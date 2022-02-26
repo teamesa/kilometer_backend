@@ -69,7 +69,7 @@ jacocoTestReport {
 							'**/*Exception*',
 							'**/*Storage*',
 							'**/*BaseDate*',
-							'**/*PageController*'
+							'**/*Controller*'
 					] + Qdomains)
 				})
 		)
@@ -101,7 +101,7 @@ jacocoTestCoverageVerification {
 					'**.*Response*',
 					'**.*Dto*',
 					'**.*Exception*',
-					'**.*PageController*',
+					'**.*Controller*',
 			]
 		}
 	}
