@@ -1,112 +1,36 @@
-plugins {
-	id 'org.springframework.boot' version '2.6.3'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
-	id 'jacoco'
-}
-
-group = 'hello'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
+buildscript {
+	ext {
+		springBootVersion = '2.5.4'
+		dependencyManagementVersion = '1.0.11.RELEASE'
 	}
-}
-
-repositories {
-	mavenCentral()
-}
-
-jar {
-	enabled = false
-}
-
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
-	finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-	dependsOn test
-	reports {
-		html.enabled true
-		xml.enabled true
-		csv.enabled true
-
-		html.destination file("src/jacoco/jacoco.html")
-		xml.destination file("src/jacoco/jacoco.xml")
+	repositories {
+		mavenCentral()
 	}
-
-	def Qdomains = []
-	for (qPattern in '**/QA'..'**/QZ') {
-		Qdomains.add(qPattern + '*')
-	}
-
-	afterEvaluate {
-		classDirectories.setFrom(
-				files(classDirectories.files.collect {
-					fileTree(dir: it, excludes: [
-							'**/BlogApplication*',
-							'**/*Request*',
-							'**/*Response*',
-							'**/*Dto*',
-							'**/*OAuthClient*',
-							'**/*Interceptor*',
-							'**/*Exception*',
-							'**/*Storage*',
-							'**/*BaseDate*',
-							'**/*Controller*'
-					] + Qdomains)
-				})
-		)
-	}
-	finalizedBy 'jacocoTestCoverageVerification'
-}
-
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			element = 'CLASS'
-			enabled = true
-
-			limit {
-				counter = 'LINE'
-				value = 'COVEREDRATIO'
-				minimum = 0.60
-			}
-
-			limit {
-				counter = 'METHOD'
-				value = 'COVEREDRATIO'
-				minimum = 0.60
-			}
-
-			excludes = [
-					'**.*Application*',
-					'**.*Request*',
-					'**.*Response*',
-					'**.*Dto*',
-					'**.*Exception*',
-					'**.*Controller*',
-			]
+	dependencies {
+		dependencies {
+			classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+			classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
 		}
 	}
 }
 
-jacoco {
-	toolVersion = '0.8.7'
+subprojects {
+	group 'esa'
+	version '1.0'
+
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	sourceCompatibility = 11
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+		implementation 'org.springframework.boot:spring-boot-starter-test'
+	}
 }
