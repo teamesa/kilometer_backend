@@ -16,13 +16,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class HelloWorldTasklet implements Tasklet {
     private final HelloService helloService;
-    @Value("#{jobParameters[memo]}")
-    public String memo = "default";
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         log.info("Hello, World!");
-        HelloResponse helloResponse = helloService.runInBatch(memo);
+        HelloResponse helloResponse = helloService.runInBatch("lalala");
         log.info("Hello Response: {}", helloResponse);
         return RepeatStatus.FINISHED;
     }

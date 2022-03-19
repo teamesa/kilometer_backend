@@ -2,18 +2,18 @@ package com.esa.domain.hello;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class HelloEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String service;
     @Column(length = 1000)
