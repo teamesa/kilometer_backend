@@ -1,9 +1,12 @@
 package com.esa.backend.batch;
 
+import com.esa.domain.cofiguration.DomainConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
 
+@Import(DomainConfiguration.class)
 @SpringBootApplication
 public class BatchProcessingApplication {
 
