@@ -1,4 +1,7 @@
 spring:
+  batch:
+    job:
+      names: ${job.name:EMPTY}
   datasource:
     url: jdbc:mariadb://azxca1731.synology.me:3306/summer
     driver-class-name: org.mariadb.jdbc.Driver
