@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class HelloWorldTasklet implements Tasklet {
+public class OtherHelloWorldTasklet implements Tasklet {
     private final HelloService helloService;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        log.info("Hello, World!");
-        HelloResponse helloResponse = helloService.runInBatch("lalala");
+        log.info("Hello, World! this is other job!");
+        HelloResponse helloResponse = helloService.runInBatch("other lalala");
         log.info("Hello Response: {}", helloResponse);
         return RepeatStatus.FINISHED;
     }
