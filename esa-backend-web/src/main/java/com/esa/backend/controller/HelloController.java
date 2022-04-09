@@ -1,8 +1,8 @@
 package com.esa.backend.controller;
 
-import com.esa.domain.hello.HelloRepository;
 import com.esa.domain.hello.HelloResponse;
 import com.esa.domain.hello.HelloService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +15,7 @@ public class HelloController {
     private final HelloService helloService;
 
     @GetMapping
+    @ApiOperation(value = "Hello List", notes = "기본적인 list 가져오기")
     public List<HelloResponse> getHelloList() {
         return helloService.getHelloLists();
     }
