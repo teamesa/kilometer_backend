@@ -1,4 +1,5 @@
 rootProject.name = 'easy-see-announcements'
+include 'esa-backend-backoffice'
 include 'esa-backend-domain'
 include 'esa-backend-web'
 include 'esa-backend-batch'

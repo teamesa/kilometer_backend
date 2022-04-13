@@ -1,0 +1,18 @@
+// This can be report project tree
+// apply plugin: 'project-report'
+
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation project(':esa-backend-domain')
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+}
+
+test {
+    useJUnitPlatform()
+}
