@@ -1,4 +1,35 @@
 spring:
+  profiles:
+    active: local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/api_study
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+    url: jdbc:mysql://localhost:3306/flyway?serverTimezone=UTC&characterEncoding=UTF-8
+    user: root
+    password: 1234
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:mariadb://azxca1731.synology.me:3306/summer
     driver-class-name: org.mariadb.jdbc.Driver
@@ -9,4 +40,32 @@ spring:
     generate-ddl: true
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+  flyway:
+    enabled: false
+    baseline-on-migrate: false
+    url: jdbc:mysql://localhost:3306/flyway?serverTimezone=UTC&characterEncoding=UTF-8
+    user: root
+    password: 1234
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:mariadb://azxca1731.synology.me:3306/summer
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: summer
+    password: rI5[w0vhFX
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: false
+    baseline-on-migrate: false
+    url: jdbc:mysql://localhost:3306/flyway?serverTimezone=UTC&characterEncoding=UTF-8
+    user: root
+    password: 1234

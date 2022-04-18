@@ -13,6 +13,9 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
+    runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'org.flywaydb:flyway-core:5.2.4'
 }
 
 test {

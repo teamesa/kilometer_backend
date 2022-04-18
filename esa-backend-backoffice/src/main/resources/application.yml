@@ -1,4 +1,43 @@
 spring:
+  profiles:
+    active: local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/api_study
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:mariadb://azxca1731.synology.me:3306/summer
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: summer
+    password: rI5[w0vhFX
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
   datasource:
     url: jdbc:mariadb://azxca1731.synology.me:3306/summer
     driver-class-name: org.mariadb.jdbc.Driver
