@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+<form action="" th:action th:object="${item}" method="post" enctype="multipart/form-data">
+    <!-- radio button -->
+    <div>
+        <div>진행 여부</div>
+        <div th:each="type : ${progressTypes}">
+            <input type="radio" th:field="*{progressType}" th:value="${type.name()}">
+            <label th:for="${#ids.prev('progressType')}" th:text="${type.name()}">
+
+            </label>
+        </div>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="image">대표 이미지</label>
+        <input type="file" id="image" th:field="*{image}" placeholder="사진">
+    </div>
+
+    <div>
+        <label for="title">메인 타이틀</label>
+        <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
+    </div>
+
+    <div>
+        <label for="term">기간</label>
+        <input type="text" id="term" th:field="*{term}" placeholder="가간을 입력하세요">
+    </div>
+
+    <div>
+        <label for="place">장소</label>
+        <input type="text" id="place" th:field="*{place}" placeholder="장소를 입력하세요">
+    </div>
+
+    <div>
+        <label for="latitude">위도</label>
+        <input type="text" id="latitude" th:field="*{latitude}" placeholder="위도를 입력하세요">
+    </div>
+
+    <div>
+        <label for="longitude">경도</label>
+        <input type="text" id="longitude" th:field="*{longitude}" placeholder="경도를 입력하세요">
+    </div>
+
+    <div>
+        <div>지역 구분</div>
+        <div th:each="type : ${regionTypes}">
+            <input type="radio" th:field="*{regionType}" th:value="${type.name()}">
+            <label th:for="${#ids.prev('regionType')}" th:text="${type.name()}">
+                Seoul
+            </label>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- radio button -->
+    <div>
+        <div>입장료</div>
+        <div th:each="type : ${feeTypes}">
+            <input type="radio" th:field="*{fee}" th:value="${type.name()}">
+            <label th:for="${#ids.prev('fee')}" th:text="${type.name()}">
+                BOOK
+            </label>
+        </div>
+    </div>
+
+    <div>
+        <label for="price">요금</label>
+        <input type="text" id="price" th:field="*{price}" placeholder="요금을 입력하세요">
+    </div>
+
+    <div>
+        <label for="url">url</label>
+        <input type="text" id="url" th:field="*{url}" placeholder="링크를 입력하세요">
+    </div>
+
+    <!-- 등록 버튼 -->
+    <div>
+        <button type="submit">수정</button>
+    </div>
+
+</form>
+
+</body>
+</html>

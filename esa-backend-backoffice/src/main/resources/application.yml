@@ -10,3 +10,21 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+#file.dir: /Users/chanhee/IdeaProjects/easy-see-announcements/file/
+#file.dir: /data/image
+
+cloud:
+  aws:
+    s3:
+      bucket: ${s3.name}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${s3.id}
+      secretKey: ${s3.pw}

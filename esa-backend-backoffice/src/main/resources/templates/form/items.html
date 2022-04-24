@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+<a href="/form/items/add">등록</a>
+
+<br>
+
+<div>
+    <table border="1" bordercolor="black">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>진행 여부</th>
+            <th>대표 이미지</th>
+            <th>메인 타이틀</th>
+            <th>기간</th>
+            <th>장소</th>
+            <th>위도</th>
+            <th>경도</th>
+            <th>지역</th>
+            <th>입장료</th>
+            <th>요금</th>
+            <th>url</th>
+            <th> </th>
+            <th> </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.progressType}"></td>
+            <td th:text="${item.image}"></td>
+            <td th:text="${item.title}"></td>
+            <td th:text="${item.term}"></td>
+            <td th:text="${item.place}"></td>
+            <td th:text="${item.latitude}"></td>
+            <td th:text="${item.longitude}"></td>
+            <td th:text="${item.regionType}"></td>
+            <td th:text="${item.fee}"></td>
+            <td th:text="${item.price}"></td>
+            <td th:text="${item.url}"></td>
+            <td>
+                <a href="#" th:href="@{/form/items/{id}/edit (id=${item.id})}" role="button">수정</a>
+            </td>
+            <td>
+                <form action="" th:action="@{/form/items/{id}/delete (id=${item.id})}" method="post">
+                    <button type="submit">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
