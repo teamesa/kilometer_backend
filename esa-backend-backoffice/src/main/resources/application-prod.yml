@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://azxca1731.synology.me:3306/summer
+    url: jdbc:mariadb://database-1.c57d2zirnw4n.ap-northeast-2.rds.amazonaws.com/winter
     driver-class-name: org.mariadb.jdbc.Driver
     username: ${my.database.username}
     password: ${my.database.password}
