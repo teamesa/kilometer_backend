@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class ItemForm {
     private ProgressType progressType;

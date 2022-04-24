@@ -7,7 +7,7 @@
 <body>
 
 <form action="/form/items/add" th:object="${item}" method="post" enctype="multipart/form-data">
-    <!-- radio button -->
+
     <div>
         <div>진행 여부</div>
         <div th:each="type : ${progressTypes}">
@@ -62,7 +62,6 @@
 
     <br>
 
-    <!-- radio button -->
     <div>
         <div>입장료</div>
         <div th:each="type : ${feeTypes}">

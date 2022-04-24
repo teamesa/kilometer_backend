@@ -1,12 +1,10 @@
 package com.esa.backend.controller;
 
 import com.esa.backend.controller.dto.ItemForm;
-//import com.esa.backend.controller.file.FileStore;
 import com.esa.backend.controller.file.S3Uploader;
 import com.esa.domain.item.*;
 import com.esa.domain.item.dto.ItemListResponse;
 import com.esa.domain.item.dto.ItemResponse;
-
 import com.esa.domain.item.dto.ItemSaveRequest;
 import com.esa.domain.item.dto.ItemUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +23,6 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
-//    private final FileStore fileStore;
     private final S3Uploader s3Uploader;
 
     @ModelAttribute("progressTypes")
@@ -59,7 +56,6 @@ public class ItemController {
     @PostMapping("/add")
     public String addItem(@ModelAttribute ItemForm item) throws IOException {
         String s3ImageUrl = s3Uploader.upload(item.getImage(), "static");
-//        UploadFile uploadFile = fileStore.storeFile(item.getImage());
         ItemSaveRequest build = ItemSaveRequest.builder()
                 .progressType(item.getProgressType())
                 .image(s3ImageUrl)
@@ -87,7 +83,6 @@ public class ItemController {
     @PostMapping("/{itemId}/edit")
     public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemForm item) throws IOException {
         String s3ImageUrl = s3Uploader.upload(item.getImage(), "static");
-//        UploadFile uploadFile = fileStore.storeFile(item.getImage());
         ItemUpdateRequest build = ItemUpdateRequest.builder()
                 .progressType(item.getProgressType())
                 .image(s3ImageUrl)
