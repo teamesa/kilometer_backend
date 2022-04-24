@@ -2,21 +2,14 @@ spring:
   datasource:
     url: jdbc:mariadb://azxca1731.synology.me:3306/summer
     driver-class-name: org.mariadb.jdbc.Driver
-    username: ${my.database.username}
-    password: ${my.database.password}
+    username: summer
+    password: rI5[w0vhFX
   jpa:
     open-in-view: false
     generate-ddl: true
     show-sql: true
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
-        user_sql_comments: true
-        format_sql: true
   servlet:
     multipart:
       max-file-size: 10MB
@@ -31,5 +24,5 @@ cloud:
     stack:
       auto: false
     credentials:
-      accessKey: ${s3.accessKey}
-      secretKey: ${s3.secretKey}
+      accessKey: example
+      secretKey: example
