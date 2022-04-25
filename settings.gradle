@@ -1,6 +1,6 @@
-rootProject.name = 'easy-see-announcements'
-include 'esa-backend-backoffice'
-include 'esa-backend-domain'
-include 'esa-backend-web'
-include 'esa-backend-batch'
+rootProject.name = 'kilometer'
+include 'kilometer-backend-backoffice'
+include 'kilometer-backend-domain'
+include 'kilometer-backend-api'
+include 'kilometer-backend-batch'
 

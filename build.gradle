@@ -15,7 +15,7 @@ buildscript {
 }
 
 subprojects {
-	group 'esa'
+	group 'kilometer'
 	version '1.0'
 
 	apply plugin: 'java'
