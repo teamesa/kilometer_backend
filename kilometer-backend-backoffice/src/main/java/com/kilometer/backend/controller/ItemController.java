@@ -49,7 +49,7 @@ public class ItemController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("item", new ItemEntity());
+        model.addAttribute("item", new ItemResponse());
         return "form/addForm";
     }
 
