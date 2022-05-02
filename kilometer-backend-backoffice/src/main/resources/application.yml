@@ -10,19 +10,26 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+    properties:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+        user_sql_comments: true
+        format_sql: true
+    servlet:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 10MB
 
-cloud:
-  aws:
-    s3:
-      bucket: kilometer-image
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
-    credentials:
-      accessKey: example
-      secretKey: example
+  cloud:
+    aws:
+      s3:
+        bucket: kilometer-image
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+      credentials:
+        accessKey: ${s3.accessKey}
+        secretKey: ${s3.secretKey}
