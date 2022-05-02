@@ -1,6 +1,5 @@
 package com.kilometer.backend.security.security.oauth2;
 
-import com.kilometer.backend.configuration.AppProperties;
 import com.kilometer.backend.security.exception.BadRequestException;
 import com.kilometer.backend.security.security.token.TokenProvider;
 import com.kilometer.backend.security.util.CookieUtils;
@@ -10,7 +9,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,11 +21,7 @@ import static com.kilometer.backend.security.security.oauth2.HttpCookieOAuth2Aut
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
     private final TokenProvider tokenProvider;
-
-    private final AppProperties appProperties;
-
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override
@@ -67,14 +61,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
-
-        return appProperties.getAuthorizedRedirectUris()
-                .stream()
-                .anyMatch(authorizedRedirectUri -> {
-                    // Only validate host and port. Let the clients use different paths if they want to
-                    URI authorizedURI = URI.create(authorizedRedirectUri);
-                    return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-                            && authorizedURI.getPort() == clientRedirectUri.getPort();
-                });
+        return "localhost".equalsIgnoreCase(clientRedirectUri.getHost()) || "kilometer.shop".equalsIgnoreCase(clientRedirectUri.getHost());
     }
 }

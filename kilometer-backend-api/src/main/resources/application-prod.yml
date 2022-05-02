@@ -46,5 +46,4 @@ app:
     tokenSecret: ${token.secret}
     tokenExpirationMsec: ${token.expiration.mesc}
   oauth2:
-    authorizedRedirectUris:
-      - http://localhost:8080/oauth2/redirect
+    authorizedRedirectDomain: kilometer.app

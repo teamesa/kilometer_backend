@@ -14,5 +14,4 @@ public class AppProperties {
     private String tokenSecret;
     @Value("${app.auth.tokenExpirationMsec}")
     private long tokenExpirationMsec;
-    private final List<String> authorizedRedirectUris = Collections.singletonList("http://localhost:8080/oauth2/redirect");
 }
