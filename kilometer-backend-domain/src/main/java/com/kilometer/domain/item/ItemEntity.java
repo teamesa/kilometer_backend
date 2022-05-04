@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class ItemEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)

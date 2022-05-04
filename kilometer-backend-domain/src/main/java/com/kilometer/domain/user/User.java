@@ -31,6 +31,7 @@ class User {
     private String imageUrl;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column
