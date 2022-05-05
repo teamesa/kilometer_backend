@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -55,7 +56,7 @@ public class ItemController {
 
     @PostMapping("/add")
     public String addItem(@ModelAttribute ItemForm item) throws IOException {
-        String s3ImageUrl = s3Uploader.upload(item.getImage(), "static");
+        String s3ImageUrl = fileExists(item);
         ItemSaveRequest build = ItemSaveRequest.builder()
                 .progressType(item.getProgressType())
                 .image(s3ImageUrl)
@@ -73,6 +74,15 @@ public class ItemController {
         return "redirect:/form/items";
     }
 
+    private String fileExists(ItemForm item) throws IOException {
+        MultipartFile image = item.getImage();
+        String s3ImageUrl = "";
+        if (!image.getOriginalFilename().equals("")) {
+            s3ImageUrl = s3Uploader.upload(image, "static");
+        }
+        return s3ImageUrl;
+    }
+
     @GetMapping("/{itemId}/edit")
     public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
         ItemResponse findOne = itemService.findOne(itemId);
@@ -82,7 +92,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/edit")
     public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemForm item) throws IOException {
-        String s3ImageUrl = s3Uploader.upload(item.getImage(), "static");
+        String s3ImageUrl = fileExists(item);
         ItemUpdateRequest build = ItemUpdateRequest.builder()
                 .progressType(item.getProgressType())
                 .image(s3ImageUrl)

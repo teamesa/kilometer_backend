@@ -21,9 +21,6 @@ public class ItemEntity {
     @Enumerated(EnumType.STRING)
     private ProgressType progressType;
 
-//    @Embedded
-//    private UploadFile image;
-
     private String image;
 
     private String title;
@@ -47,7 +44,11 @@ public class ItemEntity {
         this.title = item.getTitle();
         this.term = item.getTerm();
         this.place = item.getPlace();
+        this.latitude = item.getLatitude();
+        this.longitude = item.getLongitude();
+        this.regionType = item.getRegionType();
         this.fee = item.getFee();
         this.price = item.getPrice();
+        this.url = item.getUrl();
     }
 }

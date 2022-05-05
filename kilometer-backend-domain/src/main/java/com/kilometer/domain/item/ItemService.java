@@ -6,6 +6,7 @@ import com.kilometer.domain.item.dto.ItemSaveRequest;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +48,7 @@ public class ItemService {
         return new ItemResponse(itemEntity);
     }
 
+    @Transactional
     public void updateItem(Long itemId, ItemUpdateRequest item) {
         ItemEntity itemEntity = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
