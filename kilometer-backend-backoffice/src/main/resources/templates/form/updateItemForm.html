@@ -11,7 +11,7 @@
         <div>진행 여부</div>
         <div th:each="type : ${progressTypes}">
             <input type="radio" th:field="*{progressType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('progressType')}" th:text="${type.name()}">
+            <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">
 
             </label>
         </div>
@@ -53,7 +53,7 @@
         <div>지역 구분</div>
         <div th:each="type : ${regionTypes}">
             <input type="radio" th:field="*{regionType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('regionType')}" th:text="${type.name()}">
+            <label th:for="${#ids.prev('regionType')}" th:text="${type.description}">
                 Seoul
             </label>
         </div>
@@ -65,7 +65,7 @@
         <div>입장료</div>
         <div th:each="type : ${feeTypes}">
             <input type="radio" th:field="*{fee}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('fee')}" th:text="${type.name()}">
+            <label th:for="${#ids.prev('fee')}" th:text="${type.description}">
                 BOOK
             </label>
         </div>

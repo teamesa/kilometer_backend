@@ -33,15 +33,15 @@
         <tbody>
         <tr th:each="item : ${items}">
             <td th:text="${item.id}"></td>
-            <td th:text="${item.progressType}"></td>
+            <td th:text="${item.progressType.description}"></td>
             <td th:text="${item.image}"></td>
             <td th:text="${item.title}"></td>
             <td th:text="${item.term}"></td>
             <td th:text="${item.place}"></td>
             <td th:text="${item.latitude}"></td>
             <td th:text="${item.longitude}"></td>
-            <td th:text="${item.regionType}"></td>
-            <td th:text="${item.fee}"></td>
+            <td th:text="${item.regionType.description}"></td>
+            <td th:text="${item.fee.description}"></td>
             <td th:text="${item.price}"></td>
             <td th:text="${item.url}"></td>
             <td>
