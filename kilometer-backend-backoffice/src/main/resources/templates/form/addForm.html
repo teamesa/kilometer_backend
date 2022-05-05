@@ -3,17 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <link rel="stylesheet" href="../../static/css/addTable.css" th:href="@{/css/addTable.css}">
 </head>
 <body>
 
+<h2>문화생활 등록</h2>
+
+<h3>기본정보</h3>
+
 <form action="/form/items/add" th:object="${item}" method="post" enctype="multipart/form-data">
+
+<!--    <table class="tg">-->
+<!--        <tbody>-->
+<!--        <tr>-->
+<!--            <th class="tg-y6fn">문화생활 유형</th>-->
+<!--            <th class="tg-0lax"></th>-->
+<!--            <th class="tg-y6fn">FO 전시여부</th>-->
+<!--            <th class="tg-0lax">-->
+<!--                <span th:each="type : ${progressTypes}">-->
+<!--                    <input type="radio" th:field="*{progressType}" th:value="${type.name()}">-->
+<!--                    <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">-->
+<!--                        전시-->
+<!--                    </label>-->
+<!--                </span>-->
+<!--            </th>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax" colspan="3"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax" colspan="3"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax" colspan="3"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax"></td>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax" colspan="3"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax"></td>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax" colspan="3"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax" colspan="3"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax" colspan="3"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td class="tg-y6fn"></td>-->
+<!--            <td class="tg-0lax" colspan="3"></td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
 
     <div>
         <div>진행 여부</div>
-        <div th:each="type : ${progressTypes}">
+        <div th:each="type, typeStat : ${progressTypes}">
             <input type="radio" th:field="*{progressType}" th:value="${type.name()}">
             <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">
-
+                전시
             </label>
         </div>
     </div>
@@ -67,7 +135,7 @@
         <div th:each="type : ${feeTypes}">
             <input type="radio" th:field="*{fee}" th:value="${type.name()}">
             <label th:for="${#ids.prev('fee')}" th:text="${type.description}">
-                BOOK
+                무료
             </label>
         </div>
     </div>
