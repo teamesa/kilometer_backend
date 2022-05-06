@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Entity
@@ -28,7 +30,10 @@ public class ItemEntity {
 
     private String title;
 
-    private String term;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
 
     private String place;
     private Double latitude;
@@ -46,7 +51,8 @@ public class ItemEntity {
         this.progressType = item.getProgressType();
         this.image = item.getImage();
         this.title = item.getTitle();
-        this.term = item.getTerm();
+        this.startDate = item.getStartDate();
+        this.endDate = item.getEndDate();
         this.place = item.getPlace();
         this.latitude = item.getLatitude();
         this.longitude = item.getLongitude();

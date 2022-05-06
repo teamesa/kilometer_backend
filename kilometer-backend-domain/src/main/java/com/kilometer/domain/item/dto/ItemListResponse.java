@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -16,7 +19,12 @@ public class ItemListResponse {
     private ProgressType progressType;
     private String image;
     private String title;
-    private String term;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
+
     private String place;
     private Double latitude;
     private Double longitude;
@@ -31,7 +39,8 @@ public class ItemListResponse {
         this.progressType = itemEntity.getProgressType();
         this.image = itemEntity.getImage();
         this.title = itemEntity.getTitle();
-        this.term = itemEntity.getTerm();
+        this.startDate = itemEntity.getStartDate();
+        this.endDate = itemEntity.getEndDate();
         this.place = itemEntity.getPlace();
         this.latitude = itemEntity.getLatitude();
         this.longitude = itemEntity.getLongitude();

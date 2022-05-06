@@ -7,7 +7,10 @@ import com.kilometer.domain.item.RegionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -17,7 +20,12 @@ public class ItemForm {
     private ProgressType progressType;
     private MultipartFile image;
     private String title;
-    private String term;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
+
     private String place;
     private Double latitude;
     private Double longitude;
