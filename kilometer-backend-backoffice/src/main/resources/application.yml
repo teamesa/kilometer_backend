@@ -33,3 +33,10 @@ cloud:
     credentials:
       accessKey: ${s3.accessKey}
       secretKey: ${s3.secretKey}
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error

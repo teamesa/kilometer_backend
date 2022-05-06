@@ -3,17 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <link rel="stylesheet" href="../../static/css/addTable.css" th:href="@{/css/addTable.css}">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <body>
 
+<h2>문화생활 등록</h2>
+
+<h3>기본정보</h3>
+
 <form action="/form/items/add" th:object="${item}" method="post" enctype="multipart/form-data">
+
+    <!--    <table class="tg">-->
+    <!--        <tbody>-->
+    <!--        <tr>-->
+    <!--            <th class="tg-y6fn">문화생활 유형</th>-->
+    <!--            <th class="tg-0lax"></th>-->
+    <!--            <th class="tg-y6fn">FO 전시여부</th>-->
+    <!--            <th class="tg-0lax">-->
+    <!--                <span th:each="type : ${progressTypes}">-->
+    <!--                    <input type="radio" th:field="*{progressType}" th:value="${type.name()}">-->
+    <!--                    <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">-->
+    <!--                        전시-->
+    <!--                    </label>-->
+    <!--                </span>-->
+    <!--            </th>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax"></td>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax"></td>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        </tbody>-->
+    <!--    </table>-->
+
+
+    <div>
+        <div>문화생활 유형</div>
+        <div th:each="type, typeStat : ${exhibitionType}">
+            <input type="radio" th:field="*{exhibitionType}" th:value="${type.name()}">
+            <label th:for="${#ids.prev('exhibitionType')}" th:text="${type.description}">
+                전시
+            </label>
+        </div>
+    </div>
 
     <div>
         <div>진행 여부</div>
-        <div th:each="type : ${progressTypes}">
+        <div th:each="type, typeStat : ${progressTypes}">
             <input type="radio" th:field="*{progressType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('progressType')}" th:text="${type.name()}">
-
+            <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">
+                전시
             </label>
         </div>
     </div>
@@ -21,9 +100,50 @@
     <br>
 
     <div>
+<!--        <img style="width: 100px; height: 100px;" id="preview-image" src="">-->
         <label for="image">대표 이미지</label>
         <input type="file" id="image" th:field="*{image}" placeholder="사진">
+        <div id="preview"></div>
+        <a href="#" class="btn-delete">삭제</a>
     </div>
+
+    <script type="text/javascript">
+
+        function readInputFile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#preview').html("<img style=\"width: 100px; height: 100px;\" src=" + e.target.result + ">");
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#image").on('change', function () {
+            readInputFile(this);
+        });
+
+
+        // 등록 이미지 삭제 ( input file reset )
+        function resetInputFile($input, $preview) {
+            var agent = navigator.userAgent.toLowerCase();
+            if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
+                // ie 일때
+                $input.replaceWith($input.clone(true));
+                $preview.empty();
+            } else {
+                //other
+                $input.val("");
+                $preview.empty();
+            }
+        }
+
+        $(".btn-delete").click(function (event) {
+            var $input = $("#image");
+            var $preview = $('#preview');
+            resetInputFile($input, $preview);
+        });
+    </script>
 
     <div>
         <label for="title">메인 타이틀</label>
@@ -31,8 +151,12 @@
     </div>
 
     <div>
-        <label for="term">기간</label>
-        <input type="text" id="term" th:field="*{term}" placeholder="가간을 입력하세요">
+        <label for="startDate">시작일</label>
+        <input type="date" id="startDate" th:field="*{startDate}">
+    </div>
+    <div>
+        <label for="endDate">종료일</label>
+        <input type="date" id="endDate" th:field="*{endDate}">
     </div>
 
     <div>
@@ -54,7 +178,7 @@
         <div>지역 구분</div>
         <div th:each="type : ${regionTypes}">
             <input type="radio" th:field="*{regionType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('regionType')}" th:text="${type.name()}">
+            <label th:for="${#ids.prev('regionType')}" th:text="${type.description}">
                 Seoul
             </label>
         </div>
@@ -66,8 +190,8 @@
         <div>입장료</div>
         <div th:each="type : ${feeTypes}">
             <input type="radio" th:field="*{fee}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('fee')}" th:text="${type.name()}">
-                BOOK
+            <label th:for="${#ids.prev('fee')}" th:text="${type.description}">
+                무료
             </label>
         </div>
     </div>

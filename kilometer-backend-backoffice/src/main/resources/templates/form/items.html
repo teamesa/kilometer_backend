@@ -3,58 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <link rel="stylesheet" href="../../static/css/buttons.css" th:href="@{/css/buttons.css}">
+    <link rel="stylesheet" href="../../static/css/lists.css" th:href="@{/css/lists.css}">
+    <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
 
-<a href="/form/items/add">등록</a>
-
-<br>
-
 <div>
-    <table border="1" bordercolor="black">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>진행 여부</th>
-            <th>대표 이미지</th>
-            <th>메인 타이틀</th>
-            <th>기간</th>
-            <th>장소</th>
-            <th>위도</th>
-            <th>경도</th>
-            <th>지역</th>
-            <th>입장료</th>
-            <th>요금</th>
-            <th>url</th>
-            <th> </th>
-            <th> </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${items}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.progressType}"></td>
-            <td th:text="${item.image}"></td>
-            <td th:text="${item.title}"></td>
-            <td th:text="${item.term}"></td>
-            <td th:text="${item.place}"></td>
-            <td th:text="${item.latitude}"></td>
-            <td th:text="${item.longitude}"></td>
-            <td th:text="${item.regionType}"></td>
-            <td th:text="${item.fee}"></td>
-            <td th:text="${item.price}"></td>
-            <td th:text="${item.url}"></td>
-            <td>
-                <a href="#" th:href="@{/form/items/{id}/edit (id=${item.id})}" role="button">수정</a>
-            </td>
-            <td>
-                <form action="" th:action="@{/form/items/{id}/delete (id=${item.id})}" method="post">
-                    <button type="submit">삭제</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <h2>문화생활 관리</h2>
+
+    <br>
+
+    <form action="/form/items/add" method="get">
+        <button type="submit" class="button">등록</button>
+    </form>
+
+    <br>
+
+    <div class="list1">
+        문화생활 목록&nbsp;
+        <span class="list2">(총&nbsp;</span>
+        <span class="list3" id="result"></span>
+        <span class="list2">건) </span>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+           $('#result').text($('#itemList >tbody tr').length);
+        });
+    </script>
+
+    <div>
+        <table class="listBoard1" id="itemList">
+            <thead class="listBoard2">
+            <tr>
+                <th>컨텐츠번호</th>
+                <th>진행여부</th>
+                <th>대표 이미지</th>
+                <th>메인타이틀</th>
+                <th>장소</th>
+                <th>위도</th>
+                <th>경도</th>
+                <th>지역</th>
+                <th>입장료</th>
+                <th>요금</th>
+                <th>url</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item, itemStat: ${items}">
+                <td th:text="${itemStat.index} + 1"></td>
+                <td th:text="${item.progressType.description}"></td>
+                <td><img src="" th:src="${item.image}" width=100 height=100 alt=""></td>
+                <td th:text="${item.title}"></td>
+                <td th:text="${item.place}"></td>
+                <td th:text="${item.latitude}"></td>
+                <td th:text="${item.longitude}"></td>
+                <td th:text="${item.regionType.description}"></td>
+                <td th:text="${item.fee.description}"></td>
+                <td th:text="${item.price}"></td>
+                <td th:text="${item.url}"></td>
+                <td>
+                    <form action="" th:action="@{/form/items/{id}/edit (id=${item.id})}" method="get">
+                        <button class="button2" type="submit">수정</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="" th:action="@{/form/items/{id}/delete (id=${item.id})}" method="post">
+                        <button class="button2" type="submit">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 </body>
