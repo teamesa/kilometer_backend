@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
 import static com.kilometer.domain.item.FeeType.FREE;
 import static com.kilometer.domain.item.ProgressType.ON;
 import static com.kilometer.domain.item.RegionType.SEOUL;
@@ -29,6 +30,11 @@ public class ItemController {
 
     private final ItemService itemService;
     private final S3Uploader s3Uploader;
+
+    @ModelAttribute("exhibitionType")
+    public ExhibitionType[] exhibitionTypes() {
+        return ExhibitionType.values();
+    }
 
     @ModelAttribute("progressTypes")
     public ProgressType[] progressTypes() {
@@ -54,7 +60,7 @@ public class ItemController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("item", new ItemResponse(ON, SEOUL, FREE));
+        model.addAttribute("item", new ItemResponse(EXHIBITION, ON, SEOUL, FREE));
         return "form/addForm";
     }
 
@@ -62,6 +68,7 @@ public class ItemController {
     public String addItem(@ModelAttribute ItemForm item) throws IOException {
         String s3ImageUrl = fileExists(item);
         ItemSaveRequest build = ItemSaveRequest.builder()
+                .exhibitionType(item.getExhibitionType())
                 .progressType(item.getProgressType())
                 .image(s3ImageUrl)
                 .title(item.getTitle())
@@ -98,6 +105,7 @@ public class ItemController {
     public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemForm item) throws IOException {
         String s3ImageUrl = fileExists(item);
         ItemUpdateRequest build = ItemUpdateRequest.builder()
+                .exhibitionType(item.getExhibitionType())
                 .progressType(item.getProgressType())
                 .image(s3ImageUrl)
                 .title(item.getTitle())

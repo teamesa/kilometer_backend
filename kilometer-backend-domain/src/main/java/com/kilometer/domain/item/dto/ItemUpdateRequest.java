@@ -1,9 +1,6 @@
 package com.kilometer.domain.item.dto;
 
-import com.kilometer.domain.item.FeeType;
-import com.kilometer.domain.item.ItemEntity;
-import com.kilometer.domain.item.ProgressType;
-import com.kilometer.domain.item.RegionType;
+import com.kilometer.domain.item.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemUpdateRequest {
+    private ExhibitionType exhibitionType;
     private ProgressType progressType;
     private String image;
     private String title;
@@ -27,6 +25,7 @@ public class ItemUpdateRequest {
     private String url;
 
     public ItemUpdateRequest(ItemEntity itemEntity) {
+        this.exhibitionType = itemEntity.getExhibitionType();
         this.progressType = itemEntity.getProgressType();
         this.image = itemEntity.getImage();
         this.title = itemEntity.getTitle();

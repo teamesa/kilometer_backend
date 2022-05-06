@@ -19,6 +19,9 @@ public class ItemEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    private ExhibitionType exhibitionType;
+
+    @Enumerated(EnumType.STRING)
     private ProgressType progressType;
 
     private String image;
@@ -39,6 +42,7 @@ public class ItemEntity {
     private String url;
 
     public void update(ItemUpdateRequest item) {
+        this.exhibitionType = item.getExhibitionType();
         this.progressType = item.getProgressType();
         this.image = item.getImage();
         this.title = item.getTitle();

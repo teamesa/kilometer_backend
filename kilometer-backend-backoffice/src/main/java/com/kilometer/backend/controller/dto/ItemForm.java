@@ -1,5 +1,6 @@
 package com.kilometer.backend.controller.dto;
 
+import com.kilometer.domain.item.ExhibitionType;
 import com.kilometer.domain.item.FeeType;
 import com.kilometer.domain.item.ProgressType;
 import com.kilometer.domain.item.RegionType;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @AllArgsConstructor
 public class ItemForm {
+    private ExhibitionType exhibitionType;
     private ProgressType progressType;
     private MultipartFile image;
     private String title;

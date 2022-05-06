@@ -19,6 +19,7 @@ public class ItemService {
 
     public void saveItem(ItemSaveRequest item) {
         ItemEntity itemEntity = ItemEntity.builder()
+                .exhibitionType(item.getExhibitionType())
                 .progressType(item.getProgressType())
                 .image(item.getImage())
                 .title(item.getTitle())
