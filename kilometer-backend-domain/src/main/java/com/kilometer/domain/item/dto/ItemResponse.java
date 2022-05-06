@@ -40,4 +40,10 @@ public class ItemResponse {
         this.price = itemEntity.getPrice();
         this.url = itemEntity.getUrl();
     }
+
+    public ItemResponse(ProgressType progressType, RegionType regionType, FeeType fee) {
+        this.progressType = progressType;
+        this.regionType = regionType;
+        this.fee = fee;
+    }
 }

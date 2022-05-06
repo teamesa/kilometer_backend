@@ -17,6 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+import static com.kilometer.domain.item.FeeType.FREE;
+import static com.kilometer.domain.item.ProgressType.ON;
+import static com.kilometer.domain.item.RegionType.SEOUL;
+
 @Slf4j
 @Controller
 @RequestMapping("/form/items")
@@ -50,7 +54,7 @@ public class ItemController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("item", new ItemResponse());
+        model.addAttribute("item", new ItemResponse(ON, SEOUL, FREE));
         return "form/addForm";
     }
 

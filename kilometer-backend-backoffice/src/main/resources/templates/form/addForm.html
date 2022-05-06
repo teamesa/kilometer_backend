@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <link rel="stylesheet" href="../../static/css/addTable.css" th:href="@{/css/addTable.css}">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <body>
 
@@ -13,67 +14,67 @@
 
 <form action="/form/items/add" th:object="${item}" method="post" enctype="multipart/form-data">
 
-<!--    <table class="tg">-->
-<!--        <tbody>-->
-<!--        <tr>-->
-<!--            <th class="tg-y6fn">문화생활 유형</th>-->
-<!--            <th class="tg-0lax"></th>-->
-<!--            <th class="tg-y6fn">FO 전시여부</th>-->
-<!--            <th class="tg-0lax">-->
-<!--                <span th:each="type : ${progressTypes}">-->
-<!--                    <input type="radio" th:field="*{progressType}" th:value="${type.name()}">-->
-<!--                    <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">-->
-<!--                        전시-->
-<!--                    </label>-->
-<!--                </span>-->
-<!--            </th>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax" colspan="3"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax" colspan="3"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax" colspan="3"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax"></td>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax" colspan="3"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax"></td>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax" colspan="3"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax" colspan="3"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax" colspan="3"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td class="tg-y6fn"></td>-->
-<!--            <td class="tg-0lax" colspan="3"></td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
+    <!--    <table class="tg">-->
+    <!--        <tbody>-->
+    <!--        <tr>-->
+    <!--            <th class="tg-y6fn">문화생활 유형</th>-->
+    <!--            <th class="tg-0lax"></th>-->
+    <!--            <th class="tg-y6fn">FO 전시여부</th>-->
+    <!--            <th class="tg-0lax">-->
+    <!--                <span th:each="type : ${progressTypes}">-->
+    <!--                    <input type="radio" th:field="*{progressType}" th:value="${type.name()}">-->
+    <!--                    <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">-->
+    <!--                        전시-->
+    <!--                    </label>-->
+    <!--                </span>-->
+    <!--            </th>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax"></td>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax"></td>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        <tr>-->
+    <!--            <td class="tg-y6fn"></td>-->
+    <!--            <td class="tg-0lax" colspan="3"></td>-->
+    <!--        </tr>-->
+    <!--        </tbody>-->
+    <!--    </table>-->
 
 
     <div>
@@ -89,9 +90,50 @@
     <br>
 
     <div>
+<!--        <img style="width: 100px; height: 100px;" id="preview-image" src="">-->
         <label for="image">대표 이미지</label>
         <input type="file" id="image" th:field="*{image}" placeholder="사진">
+        <div id="preview"></div>
+        <a href="#" class="btn-delete">삭제</a>
     </div>
+
+    <script type="text/javascript">
+
+        function readInputFile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#preview').html("<img style=\"width: 100px; height: 100px;\" src=" + e.target.result + ">");
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#image").on('change', function () {
+            readInputFile(this);
+        });
+
+
+        // 등록 이미지 삭제 ( input file reset )
+        function resetInputFile($input, $preview) {
+            var agent = navigator.userAgent.toLowerCase();
+            if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
+                // ie 일때
+                $input.replaceWith($input.clone(true));
+                $preview.empty();
+            } else {
+                //other
+                $input.val("");
+                $preview.empty();
+            }
+        }
+
+        $(".btn-delete").click(function (event) {
+            var $input = $("#image");
+            var $preview = $('#preview');
+            resetInputFile($input, $preview);
+        });
+    </script>
 
     <div>
         <label for="title">메인 타이틀</label>
