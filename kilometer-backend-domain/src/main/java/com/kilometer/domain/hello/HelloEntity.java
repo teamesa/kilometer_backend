@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "hello_entity")
 public class HelloEntity {
     @Id
     @GeneratedValue

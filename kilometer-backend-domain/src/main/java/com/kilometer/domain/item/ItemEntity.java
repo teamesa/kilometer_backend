@@ -9,12 +9,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "item_entity")
 public class ItemEntity {
 
     @Id @GeneratedValue
@@ -49,6 +51,11 @@ public class ItemEntity {
     private String time;
 
     private String ticketUrl;
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     public void update(ItemUpdateRequest item) {
         this.exhibitionType = item.getExhibitionType();
