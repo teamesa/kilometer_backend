@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -91,7 +92,7 @@ public class ItemController {
     private String fileExists(ItemForm item) throws IOException {
         MultipartFile image = item.getImage();
         String s3ImageUrl = "";
-        if (!image.getOriginalFilename().equals("")) {
+        if (!StringUtils.hasText(image.getOriginalFilename())) {
             s3ImageUrl = s3Uploader.upload(image, "static");
         }
         return s3ImageUrl;
