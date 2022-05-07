@@ -33,4 +33,6 @@ public class ItemForm {
     private FeeType fee;
     private Integer price;
     private String url;
+    private String time;
+    private String ticketUrl;
 }

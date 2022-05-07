@@ -32,6 +32,8 @@ public class ItemResponse {
     private FeeType fee;
     private Integer price;
     private String url;
+    private String time;
+    private String ticketUrl;
 
     public ItemResponse(ItemEntity itemEntity) {
         this.exhibitionType = itemEntity.getExhibitionType();
@@ -47,6 +49,8 @@ public class ItemResponse {
         this.fee = itemEntity.getFee();
         this.price = itemEntity.getPrice();
         this.url = itemEntity.getUrl();
+        this.time = itemEntity.getTime();
+        this.ticketUrl = itemEntity.getTicketUrl();
     }
 
     public ItemResponse(ExhibitionType exhibitionType, ProgressType progressType, RegionType regionType, FeeType fee) {

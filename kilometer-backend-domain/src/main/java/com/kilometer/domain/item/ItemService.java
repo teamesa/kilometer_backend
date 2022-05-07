@@ -33,6 +33,8 @@ public class ItemService {
                 .fee(item.getFee())
                 .price(item.getPrice())
                 .url(item.getUrl())
+                .time(item.getTime())
+                .ticketUrl(item.getTicketUrl())
                 .build();
         ItemEntity savedItem = itemRepository.save(itemEntity);
     }

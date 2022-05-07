@@ -46,6 +46,10 @@ public class ItemEntity {
     private Integer price;
     private String url;
 
+    private String time;
+
+    private String ticketUrl;
+
     public void update(ItemUpdateRequest item) {
         this.exhibitionType = item.getExhibitionType();
         this.progressType = item.getProgressType();
@@ -60,5 +64,7 @@ public class ItemEntity {
         this.fee = item.getFee();
         this.price = item.getPrice();
         this.url = item.getUrl();
+        this.time = item.getTime();
+        this.ticketUrl = item.getTicketUrl();
     }
 }

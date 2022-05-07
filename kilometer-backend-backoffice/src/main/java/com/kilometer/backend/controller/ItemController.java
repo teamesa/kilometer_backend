@@ -81,6 +81,8 @@ public class ItemController {
                 .fee(item.getFee())
                 .price(item.getPrice())
                 .url(item.getUrl())
+                .time(item.getTime())
+                .ticketUrl(item.getTicketUrl())
                 .build();
         itemService.saveItem(build);
         return "redirect:/form/items";
@@ -119,6 +121,8 @@ public class ItemController {
                 .fee(item.getFee())
                 .price(item.getPrice())
                 .url(item.getUrl())
+                .time(item.getTime())
+                .ticketUrl(item.getTicketUrl())
                 .build();
         itemService.updateItem(itemId, build);
         return "redirect:/form/items";
