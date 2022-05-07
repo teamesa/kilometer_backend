@@ -6,10 +6,10 @@ spring:
     password: rI5[w0vhFX
   jpa:
     open-in-view: false
-    generate-ddl: true
+    generate-ddl: false
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         type:
@@ -17,6 +17,11 @@ spring:
             sql: trace
         user_sql_comments: true
         format_sql: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
   security:
     oauth2:
       client:

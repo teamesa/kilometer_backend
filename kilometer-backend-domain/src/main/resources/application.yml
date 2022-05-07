@@ -1,7 +1,4 @@
 spring:
-  batch:
-    job:
-      names: ${job.name:EMPTY}
   datasource:
     url: jdbc:mariadb://azxca1731.synology.me:3306/summer
     driver-class-name: org.mariadb.jdbc.Driver
@@ -13,6 +10,13 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+        user_sql_comments: true
+        format_sql: true
 
   flyway:
     enabled: true
