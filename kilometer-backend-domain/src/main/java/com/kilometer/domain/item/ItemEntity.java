@@ -57,6 +57,10 @@ public class ItemEntity {
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @OneToOne
+    @JoinColumn(name = "itemDetailEntity", referencedColumnName = "detailId")
+    private ItemDetailEntity itemDetailEntity;
+
     public void update(ItemUpdateRequest item) {
         this.exhibitionType = item.getExhibitionType();
         this.progressType = item.getProgressType();

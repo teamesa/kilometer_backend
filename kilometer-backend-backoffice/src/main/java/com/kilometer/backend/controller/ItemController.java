@@ -3,10 +3,7 @@ package com.kilometer.backend.controller;
 import com.kilometer.backend.controller.dto.ItemForm;
 import com.kilometer.backend.controller.file.S3Uploader;
 import com.kilometer.domain.item.*;
-import com.kilometer.domain.item.dto.ItemListResponse;
-import com.kilometer.domain.item.dto.ItemResponse;
-import com.kilometer.domain.item.dto.ItemSaveRequest;
-import com.kilometer.domain.item.dto.ItemUpdateRequest;
+import com.kilometer.domain.item.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -92,7 +89,8 @@ public class ItemController {
     private String fileExists(ItemForm item) throws IOException {
         MultipartFile image = item.getImage();
         String s3ImageUrl = "";
-        if (!StringUtils.hasText(image.getOriginalFilename())) {
+        String originalFilename = image.getOriginalFilename();
+        if (StringUtils.hasText(originalFilename)) {
             s3ImageUrl = s3Uploader.upload(image, "static");
         }
         return s3ImageUrl;
@@ -134,4 +132,12 @@ public class ItemController {
         itemService.deleteItem(itemId);
         return "redirect:/form/items";
     }
+
+    @GetMapping("/response-test")
+    @ResponseBody
+    public List<ItemAndDetailListResponse> responseItemEntity() {
+        List<ItemAndDetailListResponse> itemsAndDetail = itemService.findItemsAndDetail();
+        return itemsAndDetail;
+    }
+
 }

@@ -34,6 +34,7 @@ public class ItemListResponse {
     private String url;
     private String time;
     private String ticketUrl;
+//    private Long detailId;
 
     public ItemListResponse(ItemEntity itemEntity) {
         this.id = itemEntity.getId();
@@ -52,5 +53,6 @@ public class ItemListResponse {
         this.url = itemEntity.getUrl();
         this.time = itemEntity.getTime();
         this.ticketUrl = itemEntity.getTicketUrl();
+//        this.detailId = itemEntity.getItemDetailEntity().getId();
     }
 }
