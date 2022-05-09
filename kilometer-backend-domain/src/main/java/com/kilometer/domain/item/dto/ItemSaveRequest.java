@@ -1,6 +1,9 @@
 package com.kilometer.domain.item.dto;
 
-import com.kilometer.domain.item.*;
+import com.kilometer.domain.item.ExhibitionType;
+import com.kilometer.domain.item.FeeType;
+import com.kilometer.domain.item.ProgressType;
+import com.kilometer.domain.item.RegionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,9 +32,8 @@ public class ItemSaveRequest {
     private Double longitude;
     private RegionType regionType;
     private FeeType fee;
-    private Integer price;
+    private String price;
     private String url;
     private String time;
     private String ticketUrl;
-    private ItemDetailEntity itemDetailEntity;
 }

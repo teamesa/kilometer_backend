@@ -1,13 +1,13 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.item.dto.*;
+import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.ItemSaveRequest;
+import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,17 +39,17 @@ public class ItemService {
         ItemEntity savedItem = itemRepository.save(itemEntity);
     }
 
-    public List<ItemListResponse> findItems() {
+    public List<ItemResponse> findItems() {
         return itemRepository.findAll()
                 .stream()
-                .map(ItemListResponse::new)
+                .map(ItemEntity::makeResponse)
                 .collect(Collectors.toList());
     }
 
     public ItemResponse findOne(Long itemId) {
         ItemEntity itemEntity = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
-        return new ItemResponse(itemEntity);
+        return itemEntity.makeResponse();
     }
 
     @Transactional
@@ -65,47 +65,9 @@ public class ItemService {
         itemRepository.delete(itemEntity);
     }
 
-    public List<ItemAndDetailListResponse> findItemsAndDetail() {
+    public List<ItemEntity> findItemsAndDetail() {
         List<ItemEntity> findItem = itemRepository.findAll();
-//        List<ItemDetailEntity> findDetailItem = new ArrayList<>();
-//        for (ItemEntity itemEntity : findItem) {
-//            findDetailItem.add(itemEntity.getItemDetailEntity());
-//        }
-        List<ItemAndDetailListResponse> result = new ArrayList<>();
-        int n = findItem.size();
-        for (int i = 0; i < n; i++) {
-            result.add(new ItemAndDetailListResponse(findItem.get(i)));
-        }
-        return result;
-
-
-//        List<ItemListResponse> items = this.findItems();
-//        List<ItemAndDetailListResponse> result = new ArrayList<>();
-//        for (ItemListResponse item : items) {
-//            ItemDetailEntity findItemDetailEntity = itemDetailRepository.findById(item.getDetailId())
-//                    .orElseThrow(() -> new IllegalArgumentException("해당 데이터가 없습니다."));
-//            result.add(new ItemAndDetailListResponse(
-//                    item.getId(),
-//                    item.getExhibitionType(),
-//                    item.getProgressType(),
-//                    item.getImage(),
-//                    item.getTitle(),
-//                    item.getStartDate(),
-//                    item.getEndDate(),
-//                    item.getPlace(),
-//                    item.getLatitude(),
-//                    item.getLongitude(),
-//                    item.getRegionType(),
-//                    item.getFee(),
-//                    item.getPrice(),
-//                    item.getUrl(),
-//                    item.getTime(),
-//                    item.getTicketUrl(),
-//                    findItemDetailEntity
-//                    )
-//            );
-//        }
-//        return result;
+        return findItem;
     }
 
 }

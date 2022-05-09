@@ -12,13 +12,15 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "item_detail_entity")
-public class ItemDetailEntity {
+@Table(name = "detail_image")
+public class DetailImage {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "detailId")
+    @Id @GeneratedValue
     private Long id;
 
-    private String introduce;
+    private String url;
+
+    @ManyToOne
+    @JoinColumn(name = "itemDetailEntity")
+    private ItemDetail itemDetailEntity;
 }

@@ -1,5 +1,6 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -45,7 +48,7 @@ public class ItemEntity {
 
     @Enumerated(EnumType.STRING)
     private FeeType fee;
-    private Integer price;
+    private String price;
     private String url;
 
     private String time;
@@ -58,8 +61,8 @@ public class ItemEntity {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @OneToOne
-    @JoinColumn(name = "itemDetailEntity", referencedColumnName = "detailId")
-    private ItemDetailEntity itemDetailEntity;
+    @JoinColumn(name = "itemDetailEntity")
+    private ItemDetail itemDetailEntity;
 
     public void update(ItemUpdateRequest item) {
         this.exhibitionType = item.getExhibitionType();
@@ -77,5 +80,30 @@ public class ItemEntity {
         this.url = item.getUrl();
         this.time = item.getTime();
         this.ticketUrl = item.getTicketUrl();
+    }
+
+    public ItemResponse makeResponse() {
+        return ItemResponse.builder()
+                .id(this.id)
+                .exhibitionType(this.exhibitionType)
+                .progressType(this.progressType)
+                .image(this.image)
+                .title(this.title)
+                .startDate(this.startDate)
+                .endDate(this.endDate)
+                .place(this.place)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .regionType(this.regionType)
+                .fee(this.fee)
+                .price(this.price)
+                .url(this.url)
+                .time(this.time)
+                .ticketUrl(this.ticketUrl)
+                .detailImageUrl(this.itemDetailEntity.getImages().stream()
+                        .map(DetailImage::getUrl)
+                        .collect(Collectors.toList())
+                ).introduce(this.itemDetailEntity.getIntroduce())
+                .build();
     }
 }

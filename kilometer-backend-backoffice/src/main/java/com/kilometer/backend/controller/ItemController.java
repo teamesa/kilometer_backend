@@ -3,7 +3,9 @@ package com.kilometer.backend.controller;
 import com.kilometer.backend.controller.dto.ItemForm;
 import com.kilometer.backend.controller.file.S3Uploader;
 import com.kilometer.domain.item.*;
-import com.kilometer.domain.item.dto.*;
+import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.ItemSaveRequest;
+import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
@@ -51,14 +54,14 @@ public class ItemController {
 
     @GetMapping
     public String items(Model model) {
-        List<ItemListResponse> items = itemService.findItems();
+        List<ItemResponse> items = itemService.findItems();
         model.addAttribute("items", items);
         return "form/items";
     }
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("item", new ItemResponse(EXHIBITION, ON, SEOUL, FREE));
+        model.addAttribute("item", new ItemResponse(EXHIBITION, ON, LocalDate.now(), LocalDate.now(), SEOUL, FREE));
         return "form/addForm";
     }
 
@@ -135,9 +138,8 @@ public class ItemController {
 
     @GetMapping("/response-test")
     @ResponseBody
-    public List<ItemAndDetailListResponse> responseItemEntity() {
-        List<ItemAndDetailListResponse> itemsAndDetail = itemService.findItemsAndDetail();
-        return itemsAndDetail;
+    public List<ItemResponse> responseItemEntity() {
+        return itemService.findItems();
     }
 
 }

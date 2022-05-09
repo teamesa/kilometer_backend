@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class ItemForm {
+
     private ExhibitionType exhibitionType;
     private ProgressType progressType;
     private MultipartFile image;
@@ -28,7 +29,7 @@ public class ItemForm {
     private Double longitude;
     private RegionType regionType;
     private FeeType fee;
-    private Integer price;
+    private String price;
     private String url;
     private String time;
     private String ticketUrl;

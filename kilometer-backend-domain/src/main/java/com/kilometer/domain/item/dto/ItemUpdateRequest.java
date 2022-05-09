@@ -33,7 +33,7 @@ public class ItemUpdateRequest {
     private Double longitude;
     private RegionType regionType;
     private FeeType fee;
-    private Integer price;
+    private String price;
     private String url;
     private String time;
     private String ticketUrl;
