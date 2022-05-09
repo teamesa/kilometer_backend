@@ -1,8 +1,11 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import com.kilometer.domain.item.dto.SummaryResponse;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -41,19 +44,9 @@ public class ItemEntity {
     private String title;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Builder.Default
-    private LocalDate createdAt = LocalDate.now();
-
+    private LocalDate startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Builder.Default
-    private LocalDate updatedAt = LocalDate.now();
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Builder.Default
-    private LocalDate startDate = LocalDate.now();
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Builder.Default
-    private LocalDate endDate = LocalDate.now();
+    private LocalDate endDate;
 
     private String place;
     private Double latitude;
@@ -63,14 +56,17 @@ public class ItemEntity {
 
     @Enumerated(EnumType.STRING)
     private FeeType fee;
-    private Integer price;
+    private String price;
     private String url;
 
-    private String term;
+    private String time;
 
     private String ticketUrl;
 
-    private String time;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @OneToOne
     @JoinColumn(name = "itemDetailEntity")
@@ -90,6 +86,33 @@ public class ItemEntity {
         this.fee = item.getFee();
         this.price = item.getPrice();
         this.url = item.getUrl();
+        this.time = item.getTime();
+        this.ticketUrl = item.getTicketUrl();
+    }
+
+    public ItemResponse makeResponse() {
+        return ItemResponse.builder()
+                .id(this.id)
+                .exhibitionType(this.exhibitionType)
+                .progressType(this.progressType)
+                .image(this.image)
+                .title(this.title)
+                .startDate(this.startDate)
+                .endDate(this.endDate)
+                .place(this.place)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .regionType(this.regionType)
+                .fee(this.fee)
+                .price(this.price)
+                .url(this.url)
+                .time(this.time)
+                .ticketUrl(this.ticketUrl)
+                .detailImageUrl(this.itemDetailEntity.getImages().stream()
+                        .map(DetailImage::getUrl)
+                        .collect(Collectors.toList())
+                ).introduce(this.itemDetailEntity.getIntroduce())
+                .build();
     }
 
     public SummaryResponse makeSummaryResponse() {
@@ -97,12 +120,12 @@ public class ItemEntity {
             .type(String.valueOf(this.exhibitionType))
             .progress(this.progressType == ProgressType.ON)
             .title(this.title)
-            .term(this.term)
+            .term(this.startDate + " ~ " + this.endDate)
             .place(this.place)
             .lat(this.latitude)
             .lng(this.longitude)
             .feeType((this.fee == FeeType.COST) ? "유료" : "무료")
-            .price((this.price == null) ? null : String.valueOf(this.price))
+            .price((StringUtils.hasText(this.price)) ? null : this.price)
             .ticketUrl((StringUtils.hasText(this.ticketUrl)) ? null : this.ticketUrl)
             .time((StringUtils.hasText(this.time)) ? null : this.time)
             .homePageUrl((StringUtils.hasText(this.url)) ? null : this.url)

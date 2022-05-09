@@ -3,7 +3,6 @@ package com.kilometer.backend.controller;
 import com.kilometer.backend.controller.dto.ItemForm;
 import com.kilometer.backend.controller.file.S3Uploader;
 import com.kilometer.domain.item.*;
-import com.kilometer.domain.item.dto.ItemListResponse;
 import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemSaveRequest;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
@@ -11,10 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
@@ -53,14 +54,14 @@ public class ItemController {
 
     @GetMapping
     public String items(Model model) {
-        List<ItemListResponse> items = itemService.findItems();
+        List<ItemResponse> items = itemService.findItems();
         model.addAttribute("items", items);
         return "form/items";
     }
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("item", new ItemResponse(EXHIBITION, ON, SEOUL, FREE));
+        model.addAttribute("item", new ItemResponse(EXHIBITION, ON, LocalDate.now(), LocalDate.now(), SEOUL, FREE));
         return "form/addForm";
     }
 
@@ -81,6 +82,8 @@ public class ItemController {
                 .fee(item.getFee())
                 .price(item.getPrice())
                 .url(item.getUrl())
+                .time(item.getTime())
+                .ticketUrl(item.getTicketUrl())
                 .build();
         itemService.saveItem(build);
         return "redirect:/form/items";
@@ -89,7 +92,8 @@ public class ItemController {
     private String fileExists(ItemForm item) throws IOException {
         MultipartFile image = item.getImage();
         String s3ImageUrl = "";
-        if (!image.getOriginalFilename().equals("")) {
+        String originalFilename = image.getOriginalFilename();
+        if (StringUtils.hasText(originalFilename)) {
             s3ImageUrl = s3Uploader.upload(image, "static");
         }
         return s3ImageUrl;
@@ -119,6 +123,8 @@ public class ItemController {
                 .fee(item.getFee())
                 .price(item.getPrice())
                 .url(item.getUrl())
+                .time(item.getTime())
+                .ticketUrl(item.getTicketUrl())
                 .build();
         itemService.updateItem(itemId, build);
         return "redirect:/form/items";
@@ -129,4 +135,11 @@ public class ItemController {
         itemService.deleteItem(itemId);
         return "redirect:/form/items";
     }
+
+    @GetMapping("/response-test")
+    @ResponseBody
+    public List<ItemResponse> responseItemEntity() {
+        return itemService.findItems();
+    }
+
 }
