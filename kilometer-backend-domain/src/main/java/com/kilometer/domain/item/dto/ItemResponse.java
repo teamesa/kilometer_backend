@@ -1,6 +1,9 @@
 package com.kilometer.domain.item.dto;
 
-import com.kilometer.domain.item.*;
+import com.kilometer.domain.item.ExhibitionType;
+import com.kilometer.domain.item.FeeType;
+import com.kilometer.domain.item.ProgressType;
+import com.kilometer.domain.item.RegionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -15,6 +19,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ItemResponse {
 
+    private Long id;
     private ExhibitionType exhibitionType;
     private ProgressType progressType;
     private String image;
@@ -30,28 +35,18 @@ public class ItemResponse {
     private Double longitude;
     private RegionType regionType;
     private FeeType fee;
-    private Integer price;
+    private String price;
     private String url;
+    private String time;
+    private String ticketUrl;
+    private String introduce;
+    private List<String> detailImageUrl;
 
-    public ItemResponse(ItemEntity itemEntity) {
-        this.exhibitionType = itemEntity.getExhibitionType();
-        this.progressType = itemEntity.getProgressType();
-        this.image = itemEntity.getImage();
-        this.title = itemEntity.getTitle();
-        this.startDate = itemEntity.getStartDate();
-        this.endDate = itemEntity.getEndDate();
-        this.place = itemEntity.getPlace();
-        this.latitude = itemEntity.getLatitude();
-        this.longitude = itemEntity.getLongitude();
-        this.regionType = itemEntity.getRegionType();
-        this.fee = itemEntity.getFee();
-        this.price = itemEntity.getPrice();
-        this.url = itemEntity.getUrl();
-    }
-
-    public ItemResponse(ExhibitionType exhibitionType, ProgressType progressType, RegionType regionType, FeeType fee) {
+    public ItemResponse(ExhibitionType exhibitionType, ProgressType progressType, LocalDate startDate, LocalDate endDate, RegionType regionType, FeeType fee) {
         this.exhibitionType = exhibitionType;
         this.progressType = progressType;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.regionType = regionType;
         this.fee = fee;
     }

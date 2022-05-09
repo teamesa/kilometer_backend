@@ -1,9 +1,6 @@
 package com.kilometer.backend.controller.dto;
 
-import com.kilometer.domain.item.ExhibitionType;
-import com.kilometer.domain.item.FeeType;
-import com.kilometer.domain.item.ProgressType;
-import com.kilometer.domain.item.RegionType;
+import com.kilometer.domain.item.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +13,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class ItemForm {
+
     private ExhibitionType exhibitionType;
     private ProgressType progressType;
     private MultipartFile image;
@@ -31,6 +29,9 @@ public class ItemForm {
     private Double longitude;
     private RegionType regionType;
     private FeeType fee;
-    private Integer price;
+    private String price;
     private String url;
+    private String time;
+    private String ticketUrl;
+    private String introduce;
 }

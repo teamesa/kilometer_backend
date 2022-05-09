@@ -1,6 +1,5 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.item.dto.ItemListResponse;
 import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemSaveRequest;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final ItemDetailRepository itemDetailRepository;
 
     public void saveItem(ItemSaveRequest item) {
         ItemEntity itemEntity = ItemEntity.builder()
@@ -33,21 +33,23 @@ public class ItemService {
                 .fee(item.getFee())
                 .price(item.getPrice())
                 .url(item.getUrl())
+                .time(item.getTime())
+                .ticketUrl(item.getTicketUrl())
                 .build();
         ItemEntity savedItem = itemRepository.save(itemEntity);
     }
 
-    public List<ItemListResponse> findItems() {
+    public List<ItemResponse> findItems() {
         return itemRepository.findAll()
                 .stream()
-                .map(ItemListResponse::new)
+                .map(ItemEntity::makeResponse)
                 .collect(Collectors.toList());
     }
 
     public ItemResponse findOne(Long itemId) {
         ItemEntity itemEntity = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
-        return new ItemResponse(itemEntity);
+        return itemEntity.makeResponse();
     }
 
     @Transactional
@@ -61,6 +63,11 @@ public class ItemService {
         ItemEntity itemEntity = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
         itemRepository.delete(itemEntity);
+    }
+
+    public List<ItemEntity> findItemsAndDetail() {
+        List<ItemEntity> findItem = itemRepository.findAll();
+        return findItem;
     }
 
 }
