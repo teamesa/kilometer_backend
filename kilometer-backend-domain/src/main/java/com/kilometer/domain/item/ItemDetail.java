@@ -29,5 +29,6 @@ public class ItemDetail {
 
     @OneToMany(mappedBy = "itemDetailEntity", fetch = EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
+    @Builder.Default
     private List<DetailImage> images = new ArrayList<>();
 }

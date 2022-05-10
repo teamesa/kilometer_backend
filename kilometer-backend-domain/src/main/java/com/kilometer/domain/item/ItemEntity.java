@@ -2,23 +2,33 @@ package com.kilometer.domain.item;
 
 import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
+import com.kilometer.domain.item.dto.SummaryResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Entity
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "item_entity")
 public class ItemEntity {
 
@@ -100,10 +110,32 @@ public class ItemEntity {
                 .url(this.url)
                 .time(this.time)
                 .ticketUrl(this.ticketUrl)
-                .detailImageUrl(this.itemDetailEntity.getImages().stream()
-                        .map(DetailImage::getUrl)
-                        .collect(Collectors.toList())
-                ).introduce(this.itemDetailEntity.getIntroduce())
+                .detailImageUrl(Optional.ofNullable(this.itemDetailEntity)
+                        .map(itemDetail -> itemDetail.getImages().stream()
+                                .map(DetailImage::getUrl)
+                                .collect(Collectors.toList()))
+                        .orElseGet(() -> new ArrayList<>()))
+                .introduce(Optional.ofNullable(this.itemDetailEntity)
+                        .map(ItemDetail::getIntroduce)
+                        .orElseGet(null))
                 .build();
+    }
+
+    public SummaryResponse makeSummaryResponse() {
+        return SummaryResponse.builder()
+            .type(String.valueOf(this.exhibitionType))
+            .progress(this.progressType == ProgressType.ON)
+            .title(this.title)
+            .term(this.startDate + " ~ " + this.endDate)
+            .place(this.place)
+            .lat(this.latitude)
+            .lng(this.longitude)
+            .feeType((this.fee == FeeType.COST) ? "유료" : "무료")
+            .price((StringUtils.hasText(this.price)) ? null : this.price)
+            .ticketUrl((StringUtils.hasText(this.ticketUrl)) ? null : this.ticketUrl)
+            .time((StringUtils.hasText(this.time)) ? null : this.time)
+            .homePageUrl((StringUtils.hasText(this.url)) ? null : this.url)
+            .thumbnailImageUrl((StringUtils.hasText(this.image)) ? null : this.image)
+            .build();
     }
 }
