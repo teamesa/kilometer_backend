@@ -5,6 +5,8 @@ import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import com.kilometer.domain.item.dto.SummaryResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -108,10 +110,14 @@ public class ItemEntity {
                 .url(this.url)
                 .time(this.time)
                 .ticketUrl(this.ticketUrl)
-                .detailImageUrl(this.itemDetailEntity.getImages().stream()
-                        .map(DetailImage::getUrl)
-                        .collect(Collectors.toList())
-                ).introduce(this.itemDetailEntity.getIntroduce())
+                .detailImageUrl(Optional.ofNullable(this.itemDetailEntity)
+                        .map(itemDetail -> itemDetail.getImages().stream()
+                                .map(DetailImage::getUrl)
+                                .collect(Collectors.toList()))
+                        .orElseGet(() -> new ArrayList<>()))
+                .introduce(Optional.ofNullable(this.itemDetailEntity)
+                        .map(ItemDetail::getIntroduce)
+                        .orElseGet(null))
                 .build();
     }
 
