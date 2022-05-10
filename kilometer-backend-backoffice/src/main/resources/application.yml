@@ -13,13 +13,13 @@ spring:
       naming:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-  properties:
-    hibernate:
-      type:
-        descriptor:
-          sql: trace
-      user_sql_comments: true
-      format_sql: true
+    properties:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+        user_sql_comments: true
+        format_sql: true
   servlet:
     multipart:
       max-file-size: 10MB
