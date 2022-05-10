@@ -5,7 +5,8 @@ import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import com.kilometer.domain.item.dto.SummaryResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.Entity;
@@ -114,10 +115,10 @@ public class ItemEntity {
                         .map(itemDetail -> itemDetail.getImages().stream()
                                 .map(DetailImage::getUrl)
                                 .collect(Collectors.toList()))
-                        .orElseGet(() -> new ArrayList<>()))
+                        .orElse(List.of()))
                 .introduce(Optional.ofNullable(this.itemDetailEntity)
                         .map(ItemDetail::getIntroduce)
-                        .orElseGet(null))
+                        .orElse(null))
                 .build();
     }
 
