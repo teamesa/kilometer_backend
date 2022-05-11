@@ -61,7 +61,8 @@ public class ItemController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("item", new ItemResponse(EXHIBITION, ON, LocalDate.now(), LocalDate.now(), SEOUL, FREE));
+        ItemResponse defaultOptions = ItemResponse.builder().exhibitionType(EXHIBITION).regionType(SEOUL).progressType(ON).fee(FREE).startDate(LocalDate.now()).endDate(LocalDate.now()).build();
+        model.addAttribute("item", defaultOptions);
         return "form/addForm";
     }
 
