@@ -1,56 +1,23 @@
 package com.kilometer.domain.search.dto;
 
-import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.search.additionalinfo.ListItemAdditionalInfo;
+import com.kilometer.domain.search.badge.ListItemBadge;
+import com.kilometer.domain.search.presentationimage.PresentationImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
-import static com.kilometer.domain.search.dto.SearchDtoConstants.DEFAULT_ITEM_TYPE;
-
 @Data
 @Builder
 @AllArgsConstructor
 public class ListItem {
     private PresentationImage presentationImage;
-    @Builder.Default
-    private ListItemBadge typeBadge = makeDefaultTypeBadge();
+    private ListItemBadge typeBadge;
     @Builder.Default
     private List<ListItemBadge> additionalBadgeList = List.of();
     private String title;
-    private boolean isHearted;
+    private boolean setHearted;
     private ListItemAdditionalInfo listItemAdditionalInfo;
-
-    public static ListItem makeSearchItem(ItemResponse item) {
-        return ListItem.builder()
-                .presentationImage(
-                        PresentationImage.builder()
-                                .url(item.getImage())
-                                .description(null)
-                                .isDimTarget(false)
-                                .build()
-                )
-                .typeBadge(
-                        ListItemBadge.builder()
-                                .isTypeBadge(true)
-                                .text(item.getExhibitionType().getDescription())
-                                .build()
-                )
-                .additionalBadgeList(List.of())
-                .title(item.getTitle())
-                .isHearted(false)
-                .listItemAdditionalInfo(
-                        ListItemAdditionalInfo.builder()
-                                .heartCount(10)
-                                .grade(5)
-                                .archiveCount(10)
-                                .build()
-                )
-                .build();
-    }
-
-    private static ListItemBadge makeDefaultTypeBadge() {
-        return ListItemBadge.builder().isTypeBadge(true).text(DEFAULT_ITEM_TYPE).build();
-    }
 }

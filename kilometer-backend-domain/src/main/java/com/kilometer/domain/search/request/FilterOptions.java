@@ -1,4 +1,4 @@
-package com.kilometer.domain.search.dto;
+package com.kilometer.domain.search.request;
 
 import com.kilometer.domain.item.FeeType;
 import com.kilometer.domain.item.RegionType;

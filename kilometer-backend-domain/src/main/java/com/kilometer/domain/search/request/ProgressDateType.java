@@ -1,4 +1,4 @@
-package com.kilometer.domain.search.dto;
+package com.kilometer.domain.search.request;
 
 public enum ProgressDateType {
     ON,

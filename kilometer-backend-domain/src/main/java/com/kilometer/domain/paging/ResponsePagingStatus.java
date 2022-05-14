@@ -1,17 +1,16 @@
-package com.kilometer.domain.search.dto;
+package com.kilometer.domain.paging;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static com.kilometer.domain.search.dto.SearchDtoConstants.DEFAULT_PAGE_SIZE;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponsePagingStatus {
+    private static int DEFAULT_PAGE_SIZE = 10;
     private int nextPage;
     private int currentPage;
     @Builder.Default
