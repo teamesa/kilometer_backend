@@ -1,16 +1,15 @@
 package com.kilometer.domain.search.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-
-import static com.kilometer.domain.search.dto.SearchDtoUtil.DEFAULT_PAGE_SIZE;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class SearchRequest {
-    private int page;
-    @Builder.Default
-    private int pageSize = DEFAULT_PAGE_SIZE;
+    private ResponsePagingStatus requestPagingStatus = ResponsePagingStatus.empty();
+    private SearchSortType searchSortType = SearchSortType.ENROLL_DESC;
+    private FilterOptions filterOptions;
+    private String queryString;
 }

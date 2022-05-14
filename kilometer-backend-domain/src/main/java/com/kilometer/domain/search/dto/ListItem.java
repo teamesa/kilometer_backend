@@ -7,7 +7,7 @@ import lombok.Data;
 
 import java.util.List;
 
-import static com.kilometer.domain.search.dto.SearchDtoUtil.DEFAULT_ITEM_TYPE;
+import static com.kilometer.domain.search.dto.SearchDtoConstants.DEFAULT_ITEM_TYPE;
 
 @Data
 @Builder
@@ -26,7 +26,7 @@ public class ListItem {
         return ListItem.builder()
                 .presentationImage(
                         PresentationImage.builder()
-                                .url(item.getUrl())
+                                .url(item.getImage())
                                 .description(null)
                                 .isDimTarget(false)
                                 .build()
