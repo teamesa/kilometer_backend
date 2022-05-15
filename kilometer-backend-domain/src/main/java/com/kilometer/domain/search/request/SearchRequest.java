@@ -1,6 +1,6 @@
 package com.kilometer.domain.search.request;
 
-import com.kilometer.domain.paging.ResponsePagingStatus;
+import com.kilometer.domain.paging.RequestPagingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchRequest {
-    private ResponsePagingStatus requestPagingStatus = ResponsePagingStatus.empty();
+    private RequestPagingStatus requestPagingStatus = RequestPagingStatus.empty();
     private SearchSortType searchSortType = SearchSortType.ENROLL_DESC;
     private FilterOptions filterOptions;
     private String queryString;

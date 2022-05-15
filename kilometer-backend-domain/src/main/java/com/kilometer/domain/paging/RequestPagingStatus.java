@@ -11,17 +11,14 @@ import static com.kilometer.domain.paging.PagingStatusService.DEFAULT_PAGE_SIZE;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponsePagingStatus {
-    private int nextPage;
-    private int currentPage;
+public class RequestPagingStatus {
+    private int pageNumber;
     @Builder.Default
     private int pageSize = DEFAULT_PAGE_SIZE;
-    private boolean hasNext;
-    private int totalContentsCount;
     private int currentContentsCount;
 
-    public static ResponsePagingStatus empty() {
-        return ResponsePagingStatus
+    public static RequestPagingStatus empty() {
+        return RequestPagingStatus
                 .builder()
                 .build();
     }
