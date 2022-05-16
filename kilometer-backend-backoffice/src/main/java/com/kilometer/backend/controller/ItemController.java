@@ -132,7 +132,7 @@ public class ItemController {
 
     private String updateFileExists(Long itemId, ItemForm item) throws IOException {
         MultipartFile image = item.getImage();
-        String imageUrl = "";
+        String imageUrl;
         String originalFilename = image.getOriginalFilename();
         if (StringUtils.hasText(originalFilename)) {
             imageUrl = s3Uploader.upload(image, "static");
