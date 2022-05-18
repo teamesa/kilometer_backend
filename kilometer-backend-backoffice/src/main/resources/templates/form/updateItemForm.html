@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <body>
 
@@ -31,8 +32,57 @@
 
     <div>
         <label for="image">대표 이미지</label>
-        <input type="file" id="image" th:field="*{image}" placeholder="사진">
+        <input type="file" id="image" th:field="*{image}">
+        <div id="preview">
+            <img id="existing" width="100px" height="100px" th:src="*{image}" alt="이미지 없음">
+        </div>
+        <a href="#" class="btn-delete">삭제</a>
     </div>
+
+    <script th:inline="javascript">
+
+        var editId = [[${item.id}]];
+
+        function readInputFile(input) {
+            console.log(input.files);
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#existing').remove();
+                    $('#preview').html("<img style=\"width: 100px; height: 100px;\" src=" + e.target.result + ">");
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $.ajax("/form/items/" + editId + "/edit")
+        .done(function () {
+            $("#image").on('change', function () {
+                readInputFile(this);
+            });
+        })
+
+
+        // 등록 이미지 삭제 ( input file reset )
+        function resetInputFile($input, $preview) {
+            var agent = navigator.userAgent.toLowerCase();
+            if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
+                // ie 일때
+                $input.replaceWith($input.clone(true));
+                $preview.empty();
+            } else {
+                //other
+                $input.val("");
+                $preview.empty();
+            }
+        }
+
+        $(".btn-delete").click(function (event) {
+            var $input = $("#image");
+            var $preview = $('#preview');
+            resetInputFile($input, $preview);
+        });
+    </script>
 
     <div>
         <label for="title">메인 타이틀</label>
