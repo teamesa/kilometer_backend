@@ -7,6 +7,8 @@ import com.kilometer.domain.item.dto.SummaryResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.kilometer.domain.search.request.FilterOptions;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.data.domain.Page;
@@ -43,8 +45,8 @@ public class ItemService {
         ItemEntity savedItem = itemRepository.save(itemEntity);
     }
 
-    public Page<ItemResponse> findByDefaultPageable(Pageable pageable) {
-        return itemRepository.findAll(pageable)
+    public Page<ItemResponse> findByDefaultPageable(Pageable pageable, FilterOptions filterOptions) {
+        return itemRepository.findAllBySortOption(pageable, filterOptions)
                 .map(ItemEntity::makeResponse);
     }
 

@@ -1,6 +1,7 @@
 package com.kilometer.domain.search
 
 import com.kilometer.domain.item.ItemService
+import com.kilometer.domain.paging.PagingStatusService
 import com.kilometer.domain.search.dto.ListItem
 import com.kilometer.domain.search.request.SearchRequest
 import org.junit.platform.commons.PreconditionViolationException
@@ -15,15 +16,17 @@ class SearchServiceTest extends Specification {
 
     ItemService itemService = Mock(ItemService.class)
     ListItemAggregateConverter listItemAggregateConverter = Mock(ListItemAggregateConverter.class)
+    PagingStatusService pagingStatusService = Mock(PagingStatusService.class)
 
     def setup() {
-        sut = new SearchService(itemService, listItemAggregateConverter)
+        sut = new SearchService(itemService, listItemAggregateConverter, pagingStatusService)
     }
 
     def "Search works well"() {
         given:
         def insert = Spy(SearchRequest)
-        itemService.findByDefaultPageable(_ as Pageable) >> Page.empty()
+        itemService.findByDefaultPageable(_, _) >> Page.empty()
+        1 * pagingStatusService.makePageable(_) >> Mock(Pageable)
         0 * listItemAggregateConverter.convert(_) >> Mock(ListItem)
         when:
         def result = sut.search(insert)

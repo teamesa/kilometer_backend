@@ -2,6 +2,7 @@ buildscript {
 	ext {
 		springBootVersion = '2.5.4'
 		dependencyManagementVersion = '1.0.11.RELEASE'
+		queryDslVersion = "5.0.0"
 	}
 	repositories {
 		mavenCentral()

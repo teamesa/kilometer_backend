@@ -25,7 +25,7 @@ public class SearchService {
         Preconditions.notNull(searchRequest.getRequestPagingStatus(), String.format("this service can not be run will null object, please check this, %s", searchRequest));
 
         Pageable pageable = pagingStatusService.makePageable(searchRequest);
-        Page<ItemResponse> pageableItems = itemService.findByDefaultPageable(pageable);
+        Page<ItemResponse> pageableItems = itemService.findByDefaultPageable(pageable, searchRequest.getFilterOptions());
         return convertingItems(pageableItems);
     }
 
