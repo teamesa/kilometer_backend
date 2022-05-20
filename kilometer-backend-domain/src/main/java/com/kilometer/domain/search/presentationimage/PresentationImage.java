@@ -9,6 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class PresentationImage {
     private String url;
+    private String link;
     private boolean isDimTarget;
     private String backgroundText;
     private String dimColor;

@@ -1,6 +1,7 @@
 package com.kilometer.domain.search.presentationimage;
 
 import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.util.FrontUrlUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -18,15 +19,15 @@ public class PresentationImageGenerator {
         LocalDate now = LocalDate.now();
 
         if (now.isBefore(item.getStartDate())) {
-            return makeUpcomingImage(item.getUrl(), item.getStartDate());
+            return makeUpcomingImage(item.getId(), item.getUrl(), item.getStartDate());
         } else if (now.isAfter(item.getEndDate())) {
-            return makeEndImage(item.getUrl());
+            return makeEndImage(item.getId(), item.getUrl());
         } else {
-            return makeOngoingImage(item.getUrl());
+            return makeOngoingImage(item.getId(), item.getUrl());
         }
     }
 
-    private PresentationImage makeUpcomingImage(String url, LocalDate startDate) {
+    private PresentationImage makeUpcomingImage(long id, String url, LocalDate startDate) {
         LocalDate now = LocalDate.now();
         int periodDays = Period.between(now, startDate).getDays();
 
@@ -36,23 +37,26 @@ public class PresentationImageGenerator {
                 .isDimTarget(true)
                 .dimColor(DIM_HEX_CODE)
                 .opacity(DIM_OPACITY)
+                .link(FrontUrlUtils.getFrontDetailUrlPattern(id))
                 .build();
     }
 
-    private PresentationImage makeOngoingImage(String url) {
-        return PresentationImage.builder().
-                url(url)
+    private PresentationImage makeOngoingImage(long id, String url) {
+        return PresentationImage.builder()
+                .url(url)
                 .isDimTarget(false)
+                .link(FrontUrlUtils.getFrontDetailUrlPattern(id))
                 .build();
     }
 
-    private PresentationImage makeEndImage(String url) {
+    private PresentationImage makeEndImage(long id, String url) {
         return PresentationImage.builder()
                 .url(url)
                 .backgroundText(BACKGROUND_END_TEXT)
                 .isDimTarget(true)
                 .dimColor(DIM_HEX_CODE)
                 .opacity(DIM_OPACITY)
+                .link(FrontUrlUtils.getFrontDetailUrlPattern(id))
                 .build();
     }
 }
