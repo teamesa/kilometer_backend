@@ -27,6 +27,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(request, response, authentication);
+        String token = tokenProvider.createToken(authentication);
 
         if (response.isCommitted()) {
             logger.debug("응답이 이미 커밋되었습니다. " + targetUrl + "로 리다이렉션을 할 수 없습니다");
@@ -34,6 +35,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         clearAuthenticationAttributes(request, response);
+        httpCookieOAuth2AuthorizationRequestRepository.addFrontCookie(response, token);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
@@ -47,10 +49,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String token = tokenProvider.createToken(authentication);
-
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", token)
                 .build().toUriString();
     }
 
@@ -61,6 +60,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
-        return "localhost".equalsIgnoreCase(clientRedirectUri.getHost()) || "kilometer.shop".equalsIgnoreCase(clientRedirectUri.getHost());
+        return "localhost".equalsIgnoreCase(clientRedirectUri.getHost())
+                || "kilometer.shop".equalsIgnoreCase(clientRedirectUri.getHost())
+                || "azxca1731.synology.me".equalsIgnoreCase(clientRedirectUri.getHost());
     }
 }
