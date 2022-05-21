@@ -61,6 +61,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
-        return "localhost".equalsIgnoreCase(clientRedirectUri.getHost()) || "kilometer.shop".equalsIgnoreCase(clientRedirectUri.getHost());
+        return "localhost".equalsIgnoreCase(clientRedirectUri.getHost())
+                || "kilometer.shop".equalsIgnoreCase(clientRedirectUri.getHost())
+                || "azxca1731.synology.me".equalsIgnoreCase(clientRedirectUri.getHost());
     }
 }
