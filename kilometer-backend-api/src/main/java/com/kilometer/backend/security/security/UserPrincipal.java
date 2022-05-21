@@ -1,6 +1,5 @@
 package com.kilometer.backend.security.security;
 
-import com.kilometer.domain.user.Role;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
