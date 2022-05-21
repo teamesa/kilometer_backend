@@ -1,6 +1,7 @@
 package com.kilometer.domain.search;
 
 import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.search.additionalinfo.ListItemAdditionalInfo;
 import com.kilometer.domain.search.additionalinfo.ListItemAdditionalInfoGenerator;
 import com.kilometer.domain.search.badge.ListItemBadge;
@@ -27,7 +28,7 @@ public class ListItemAggregateConverter {
     private final ListItemTitleGenerator titleGenerator;
     private final ListItemHeartGenerator heartGenerator;
 
-    public ListItem convert(ItemResponse item) {
+    public ListItem convert(SearchItemResponse item) {
         Preconditions.notNull(item, String.format("converting can not be run will null item response, please check this, %s", item));
         PresentationImage image = presentationImageGenerator.generatePresentationImage(item);
         ListItemBadge typeBadge = badgeGenerator.generateTypeListItemBadge(item);

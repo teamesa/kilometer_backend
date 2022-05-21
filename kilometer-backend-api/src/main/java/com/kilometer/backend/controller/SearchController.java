@@ -7,6 +7,8 @@ import com.kilometer.domain.util.ApiUrlUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(ApiUrlUtils.SEARCH_ROOT)
@@ -15,7 +17,8 @@ public class SearchController {
 
     @PostMapping
     public SearchResponse search(@RequestBody SearchRequest searchRequest) {
-        return searchService.search(searchRequest);
+        long userId = getLoginUserId();
+        return searchService.search(searchRequest, userId);
     }
 
 }

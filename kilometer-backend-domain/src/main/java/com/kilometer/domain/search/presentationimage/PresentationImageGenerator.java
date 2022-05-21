@@ -1,6 +1,6 @@
 package com.kilometer.domain.search.presentationimage;
 
-import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
 import org.springframework.stereotype.Component;
 
@@ -15,15 +15,15 @@ public class PresentationImageGenerator {
     private static final Double DIM_OPACITY = 0.55;
 
 
-    public PresentationImage generatePresentationImage(ItemResponse item) {
+    public PresentationImage generatePresentationImage(SearchItemResponse item) {
         LocalDate now = LocalDate.now();
 
         if (now.isBefore(item.getStartDate())) {
-            return makeUpcomingImage(item.getId(), item.getUrl(), item.getStartDate());
+            return makeUpcomingImage(item.getId(), item.getImage(), item.getStartDate());
         } else if (now.isAfter(item.getEndDate())) {
-            return makeEndImage(item.getId(), item.getUrl());
+            return makeEndImage(item.getId(), item.getImage());
         } else {
-            return makeOngoingImage(item.getId(), item.getUrl());
+            return makeOngoingImage(item.getId(), item.getImage());
         }
     }
 

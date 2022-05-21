@@ -1,7 +1,7 @@
 package com.kilometer.domain.search.badge;
 
 import com.kilometer.domain.item.FeeType;
-import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.SearchItemResponse;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -13,14 +13,14 @@ public class ListItemBadgeGenerator {
     private static final String END_PROGRESS_TYPE_TEXT = "OFF";
     private static final String UPCOMING_PROGRESS_TYPE_TEXT = "UPCOMING";
 
-    public ListItemBadge generateTypeListItemBadge(ItemResponse itemResponse) {
+    public ListItemBadge generateTypeListItemBadge(SearchItemResponse itemResponse) {
         return ListItemBadge.builder()
                 .isTypeBadge(true)
                 .text(itemResponse.getExhibitionType().getDescription())
                 .build();
     }
 
-    public List<ListItemBadge> generateAdditionalItemBadgeList(ItemResponse itemResponse) {
+    public List<ListItemBadge> generateAdditionalItemBadgeList(SearchItemResponse itemResponse) {
         ListItemBadge progressTypeBadge = makeProgressTypeBadge(itemResponse.getStartDate(), itemResponse.getEndDate());
         ListItemBadge feeTypeBadge = makeFeeTypeBadge(itemResponse.getFee());
 

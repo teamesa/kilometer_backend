@@ -1,9 +1,7 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.item.dto.ItemResponse;
-import com.kilometer.domain.item.dto.ItemSaveRequest;
-import com.kilometer.domain.item.dto.ItemUpdateRequest;
-import com.kilometer.domain.item.dto.SummaryResponse;
+import com.kilometer.domain.item.dto.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,9 +43,8 @@ public class ItemService {
         ItemEntity savedItem = itemRepository.save(itemEntity);
     }
 
-    public Page<ItemResponse> findByDefaultPageable(Pageable pageable, FilterOptions filterOptions) {
-        return itemRepository.findAllBySortOption(pageable, filterOptions)
-                .map(ItemEntity::makeResponse);
+    public Page<SearchItemResponse> findByDefaultPageable(Pageable pageable, FilterOptions filterOptions, long userId) {
+        return itemRepository.findAllBySortOption(pageable, filterOptions, userId);
     }
 
     public List<ItemResponse> findItems() {

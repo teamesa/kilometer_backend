@@ -1,6 +1,9 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.pick.QPick;
 import com.kilometer.domain.search.request.FilterOptions;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -18,17 +21,31 @@ import static com.kilometer.domain.search.request.ProgressDateType.*;
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
+    private final static QPick pick = QPick.pick;
 
     public ItemRepositoryCustomImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
     @Override
-    public Page<ItemEntity> findAllBySortOption(Pageable pageable, FilterOptions filterOptions) {
-        List<ItemEntity> items = queryFactory
-                .select(itemEntity)
+    public Page<SearchItemResponse> findAllBySortOption(Pageable pageable, FilterOptions filterOptions, long userId) {
+        List<SearchItemResponse> items = queryFactory
+                .select(Projections.fields(SearchItemResponse.class,
+                                itemEntity.id,
+                                itemEntity.image,
+                                itemEntity.title,
+                                itemEntity.exhibitionType,
+                                itemEntity.fee,
+                                itemEntity.startDate,
+                                itemEntity.endDate,
+                                pick.isHearted
+                        )
+                )
                 .from(itemEntity)
+                .leftJoin(pick)
+                .on(pick.pickedItem.eq(itemEntity), eqUserId(userId))
                 .where(
+                        itemEntity.progressType.eq(ProgressType.ON),
                         eqExhibitionType(filterOptions),
                         eqFeeType(filterOptions),
                         eqRegionType(filterOptions),
@@ -39,6 +56,14 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .fetch();
 
         return new PageImpl<>(items, pageable, items.size());
+    }
+
+    private BooleanExpression eqUserId(long userId) {
+        if (-1L == userId) {
+            return pick.pickedUser.id.eq(0L);
+        } else {
+            return pick.pickedUser.id.eq(userId);
+        }
     }
 
     private BooleanExpression eqExhibitionType(FilterOptions filterOptions) {

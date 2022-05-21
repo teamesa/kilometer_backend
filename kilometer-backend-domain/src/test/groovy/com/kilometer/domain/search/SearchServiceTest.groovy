@@ -25,11 +25,11 @@ class SearchServiceTest extends Specification {
     def "Search works well"() {
         given:
         def insert = Spy(SearchRequest)
-        itemService.findByDefaultPageable(_, _) >> Page.empty()
+        itemService.findByDefaultPageable(*_) >> Page.empty()
         1 * pagingStatusService.makePageable(_) >> Mock(Pageable)
         0 * listItemAggregateConverter.convert(_) >> Mock(ListItem)
         when:
-        def result = sut.search(insert)
+        def result = sut.search(insert, 0)
         then:
         result
     }
@@ -38,7 +38,7 @@ class SearchServiceTest extends Specification {
         given:
         def insert = null
         when:
-        sut.search(insert)
+        sut.search(insert, -1)
         then:
         thrown(PreconditionViolationException.class)
     }
