@@ -7,7 +7,7 @@ public class ApiUrlUtils {
     public static final String PICK_ITEM = "/{itemId}";
     public static final String PICK_ITEM_PATTERN = PICK_ROOT + "/%s";
 
-    public static String getPickItemUrl(long itemId, boolean pickStatus) {
-        return String.format(PICK_ITEM_PATTERN + "?status=%s", itemId, pickStatus);
+    public static String getPickItemUrl(long itemId) {
+        return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
     }
 }
