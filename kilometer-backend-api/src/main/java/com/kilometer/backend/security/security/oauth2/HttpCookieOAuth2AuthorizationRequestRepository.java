@@ -14,6 +14,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
 
     public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
+    public static final String KILLOMETER_JWT_COOKIE_NAME = "kilometer_session";
     private static final int cookieExpireSeconds = 180;
 
     // 인증 쿠키 조회
@@ -49,5 +50,9 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
     public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
         CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+    }
+
+    public void addFrontCookie(HttpServletResponse response, String token) {
+        CookieUtils.addCookie(response, KILLOMETER_JWT_COOKIE_NAME, token, 369400000);
     }
 }
