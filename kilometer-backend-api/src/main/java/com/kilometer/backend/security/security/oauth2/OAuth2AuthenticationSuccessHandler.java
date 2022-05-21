@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-import static com.kilometer.backend.security.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.KILLOMETER_JWT_COOKIE_NAME;
 import static com.kilometer.backend.security.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
