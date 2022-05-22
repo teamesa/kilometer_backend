@@ -9,7 +9,7 @@ public class ListItemHeartGenerator {
     public ListItemHeart generateListItemHeart(SearchItemResponse item) {
         return ListItemHeart.builder()
                 .heartClicked(item.isHearted())
-                .link(ApiUrlUtils.getPickItemUrl(item.getId(), !item.isHearted()))
+                .link(ApiUrlUtils.getPickItemUrl(item.getId()))
                 .build();
     }
 }
