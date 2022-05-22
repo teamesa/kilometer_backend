@@ -1,12 +1,12 @@
 package com.kilometer.domain.item;
 
-public enum ProgressType {
+public enum ExposureType {
 
     ON("전시"), OFF("미전시");
 
     private final String description;
 
-    ProgressType(String description) {
+    ExposureType(String description) {
         this.description = description;
     }
 

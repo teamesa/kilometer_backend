@@ -21,8 +21,8 @@
     <div>
         <div>진행 여부</div>
         <div th:each="type : ${progressTypes}">
-            <input type="radio" th:field="*{progressType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">
+            <input type="radio" th:field="*{ExposureType}" th:value="${type.name()}">
+            <label th:for="${#ids.prev('ExposureType')}" th:text="${type.description}">
 
             </label>
         </div>
