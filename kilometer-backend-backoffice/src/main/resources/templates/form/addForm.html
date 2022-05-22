@@ -22,8 +22,8 @@
     <!--            <th class="tg-y6fn">FO 전시여부</th>-->
     <!--            <th class="tg-0lax">-->
     <!--                <span th:each="type : ${progressTypes}">-->
-    <!--                    <input type="radio" th:field="*{progressType}" th:value="${type.name()}">-->
-    <!--                    <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">-->
+    <!--                    <input type="radio" th:field="*{ExposureType}" th:value="${type.name()}">-->
+    <!--                    <label th:for="${#ids.prev('ExposureType')}" th:text="${type.description}">-->
     <!--                        전시-->
     <!--                    </label>-->
     <!--                </span>-->
@@ -90,8 +90,8 @@
     <div>
         <div>진행 여부</div>
         <div th:each="type, typeStat : ${progressTypes}">
-            <input type="radio" th:field="*{progressType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('progressType')}" th:text="${type.description}">
+            <input type="radio" th:field="*{ExposureType}" th:value="${type.name()}">
+            <label th:for="${#ids.prev('ExposureType')}" th:text="${type.description}">
                 전시
             </label>
         </div>
