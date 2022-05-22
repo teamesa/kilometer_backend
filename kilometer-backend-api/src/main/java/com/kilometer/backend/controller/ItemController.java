@@ -16,7 +16,7 @@ public class ItemController {
 
   private final ItemService itemService;
 
-  @GetMapping("/{itemId}/summary")
+  @GetMapping("/info/{itemId}")
   public SummaryResponse getSummary(@PathVariable Long itemId) {
     return itemService.findToSummaryResponseById(itemId)
         .orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
