@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class ItemForm {
 
     private ExhibitionType exhibitionType;
-    private ExposureType ExposureType;
+    private ExposureType exposureType;
     private MultipartFile image;
     private String title;
 

@@ -21,7 +21,7 @@
     <!--            <th class="tg-0lax"></th>-->
     <!--            <th class="tg-y6fn">FO 전시여부</th>-->
     <!--            <th class="tg-0lax">-->
-    <!--                <span th:each="type : ${progressTypes}">-->
+    <!--                <span th:each="type : ${exposureTypes}">-->
     <!--                    <input type="radio" th:field="*{ExposureType}" th:value="${type.name()}">-->
     <!--                    <label th:for="${#ids.prev('ExposureType')}" th:text="${type.description}">-->
     <!--                        전시-->
@@ -79,7 +79,7 @@
 
     <div>
         <div>문화생활 유형</div>
-        <div th:each="type, typeStat : ${exhibitionType}">
+        <div th:each="type, typeStat : ${exhibitionTypes}">
             <input type="radio" th:field="*{exhibitionType}" th:value="${type.name()}">
             <label th:for="${#ids.prev('exhibitionType')}" th:text="${type.description}">
                 전시
@@ -89,9 +89,9 @@
 
     <div>
         <div>진행 여부</div>
-        <div th:each="type, typeStat : ${progressTypes}">
-            <input type="radio" th:field="*{ExposureType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('ExposureType')}" th:text="${type.description}">
+        <div th:each="type, typeStat : ${exposureTypes}">
+            <input type="radio" th:field="*{exposureType}" th:value="${type.name()}">
+            <label th:for="${#ids.prev('exposureType')}" th:text="${type.description}">
                 전시
             </label>
         </div>
