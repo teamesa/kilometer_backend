@@ -67,9 +67,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         Projections.fields(AutoCompleteItem.class,
                                 itemEntity.id,
                                 itemEntity.title,
-                                itemEntity.title.locate(query),
-                                itemEntity.title.locate(query).add(query.length()),
-                                Expressions.asString(FrontUrlUtils.getFrontDetailPrefix()).append(itemEntity.id.stringValue())
+                                itemEntity.title.indexOf(query).as("searchedTextLocationStart"),
+                                itemEntity.title.indexOf(query).add(query.length()).as("searchedTextLocationEnd"),
+                                Expressions.asString(FrontUrlUtils.getFrontDetailPrefix()).append(itemEntity.id.stringValue()).as("link")
                         )
                 )
                 .where(itemEntity.title.containsIgnoreCase(query))

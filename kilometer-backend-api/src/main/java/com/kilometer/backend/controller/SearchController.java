@@ -22,7 +22,7 @@ public class SearchController {
         return searchService.search(searchRequest, userId);
     }
 
-    @PostMapping
+    @PostMapping(ApiUrlUtils.SEARCH_AUTO_COMPLETE)
     public AutoCompleteResult autoCompleteSearch(@RequestParam String query) {
         return searchService.autoComplete(query);
     }

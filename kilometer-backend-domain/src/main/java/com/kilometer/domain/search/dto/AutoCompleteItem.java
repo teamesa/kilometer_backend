@@ -1,16 +1,14 @@
 package com.kilometer.domain.search.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
+@NoArgsConstructor
 public class AutoCompleteItem {
-    private long id;
+    private Long id;
     private String title;
-    private int searchedTextLocationStart;
-    private int searchedTextLocationEnd;
+    private Integer searchedTextLocationStart;
+    private Integer searchedTextLocationEnd;
     private String link;
 }
