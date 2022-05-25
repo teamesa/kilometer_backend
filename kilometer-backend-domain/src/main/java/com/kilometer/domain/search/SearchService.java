@@ -38,4 +38,7 @@ public class SearchService {
                 .build();
     }
 
+    public AutoCompleteResult autoComplete(String query) {
+        return AutoCompleteResult.builder().build();
+    }
 }
