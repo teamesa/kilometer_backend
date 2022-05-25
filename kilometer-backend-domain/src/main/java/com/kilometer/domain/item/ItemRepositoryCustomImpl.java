@@ -2,9 +2,12 @@ package com.kilometer.domain.item;
 
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.pick.QPick;
+import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.request.FilterOptions;
+import com.kilometer.domain.util.FrontUrlUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -56,6 +59,24 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .fetch();
 
         return new PageImpl<>(items, pageable, items.size());
+    }
+
+    @Override
+    public List<AutoCompleteItem> findTop10ByQuery(String query) {
+        return queryFactory.select(
+                        Projections.fields(AutoCompleteItem.class,
+                                itemEntity.id,
+                                itemEntity.title,
+                                itemEntity.title.locate(query),
+                                itemEntity.title.locate(query).add(query.length()),
+                                Expressions.asString(FrontUrlUtils.getFrontDetailPrefix()).append(itemEntity.id.stringValue())
+                        )
+                )
+                .where(itemEntity.title.containsIgnoreCase(query))
+                .from(itemEntity)
+                .orderBy(itemEntity.id.desc())
+                .limit(10)
+                .fetch();
     }
 
     private BooleanExpression eqUserId(long userId) {

@@ -8,8 +8,8 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class AutoCompleteItem {
+    private long id;
     private String title;
-    private String itemId;
     private int searchedTextLocationStart;
     private int searchedTextLocationEnd;
     private String link;

@@ -22,7 +22,8 @@ public class SearchService {
     private final PagingStatusService pagingStatusService;
 
     public SearchResponse search(SearchRequest searchRequest, long userId) {
-        Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));
+        Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));
+        Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));
         Preconditions.notNull(searchRequest.getRequestPagingStatus(), String.format("this service can not be run will null object, please check this, %s", searchRequest));
 
         Pageable pageable = pagingStatusService.makePageable(searchRequest);
@@ -39,6 +40,9 @@ public class SearchService {
     }
 
     public AutoCompleteResult autoComplete(String query) {
-        return AutoCompleteResult.builder().build();
+        List<AutoCompleteItem> contents = itemService.getAutoCompleteItemByQuery(query);
+        return AutoCompleteResult.builder()
+                .contents(contents)
+                .build();
     }
 }

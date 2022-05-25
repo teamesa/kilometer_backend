@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.request.FilterOptions;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -45,6 +46,10 @@ public class ItemService {
 
     public Page<SearchItemResponse> findByDefaultPageable(Pageable pageable, FilterOptions filterOptions, long userId) {
         return itemRepository.findAllBySortOption(pageable, filterOptions, userId);
+    }
+
+    public List<AutoCompleteItem> getAutoCompleteItemByQuery(String query) {
+        return itemRepository.findTop10ByQuery(query);
     }
 
     public List<ItemResponse> findItems() {
