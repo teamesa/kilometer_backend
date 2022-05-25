@@ -1,8 +1,8 @@
 package com.kilometer.domain.item.dto;
 
 import com.kilometer.domain.item.ExhibitionType;
+import com.kilometer.domain.item.ExposureType;
 import com.kilometer.domain.item.FeeType;
-import com.kilometer.domain.item.ProgressType;
 import com.kilometer.domain.item.RegionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +21,7 @@ public class ItemResponse {
 
     private Long id;
     private ExhibitionType exhibitionType;
-    private ProgressType progressType;
+    private ExposureType exposureType;
     private String image;
     private String title;
 
@@ -42,9 +42,9 @@ public class ItemResponse {
     private String introduce;
     private List<String> detailImageUrl;
 
-    public ItemResponse(ExhibitionType exhibitionType, ProgressType progressType, LocalDate startDate, LocalDate endDate, RegionType regionType, FeeType fee) {
+    public ItemResponse(ExhibitionType exhibitionType, ExposureType exposureType, LocalDate startDate, LocalDate endDate, RegionType regionType, FeeType fee) {
         this.exhibitionType = exhibitionType;
-        this.progressType = progressType;
+        this.exposureType = exposureType;
         this.startDate = startDate;
         this.endDate = endDate;
         this.regionType = regionType;
