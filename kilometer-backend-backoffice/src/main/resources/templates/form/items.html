@@ -55,7 +55,7 @@
             <tbody>
             <tr th:each="item, itemStat: ${items}">
                 <td th:text="${itemStat.index} + 1"></td>
-                <td th:text="${item.ExposureType.description}"></td>
+                <td th:text="${item.exposureType.description}"></td>
                 <td><img src="" th:src="${item.image}" width=100 height=100 alt="이미지 없음"></td>
                 <td th:text="${item.title}"></td>
                 <td th:text="${item.place}"></td>

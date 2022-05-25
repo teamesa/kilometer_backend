@@ -45,7 +45,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .leftJoin(pick)
                 .on(pick.pickedItem.eq(itemEntity), eqUserId(userId))
                 .where(
-                        itemEntity.ExposureType.eq(ExposureType.ON),
+                        itemEntity.exposureType.eq(ExposureType.ON),
                         eqExhibitionType(filterOptions),
                         eqFeeType(filterOptions),
                         eqRegionType(filterOptions),

@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ItemUpdateRequest {
     private ExhibitionType exhibitionType;
-    private ExposureType ExposureType;
+    private ExposureType exposureType;
     private String image;
     private String title;
 

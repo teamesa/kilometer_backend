@@ -21,7 +21,7 @@ public class ItemResponse {
 
     private Long id;
     private ExhibitionType exhibitionType;
-    private ExposureType ExposureType;
+    private ExposureType exposureType;
     private String image;
     private String title;
 
@@ -42,9 +42,9 @@ public class ItemResponse {
     private String introduce;
     private List<String> detailImageUrl;
 
-    public ItemResponse(ExhibitionType exhibitionType, ExposureType ExposureType, LocalDate startDate, LocalDate endDate, RegionType regionType, FeeType fee) {
+    public ItemResponse(ExhibitionType exhibitionType, ExposureType exposureType, LocalDate startDate, LocalDate endDate, RegionType regionType, FeeType fee) {
         this.exhibitionType = exhibitionType;
-        this.ExposureType = ExposureType;
+        this.exposureType = exposureType;
         this.startDate = startDate;
         this.endDate = endDate;
         this.regionType = regionType;

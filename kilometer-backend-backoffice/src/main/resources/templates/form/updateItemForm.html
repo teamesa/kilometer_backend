@@ -10,7 +10,7 @@
 <form action="" th:action th:object="${item}" method="post" enctype="multipart/form-data">
     <div>
         <div>문화생활 유형</div>
-        <div th:each="type : ${exhibitionType}">
+        <div th:each="type : ${exhibitionTypes}">
             <input type="radio" th:field="*{exhibitionType}" th:value="${type.name()}">
             <label th:for="${#ids.prev('exhibitionType')}" th:text="${type.description}">
 
@@ -20,9 +20,9 @@
 
     <div>
         <div>진행 여부</div>
-        <div th:each="type : ${progressTypes}">
-            <input type="radio" th:field="*{ExposureType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('ExposureType')}" th:text="${type.description}">
+        <div th:each="type : ${exposureTypes}">
+            <input type="radio" th:field="*{exposureType}" th:value="${type.name()}">
+            <label th:for="${#ids.prev('exposureType')}" th:text="${type.description}">
 
             </label>
         </div>
