@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum FeeType {
+public enum ExposureType {
 
-    FREE("무료"), COST("유료");
+    ON("전시"), OFF("미전시");
 
     private final String description;
 }

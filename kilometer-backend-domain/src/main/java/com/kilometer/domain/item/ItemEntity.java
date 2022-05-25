@@ -40,7 +40,7 @@ public class ItemEntity {
     private ExhibitionType exhibitionType;
 
     @Enumerated(EnumType.STRING)
-    private ProgressType progressType;
+    private ExposureType exposureType;
 
     private String image;
 
@@ -77,7 +77,7 @@ public class ItemEntity {
 
     public void update(ItemUpdateRequest item) {
         this.exhibitionType = item.getExhibitionType();
-        this.progressType = item.getProgressType();
+        this.exposureType = item.getExposureType();
         this.image = item.getImage();
         this.title = item.getTitle();
         this.startDate = item.getStartDate();
@@ -97,7 +97,7 @@ public class ItemEntity {
         return ItemResponse.builder()
                 .id(this.id)
                 .exhibitionType(this.exhibitionType)
-                .progressType(this.progressType)
+                .exposureType(this.exposureType)
                 .image(this.image)
                 .title(this.title)
                 .startDate(this.startDate)
@@ -125,7 +125,7 @@ public class ItemEntity {
     public SummaryResponse makeSummaryResponse() {
         return SummaryResponse.builder()
             .type(String.valueOf(this.exhibitionType))
-            .progress(this.progressType == ProgressType.ON)
+            .progress(this.exposureType == ExposureType.ON)
             .title(this.title)
             .term(this.startDate + " ~ " + this.endDate)
             .place(this.place)
