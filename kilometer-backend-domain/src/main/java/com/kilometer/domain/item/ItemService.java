@@ -44,11 +44,11 @@ public class ItemService {
         ItemEntity savedItem = itemRepository.save(itemEntity);
     }
 
-    public Page<SearchItemResponse> findByDefaultPageable(Pageable pageable, FilterOptions filterOptions, long userId) {
-        return itemRepository.findAllBySortOption(pageable, filterOptions, userId);
+    public Page<SearchItemResponse> getItemBySearchOptions(Pageable pageable, FilterOptions filterOptions, long userId, String query) {
+        return itemRepository.findAllBySortOption(pageable, filterOptions, userId, query);
     }
 
-    public List<AutoCompleteItem> getAutoCompleteItemByQuery(String query) {
+    public Page<AutoCompleteItem> getAutoCompleteItemByQuery(String query) {
         return itemRepository.findTop10ByQuery(query);
     }
 

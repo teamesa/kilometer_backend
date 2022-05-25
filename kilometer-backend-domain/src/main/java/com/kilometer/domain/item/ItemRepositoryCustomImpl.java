@@ -5,10 +5,12 @@ import com.kilometer.domain.pick.QPick;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.request.FilterOptions;
 import com.kilometer.domain.util.FrontUrlUtils;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +33,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Page<SearchItemResponse> findAllBySortOption(Pageable pageable, FilterOptions filterOptions, long userId) {
+    public Page<SearchItemResponse> findAllBySortOption(Pageable pageable, FilterOptions filterOptions, long userId, String query) {
         List<SearchItemResponse> items = queryFactory
                 .select(Projections.fields(SearchItemResponse.class,
                                 itemEntity.id,
@@ -52,18 +54,20 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         eqExhibitionType(filterOptions),
                         eqFeeType(filterOptions),
                         eqRegionType(filterOptions),
+                        eqTitle(query),
                         loeStartDateNow(filterOptions),
                         goeEndDateNow(filterOptions),
                         goeStartDateNowLoeEndDateNow(filterOptions)
                 )
+                .orderBy(itemEntity.id.desc())
                 .fetch();
 
         return new PageImpl<>(items, pageable, items.size());
     }
 
     @Override
-    public List<AutoCompleteItem> findTop10ByQuery(String query) {
-        return queryFactory.select(
+    public Page<AutoCompleteItem> findTop10ByQuery(String query) {
+        List<AutoCompleteItem> items = queryFactory.select(
                         Projections.fields(AutoCompleteItem.class,
                                 itemEntity.id,
                                 itemEntity.title,
@@ -77,6 +81,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .orderBy(itemEntity.id.desc())
                 .limit(10)
                 .fetch();
+
+        return new PageImpl<>(items);
     }
 
     private BooleanExpression eqUserId(long userId) {
@@ -129,6 +135,13 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .map(FilterOptions::getProgressType)
                 .filter(ON::equals)
                 .map(it -> itemEntity.startDate.goe(LocalDate.now()).and(itemEntity.endDate.loe(LocalDate.now())))
+                .orElse(null);
+    }
+
+    private BooleanExpression eqTitle(String query) {
+        return Optional.ofNullable(query)
+                .filter(StringUtils::isNotBlank)
+                .map(it -> itemEntity.title.containsIgnoreCase(query))
                 .orElse(null);
     }
 }

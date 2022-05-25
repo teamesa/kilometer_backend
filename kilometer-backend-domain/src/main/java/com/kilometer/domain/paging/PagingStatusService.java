@@ -19,13 +19,14 @@ public class PagingStatusService {
     private static final int DEFAULT_PAGE_NUMBER = 0;
     private static final Sort DEFAULT_SORT_OPTION = SearchSortType.ENROLL_DESC.getSearchSortOption();
 
-    public ResponsePagingStatus convert(Page page) {
+    public ResponsePagingStatus convert(Page page, String query) {
         return ResponsePagingStatus.builder()
                 .currentPage(page.getNumber())
                 .currentContentsCount(getCurrentContentsCount(page))
                 .pageSize(page.getNumber())
                 .nextPage(getNextPage(page))
                 .hasNext(page.hasNext())
+                .query(query)
                 .build();
     }
 
