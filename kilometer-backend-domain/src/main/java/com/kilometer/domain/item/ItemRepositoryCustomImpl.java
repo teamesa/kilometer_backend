@@ -59,7 +59,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         goeEndDateNow(filterOptions),
                         goeStartDateNowLoeEndDateNow(filterOptions)
                 )
-                .orderBy(itemEntity.id.desc())
                 .fetch();
 
         return new PageImpl<>(items, pageable, items.size());
