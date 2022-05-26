@@ -41,3 +41,6 @@ cloud:
     credentials:
       accessKey: ${s3.accessKey}
       secretKey: ${s3.secretKey}
+
+logging:
+  config: classpath:log4j2.xml
