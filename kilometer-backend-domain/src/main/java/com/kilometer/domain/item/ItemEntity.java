@@ -91,6 +91,7 @@ public class ItemEntity {
         this.url = item.getUrl();
         this.time = item.getTime();
         this.ticketUrl = item.getTicketUrl();
+        this.itemDetailEntity.update(item.getIntroduce());
     }
 
     public ItemResponse makeResponse() {

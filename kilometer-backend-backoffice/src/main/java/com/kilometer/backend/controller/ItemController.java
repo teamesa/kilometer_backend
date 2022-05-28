@@ -85,6 +85,7 @@ public class ItemController {
                 .url(item.getUrl())
                 .time(item.getTime())
                 .ticketUrl(item.getTicketUrl())
+                .introduce(item.getIntroduce())
                 .build();
         itemService.saveItem(build);
         return "redirect:/form/items";
@@ -126,6 +127,7 @@ public class ItemController {
                 .url(item.getUrl())
                 .time(item.getTime())
                 .ticketUrl(item.getTicketUrl())
+                .introduce(item.getIntroduce())
                 .build();
         itemService.updateItem(itemId, build);
         return "redirect:/form/items";

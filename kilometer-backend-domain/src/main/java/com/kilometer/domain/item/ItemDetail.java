@@ -31,4 +31,8 @@ public class ItemDetail {
     @Fetch(value = FetchMode.SUBSELECT)
     @Builder.Default
     private List<DetailImage> images = new ArrayList<>();
+
+    public void update(String introduce) {
+        this.introduce = introduce;
+    }
 }

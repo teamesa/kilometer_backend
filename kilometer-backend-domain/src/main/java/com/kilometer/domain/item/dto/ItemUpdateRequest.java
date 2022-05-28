@@ -37,4 +37,5 @@ public class ItemUpdateRequest {
     private String url;
     private String time;
     private String ticketUrl;
+    private String introduce;
 }

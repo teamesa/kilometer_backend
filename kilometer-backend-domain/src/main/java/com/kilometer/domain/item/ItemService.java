@@ -22,6 +22,11 @@ public class ItemService {
     private final ItemDetailRepository itemDetailRepository;
 
     public void saveItem(ItemSaveRequest item) {
+        ItemDetail itemDetail = ItemDetail.builder()
+                .introduce(item.getIntroduce())
+                .build();
+        itemDetailRepository.save(itemDetail);
+
         ItemEntity itemEntity = ItemEntity.builder()
             .exhibitionType(item.getExhibitionType())
             .exposureType(item.getExposureType())
@@ -39,8 +44,9 @@ public class ItemService {
             .url(item.getUrl())
             .time(item.getTime())
             .ticketUrl(item.getTicketUrl())
+            .itemDetailEntity(itemDetail)
             .build();
-        ItemEntity savedItem = itemRepository.save(itemEntity);
+        itemRepository.save(itemEntity);
     }
 
     public Page<SearchItemResponse> findByDefaultPageable(Pageable pageable, FilterOptions filterOptions, long userId) {
@@ -76,6 +82,7 @@ public class ItemService {
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
         itemEntity.update(item);
+
     }
 
     public void deleteItem(Long itemId) {
