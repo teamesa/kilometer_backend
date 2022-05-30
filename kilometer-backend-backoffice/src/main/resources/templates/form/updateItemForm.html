@@ -161,6 +161,14 @@
     </div>
 
     <div>
+        <div th:each="image : *{detailImageUrl}">
+            <div id="previewImages">
+                <img width="100px" height="100px" th:src="${image}" alt="이미지 없음">
+            </div>
+        </div>
+    </div>
+
+    <div>
         <button type="submit">수정</button>
     </div>
 

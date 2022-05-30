@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -37,4 +38,5 @@ public class ItemSaveRequest {
     private String time;
     private String ticketUrl;
     private String introduce;
+    private List<String> detailImageUrl;
 }

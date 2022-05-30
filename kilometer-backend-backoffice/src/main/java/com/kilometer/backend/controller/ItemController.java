@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
@@ -68,7 +69,11 @@ public class ItemController {
 
     @PostMapping("/add")
     public String addItem(@ModelAttribute ItemForm item) throws IOException {
-        String s3ImageUrl = fileExists(item);
+        String s3ImageUrl = fileExists(item.getImage());
+        ArrayList<String> multiS3ImageUrl = new ArrayList<>();
+        for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
+            multiS3ImageUrl.add(fileExists(item.getDetailImageUrl().get(i)));
+        }
         ItemSaveRequest build = ItemSaveRequest.builder()
                 .exhibitionType(item.getExhibitionType())
                 .exposureType(item.getExposureType())
@@ -86,13 +91,13 @@ public class ItemController {
                 .time(item.getTime())
                 .ticketUrl(item.getTicketUrl())
                 .introduce(item.getIntroduce())
+                .detailImageUrl(multiS3ImageUrl)
                 .build();
         itemService.saveItem(build);
         return "redirect:/form/items";
     }
 
-    private String fileExists(ItemForm item) throws IOException {
-        MultipartFile image = item.getImage();
+    private String fileExists(MultipartFile image) throws IOException {
         String s3ImageUrl = "";
         String originalFilename = image.getOriginalFilename();
         if (StringUtils.hasText(originalFilename)) {

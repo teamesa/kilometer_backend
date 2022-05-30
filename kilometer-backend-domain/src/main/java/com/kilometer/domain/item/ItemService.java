@@ -20,12 +20,21 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final ItemDetailRepository itemDetailRepository;
+    private final DetailImageRepository detailImageRepository;
 
     public void saveItem(ItemSaveRequest item) {
         ItemDetail itemDetail = ItemDetail.builder()
                 .introduce(item.getIntroduce())
                 .build();
         itemDetailRepository.save(itemDetail);
+
+        for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
+            DetailImage detailImage = DetailImage.builder()
+                    .url(item.getDetailImageUrl().get(i))
+                    .itemDetailEntity(itemDetail)
+                    .build();
+            detailImageRepository.save(detailImage);
+        }
 
         ItemEntity itemEntity = ItemEntity.builder()
             .exhibitionType(item.getExhibitionType())
