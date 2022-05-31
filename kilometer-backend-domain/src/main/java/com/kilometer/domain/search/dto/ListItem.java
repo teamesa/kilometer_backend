@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class ListItem {
+    private long id;
     private PresentationImage presentationImage;
     private ListItemBadge typeBadge;
     @Builder.Default
