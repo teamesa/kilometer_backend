@@ -1,5 +1,6 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.item.dto.ItemDetailImages;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,4 +24,11 @@ public class DetailImage {
     @ManyToOne
     @JoinColumn(name = "itemDetailEntity")
     private ItemDetail itemDetailEntity;
+
+    public ItemDetailImages getDetailImages() {
+        return ItemDetailImages.builder()
+                .id(this.id)
+                .images(url)
+                .build();
+    }
 }

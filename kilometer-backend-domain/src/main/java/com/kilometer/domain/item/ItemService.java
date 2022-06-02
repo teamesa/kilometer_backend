@@ -90,6 +90,17 @@ public class ItemService {
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
+        for (int i = 0; i < item.getDeleteImage().size(); i++) {
+            detailImageRepository.deleteById(item.getDeleteImage().get(i));
+        }
+        ItemDetail itemDetail = itemEntity.getItemDetailEntity();
+        for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
+            DetailImage detailImage = DetailImage.builder()
+                    .url(item.getDetailImageUrl().get(i))
+                    .itemDetailEntity(itemDetail)
+                    .build();
+            detailImageRepository.save(detailImage);
+        }
         itemEntity.update(item);
 
     }
@@ -100,10 +111,4 @@ public class ItemService {
             .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
         itemRepository.delete(itemEntity);
     }
-
-    public List<ItemEntity> findItemsAndDetail() {
-        List<ItemEntity> findItem = itemRepository.findAll();
-        return findItem;
-    }
-
 }

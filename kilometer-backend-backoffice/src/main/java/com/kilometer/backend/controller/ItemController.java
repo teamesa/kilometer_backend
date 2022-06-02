@@ -116,6 +116,14 @@ public class ItemController {
     @PostMapping("/{itemId}/edit")
     public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemForm item) throws IOException {
         String imageUrl = updateFileExists(itemId, item);
+        ArrayList<String> multiS3ImageUrl = new ArrayList<>();
+        for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
+            multiS3ImageUrl.add(fileExists(item.getDetailImageUrl().get(i)));
+        }
+        ArrayList<Long> deleteImage = new ArrayList<>();
+        for (int i = 0; i < item.getDeleteImageIndex().size(); i++) {
+            deleteImage.add(item.getDeleteImageIndex().get(i));
+        }
         ItemUpdateRequest build = ItemUpdateRequest.builder()
                 .exhibitionType(item.getExhibitionType())
                 .exposureType(item.getExposureType())
@@ -133,6 +141,8 @@ public class ItemController {
                 .time(item.getTime())
                 .ticketUrl(item.getTicketUrl())
                 .introduce(item.getIntroduce())
+                .detailImageUrl(multiS3ImageUrl)
+                .deleteImage(deleteImage)
                 .build();
         itemService.updateItem(itemId, build);
         return "redirect:/form/items";

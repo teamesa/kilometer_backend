@@ -36,4 +36,5 @@ public class ItemForm {
     private String ticketUrl;
     private String introduce;
     private List<MultipartFile> detailImageUrl;
+    private List<Long> deleteImageIndex;
 }

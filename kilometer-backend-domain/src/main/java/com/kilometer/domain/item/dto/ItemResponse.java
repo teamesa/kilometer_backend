@@ -41,13 +41,5 @@ public class ItemResponse {
     private String ticketUrl;
     private String introduce;
     private List<String> detailImageUrl;
-
-    public ItemResponse(ExhibitionType exhibitionType, ExposureType exposureType, LocalDate startDate, LocalDate endDate, RegionType regionType, FeeType fee) {
-        this.exhibitionType = exhibitionType;
-        this.exposureType = exposureType;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.regionType = regionType;
-        this.fee = fee;
-    }
+    private List<ItemDetailImages> detailImages;
 }
