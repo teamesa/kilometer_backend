@@ -20,7 +20,7 @@ import java.util.List;
 
 import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
 import static com.kilometer.domain.item.FeeType.FREE;
-import static com.kilometer.domain.item.ProgressType.ON;
+import static com.kilometer.domain.item.ExposureType.ON;
 import static com.kilometer.domain.item.RegionType.SEOUL;
 
 @Slf4j
@@ -32,14 +32,14 @@ public class ItemController {
     private final ItemService itemService;
     private final S3Uploader s3Uploader;
 
-    @ModelAttribute("exhibitionType")
+    @ModelAttribute("exhibitionTypes")
     public ExhibitionType[] exhibitionTypes() {
         return ExhibitionType.values();
     }
 
-    @ModelAttribute("progressTypes")
-    public ProgressType[] progressTypes() {
-        return ProgressType.values();
+    @ModelAttribute("exposureTypes")
+    public ExposureType[] exposureTypes() {
+        return ExposureType.values();
     }
 
     @ModelAttribute("feeTypes")
@@ -61,7 +61,7 @@ public class ItemController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        ItemResponse defaultOptions = ItemResponse.builder().exhibitionType(EXHIBITION).regionType(SEOUL).progressType(ON).fee(FREE).startDate(LocalDate.now()).endDate(LocalDate.now()).build();
+        ItemResponse defaultOptions = ItemResponse.builder().exhibitionType(EXHIBITION).regionType(SEOUL).exposureType(ON).fee(FREE).startDate(LocalDate.now()).endDate(LocalDate.now()).build();
         model.addAttribute("item", defaultOptions);
         return "form/addForm";
     }
@@ -71,7 +71,7 @@ public class ItemController {
         String s3ImageUrl = fileExists(item);
         ItemSaveRequest build = ItemSaveRequest.builder()
                 .exhibitionType(item.getExhibitionType())
-                .progressType(item.getProgressType())
+                .exposureType(item.getExposureType())
                 .image(s3ImageUrl)
                 .title(item.getTitle())
                 .startDate(item.getStartDate())
@@ -112,7 +112,7 @@ public class ItemController {
         String imageUrl = updateFileExists(itemId, item);
         ItemUpdateRequest build = ItemUpdateRequest.builder()
                 .exhibitionType(item.getExhibitionType())
-                .progressType(item.getProgressType())
+                .exposureType(item.getExposureType())
                 .image(imageUrl)
                 .title(item.getTitle())
                 .startDate(item.getStartDate())
