@@ -89,4 +89,9 @@ public class Archive {
             .build();
     }
 
+    public void setVisitedPlaces(List<VisitedPlace> places) {
+        this.visitedPlaces = places;
+        this.visitedPlaces.forEach(place -> place.setArchive(this));
+    }
+
 }

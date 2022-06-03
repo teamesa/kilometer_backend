@@ -4,17 +4,15 @@ import com.kilometer.backend.security.security.CurrentUser;
 import com.kilometer.backend.security.security.UserPrincipal;
 import com.kilometer.domain.archive.ArchiveService;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
+import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.dto.ItemDetailResponse;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,8 +24,8 @@ public class ArchiveController {
     private final ArchiveService archiveService;
 
     @GetMapping("/{itemId}")
-    public ItemDetailResponse<ArchiveResponse> archives(@PathVariable Long itemId, RequestPagingStatus requestPagingStatus) {
-        ArchiveResponse response = archiveService.findAllByItemId(itemId,requestPagingStatus);
+    public ItemDetailResponse<ArchiveResponse> archives(@PathVariable Long itemId, @RequestParam RequestPagingStatus requestPagingStatus, @RequestParam ArchiveSortType sortType) {
+        ArchiveResponse response = archiveService.findAllByItemId(itemId,requestPagingStatus,sortType);
         return ItemDetailResponse.<ArchiveResponse>builder()
             .title(ARCHIVE_TITLE)
             .contents(response)
@@ -35,8 +33,9 @@ public class ArchiveController {
     }
 
     @PostMapping
-    public void saveArchive(@CurrentUser UserPrincipal userPrincipal, @RequestBody ArchiveRequest request) {
-        archiveService.save(userPrincipal.getId(),request);
+    public void saveArchive(@RequestBody ArchiveRequest request) {
+        long userId = getLoginUserId();
+        archiveService.save(userId,request);
     }
 
     @GetMapping("/my")

@@ -37,4 +37,8 @@ public class VisitedPlace {
     private String address;
 
     private String roadAddress;
+
+    public void setArchive(Archive archive) {
+        this.archive = archive;
+    }
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class PlaceInfo {
+    private String placeType;
     private String name;
     private String address;
     private String roadAddress;
