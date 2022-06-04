@@ -11,7 +11,7 @@ import java.time.Period;
 public class PresentationImageGenerator {
     private static final String BACKGROUND_END_TEXT = "종료";
     private static final String BACKGROUND_D_DAT_COUNT_FORMAT = "D-%s";
-    private static final String DIM_HEX_CODE = "#FFF";
+    private static final String DIM_HEX_CODE = "#000";
     private static final Double DIM_OPACITY = 0.55;
 
 
