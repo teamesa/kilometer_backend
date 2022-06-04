@@ -2,13 +2,15 @@ package com.kilometer.domain.item;
 
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.pick.QPick;
+import com.kilometer.domain.search.dto.ListQueryRequest;
 import com.kilometer.domain.search.request.FilterOptions;
+import com.kilometer.domain.search.request.SearchSortType;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 
 import static com.kilometer.domain.search.request.ProgressDateType.*;
 
+@SuppressWarnings("rawtypes")
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
@@ -28,7 +31,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Page<SearchItemResponse> findAllBySortOption(Pageable pageable, FilterOptions filterOptions, long userId) {
+    public Page<SearchItemResponse> findAllBySortOption(ListQueryRequest queryRequest) {
         List<SearchItemResponse> items = queryFactory
                 .select(Projections.fields(SearchItemResponse.class,
                                 itemEntity.id,
@@ -43,19 +46,36 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 )
                 .from(itemEntity)
                 .leftJoin(pick)
-                .on(pick.pickedItem.eq(itemEntity), eqUserId(userId))
+                .on(pick.pickedItem.eq(itemEntity), eqUserId(queryRequest.getUserId()))
                 .where(
                         itemEntity.exposureType.eq(ExposureType.ON),
-                        eqExhibitionType(filterOptions),
-                        eqFeeType(filterOptions),
-                        eqRegionType(filterOptions),
-                        loeStartDateNow(filterOptions),
-                        goeEndDateNow(filterOptions),
-                        goeStartDateNowLoeEndDateNow(filterOptions)
+                        eqExhibitionType(queryRequest.getFilterOptions()),
+                        eqFeeType(queryRequest.getFilterOptions()),
+                        eqRegionType(queryRequest.getFilterOptions()),
+                        loeStartDateNow(queryRequest.getFilterOptions()),
+                        goeEndDateNow(queryRequest.getFilterOptions()),
+                        goeStartDateNowLoeEndDateNow(queryRequest.getFilterOptions())
                 )
+                .offset(queryRequest.getPageable().getOffset())
+                .limit(queryRequest.getPageable().getPageSize())
+                .orderBy(getOrderSpecifier(queryRequest.getSearchSortType()))
                 .fetch();
 
-        return new PageImpl<>(items, pageable, items.size());
+        int count = queryFactory
+                .select(itemEntity.id)
+                .from(itemEntity)
+                .where(
+                        itemEntity.exposureType.eq(ExposureType.ON),
+                        eqExhibitionType(queryRequest.getFilterOptions()),
+                        eqFeeType(queryRequest.getFilterOptions()),
+                        eqRegionType(queryRequest.getFilterOptions()),
+                        loeStartDateNow(queryRequest.getFilterOptions()),
+                        goeEndDateNow(queryRequest.getFilterOptions()),
+                        goeStartDateNowLoeEndDateNow(queryRequest.getFilterOptions())
+                )
+                .fetch().size();
+
+        return new PageImpl<>(items, queryRequest.getPageable(), count);
     }
 
     private BooleanExpression eqUserId(long userId) {
@@ -109,5 +129,17 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .filter(ON::equals)
                 .map(it -> itemEntity.startDate.goe(LocalDate.now()).and(itemEntity.endDate.loe(LocalDate.now())))
                 .orElse(null);
+    }
+
+    private OrderSpecifier getOrderSpecifier(SearchSortType searchSortType) {
+        switch (searchSortType) {
+            case END_DATE_ASC:
+                return itemEntity.endDate.asc();
+            case GRADE_DESC:
+            case HEART_DESC:
+            case ENROLL_DESC:
+            default:
+                return itemEntity.id.desc();
+        }
     }
 }
