@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,13 +34,24 @@ public class ArchiveService {
     private final PagingStatusService pagingStatusService;
 
     public void save(Long userId, ArchiveRequest archiveRequest) {
+        Preconditions.notNull(archiveRequest.getComment(),
+                "Comment must not be null");
+        Preconditions.condition((archiveRequest.getStarRating() > 0 && archiveRequest.getStarRating() <= 5),
+                "별점은 1이상 5이하의 숫자여야 합니다. now : "+archiveRequest.getStarRating());
+        Preconditions.notNull(archiveRequest.getPhotoUrls(),
+                "Photo urls must not be null");
+        Preconditions.notNull(archiveRequest.getPlaceInfos(),
+                "Place infos must not be null");
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
 
         ItemEntity item = itemRepository.findById(archiveRequest.getItemId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + archiveRequest.getItemId()));
+                .orElseThrow(() -> new IllegalArgumentException("Item does not exists 없습니다. id = " + archiveRequest.getItemId()));
 
+        List<Archive> findedArchive = archiveRepository.findAllByItemAndUser(item, user);
+        if(!findedArchive.isEmpty())
+            throw new IllegalArgumentException("이미 Archive가 존재합니다. id : "+ findedArchive.get(0));
 
         List<VisitedPlace> places = new ArrayList<>();
         for(PlaceInfo info : archiveRequest.getPlaceInfos()) {
