@@ -23,23 +23,23 @@ public class ItemService {
 
     public void saveItem(ItemSaveRequest item) {
         ItemEntity itemEntity = ItemEntity.builder()
-            .exhibitionType(item.getExhibitionType())
-            .exposureType(item.getExposureType())
-            .image(item.getImage())
-            .title(item.getTitle())
-            .startDate(item.getStartDate())
-            .endDate(item.getEndDate())
-            .place(item.getPlace())
-            .latitude(item.getLatitude())
-            .longitude(item.getLongitude())
-            .regionType(item.getRegionType())
-            .place(item.getPlace())
-            .fee(item.getFee())
-            .price(item.getPrice())
-            .url(item.getUrl())
-            .time(item.getTime())
-            .ticketUrl(item.getTicketUrl())
-            .build();
+                .exhibitionType(item.getExhibitionType())
+                .exposureType(item.getExposureType())
+                .image(item.getImage())
+                .title(item.getTitle())
+                .startDate(item.getStartDate())
+                .endDate(item.getEndDate())
+                .place(item.getPlace())
+                .latitude(item.getLatitude())
+                .longitude(item.getLongitude())
+                .regionType(item.getRegionType())
+                .place(item.getPlace())
+                .fee(item.getFee())
+                .price(item.getPrice())
+                .url(item.getUrl())
+                .time(item.getTime())
+                .ticketUrl(item.getTicketUrl())
+                .build();
         ItemEntity savedItem = itemRepository.save(itemEntity);
     }
 
@@ -49,16 +49,16 @@ public class ItemService {
 
     public List<ItemResponse> findItems() {
         return itemRepository.findAll()
-            .stream()
-            .map(ItemEntity::makeResponse)
-            .collect(Collectors.toList());
+                .stream()
+                .map(ItemEntity::makeResponse)
+                .collect(Collectors.toList());
     }
 
     public ItemResponse findOne(Long itemId) {
         Preconditions.notNull(itemId, "id must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
         return itemEntity.makeResponse();
     }
 
@@ -74,14 +74,14 @@ public class ItemService {
         Preconditions.notNull(item, "item must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
         itemEntity.update(item);
     }
 
     public void deleteItem(Long itemId) {
         Preconditions.notNull(itemId, "id must not be null");
         ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
         itemRepository.delete(itemEntity);
     }
 
@@ -90,4 +90,16 @@ public class ItemService {
         return findItem;
     }
 
+
+    public DetailResponse findToDetailResponseById(Long itemId) {
+        Preconditions.notNull(itemId, "id must not be null");
+
+        ItemEntity itemEntity = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + itemId));
+
+        return Optional.ofNullable(itemEntity.getItemDetailEntity())
+                .map(itemDetailEntity -> itemDetailRepository.findById(itemDetailEntity.getId()).map(ItemDetail::makeResponse)
+                        .orElseThrow(() -> new IllegalArgumentException("ItemDetail not found id="+itemDetailEntity.getId())))
+                .orElse(DetailResponse.empty());
+    }
 }
