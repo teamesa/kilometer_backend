@@ -2,13 +2,17 @@ package com.kilometer.domain.item;
 
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.pick.QPick;
+import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
 import com.kilometer.domain.search.request.FilterOptions;
 import com.kilometer.domain.search.request.SearchSortType;
 import com.querydsl.core.types.OrderSpecifier;
+import com.kilometer.domain.util.FrontUrlUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
@@ -78,6 +82,26 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         return new PageImpl<>(items, queryRequest.getPageable(), count);
     }
 
+    @Override
+    public Page<AutoCompleteItem> findTop10ByQuery(String query) {
+        List<AutoCompleteItem> items = queryFactory.select(
+                        Projections.fields(AutoCompleteItem.class,
+                                itemEntity.id,
+                                itemEntity.title,
+                                itemEntity.title.indexOf(query).as("searchedTextLocationStart"),
+                                itemEntity.title.indexOf(query).add(query.length()).as("searchedTextLocationEnd"),
+                                Expressions.asString(FrontUrlUtils.getFrontDetailPrefix()).append(itemEntity.id.stringValue()).as("link")
+                        )
+                )
+                .where(itemEntity.title.containsIgnoreCase(query))
+                .from(itemEntity)
+                .orderBy(itemEntity.id.desc())
+                .limit(10)
+                .fetch();
+
+        return new PageImpl<>(items);
+    }
+
     private BooleanExpression eqUserId(long userId) {
         if (-1L == userId) {
             return pick.pickedUser.id.eq(0L);
@@ -128,6 +152,13 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .map(FilterOptions::getProgressType)
                 .filter(ON::equals)
                 .map(it -> itemEntity.startDate.goe(LocalDate.now()).and(itemEntity.endDate.loe(LocalDate.now())))
+                .orElse(null);
+    }
+
+    private BooleanExpression eqTitle(String query) {
+        return Optional.ofNullable(query)
+                .filter(StringUtils::isNotBlank)
+                .map(it -> itemEntity.title.containsIgnoreCase(query))
                 .orElse(null);
     }
 

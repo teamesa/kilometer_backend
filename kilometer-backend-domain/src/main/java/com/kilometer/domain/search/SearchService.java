@@ -32,15 +32,23 @@ public class SearchService {
                 .userId(userId)
                 .build();
 
-        Page<SearchItemResponse> pageableItems = itemService.findByDefaultPageable(queryRequest);
-        return convertingItems(pageableItems);
+        Page<SearchItemResponse> pageableItems = itemService.getItemBySearchOptions(queryRequest);
+        return convertingItems(pageableItems, searchRequest.getQueryString());
     }
 
-    private SearchResponse convertingItems(Page<SearchItemResponse> pageableItems) {
+    private SearchResponse convertingItems(Page<SearchItemResponse> pageableItems, String query) {
         List<ListItem> items = pageableItems.map(listItemAggregateConverter::convert).getContent();
         return SearchResponse.builder()
                 .contents(items)
-                .responsePagingStatus(pagingStatusService.convert(pageableItems))
+                .responsePagingStatus(pagingStatusService.convert(pageableItems, query))
+                .build();
+    }
+
+    public AutoCompleteResult autoComplete(String query) {
+        Page<AutoCompleteItem> contents = itemService.getAutoCompleteItemByQuery(query);
+        return AutoCompleteResult.builder()
+                .contents(contents.getContent())
+                .responsePagingStatus(pagingStatusService.convert(contents, query))
                 .build();
     }
 
