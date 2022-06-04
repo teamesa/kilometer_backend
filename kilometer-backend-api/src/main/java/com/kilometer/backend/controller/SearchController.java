@@ -1,6 +1,7 @@
 package com.kilometer.backend.controller;
 
 import com.kilometer.domain.search.SearchService;
+import com.kilometer.domain.search.dto.AutoCompleteResult;
 import com.kilometer.domain.search.request.SearchRequest;
 import com.kilometer.domain.search.dto.SearchResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
@@ -19,6 +20,11 @@ public class SearchController {
     public SearchResponse search(@RequestBody SearchRequest searchRequest) {
         long userId = getLoginUserId();
         return searchService.search(searchRequest, userId);
+    }
+
+    @GetMapping(ApiUrlUtils.SEARCH_AUTO_COMPLETE)
+    public AutoCompleteResult autoCompleteSearch(@RequestParam String query) {
+        return searchService.autoComplete(query);
     }
 
 }

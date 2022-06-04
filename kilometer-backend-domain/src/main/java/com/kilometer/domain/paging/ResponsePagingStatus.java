@@ -14,6 +14,7 @@ import static com.kilometer.domain.paging.PagingStatusService.DEFAULT_PAGE_SIZE;
 public class ResponsePagingStatus {
     private int nextPage;
     private int currentPage;
+    private String query;
     @Builder.Default
     private int pageSize = DEFAULT_PAGE_SIZE;
     private boolean hasNext;
