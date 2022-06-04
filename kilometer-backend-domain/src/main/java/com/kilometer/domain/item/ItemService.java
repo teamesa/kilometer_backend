@@ -98,8 +98,10 @@ public class ItemService {
                 .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + itemId));
 
         return Optional.ofNullable(itemEntity.getItemDetailEntity())
-                .map(itemDetailEntity -> itemDetailRepository.findById(itemDetailEntity.getId()).map(ItemDetail::makeResponse)
-                        .orElseThrow(() -> new IllegalArgumentException("ItemDetail not found id="+itemDetailEntity.getId())))
+                .map(itemDetailEntity -> itemDetailRepository.findById(itemDetailEntity.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("ItemDetail not found id="+itemDetailEntity.getId()))
+                )
+                .map(ItemDetail::makeResponse)
                 .orElse(DetailResponse.empty());
     }
 }
