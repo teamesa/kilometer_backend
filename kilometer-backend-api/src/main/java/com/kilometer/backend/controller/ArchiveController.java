@@ -24,7 +24,7 @@ public class ArchiveController {
     private final ArchiveService archiveService;
 
     @GetMapping("/{itemId}")
-    public ItemDetailResponse<ArchiveResponse> archives(@PathVariable Long itemId, @RequestParam RequestPagingStatus requestPagingStatus, @RequestParam ArchiveSortType sortType) {
+    public ItemDetailResponse<ArchiveResponse> archives(@PathVariable Long itemId, RequestPagingStatus requestPagingStatus, @RequestParam ArchiveSortType sortType) {
         ArchiveResponse response = archiveService.findAllByItemId(itemId,requestPagingStatus,sortType);
         return ItemDetailResponse.<ArchiveResponse>builder()
             .title(ARCHIVE_TITLE)

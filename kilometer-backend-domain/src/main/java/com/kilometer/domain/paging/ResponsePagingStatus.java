@@ -17,7 +17,7 @@ public class ResponsePagingStatus {
     @Builder.Default
     private int pageSize = DEFAULT_PAGE_SIZE;
     private boolean hasNext;
-    private int totalContentsCount;
+    private long totalContentsCount;
     private int currentContentsCount;
 
     public static ResponsePagingStatus empty() {
