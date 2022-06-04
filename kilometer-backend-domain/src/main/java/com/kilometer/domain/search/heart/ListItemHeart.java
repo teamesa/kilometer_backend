@@ -10,4 +10,5 @@ import lombok.Data;
 public class ListItemHeart {
     private boolean heartClicked;
     private String link;
+    private long id;
 }

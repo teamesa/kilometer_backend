@@ -2,6 +2,7 @@ package com.kilometer.backend.controller;
 
 import com.kilometer.backend.security.security.CurrentUser;
 import com.kilometer.backend.security.security.UserPrincipal;
+import com.kilometer.domain.pick.PickResponse;
 import com.kilometer.domain.pick.PickService;
 import com.kilometer.domain.util.ApiUrlUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class PickController {
 
     @PreAuthorize("hasRole('USER')")
     @PutMapping(ApiUrlUtils.PICK_ITEM)
-    public boolean makePickStatus(@PathVariable Long itemId, @RequestParam Boolean status, @CurrentUser UserPrincipal userPrincipal) {
+    public PickResponse makePickStatus(@PathVariable Long itemId, @RequestParam Boolean status, @CurrentUser UserPrincipal userPrincipal) {
         return pickService.makePickStatus(itemId, userPrincipal.getId(), status);
     }
 }
