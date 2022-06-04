@@ -2,6 +2,7 @@ package com.kilometer.backend.controller;
 
 import com.kilometer.backend.security.exception.ResourceNotFoundException;
 import com.kilometer.domain.item.ItemService;
+import com.kilometer.domain.item.dto.DetailResponse;
 import com.kilometer.domain.item.dto.SummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,11 @@ public class ItemController {
   public SummaryResponse getSummary(@PathVariable Long itemId) {
     return itemService.findToSummaryResponseById(itemId)
         .orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
+  }
+
+  @GetMapping("/detail/{itemId}")
+  public DetailResponse getDetail(@PathVariable Long itemId) {
+    return itemService.findToDetailResponseById(itemId);
   }
 
 }

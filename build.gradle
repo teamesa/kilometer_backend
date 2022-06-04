@@ -39,5 +39,12 @@ subprojects {
 		testImplementation 'org.junit.vintage:junit-vintage-engine'
 		testImplementation 'org.spockframework:spock-core:2.2-M1-groovy-4.0'
 		testImplementation 'org.spockframework:spock-spring:2.2-M1-groovy-4.0'
+
+		implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+		modules {
+			module("org.springframework.boot:spring-boot-starter-logging") {
+				replacedBy("org.springframework.boot:spring-boot-starter-log4j2", "Use Log4j2 instead of Logback")
+			}
+		}
 	}
 }

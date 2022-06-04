@@ -22,6 +22,7 @@ public class PagingStatusService {
     public ResponsePagingStatus convert(Page page, String query) {
         return ResponsePagingStatus.builder()
                 .currentPage(page.getNumber())
+                .totalContentsCount(page.getTotalElements())
                 .currentContentsCount(getCurrentContentsCount(page))
                 .pageSize(page.getNumber())
                 .nextPage(getNextPage(page))

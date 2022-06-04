@@ -22,16 +22,17 @@ public class SearchService {
 
     public SearchResponse search(SearchRequest searchRequest, long userId) {
         Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));
-        Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));
         Preconditions.notNull(searchRequest.getRequestPagingStatus(), String.format("this service can not be run will null object, please check this, %s", searchRequest));
 
         Pageable pageable = pagingStatusService.makePageable(searchRequest);
-        Page<SearchItemResponse> pageableItems = itemService.getItemBySearchOptions(
-                pageable,
-                searchRequest.getFilterOptions(),
-                userId,
-                searchRequest.getQueryString()
-        );
+        ListQueryRequest queryRequest = ListQueryRequest.builder()
+                .filterOptions(searchRequest.getFilterOptions())
+                .searchSortType(searchRequest.getSearchSortType())
+                .pageable(pageable)
+                .userId(userId)
+                .build();
+
+        Page<SearchItemResponse> pageableItems = itemService.getItemBySearchOptions(queryRequest);
         return convertingItems(pageableItems, searchRequest.getQueryString());
     }
 
@@ -50,4 +51,5 @@ public class SearchService {
                 .responsePagingStatus(pagingStatusService.convert(contents, query))
                 .build();
     }
+
 }
