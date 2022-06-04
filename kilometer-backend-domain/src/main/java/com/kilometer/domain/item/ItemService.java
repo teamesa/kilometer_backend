@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.kilometer.domain.search.request.FilterOptions;
+import com.kilometer.domain.search.dto.ListQueryRequest;
+import com.kilometer.domain.search.dto.AutoCompleteItem;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +43,12 @@ public class ItemService {
         ItemEntity savedItem = itemRepository.save(itemEntity);
     }
 
-    public Page<SearchItemResponse> findByDefaultPageable(Pageable pageable, FilterOptions filterOptions, long userId) {
-        return itemRepository.findAllBySortOption(pageable, filterOptions, userId);
+    public Page<SearchItemResponse> getItemBySearchOptions(ListQueryRequest queryRequest) {
+        return itemRepository.findAllBySortOption(queryRequest);
+    }
+
+    public Page<AutoCompleteItem> getAutoCompleteItemByQuery(String query) {
+        return itemRepository.findTop10ByQuery(query);
     }
 
     public List<ItemResponse> findItems() {
@@ -90,4 +94,18 @@ public class ItemService {
         return findItem;
     }
 
+
+    public DetailResponse findToDetailResponseById(Long itemId) {
+        Preconditions.notNull(itemId, "id must not be null");
+
+        ItemEntity itemEntity = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + itemId));
+
+        return Optional.ofNullable(itemEntity.getItemDetailEntity())
+                .map(itemDetailEntity -> itemDetailRepository.findById(itemDetailEntity.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("ItemDetail not found id="+itemDetailEntity.getId()))
+                )
+                .map(ItemDetail::makeResponse)
+                .orElse(DetailResponse.empty());
+    }
 }
