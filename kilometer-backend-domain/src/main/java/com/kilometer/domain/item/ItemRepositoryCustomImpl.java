@@ -5,6 +5,7 @@ import com.kilometer.domain.pick.QPick;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
 import com.kilometer.domain.search.request.FilterOptions;
+import com.kilometer.domain.search.request.ProgressDateType;
 import com.kilometer.domain.search.request.SearchSortType;
 import com.querydsl.core.types.OrderSpecifier;
 import com.kilometer.domain.util.FrontUrlUtils;
@@ -19,10 +20,9 @@ import org.springframework.data.domain.PageImpl;
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import static com.kilometer.domain.search.request.ProgressDateType.*;
 
 @SuppressWarnings("rawtypes")
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
@@ -53,12 +53,11 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .on(pick.pickedItem.eq(itemEntity), eqUserId(queryRequest.getUserId()))
                 .where(
                         itemEntity.exposureType.eq(ExposureType.ON),
+                        eqTitle(queryRequest.getQueryString()),
                         eqExhibitionType(queryRequest.getFilterOptions()),
                         eqFeeType(queryRequest.getFilterOptions()),
                         eqRegionType(queryRequest.getFilterOptions()),
-                        loeStartDateNow(queryRequest.getFilterOptions()),
-                        goeEndDateNow(queryRequest.getFilterOptions()),
-                        goeStartDateNowLoeEndDateNow(queryRequest.getFilterOptions())
+                        eqProgressType(queryRequest.getFilterOptions())
                 )
                 .offset(queryRequest.getPageable().getOffset())
                 .limit(queryRequest.getPageable().getPageSize())
@@ -73,9 +72,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         eqExhibitionType(queryRequest.getFilterOptions()),
                         eqFeeType(queryRequest.getFilterOptions()),
                         eqRegionType(queryRequest.getFilterOptions()),
-                        loeStartDateNow(queryRequest.getFilterOptions()),
-                        goeEndDateNow(queryRequest.getFilterOptions()),
-                        goeStartDateNowLoeEndDateNow(queryRequest.getFilterOptions())
+                        eqProgressType(queryRequest.getFilterOptions())
                 )
                 .fetch().size();
 
@@ -102,14 +99,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         return new PageImpl<>(items);
     }
 
-    private BooleanExpression eqUserId(long userId) {
-        if (-1L == userId) {
-            return pick.pickedUser.id.eq(0L);
-        } else {
-            return pick.pickedUser.id.eq(userId);
-        }
-    }
-
     private BooleanExpression eqExhibitionType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
                 .map(FilterOptions::getExhibitionType)
@@ -119,40 +108,52 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     private BooleanExpression eqFeeType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-                .map(FilterOptions::getFeeType)
-                .map(itemEntity.fee::eq)
+                .map(FilterOptions::getFeeTypes)
+                .map(Collection::stream)
+                .map(it -> it.map(itemEntity.fee::eq))
+                .flatMap(it -> it.reduce(BooleanExpression::or))
                 .orElse(null);
     }
 
     private BooleanExpression eqRegionType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-                .map(FilterOptions::getRegionType)
-                .map(itemEntity.regionType::eq)
+                .map(FilterOptions::getRegionTypes)
+                .map(Collection::stream)
+                .map(it -> it.map(itemEntity.regionType::eq))
+                .flatMap(it -> it.reduce(BooleanExpression::or))
                 .orElse(null);
     }
 
-    private BooleanExpression loeStartDateNow(FilterOptions filterOptions) {
+    private BooleanExpression eqProgressType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-                .map(FilterOptions::getProgressType)
-                .filter(UPCOMING::equals)
-                .map(it -> itemEntity.startDate.loe(LocalDate.now()))
+                .map(FilterOptions::getProgressTypes)
+                .map(Collection::stream)
+                .map(it -> it.map(this::getExpressionByProgressDateType))
+                .flatMap(it -> it.reduce(BooleanExpression::or))
                 .orElse(null);
     }
 
-    private BooleanExpression goeEndDateNow(FilterOptions filterOptions) {
-        return Optional.ofNullable(filterOptions)
-                .map(FilterOptions::getProgressType)
-                .filter(OFF::equals)
-                .map(it -> itemEntity.endDate.goe(LocalDate.now()))
-                .orElse(null);
+    private BooleanExpression getExpressionByProgressDateType(ProgressDateType type) {
+        LocalDate now = LocalDate.now();
+
+        switch (type) {
+            case UPCOMING:
+                return itemEntity.startDate.goe(now);
+            case OFF:
+                return itemEntity.endDate.loe(now);
+            case ON:
+                return itemEntity.startDate.loe(now).and(itemEntity.endDate.goe(now));
+            default:
+                return null;
+        }
     }
 
-    private BooleanExpression goeStartDateNowLoeEndDateNow(FilterOptions filterOptions) {
-        return Optional.ofNullable(filterOptions)
-                .map(FilterOptions::getProgressType)
-                .filter(ON::equals)
-                .map(it -> itemEntity.startDate.goe(LocalDate.now()).and(itemEntity.endDate.loe(LocalDate.now())))
-                .orElse(null);
+    private BooleanExpression eqUserId(long userId) {
+        if (-1L == userId) {
+            return pick.pickedUser.id.eq(0L);
+        } else {
+            return pick.pickedUser.id.eq(userId);
+        }
     }
 
     private BooleanExpression eqTitle(String query) {

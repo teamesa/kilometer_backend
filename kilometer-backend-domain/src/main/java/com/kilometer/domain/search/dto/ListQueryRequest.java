@@ -12,5 +12,6 @@ public class ListQueryRequest {
     private Pageable pageable;
     private FilterOptions filterOptions;
     private SearchSortType searchSortType;
+    private String queryString;
     private long userId;
 }
