@@ -25,7 +25,7 @@ class SearchServiceTest extends Specification {
     def "Search works well"() {
         given:
         def insert = Spy(SearchRequest)
-        itemService.findByDefaultPageable(*_) >> Page.empty()
+        itemService.getItemBySearchOptions(*_) >> Page.empty()
         1 * pagingStatusService.makePageable(_) >> Mock(Pageable)
         0 * listItemAggregateConverter.convert(_) >> Mock(ListItem)
         when:

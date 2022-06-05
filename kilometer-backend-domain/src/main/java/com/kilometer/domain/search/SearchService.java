@@ -1,7 +1,6 @@
 package com.kilometer.domain.search;
 
 import com.kilometer.domain.item.ItemService;
-import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.search.dto.*;
@@ -22,19 +21,35 @@ public class SearchService {
     private final PagingStatusService pagingStatusService;
 
     public SearchResponse search(SearchRequest searchRequest, long userId) {
-        Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));
+        Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));
         Preconditions.notNull(searchRequest.getRequestPagingStatus(), String.format("this service can not be run will null object, please check this, %s", searchRequest));
 
         Pageable pageable = pagingStatusService.makePageable(searchRequest);
-        Page<SearchItemResponse> pageableItems = itemService.findByDefaultPageable(pageable, searchRequest.getFilterOptions(), userId);
-        return convertingItems(pageableItems);
+        ListQueryRequest queryRequest = ListQueryRequest.builder()
+                .filterOptions(searchRequest.getFilterOptions())
+                .searchSortType(searchRequest.getSearchSortType())
+                .queryString(searchRequest.getQueryString())
+                .pageable(pageable)
+                .userId(userId)
+                .build();
+
+        Page<SearchItemResponse> pageableItems = itemService.getItemBySearchOptions(queryRequest);
+        return convertingItems(pageableItems, searchRequest.getQueryString());
     }
 
-    private SearchResponse convertingItems(Page<SearchItemResponse> pageableItems) {
+    private SearchResponse convertingItems(Page<SearchItemResponse> pageableItems, String query) {
         List<ListItem> items = pageableItems.map(listItemAggregateConverter::convert).getContent();
         return SearchResponse.builder()
                 .contents(items)
-                .responsePagingStatus(pagingStatusService.convert(pageableItems))
+                .responsePagingStatus(pagingStatusService.convert(pageableItems, query))
+                .build();
+    }
+
+    public AutoCompleteResult autoComplete(String query) {
+        Page<AutoCompleteItem> contents = itemService.getAutoCompleteItemByQuery(query);
+        return AutoCompleteResult.builder()
+                .contents(contents.getContent())
+                .responsePagingStatus(pagingStatusService.convert(contents, query))
                 .build();
     }
 
