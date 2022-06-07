@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("rawtypes, unchecked")
 public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
@@ -66,7 +67,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     @Override
     public Double avgStarRatingByItemId(long itemId) {
-        List<Double> result = queryFactory
+        return queryFactory
                 .select(
                         archive.starRating.avg()
                 )
@@ -74,9 +75,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 .where(
                         archive.item.id.eq(itemId)
                 )
-                .fetch();
-
-        return result.get(0);
+                .fetchOne();
     }
 
     private OrderSpecifier convertOrderSpecifier(Pageable pageable) {

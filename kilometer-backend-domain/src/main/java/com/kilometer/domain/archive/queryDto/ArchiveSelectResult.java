@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +22,14 @@ public class ArchiveSelectResult {
     private Integer starRating;
     private Integer heartCount;
     private String comment;
-    private List<VisitedPlace> places = List.of();
+    private final List<VisitedPlace> places = new ArrayList<>();
 
     public ArchiveInfo convert() {
         String food = "";
         String cafe = "";
 
         for (VisitedPlace place : places) {
-            if(PlaceType.CAFE == place.getPlaceType()) {
+            if(PlaceType.CAFE.equals(place.getPlaceType())) {
                 cafe = place.getPlaceName();
             } else {
                 food = place.getPlaceName();

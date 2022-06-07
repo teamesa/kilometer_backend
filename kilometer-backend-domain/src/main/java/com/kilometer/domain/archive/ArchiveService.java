@@ -85,9 +85,8 @@ public class ArchiveService {
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus,sortType);
         Page<ArchiveSelectResult> items = archiveRepository.findAllByItemId(pageable, itemId);
-        Double avgStarRating = Math.round(archiveRepository.avgStarRatingByItemId(itemId)*10)/10.0;
 
-        return convertingItemArchive(items,avgStarRating);
+        return convertingItemArchive(items,getStarRatingAvgByItemId(itemId));
     }
 
     public ArchiveResponse findAllByUserId(Long userId, RequestPagingStatus requestPagingStatus) {
@@ -105,6 +104,13 @@ public class ArchiveService {
                 .avgStarRating(avgStarRating)
                 .archives(infos)
                 .build();
+    }
+
+    private Double getStarRatingAvgByItemId(Long itemId) {
+        Double result = archiveRepository.avgStarRatingByItemId(itemId);
+        if(result != null)
+           result = Math.round(result*10)/10.0;
+        return result;
     }
 
 }
