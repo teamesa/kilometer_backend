@@ -29,7 +29,7 @@ public class ArchiveSelectResult {
         String cafe = "";
 
         for (VisitedPlace place : places) {
-            if(PlaceType.CAFE.equals(place.getPlaceType())) {
+            if (PlaceType.CAFE.equals(place.getPlaceType())) {
                 cafe = place.getPlaceName();
             } else {
                 food = place.getPlaceName();

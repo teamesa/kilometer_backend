@@ -27,17 +27,17 @@ public class ArchiveController {
 
     @GetMapping(ApiUrlUtils.ARCHIVE_ITEM)
     public ItemDetailResponse<ArchiveResponse> archives(@PathVariable Long itemId, RequestPagingStatus requestPagingStatus, @RequestParam(defaultValue = "MODIFY_DESC") ArchiveSortType sortType) {
-        ArchiveResponse response = archiveService.findAllByItemId(itemId,requestPagingStatus,sortType);
+        ArchiveResponse response = archiveService.findAllByItemId(itemId, requestPagingStatus, sortType);
         return ItemDetailResponse.<ArchiveResponse>builder()
-            .title(ARCHIVE_TITLE)
-            .contents(response)
-            .build();
+                .title(ARCHIVE_TITLE)
+                .contents(response)
+                .build();
     }
 
     @PostMapping
     public void saveArchive(@RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();
-        archiveService.save(userId,request);
+        archiveService.save(userId, request);
     }
 
     @GetMapping(ApiUrlUtils.ARCHIVE_MY)
@@ -45,9 +45,9 @@ public class ArchiveController {
     public ItemDetailResponse<ArchiveResponse> myArchives(@CurrentUser UserPrincipal userPrincipal, RequestPagingStatus requestPagingStatus) {
         ArchiveResponse response = archiveService.findAllByUserId(userPrincipal.getId(), requestPagingStatus);
         return ItemDetailResponse.<ArchiveResponse>builder()
-            .title(MY_ARCHIVE_TITLE)
-            .contents(response)
-            .build();
+                .title(MY_ARCHIVE_TITLE)
+                .contents(response)
+                .build();
     }
 
 

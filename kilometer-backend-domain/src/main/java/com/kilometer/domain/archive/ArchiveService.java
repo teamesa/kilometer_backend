@@ -37,7 +37,7 @@ public class ArchiveService {
         Preconditions.notNull(archiveRequest.getComment(),
                 "Comment must not be null");
         Preconditions.condition((archiveRequest.getStarRating() > 0 && archiveRequest.getStarRating() <= 5),
-                "별점은 1이상 5이하의 숫자여야 합니다. now : "+archiveRequest.getStarRating());
+                "별점은 1이상 5이하의 숫자여야 합니다. now : " + archiveRequest.getStarRating());
         Preconditions.notNull(archiveRequest.getPhotoUrls(),
                 "Photo urls must not be null");
         Preconditions.notNull(archiveRequest.getPlaceInfos(),
@@ -51,16 +51,16 @@ public class ArchiveService {
 
         List<Archive> findedArchive = archiveRepository.findAllByItemAndUser(item, user);
 
-        if(!findedArchive.isEmpty())
-            throw new IllegalArgumentException("이미 Archive가 존재합니다. id : "+ findedArchive.get(0));
+        if (!findedArchive.isEmpty())
+            throw new IllegalArgumentException("이미 Archive가 존재합니다. id : " + findedArchive.get(0));
 
         List<VisitedPlace> places = new ArrayList<>();
-        for(PlaceInfo info : archiveRequest.getPlaceInfos()) {
+        for (PlaceInfo info : archiveRequest.getPlaceInfos()) {
             places.add(VisitedPlace.builder()
-                            .placeType(PlaceType.valueOf(info.getPlaceType()))
-                            .placeName(info.getName())
-                            .address(info.getAddress())
-                            .roadAddress(info.getRoadAddress())
+                    .placeType(PlaceType.valueOf(info.getPlaceType()))
+                    .placeName(info.getName())
+                    .address(info.getAddress())
+                    .roadAddress(info.getRoadAddress())
                     .build());
         }
 
@@ -83,10 +83,10 @@ public class ArchiveService {
         Preconditions.notNull(requestPagingStatus, "page value must not be null");
         Preconditions.notNull(sortType, "sort type value must not be null");
 
-        Pageable pageable = pagingStatusService.makePageable(requestPagingStatus,sortType);
+        Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
         Page<ArchiveSelectResult> items = archiveRepository.findAllByItemId(pageable, itemId);
 
-        return convertingItemArchive(items,getStarRatingAvgByItemId(itemId));
+        return convertingItemArchive(items, getStarRatingAvgByItemId(itemId));
     }
 
     public ArchiveResponse findAllByUserId(Long userId, RequestPagingStatus requestPagingStatus) {
@@ -100,7 +100,7 @@ public class ArchiveService {
     private ArchiveResponse convertingItemArchive(Page<ArchiveSelectResult> archiveSelectResults, Double avgStarRating) {
         List<ArchiveInfo> infos = archiveSelectResults.stream().map(ArchiveSelectResult::convert).collect(Collectors.toList());
         return ArchiveResponse.builder()
-                .responsePagingStatus(pagingStatusService.convert(archiveSelectResults,null))
+                .responsePagingStatus(pagingStatusService.convert(archiveSelectResults, null))
                 .avgStarRating(avgStarRating)
                 .archives(infos)
                 .build();
@@ -108,8 +108,8 @@ public class ArchiveService {
 
     private Double getStarRatingAvgByItemId(Long itemId) {
         Double result = archiveRepository.avgStarRatingByItemId(itemId);
-        if(result != null)
-           result = Math.round(result*10)/10.0;
+        if (result != null)
+            result = Math.round(result * 10) / 10.0;
         return result;
     }
 
