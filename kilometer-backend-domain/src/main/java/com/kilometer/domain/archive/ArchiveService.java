@@ -50,6 +50,7 @@ public class ArchiveService {
                 .orElseThrow(() -> new IllegalArgumentException("Item does not exists 없습니다. id = " + archiveRequest.getItemId()));
 
         List<Archive> findedArchive = archiveRepository.findAllByItemAndUser(item, user);
+
         if(!findedArchive.isEmpty())
             throw new IllegalArgumentException("이미 Archive가 존재합니다. id : "+ findedArchive.get(0));
 
@@ -100,7 +101,7 @@ public class ArchiveService {
     private ArchiveResponse convertingItemArchive(Page<ArchiveSelectResult> archiveSelectResults, Double avgStarRating) {
         List<ArchiveInfo> infos = archiveSelectResults.stream().map(ArchiveSelectResult::convert).collect(Collectors.toList());
         return ArchiveResponse.builder()
-                .responsePagingStatus(pagingStatusService.convert(archiveSelectResults))
+                .responsePagingStatus(pagingStatusService.convert(archiveSelectResults,null))
                 .avgStarRating(avgStarRating)
                 .archives(infos)
                 .build();
