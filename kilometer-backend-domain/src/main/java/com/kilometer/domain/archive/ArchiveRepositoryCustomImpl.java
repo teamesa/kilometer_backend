@@ -15,7 +15,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("rawtypes, unchecked")
+@SuppressWarnings("unchecked")
 public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
