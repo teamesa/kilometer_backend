@@ -20,4 +20,5 @@ public class UserResponse {
     private Date birthdate;
     private Gender gender;
     private AuthProvider provider;
+    private boolean isCreated;
 }
