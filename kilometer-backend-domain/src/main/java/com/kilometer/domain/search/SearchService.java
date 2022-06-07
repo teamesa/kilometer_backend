@@ -28,6 +28,7 @@ public class SearchService {
         ListQueryRequest queryRequest = ListQueryRequest.builder()
                 .filterOptions(searchRequest.getFilterOptions())
                 .searchSortType(searchRequest.getSearchSortType())
+                .queryString(searchRequest.getQueryString())
                 .pageable(pageable)
                 .userId(userId)
                 .build();
