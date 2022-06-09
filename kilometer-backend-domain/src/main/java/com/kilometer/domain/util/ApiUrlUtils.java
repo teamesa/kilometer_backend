@@ -8,6 +8,12 @@ public class ApiUrlUtils {
     public static final String PICK_ITEM = "/{itemId}";
     public static final String PICK_ITEM_PATTERN = PICK_ROOT + "/%s";
 
+    public static final String ARCHIVE_ROOT = ROOT + "/archive";
+
+    public static final String ARCHIVE_ITEM = "/{itemId}";
+
+    public static final String ARCHIVE_MY = "/my";
+
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
     }
