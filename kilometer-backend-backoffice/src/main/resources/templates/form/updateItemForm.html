@@ -9,7 +9,7 @@
 
 <form action="" th:action th:object="${item}" method="post" enctype="multipart/form-data">
     <div>
-        <div>문화생활 유형</div>
+        <div>문화생활유형 * </div>
         <div th:each="type : ${exhibitionTypes}">
             <input type="radio" th:field="*{exhibitionType}" th:value="${type.name()}">
             <label th:for="${#ids.prev('exhibitionType')}" th:text="${type.description}">
@@ -19,7 +19,7 @@
     </div>
 
     <div>
-        <div>진행 여부</div>
+        <div>FO전시여부 * </div>
         <div th:each="type : ${exposureTypes}">
             <input type="radio" th:field="*{exposureType}" th:value="${type.name()}">
             <label th:for="${#ids.prev('exposureType')}" th:text="${type.description}">
@@ -31,7 +31,7 @@
     <br>
 
     <div>
-        <label for="image">대표 이미지</label>
+        <label for="image">대표이미지 * </label>
         <input type="file" id="image" th:field="*{image}">
         <div id="preview">
             <img id="existing" width="100px" height="100px" th:src="*{image}" alt="이미지 없음">
@@ -85,21 +85,21 @@
     </script>
 
     <div>
-        <label for="title">메인 타이틀</label>
+        <label for="title">메인타이틀 * </label>
         <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
     </div>
 
     <div>
-        <label for="startDate">시작일</label>
+        <label for="startDate"> * </label>
         <input type="date" id="startDate" th:field="*{startDate}">
     </div>
     <div>
-        <label for="endDate">종료일</label>
+        <label for="endDate">종료일 * </label>
         <input type="date" id="endDate" th:field="*{endDate}">
     </div>
 
     <div>
-        <label for="place">장소</label>
+        <label for="place">장소 * </label>
         <input type="text" id="place" th:field="*{place}" placeholder="장소를 입력하세요">
     </div>
 
@@ -114,7 +114,7 @@
     </div>
 
     <div>
-        <div>지역 구분</div>
+        <div>지역구분 * </div>
         <div th:each="type : ${regionTypes}">
             <input type="radio" th:field="*{regionType}" th:value="${type.name()}">
             <label th:for="${#ids.prev('regionType')}" th:text="${type.description}">
@@ -126,7 +126,7 @@
     <br>
 
     <div>
-        <div>입장료</div>
+        <div>입장료 * </div>
         <div th:each="type : ${feeTypes}">
             <input type="radio" th:field="*{fee}" th:value="${type.name()}">
             <label th:for="${#ids.prev('fee')}" th:text="${type.description}">

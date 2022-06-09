@@ -1,7 +1,8 @@
 package com.kilometer.backend.controller;
 
 import com.kilometer.backend.controller.dto.ItemForm;
-import com.kilometer.backend.controller.file.S3Uploader;
+import com.kilometer.backend.utils.FileUtils;
+import com.kilometer.domain.file.S3Uploader;
 import com.kilometer.domain.item.*;
 import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemSaveRequest;
@@ -20,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
-import static com.kilometer.domain.item.FeeType.FREE;
 import static com.kilometer.domain.item.ExposureType.ON;
+import static com.kilometer.domain.item.FeeType.FREE;
 import static com.kilometer.domain.item.RegionType.SEOUL;
 
 @Slf4j
@@ -31,7 +32,7 @@ import static com.kilometer.domain.item.RegionType.SEOUL;
 public class ItemController {
 
     private final ItemService itemService;
-    private final S3Uploader s3Uploader;
+    private final FileUtils fileUtils;
 
     @ModelAttribute("exhibitionTypes")
     public ExhibitionType[] exhibitionTypes() {
@@ -62,17 +63,28 @@ public class ItemController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        ItemResponse defaultOptions = ItemResponse.builder().exhibitionType(EXHIBITION).regionType(SEOUL).exposureType(ON).fee(FREE).startDate(LocalDate.now()).endDate(LocalDate.now()).build();
+        ItemResponse defaultOptions = makeDefaultOption();
         model.addAttribute("item", defaultOptions);
         return "form/addForm";
     }
 
+    private ItemResponse makeDefaultOption() {
+        return ItemResponse.builder()
+                .exhibitionType(EXHIBITION)
+                .regionType(SEOUL)
+                .exposureType(ON)
+                .fee(FREE)
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
+                .build();
+    }
+
     @PostMapping("/add")
     public String addItem(@ModelAttribute ItemForm item) throws IOException {
-        String s3ImageUrl = fileExists(item.getImage());
+        String s3ImageUrl = fileUtils.fileExists(item.getImage());
         ArrayList<String> multiS3ImageUrl = new ArrayList<>();
         for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
-            multiS3ImageUrl.add(fileExists(item.getDetailImageUrl().get(i)));
+            multiS3ImageUrl.add(fileUtils.fileExists(item.getDetailImageUrl().get(i)));
         }
         ItemSaveRequest build = ItemSaveRequest.builder()
                 .exhibitionType(item.getExhibitionType())
@@ -97,15 +109,6 @@ public class ItemController {
         return "redirect:/form/items";
     }
 
-    private String fileExists(MultipartFile image) throws IOException {
-        String s3ImageUrl = "";
-        String originalFilename = image.getOriginalFilename();
-        if (StringUtils.hasText(originalFilename)) {
-            s3ImageUrl = s3Uploader.upload(image, "static");
-        }
-        return s3ImageUrl;
-    }
-
     @GetMapping("/{itemId}/edit")
     public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
         ItemResponse findOne = itemService.findOne(itemId);
@@ -115,10 +118,10 @@ public class ItemController {
 
     @PostMapping("/{itemId}/edit")
     public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemForm item) throws IOException {
-        String imageUrl = updateFileExists(itemId, item);
+        String imageUrl = fileUtils.updateFileExists(itemId, item);
         ArrayList<String> multiS3ImageUrl = new ArrayList<>();
         for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
-            multiS3ImageUrl.add(fileExists(item.getDetailImageUrl().get(i)));
+            multiS3ImageUrl.add(fileUtils.fileExists(item.getDetailImageUrl().get(i)));
         }
         ArrayList<Long> deleteImage = new ArrayList<>();
         for (int i = 0; i < item.getDeleteImageIndex().size(); i++) {
@@ -146,19 +149,6 @@ public class ItemController {
                 .build();
         itemService.updateItem(itemId, build);
         return "redirect:/form/items";
-    }
-
-    private String updateFileExists(Long itemId, ItemForm item) throws IOException {
-        MultipartFile image = item.getImage();
-        String imageUrl;
-        String originalFilename = image.getOriginalFilename();
-        if (StringUtils.hasText(originalFilename)) {
-            imageUrl = s3Uploader.upload(image, "static");
-        } else {
-            ItemResponse findItem = itemService.findOne(itemId);
-            imageUrl = findItem.getImage();
-        }
-        return imageUrl;
     }
 
     @PostMapping("/{itemId}/delete")
