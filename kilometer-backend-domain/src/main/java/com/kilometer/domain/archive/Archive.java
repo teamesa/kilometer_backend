@@ -3,16 +3,11 @@ package com.kilometer.domain.archive;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.user.User;
+import lombok.*;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.*;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 @Getter
 @Entity
@@ -58,11 +53,11 @@ public class Archive {
 
 
     public ArchiveInfo makeInfo() {
-        String food = null;
-        String cafe = null;
+        String food = "";
+        String cafe = "";
 
         for (VisitedPlace place : visitedPlaces) {
-            if(PlaceType.CAFE == place.getPlaceType()) {
+            if (PlaceType.CAFE == place.getPlaceType()) {
                 cafe = place.getPlaceName();
             } else {
                 food = place.getPlaceName();
@@ -70,16 +65,17 @@ public class Archive {
         }
 
         return ArchiveInfo.builder()
-            .userProfileUrl(this.user.getImageUrl())
-            .userName(this.user.getName())
-            .updatedAt(this.updatedAt)
-            .starRating(this.starRating)
-            .heartCount(this.heartCount)
-            .isHearted(false)
-            .comment(this.comment)
-            .food(food)
-            .cafe(cafe)
-            .build();
+                .id(this.id)
+                .userProfileUrl(this.user.getImageUrl())
+                .userName(this.user.getName())
+                .updatedAt(this.updatedAt)
+                .starRating(this.starRating)
+                .heartCount(this.heartCount)
+                .isHearted(false)
+                .comment(this.comment)
+                .food(food)
+                .cafe(cafe)
+                .build();
     }
 
     public void setVisitedPlaces(List<VisitedPlace> places) {

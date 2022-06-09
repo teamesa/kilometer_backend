@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 @AllArgsConstructor
 public enum ArchiveSortType {
     MODIFY_DESC("수정순","updatedAt", Sort.Direction.DESC),
+    LIKE_DESC("좋아요순","heartCount", Sort.Direction.DESC),
     ;
 
     private final String description;

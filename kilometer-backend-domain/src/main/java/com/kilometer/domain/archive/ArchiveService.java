@@ -33,7 +33,7 @@ public class ArchiveService {
     private final ArchiveRepository archiveRepository;
     private final PagingStatusService pagingStatusService;
 
-    public void save(Long userId, ArchiveRequest archiveRequest) {
+    public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
         Preconditions.notNull(archiveRequest.getComment(),
                 "Comment must not be null");
         Preconditions.condition((archiveRequest.getStarRating() > 0 && archiveRequest.getStarRating() <= 5),
@@ -76,6 +76,7 @@ public class ArchiveService {
 
         archiveRepository.save(archive);
 
+        return archive.makeInfo();
     }
 
     public ArchiveResponse findAllByItemId(Long itemId, RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
@@ -84,7 +85,7 @@ public class ArchiveService {
         Preconditions.notNull(sortType, "sort type value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<ArchiveSelectResult> items = archiveRepository.findAllByItemId(pageable, itemId);
+        Page<ArchiveSelectResult> items = archiveRepository.findAllByItemId(pageable, sortType, itemId);
 
         return convertingItemArchive(items, getStarRatingAvgByItemId(itemId));
     }

@@ -1,5 +1,6 @@
 package com.kilometer.domain.archive;
 
+import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.queryDto.ArchiveSelectResult;
 import com.kilometer.domain.user.QUser;
 import com.querydsl.core.types.Order;
@@ -13,9 +14,9 @@ import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unchecked")
 public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
@@ -28,7 +29,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<ArchiveSelectResult> findAllByItemId(Pageable pageable, long itemId) {
+    public Page<ArchiveSelectResult> findAllByItemId(Pageable pageable, ArchiveSortType sortType, long itemId) {
         List<ArchiveSelectResult> archives = queryFactory
                 .select(Projections.fields(ArchiveSelectResult.class,
                                 archive.id,
@@ -51,7 +52,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(convertOrderSpecifier(pageable))
+                .orderBy(getOrderSpecifier(sortType))
                 .fetch();
 
         int count = queryFactory
@@ -78,18 +79,9 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 .fetchOne();
     }
 
-    private OrderSpecifier convertOrderSpecifier(Pageable pageable) {
-        List<OrderSpecifier> collect = pageable.getSort().stream().map(this::getOrderSpecifier).collect(Collectors.toList());
-        return collect.isEmpty() ? null : collect.get(0);
-    }
-
-    private OrderSpecifier getOrderSpecifier(Sort.Order sort) {
-        switch (sort.getProperty()) {
-            case "updatedAt":
-                return new OrderSpecifier(sort.getDirection().isAscending() ? Order.ASC : Order.DESC,
-                        archive.updatedAt);
-            case "like":
-        }
-        return null;
+    private OrderSpecifier getOrderSpecifier(ArchiveSortType sortType) {
+        if (sortType == ArchiveSortType.LIKE_DESC)
+            return archive.heartCount.desc();
+        return archive.updatedAt.desc();
     }
 }
