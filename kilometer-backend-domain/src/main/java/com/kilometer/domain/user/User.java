@@ -65,4 +65,19 @@ public class User {
                 .phoneNumber(this.phoneNumber)
                 .build();
     }
+
+    public UserResponse toResponse(boolean isCreated) {
+        return UserResponse.builder()
+                .name(this.name)
+                .role(this.role)
+                .imageUrl(this.imageUrl)
+                .provider(this.provider)
+                .email(this.email)
+                .id(this.id)
+                .birthdate(this.birthdate)
+                .gender(this.gender)
+                .phoneNumber(this.phoneNumber)
+                .isCreated(isCreated)
+                .build();
+    }
 }
