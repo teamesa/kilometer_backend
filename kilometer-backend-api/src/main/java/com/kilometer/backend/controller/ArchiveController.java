@@ -27,33 +27,34 @@ public class ArchiveController {
     @GetMapping(ApiUrlUtils.ARCHIVE_ITEM)
     @ApiOperation(value = "전시글에서 아카이브 조회")
     public ItemDetailResponse<ArchiveResponse> archives(
-            @ApiParam(value = "조회할 전시글 ID", required = true) @PathVariable Long itemId,
-            @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus,
-            @ApiParam(value = "아카이브 정렬 기준", required = true, defaultValue = "MODIFY_DESC : 수정일 기준 정렬")
-            @RequestParam(defaultValue = "MODIFY_DESC") ArchiveSortType sortType) {
-        ArchiveResponse response = archiveService.findAllByItemId(itemId, requestPagingStatus, sortType);
+        @ApiParam(value = "조회할 전시글 ID", required = true) @PathVariable Long itemId,
+        @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus,
+        @ApiParam(value = "아카이브 정렬 기준", required = true, defaultValue = "MODIFY_DESC : 수정일 기준 정렬")
+        @RequestParam(defaultValue = "MODIFY_DESC") ArchiveSortType sortType) {
+        ArchiveResponse response = archiveService.findAllByItemId(itemId, requestPagingStatus,
+            sortType);
         return ItemDetailResponse.<ArchiveResponse>builder()
-                .title(ARCHIVE_TITLE)
-                .contents(response)
-                .build();
+            .title(ARCHIVE_TITLE)
+            .contents(response)
+            .build();
     }
 
     @PostMapping
     public ArchiveInfo saveArchive(
-            @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
+        @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();
         return archiveService.save(userId, request);
     }
 
     @GetMapping(ApiUrlUtils.ARCHIVE_MY)
     public ItemDetailResponse<ArchiveResponse> myArchives(
-            @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus) {
+        @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus) {
         Long userId = getLoginUserId();
         ArchiveResponse response = archiveService.findAllByUserId(userId, requestPagingStatus);
         return ItemDetailResponse.<ArchiveResponse>builder()
-                .title(MY_ARCHIVE_TITLE)
-                .contents(response)
-                .build();
+            .title(MY_ARCHIVE_TITLE)
+            .contents(response)
+            .build();
     }
 
 

@@ -14,6 +14,8 @@ public class ApiUrlUtils {
 
     public static final String ARCHIVE_MY = "/my";
 
+    public static final String IMAGE_ROOT = ROOT + "/image";
+
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
     }

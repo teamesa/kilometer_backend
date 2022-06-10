@@ -9,6 +9,8 @@ dependencies {
     )
     implementation "org.flywaydb:flyway-mysql:8.5.10"
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'org.springframework:spring-web:5.3.9'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 bootRun.enabled = false

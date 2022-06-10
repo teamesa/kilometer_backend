@@ -1,5 +1,6 @@
-package com.kilometer.domain.archive;
+package com.kilometer.domain.archive.entity;
 
+import com.kilometer.domain.archive.PlaceType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -22,7 +23,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "visited_place")
 public class VisitedPlace {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @ManyToOne
