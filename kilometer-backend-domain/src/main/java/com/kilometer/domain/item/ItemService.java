@@ -1,11 +1,6 @@
 package com.kilometer.domain.item;
 
 import com.kilometer.domain.item.dto.*;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.kilometer.domain.search.request.FilterOptions;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -13,6 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,38 +22,26 @@ public class ItemService {
     private final DetailImageRepository detailImageRepository;
 
     public void saveItem(ItemSaveRequest item) {
-        ItemDetail itemDetail = ItemDetail.builder()
-                .introduce(item.getIntroduce())
-                .build();
-        itemDetailRepository.save(itemDetail);
+        ItemDetail itemDetail = saveItemDetail(item);
+        saveDetailImage(item, itemDetail);
+        saveItemEntity(item, itemDetail);
+    }
 
+    private ItemDetail saveItemDetail(ItemSaveRequest item) {
+        ItemDetail itemDetail = item.makeItemDetail();
+        itemDetailRepository.save(itemDetail);
+        return itemDetail;
+    }
+
+    private void saveDetailImage(ItemSaveRequest item, ItemDetail itemDetail) {
         for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
-            DetailImage detailImage = DetailImage.builder()
-                    .url(item.getDetailImageUrl().get(i))
-                    .itemDetailEntity(itemDetail)
-                    .build();
+            DetailImage detailImage = item.makeDetailImage(itemDetail, i);
             detailImageRepository.save(detailImage);
         }
+    }
 
-        ItemEntity itemEntity = ItemEntity.builder()
-            .exhibitionType(item.getExhibitionType())
-            .exposureType(item.getExposureType())
-            .image(item.getImage())
-            .title(item.getTitle())
-            .startDate(item.getStartDate())
-            .endDate(item.getEndDate())
-            .place(item.getPlace())
-            .latitude(item.getLatitude())
-            .longitude(item.getLongitude())
-            .regionType(item.getRegionType())
-            .place(item.getPlace())
-            .fee(item.getFee())
-            .price(item.getPrice())
-            .url(item.getUrl())
-            .time(item.getTime())
-            .ticketUrl(item.getTicketUrl())
-            .itemDetailEntity(itemDetail)
-            .build();
+    private void saveItemEntity(ItemSaveRequest item, ItemDetail itemDetail) {
+        ItemEntity itemEntity = item.makeItemEntity(itemDetail);
         itemRepository.save(itemEntity);
     }
 
@@ -90,10 +77,17 @@ public class ItemService {
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
+        updateDetailImage(item, itemEntity);
+        itemEntity.update(item);
+
+    }
+
+    private void updateDetailImage(ItemUpdateRequest item, ItemEntity itemEntity) {
         for (int i = 0; i < item.getDeleteImage().size(); i++) {
             detailImageRepository.deleteById(item.getDeleteImage().get(i));
         }
         ItemDetail itemDetail = itemEntity.getItemDetailEntity();
+        //추가로 들어온 이미지 저장
         for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
             DetailImage detailImage = DetailImage.builder()
                     .url(item.getDetailImageUrl().get(i))
@@ -101,8 +95,6 @@ public class ItemService {
                     .build();
             detailImageRepository.save(detailImage);
         }
-        itemEntity.update(item);
-
     }
 
     public void deleteItem(Long itemId) {

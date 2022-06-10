@@ -3,205 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <link rel="stylesheet" href="../../static/css/addTable.css" th:href="@{/css/addTable.css}">
+    <link rel="stylesheet" href="../../static/css/table.css" th:href="@{/css/table.css}">
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <body>
 
-<h2>문화생활 등록</h2>
-
-<h3>기본정보</h3>
-
 <form action="/form/items/add" th:object="${item}" method="post" enctype="multipart/form-data">
+    <table class="tg">
+        <colgroup>
+            <col width="10%">
+            <col width="*%">
+            <col width="10%">
+            <col width="*%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th class="mainTitle" colspan="4">문화생활 등록</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="mainTitle" colspan="4">기본정보</td>
+        </tr>
+        <tr>
+            <td class="subTitle">문화생활 유형 *</td>
+            <td>
+                <div th:each="type, typeStat : ${exhibitionTypes}">
+                    <input type="radio" th:field="*{exhibitionType}" th:value="${type.name()}">
+                    <label th:for="${#ids.prev('exhibitionType')}" th:text="${type.description}">
+                        전시
+                    </label>
+                </div>
+            </td>
+            <td class="subTitle">FO 전시여부 *</td>
+            <td>
+                <div th:each="type, typeStat : ${exposureTypes}">
+                    <input type="radio" th:field="*{exposureType}" th:value="${type.name()}">
+                    <label th:for="${#ids.prev('exposureType')}" th:text="${type.description}">
+                        전시
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">진행기간</td>
+            <td colspan="3">
+                <div>
+                    <label for="startDate">시작일 * </label>
+                    <input type="date" id="startDate" th:field="*{startDate}">
+                </div>
+                <div>
+                    <label for="endDate">종료일 * </label>
+                    <input type="date" id="endDate" th:field="*{endDate}">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">메인타이틀 *</td>
+            <td colspan="3">
+                <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">장소명 *</td>
+            <td colspan="3">
+                <input type="text" id="place" th:field="*{place}" placeholder="장소를 입력하세요">
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">장소 위도</td>
+            <td>
+                <input type="text" id="latitude" th:field="*{latitude}" placeholder="위도를 입력하세요">
+            </td>
+            <td class="subTitle">장소 경도</td>
+            <td>
+                <input type="text" id="longitude" th:field="*{longitude}" placeholder="경도를 입력하세요">
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">입장료 *</td>
+            <td colspan="3">
+                <div th:each="type : ${feeTypes}">
+                    <input type="radio" th:field="*{fee}" th:value="${type.name()}">
+                    <label th:for="${#ids.prev('fee')}" th:text="${type.description}">
+                        무료
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">유료 입장료 가격</td>
+            <td>
+                <input type="text" id="price" th:field="*{price}" placeholder="요금을 입력하세요">
+            </td>
+            <td class="subTitle">티켓구매 URL</td>
+            <td>
+                <input type="text" id="ticketUrl" th:field="*{ticketUrl}" placeholder="티켓 구매 url 입력하세요">
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">지역구분 *</td>
+            <td colspan="3">
+                <div th:each="type : ${regionTypes}">
+                    <input type="radio" th:field="*{regionType}" th:value="${type.name()}">
+                    <label th:for="${#ids.prev('regionType')}" th:text="${type.description}">
+                        Seoul
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">홈페이지링크</td>
+            <td colspan="3">
+                <input type="text" id="url" th:field="*{url}" placeholder="링크를 입력하세요">
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">시간</td>
+            <td colspan="3">
+                <input type="text" id="time" th:field="*{time}" placeholder="시간를 입력하세요">
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">대표이미지 *</td>
+            <td colspan="3">
+                <input type="file" id="image" th:field="*{image}" placeholder="사진">
+                <div id="preview"></div>
+                <a href="#" class="btn-delete">삭제</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="mainTitle" colspan="4">소개</td>
+        </tr>
+        <tr>
+            <td>소개</td>
+            <td colspan="3">
+                <input type="text" id="introduce" th:field="*{introduce}" placeholder="소개글">
+            </td>
+        </tr>
+        <tr>
+            <td>소개이미지</td>
+            <td colspan="3">
+                <div id="btnDiv">
+                    <div data-name="fileDiv">
+                        <label for="detailImageUrl[0]">파일1</label>
+                        <input type="file" id="detailImageUrl[0]" th:field="*{detailImageUrl[0]}">
+                        <button type="button" onclick="addFile()"> 추가</button>
+                        <button type="button" onclick="removeFile(this)"> 삭제</button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="mainTitle" colspan="4">
+                <button type="submit">저장</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
 
-    <div>
-        <div>문화생활유형 * </div>
-        <div th:each="type, typeStat : ${exhibitionTypes}">
-            <input type="radio" th:field="*{exhibitionType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('exhibitionType')}" th:text="${type.description}">
-                전시
-            </label>
-        </div>
-    </div>
+<form action="/form/items" method="get">
+    <button type="submit" class="button">취소</button>
+</form>
 
-    <div>
-        <div>FO전시여부 * </div>
-        <div th:each="type, typeStat : ${exposureTypes}">
-            <input type="radio" th:field="*{exposureType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('exposureType')}" th:text="${type.description}">
-                전시
-            </label>
-        </div>
-    </div>
+<script type="text/javascript">
 
-    <br>
-
-    <div>
-        <label for="image">대표이미지 * </label>
-        <input type="file" id="image" th:field="*{image}" placeholder="사진">
-        <div id="preview"></div>
-        <a href="#" class="btn-delete">삭제</a>
-    </div>
-
-    <script type="text/javascript">
-
-        function readInputFile(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#preview').html("<img style=\"width: 100px; height: 100px;\" src=" + e.target.result + ">");
-                }
-                reader.readAsDataURL(input.files[0]);
+    function readInputFile(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#preview').html("<img style=\"width: 100px; height: 100px;\" src=" + e.target.result + ">");
             }
+            reader.readAsDataURL(input.files[0]);
         }
+    }
 
-        $("#image").on('change', function () {
-            readInputFile(this);
-        });
+    $("#image").on('change', function () {
+        readInputFile(this);
+    });
 
-        // 등록 이미지 삭제 ( input file reset )
-        function resetInputFile($input, $preview) {
-            var agent = navigator.userAgent.toLowerCase();
-            if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
-                // ie 일때
-                $input.replaceWith($input.clone(true));
-                $preview.empty();
-            } else {
-                //other
-                $input.val("");
-                $preview.empty();
-            }
+    // 등록 이미지 삭제 ( input file reset )
+    function resetInputFile($input, $preview) {
+        var agent = navigator.userAgent.toLowerCase();
+        if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
+            // ie 일때
+            $input.replaceWith($input.clone(true));
+            $preview.empty();
+        } else {
+            //other
+            $input.val("");
+            $preview.empty();
         }
+    }
 
-        $(".btn-delete").click(function (event) {
-            var $input = $("#image");
-            var $preview = $('#preview');
-            resetInputFile($input, $preview);
-        });
-    </script>
+    $(".btn-delete").click(function (event) {
+        var $input = $("#image");
+        var $preview = $('#preview');
+        resetInputFile($input, $preview);
+    });
+</script>
 
-    <div>
-        <label for="title">메인타이틀 * </label>
-        <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
-    </div>
+<script th:inline="javascript">
+    let fileIdx = 0;
 
-    <div>
-        <label for="startDate">시작일 * </label>
-        <input type="date" id="startDate" th:field="*{startDate}">
-    </div>
-    <div>
-        <label for="endDate">종료일 * </label>
-        <input type="date" id="endDate" th:field="*{endDate}">
-    </div>
-
-    <div>
-        <label for="place">장소 * </label>
-        <input type="text" id="place" th:field="*{place}" placeholder="장소를 입력하세요">
-    </div>
-
-    <div>
-        <label for="latitude">위도</label>
-        <input type="text" id="latitude" th:field="*{latitude}" placeholder="위도를 입력하세요">
-    </div>
-
-    <div>
-        <label for="longitude">경도</label>
-        <input type="text" id="longitude" th:field="*{longitude}" placeholder="경도를 입력하세요">
-    </div>
-
-    <div>
-        <div>지역구분 * </div>
-        <div th:each="type : ${regionTypes}">
-            <input type="radio" th:field="*{regionType}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('regionType')}" th:text="${type.description}">
-                Seoul
-            </label>
-        </div>
-    </div>
-
-    <br>
-
-    <div>
-        <div>입장료 * </div>
-        <div th:each="type : ${feeTypes}">
-            <input type="radio" th:field="*{fee}" th:value="${type.name()}">
-            <label th:for="${#ids.prev('fee')}" th:text="${type.description}">
-                무료
-            </label>
-        </div>
-    </div>
-
-    <div>
-        <label for="price">요금</label>
-        <input type="text" id="price" th:field="*{price}" placeholder="요금을 입력하세요">
-    </div>
-
-    <div>
-        <label for="url">url</label>
-        <input type="text" id="url" th:field="*{url}" placeholder="링크를 입력하세요">
-    </div>
-
-    <div>
-        <label for="time">time</label>
-        <input type="text" id="time" th:field="*{time}" placeholder="시간를 입력하세요">
-    </div>
-
-    <div>
-        <label for="ticketUrl">티켓구매URL</label>
-        <input type="text" id="ticketUrl" th:field="*{ticketUrl}" placeholder="티켓 구매 url 입력하세요">
-    </div>
-
-    <div>
-        <label for="introduce">소개글</label>
-        <input type="text" id="introduce" th:field="*{introduce}" placeholder="소개글">
-    </div>
-
-    <div id="btnDiv">
-        <div data-name="fileDiv">
-            <label for="detailImageUrl[0]">파일1</label>
-            <input type="file" id="detailImageUrl[0]" th:field="*{detailImageUrl[0]}">
-            <button type="button" onclick="addFile()"> 추가</button>
-            <button type="button" onclick="removeFile(this)"> 삭제</button>
-        </div>
-    </div>
-
-    <script th:inline="javascript">
-        let fileIdx = 0;
-
-        function addFile() {
-            fileIdx++;
-            const fileHtml = `
+    function addFile() {
+        fileIdx++;
+        const fileHtml = `
         <div data-name="fileDiv">
             <label for="detailImageUrl[${fileIdx}]">파일${fileIdx + 1}</label>
             <input type="file" id="detailImageUrl[${fileIdx}]" name="detailImageUrl[${fileIdx}]">
             <button type="button" onclick="removeFile(this)"> 삭제 </button>
         </div>
 	`;
-            $('#btnDiv').append(fileHtml);
+        $('#btnDiv').append(fileHtml);
+    }
+
+    function removeFile(elem) {
+
+        fileIdx--;
+
+        const prevTag = $(elem).prev().prop('tagName');
+        if (prevTag === 'BUTTON') {
+            const file = $(elem).prevAll('input[type="file"]');
+            file.val('');
+            return false;
         }
 
-        function removeFile(elem) {
-
-            fileIdx--;
-
-            const prevTag = $(elem).prev().prop('tagName');
-            if (prevTag === 'BUTTON') {
-                const file = $(elem).prevAll('input[type="file"]');
-                file.val('');
-                return false;
-            }
-
-            const target = $(elem).parents('div[data-name="fileDiv"]');
-            target.remove();
-        }
-    </script>
-
-    <!-- 등록 버튼 -->
-    <div>
-        <button type="submit">등록</button>
-    </div>
-
-</form>
+        const target = $(elem).parents('div[data-name="fileDiv"]');
+        target.remove();
+    }
+</script>
 
 </body>
 </html>

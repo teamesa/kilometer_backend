@@ -2,22 +2,16 @@ package com.kilometer.backend.controller;
 
 import com.kilometer.backend.controller.dto.ItemForm;
 import com.kilometer.backend.utils.FileUtils;
-import com.kilometer.domain.file.S3Uploader;
 import com.kilometer.domain.item.*;
 import com.kilometer.domain.item.dto.ItemResponse;
-import com.kilometer.domain.item.dto.ItemSaveRequest;
-import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
@@ -68,44 +62,12 @@ public class ItemController {
         return "form/addForm";
     }
 
-    private ItemResponse makeDefaultOption() {
-        return ItemResponse.builder()
-                .exhibitionType(EXHIBITION)
-                .regionType(SEOUL)
-                .exposureType(ON)
-                .fee(FREE)
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now())
-                .build();
-    }
-
     @PostMapping("/add")
     public String addItem(@ModelAttribute ItemForm item) throws IOException {
-        String s3ImageUrl = fileUtils.fileExists(item.getImage());
-        ArrayList<String> multiS3ImageUrl = new ArrayList<>();
-        for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
-            multiS3ImageUrl.add(fileUtils.fileExists(item.getDetailImageUrl().get(i)));
-        }
-        ItemSaveRequest build = ItemSaveRequest.builder()
-                .exhibitionType(item.getExhibitionType())
-                .exposureType(item.getExposureType())
-                .image(s3ImageUrl)
-                .title(item.getTitle())
-                .startDate(item.getStartDate())
-                .endDate(item.getEndDate())
-                .latitude(item.getLatitude())
-                .longitude(item.getLongitude())
-                .regionType(item.getRegionType())
-                .place(item.getPlace())
-                .fee(item.getFee())
-                .price(item.getPrice())
-                .url(item.getUrl())
-                .time(item.getTime())
-                .ticketUrl(item.getTicketUrl())
-                .introduce(item.getIntroduce())
-                .detailImageUrl(multiS3ImageUrl)
-                .build();
-        itemService.saveItem(build);
+        itemService.saveItem(item.makeItemSaveRequest(
+                fileUtils.getS3ImageUrl(item),
+                fileUtils.getS3MultiImageUrl(item)
+        ));
         return "redirect:/form/items";
     }
 
@@ -118,36 +80,11 @@ public class ItemController {
 
     @PostMapping("/{itemId}/edit")
     public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemForm item) throws IOException {
-        String imageUrl = fileUtils.updateFileExists(itemId, item);
-        ArrayList<String> multiS3ImageUrl = new ArrayList<>();
-        for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
-            multiS3ImageUrl.add(fileUtils.fileExists(item.getDetailImageUrl().get(i)));
-        }
-        ArrayList<Long> deleteImage = new ArrayList<>();
-        for (int i = 0; i < item.getDeleteImageIndex().size(); i++) {
-            deleteImage.add(item.getDeleteImageIndex().get(i));
-        }
-        ItemUpdateRequest build = ItemUpdateRequest.builder()
-                .exhibitionType(item.getExhibitionType())
-                .exposureType(item.getExposureType())
-                .image(imageUrl)
-                .title(item.getTitle())
-                .startDate(item.getStartDate())
-                .endDate(item.getEndDate())
-                .latitude(item.getLatitude())
-                .longitude(item.getLongitude())
-                .regionType(item.getRegionType())
-                .place(item.getPlace())
-                .fee(item.getFee())
-                .price(item.getPrice())
-                .url(item.getUrl())
-                .time(item.getTime())
-                .ticketUrl(item.getTicketUrl())
-                .introduce(item.getIntroduce())
-                .detailImageUrl(multiS3ImageUrl)
-                .deleteImage(deleteImage)
-                .build();
-        itemService.updateItem(itemId, build);
+        itemService.updateItem(itemId, item.makeItemUpdateRequest(
+                fileUpdateCheck(itemId, fileUtils.getS3ImageUrl(item)),
+                fileUtils.getS3MultiImageUrl(item),
+                fileUtils.getDeleteImage(item)
+        ));
         return "redirect:/form/items";
     }
 
@@ -163,4 +100,22 @@ public class ItemController {
         return itemService.findItems();
     }
 
+    private ItemResponse makeDefaultOption() {
+        return ItemResponse.builder()
+                .exhibitionType(EXHIBITION)
+                .regionType(SEOUL)
+                .exposureType(ON)
+                .fee(FREE)
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
+                .build();
+    }
+
+    private String fileUpdateCheck(Long itemId, String s3ImageUrl) {
+        if (s3ImageUrl.equals("")) {
+            ItemResponse findItem = itemService.findOne(itemId);
+            s3ImageUrl = findItem.getImage();
+        }
+        return s3ImageUrl;
+    }
 }
