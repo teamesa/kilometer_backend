@@ -1,21 +1,18 @@
 package com.kilometer.domain.archive;
 
 import com.kilometer.domain.archive.dto.ArchiveSortType;
+import com.kilometer.domain.archive.entity.QArchive;
+import com.kilometer.domain.archive.entity.QVisitedPlace;
 import com.kilometer.domain.archive.queryDto.ArchiveSelectResult;
 import com.kilometer.domain.user.QUser;
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
