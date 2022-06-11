@@ -1,5 +1,6 @@
-package com.kilometer.domain.archive;
+package com.kilometer.domain.archive.entity;
 
+import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.user.User;
@@ -65,6 +66,9 @@ public class Archive {
     @Builder.Default
     private List<VisitedPlace> visitedPlaces = List.of();
 
+    @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<ArchivePhoto> archivePhotos = List.of();
 
     public ArchiveInfo makeInfo() {
         String food = "";
@@ -97,4 +101,8 @@ public class Archive {
         this.visitedPlaces.forEach(place -> place.setArchive(this));
     }
 
+    public void setPhotos(List<ArchivePhoto> photos) {
+        this.archivePhotos = photos;
+        this.archivePhotos.forEach(photo -> photo.setArchive(this));
+    }
 }
