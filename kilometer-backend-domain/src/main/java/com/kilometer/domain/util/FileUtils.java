@@ -10,6 +10,8 @@ public class FileUtils {
     public static final long LIST_IMAGE_SIZE = 307200L;
     public static final String S3_ROOT = "static";
 
+    public static final String PHOTO_FILE_EXTENSION_REGEX = ".(png|jpeg|jpg|gif)$";
+
     public static String getFilePath() {
         return S3_ROOT+"/"+ LocalDate.now();
     }
