@@ -1,6 +1,7 @@
 package com.kilometer.backend.utils;
 
 import com.kilometer.backend.controller.dto.ItemForm;
+import com.kilometer.domain.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class FileUtils {
 
-    private final S3FileConverter s3fileConverter;
+    private final S3Uploader s3Uploader;
 
     public String getS3ImageUrl(ItemForm item) throws IOException {
         String s3ImageUrl = "";
@@ -43,7 +44,7 @@ public class FileUtils {
     }
 
     private String upload(MultipartFile file) throws IOException {
-        return s3fileConverter.upload(file, "static");
+        return s3Uploader.upload(file.getBytes(),file.getOriginalFilename());
     }
 
     private String multipartFileToString(MultipartFile file) {
