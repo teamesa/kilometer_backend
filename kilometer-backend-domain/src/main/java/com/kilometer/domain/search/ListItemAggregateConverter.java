@@ -38,6 +38,7 @@ public class ListItemAggregateConverter {
         ListItemHeart heart = heartGenerator.generateListItemHeart(item);
 
         return ListItem.builder()
+                .id(item.getId())
                 .presentationImage(image)
                 .typeBadge(typeBadge)
                 .additionalBadgeList(additionalBadgeList)

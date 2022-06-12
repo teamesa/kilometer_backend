@@ -138,11 +138,11 @@ public class ItemEntity {
             .lat(this.latitude)
             .lng(this.longitude)
             .feeType((this.fee == FeeType.COST) ? "유료" : "무료")
-            .price((StringUtils.hasText(this.price)) ? null : this.price)
-            .ticketUrl((StringUtils.hasText(this.ticketUrl)) ? null : this.ticketUrl)
-            .time((StringUtils.hasText(this.time)) ? null : this.time)
-            .homePageUrl((StringUtils.hasText(this.url)) ? null : this.url)
-            .thumbnailImageUrl((StringUtils.hasText(this.image)) ? null : this.image)
+            .price((StringUtils.hasText(this.price)) ? this.price : null)
+            .ticketUrl((StringUtils.hasText(this.ticketUrl)) ? this.ticketUrl : null )
+            .time((StringUtils.hasText(this.time)) ? this.time : null)
+            .homePageUrl((StringUtils.hasText(this.url)) ? this.url : null)
+            .thumbnailImageUrl((StringUtils.hasText(this.image)) ? this.image : null)
             .build();
     }
 }

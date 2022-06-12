@@ -1,5 +1,6 @@
 package com.kilometer.domain.paging;
 
+import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.search.request.SearchRequest;
 import com.kilometer.domain.search.request.SearchSortType;
 import org.springframework.data.domain.Page;
@@ -19,13 +20,15 @@ public class PagingStatusService {
     private static final int DEFAULT_PAGE_NUMBER = 0;
     private static final Sort DEFAULT_SORT_OPTION = SearchSortType.ENROLL_DESC.getSearchSortOption();
 
-    public ResponsePagingStatus convert(Page page) {
+    public ResponsePagingStatus convert(Page page, String query) {
         return ResponsePagingStatus.builder()
                 .currentPage(page.getNumber())
+                .totalContentsCount(page.getTotalElements())
                 .currentContentsCount(getCurrentContentsCount(page))
                 .pageSize(page.getNumber())
                 .nextPage(getNextPage(page))
                 .hasNext(page.hasNext())
+                .query(query)
                 .build();
     }
 
@@ -41,6 +44,22 @@ public class PagingStatusService {
         Sort sort = Optional.ofNullable(searchRequest)
                 .map(SearchRequest::getSearchSortType)
                 .map(SearchSortType::getSearchSortOption)
+                .orElse(DEFAULT_SORT_OPTION);
+
+        return PageRequest.of(page, size, sort);
+    }
+
+    public Pageable makePageable(RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
+        int page = Optional.ofNullable(requestPagingStatus)
+                .map(RequestPagingStatus::getPageNumber)
+                .orElse(DEFAULT_PAGE_NUMBER);
+
+        int size = Optional.ofNullable(requestPagingStatus)
+                .map(RequestPagingStatus::getPageSize)
+                .orElse(DEFAULT_PAGE_SIZE);
+
+        Sort sort = Optional.ofNullable(sortType)
+                .map(ArchiveSortType::getArchiveSortOption)
                 .orElse(DEFAULT_SORT_OPTION);
 
         return PageRequest.of(page, size, sort);

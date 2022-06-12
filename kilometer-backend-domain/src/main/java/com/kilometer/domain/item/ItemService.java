@@ -1,17 +1,21 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.item.dto.*;
-import com.kilometer.domain.search.request.FilterOptions;
-import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.kilometer.domain.item.dto.DetailResponse;
+import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.ItemSaveRequest;
+import com.kilometer.domain.item.dto.ItemUpdateRequest;
+import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.item.dto.SummaryResponse;
+import com.kilometer.domain.search.dto.AutoCompleteItem;
+import com.kilometer.domain.search.dto.ListQueryRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.junit.platform.commons.util.Preconditions;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +49,12 @@ public class ItemService {
         itemRepository.save(itemEntity);
     }
 
-    public Page<SearchItemResponse> findByDefaultPageable(Pageable pageable, FilterOptions filterOptions, long userId) {
-        return itemRepository.findAllBySortOption(pageable, filterOptions, userId);
+    public Page<SearchItemResponse> getItemBySearchOptions(ListQueryRequest queryRequest) {
+        return itemRepository.findAllBySortOption(queryRequest);
+    }
+
+    public Page<AutoCompleteItem> getAutoCompleteItemByQuery(String query) {
+        return itemRepository.findTop10ByQuery(query);
     }
 
     public List<ItemResponse> findItems() {
@@ -90,9 +98,9 @@ public class ItemService {
         //추가로 들어온 이미지 저장
         for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
             DetailImage detailImage = DetailImage.builder()
-                    .url(item.getDetailImageUrl().get(i))
-                    .itemDetailEntity(itemDetail)
-                    .build();
+                .url(item.getDetailImageUrl().get(i))
+                .itemDetailEntity(itemDetail)
+                .build();
             detailImageRepository.save(detailImage);
         }
     }
@@ -102,5 +110,20 @@ public class ItemService {
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
         itemRepository.delete(itemEntity);
+    }
+
+    public DetailResponse findToDetailResponseById(Long itemId) {
+        Preconditions.notNull(itemId, "id must not be null");
+
+        ItemEntity itemEntity = itemRepository.findById(itemId)
+            .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + itemId));
+
+        return Optional.ofNullable(itemEntity.getItemDetailEntity())
+            .map(itemDetailEntity -> itemDetailRepository.findById(itemDetailEntity.getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "ItemDetail not found id=" + itemDetailEntity.getId()))
+            )
+            .map(ItemDetail::makeResponse)
+            .orElse(DetailResponse.empty());
     }
 }

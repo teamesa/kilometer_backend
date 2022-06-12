@@ -39,6 +39,6 @@ public class UserService {
                 .provider(provider)
                 .providerId(oAuth2UserInfo.getId())
                 .build();
-        return userRepository.save(newUser).toResponse();
+        return userRepository.save(newUser).toResponse(true);
     }
 }

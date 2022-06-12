@@ -101,6 +101,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .antMatchers("/", "/test").permitAll()
                         .antMatchers("/hello-example").permitAll()
                         .antMatchers(HttpMethod.POST,"/api/search").permitAll()
+                        .antMatchers(HttpMethod.GET,"/api/search/auto-complete").permitAll()
                         // swagger
                         .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
@@ -126,8 +127,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://azxca1731.synology.me:4000", "http://www.kilometer.shop"));
-        configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "X-PINGOTHER"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

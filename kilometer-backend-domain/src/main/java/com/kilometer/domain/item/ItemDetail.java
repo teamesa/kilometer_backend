@@ -1,5 +1,6 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.item.dto.DetailResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -34,5 +36,13 @@ public class ItemDetail {
 
     public void update(String introduce) {
         this.introduce = introduce;
+    }
+
+    public DetailResponse makeResponse() {
+        List<String> photo = images.stream().map(DetailImage::getUrl).collect(Collectors.toList());
+        return DetailResponse.builder()
+                .summary(introduce)
+                .photo(photo)
+                .build();
     }
 }

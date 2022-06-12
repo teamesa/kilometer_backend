@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class PickService {
     private final PickRepository pickRepository;
 
-    public boolean makePickStatus(Long itemId, Long userId, boolean status) {
+    public PickResponse makePickStatus(Long itemId, Long userId, boolean status) {
         ItemEntity pickedItem = ItemEntity.builder().id(itemId).build();
         User pickedUser = User.builder().id(userId).build();
 
@@ -24,6 +24,8 @@ public class PickService {
                                 .build()
                 );
 
-        return pickRepository.save(pick).isHearted();
+        return PickResponse.builder()
+                .content(pickRepository.save(pick).isHearted())
+                .build();
     }
 }

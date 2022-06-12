@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class ListItemHeartGenerator {
     public ListItemHeart generateListItemHeart(SearchItemResponse item) {
         return ListItemHeart.builder()
+                .id(item.getId())
                 .heartClicked(item.isHearted())
                 .link(ApiUrlUtils.getPickItemUrl(item.getId()))
                 .build();

@@ -42,6 +42,7 @@ cloud:
       secretKey: ${s3.secretKey}
 
 logging:
+  config: classpath:log4j2.xml
   level:
     com:
       amazonaws:

@@ -1,8 +1,10 @@
 package com.kilometer.backend.security.security.oauth2;
 
 import com.kilometer.backend.security.exception.BadRequestException;
+import com.kilometer.backend.security.security.UserPrincipal;
 import com.kilometer.backend.security.security.token.TokenProvider;
 import com.kilometer.backend.security.util.CookieUtils;
+import com.kilometer.domain.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -27,7 +29,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(request, response, authentication);
-        String token = tokenProvider.createToken(authentication);
 
         if (response.isCommitted()) {
             logger.debug("응답이 이미 커밋되었습니다. " + targetUrl + "로 리다이렉션을 할 수 없습니다");
@@ -35,7 +36,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         clearAuthenticationAttributes(request, response);
-        httpCookieOAuth2AuthorizationRequestRepository.addFrontCookie(response, token);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
@@ -47,10 +47,28 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             throw new BadRequestException("승인되지 않은 리디렉션 URI가 있어 인증을 진행할 수 없습니다.");
         }
 
-        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        String token = tokenProvider.createToken(authentication);
+
+        String targetUrl = makeTargetUrl(redirectUri, authentication);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
+                .queryParam("token", token)
                 .build().toUriString();
+    }
+
+    private String makeTargetUrl(Optional<String> redirectUri, Authentication authentication) {
+        String first = redirectUri.orElse(getDefaultTargetUrl());
+
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        boolean isFirstUser = Optional.ofNullable(userPrincipal.getUser())
+                .map(UserResponse::isCreated)
+                .orElse(false);
+
+        if (isFirstUser) {
+            return first.substring(0,first.indexOf("redirect_uri")).concat("redirect_uri=/welcome");
+        } else {
+            return first;
+        }
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
