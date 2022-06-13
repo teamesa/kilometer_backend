@@ -38,6 +38,13 @@ public class ItemDetail {
         this.introduce = introduce;
     }
 
+    public void setDetailImages(List<DetailImage> images) {
+        if(!this.images.isEmpty()) {
+            this.images.clear();
+        }
+        this.images.addAll(images);
+    }
+
     public DetailResponse makeResponse() {
         List<String> photo = images.stream().map(DetailImage::getUrl).collect(Collectors.toList());
         return DetailResponse.builder()

@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,7 +22,11 @@ public class ItemForm {
 
     private ExhibitionType exhibitionType;
     private ExposureType exposureType;
-    private MultipartFile image;
+
+    private String listImageUrl;
+
+    private String thumbnailImageUrl;
+
     private String title;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -41,51 +44,52 @@ public class ItemForm {
     private String time;
     private String ticketUrl;
     private String introduce;
-    private List<MultipartFile> detailImageUrl;
-    private List<Long> deleteImageIndex;
+    private List<String> detailImageUrls;
 
-    public ItemSaveRequest makeItemSaveRequest(String s3ImageUrl, ArrayList<String> multiS3ImageUrl) {
+    public ItemSaveRequest makeItemSaveRequest() {
         return ItemSaveRequest.builder()
-                .exhibitionType(this.exhibitionType)
-                .exposureType(this.exposureType)
-                .image(s3ImageUrl)
-                .title(this.title)
-                .startDate(this.startDate)
-                .endDate(this.endDate)
-                .latitude(this.latitude)
-                .longitude(this.longitude)
-                .regionType(this.regionType)
-                .place(this.place)
-                .fee(this.fee)
-                .price(this.price)
-                .url(this.url)
-                .time(this.time)
-                .ticketUrl(this.ticketUrl)
-                .introduce(this.introduce)
-                .detailImageUrl(multiS3ImageUrl)
-                .build();
+            .exhibitionType(this.exhibitionType)
+            .exposureType(this.exposureType)
+            .listImageUrl(this.listImageUrl)
+            .thumbnailImageUrl(this.thumbnailImageUrl)
+            .title(this.title)
+            .startDate(this.startDate)
+            .endDate(this.endDate)
+            .latitude(this.latitude)
+            .longitude(this.longitude)
+            .regionType(this.regionType)
+            .placeName(this.place)
+            .fee(this.fee)
+            .price(this.price)
+            .homepageUrl(this.url)
+            .time(this.time)
+            .ticketUrl(this.ticketUrl)
+            .introduce(this.introduce)
+            .detailImageUrls(this.detailImageUrls)
+            .build();
     }
 
-    public ItemUpdateRequest makeItemUpdateRequest(String s3ImageUrl, ArrayList<String> multiS3ImageUrl, ArrayList<Long> deleteImage) {
+    public ItemUpdateRequest makeItemUpdateRequest(String s3ImageUrl,
+        ArrayList<String> multiS3ImageUrl, ArrayList<Long> deleteImage) {
         return ItemUpdateRequest.builder()
-                .exhibitionType(this.exhibitionType)
-                .exposureType(this.exposureType)
-                .image(s3ImageUrl)
-                .title(this.title)
-                .startDate(this.startDate)
-                .endDate(this.endDate)
-                .latitude(this.latitude)
-                .longitude(this.longitude)
-                .regionType(this.regionType)
-                .place(this.place)
-                .fee(this.fee)
-                .price(this.price)
-                .url(this.url)
-                .time(this.time)
-                .ticketUrl(this.ticketUrl)
-                .introduce(this.introduce)
-                .detailImageUrl(multiS3ImageUrl)
-                .deleteImage(deleteImage)
-                .build();
+            .exhibitionType(this.exhibitionType)
+            .exposureType(this.exposureType)
+            .image(s3ImageUrl)
+            .title(this.title)
+            .startDate(this.startDate)
+            .endDate(this.endDate)
+            .latitude(this.latitude)
+            .longitude(this.longitude)
+            .regionType(this.regionType)
+            .place(this.place)
+            .fee(this.fee)
+            .price(this.price)
+            .url(this.url)
+            .time(this.time)
+            .ticketUrl(this.ticketUrl)
+            .introduce(this.introduce)
+            .detailImageUrl(multiS3ImageUrl)
+            .deleteImage(deleteImage)
+            .build();
     }
 }

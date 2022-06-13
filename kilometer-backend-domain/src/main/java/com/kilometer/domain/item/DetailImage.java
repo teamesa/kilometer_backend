@@ -25,6 +25,19 @@ public class DetailImage {
     @JoinColumn(name = "itemDetailEntity")
     private ItemDetail itemDetailEntity;
 
+    public static DetailImage makeEntity(String url) {
+        return DetailImage.builder()
+            .url(url)
+            .build();
+    }
+
+    public static DetailImage makeEntity(String url, ItemDetail itemDetail) {
+        return DetailImage.builder()
+            .url(url)
+            .itemDetailEntity(itemDetail)
+            .build();
+    }
+
     public ItemDetailImages getDetailImages() {
         return ItemDetailImages.builder()
                 .id(this.id)

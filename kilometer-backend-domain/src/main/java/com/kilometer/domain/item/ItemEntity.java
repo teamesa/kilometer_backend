@@ -6,6 +6,7 @@ import com.kilometer.domain.item.dto.SummaryResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,7 +34,8 @@ import org.springframework.util.StringUtils;
 @Table(name = "item_entity")
 public class ItemEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -96,36 +98,32 @@ public class ItemEntity {
 
     public ItemResponse makeResponse() {
         return ItemResponse.builder()
-                .id(this.id)
-                .exhibitionType(this.exhibitionType)
-                .exposureType(this.exposureType)
-                .image(this.image)
-                .title(this.title)
-                .startDate(this.startDate)
-                .endDate(this.endDate)
-                .place(this.place)
-                .latitude(this.latitude)
-                .longitude(this.longitude)
-                .regionType(this.regionType)
-                .fee(this.fee)
-                .price(this.price)
-                .url(this.url)
-                .time(this.time)
-                .ticketUrl(this.ticketUrl)
-                .detailImageUrl(Optional.ofNullable(this.itemDetailEntity)
-                        .map(itemDetail -> itemDetail.getImages().stream()
-                                .map(DetailImage::getUrl)
-                                .collect(Collectors.toList()))
-                        .orElse(List.of()))
-                .detailImages(Optional.ofNullable(this.itemDetailEntity)
-                        .map(itemDetail -> itemDetail.getImages().stream()
-                                .map(DetailImage::getDetailImages)
-                                .collect(Collectors.toList()))
-                        .orElse(List.of()))
-                .introduce(Optional.ofNullable(this.itemDetailEntity)
-                        .map(ItemDetail::getIntroduce)
-                        .orElse(null))
-                .build();
+            .id(this.id)
+            .exhibitionType(this.exhibitionType)
+            .exposureType(this.exposureType)
+            .listImageUrl(this.image)
+            .thumbnailImageUrl(this.image)
+            .title(this.title)
+            .startDate(this.startDate)
+            .endDate(this.endDate)
+            .placeName(this.place)
+            .latitude(this.latitude)
+            .longitude(this.longitude)
+            .regionType(this.regionType)
+            .fee(this.fee)
+            .price(this.price)
+            .homepageUrl(this.url)
+            .time(this.time)
+            .ticketUrl(this.ticketUrl)
+            .detailImageUrls(Optional.ofNullable(this.itemDetailEntity)
+                .map(itemDetail -> itemDetail.getImages().stream()
+                    .map(DetailImage::getUrl)
+                    .collect(Collectors.toList()))
+                .orElse(new ArrayList<>()))
+            .introduce(Optional.ofNullable(this.itemDetailEntity)
+                .map(ItemDetail::getIntroduce)
+                .orElse(""))
+            .build();
     }
 
     public SummaryResponse makeSummaryResponse() {
@@ -139,7 +137,7 @@ public class ItemEntity {
             .lng(this.longitude)
             .feeType((this.fee == FeeType.COST) ? "유료" : "무료")
             .price((StringUtils.hasText(this.price)) ? this.price : null)
-            .ticketUrl((StringUtils.hasText(this.ticketUrl)) ? this.ticketUrl : null )
+            .ticketUrl((StringUtils.hasText(this.ticketUrl)) ? this.ticketUrl : null)
             .time((StringUtils.hasText(this.time)) ? this.time : null)
             .homePageUrl((StringUtils.hasText(this.url)) ? this.url : null)
             .thumbnailImageUrl((StringUtils.hasText(this.image)) ? this.image : null)

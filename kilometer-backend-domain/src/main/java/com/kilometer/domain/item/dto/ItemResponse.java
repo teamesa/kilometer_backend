@@ -20,9 +20,15 @@ import java.util.List;
 public class ItemResponse {
 
     private Long id;
+
     private ExhibitionType exhibitionType;
     private ExposureType exposureType;
-    private String image;
+    private RegionType regionType;
+    private FeeType fee;
+
+    private String listImageUrl;
+    private String thumbnailImageUrl;
+
     private String title;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -30,16 +36,17 @@ public class ItemResponse {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    private String place;
+    private String placeName;
+
     private Double latitude;
     private Double longitude;
-    private RegionType regionType;
-    private FeeType fee;
+
     private String price;
-    private String url;
+    private String homepageUrl;
     private String time;
     private String ticketUrl;
+
+    // ItemDetail & DetailImage
     private String introduce;
-    private List<String> detailImageUrl;
-    private List<ItemDetailImages> detailImages;
+    private List<String> detailImageUrls;
 }

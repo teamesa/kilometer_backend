@@ -17,7 +17,11 @@ import java.util.List;
 public class ItemSaveRequest {
     private ExhibitionType exhibitionType;
     private ExposureType exposureType;
-    private String image;
+    private RegionType regionType;
+    private FeeType fee;
+
+    private String listImageUrl;
+    private String thumbnailImageUrl;
     private String title;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -25,17 +29,18 @@ public class ItemSaveRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    private String place;
+    private String placeName;
+
     private Double latitude;
     private Double longitude;
-    private RegionType regionType;
-    private FeeType fee;
+
     private String price;
-    private String url;
+    private String homepageUrl;
     private String time;
     private String ticketUrl;
     private String introduce;
-    private List<String> detailImageUrl;
+    @Builder.Default
+    private List<String> detailImageUrls = List.of();
 
     public ItemDetail makeItemDetail() {
         return ItemDetail.builder()
@@ -45,7 +50,7 @@ public class ItemSaveRequest {
 
     public DetailImage makeDetailImage(ItemDetail itemDetail, int index) {
         return DetailImage.builder()
-                .url(this.detailImageUrl.get(index))
+                .url(this.detailImageUrls.get(index))
                 .itemDetailEntity(itemDetail)
                 .build();
     }
@@ -54,18 +59,18 @@ public class ItemSaveRequest {
         return ItemEntity.builder()
                 .exhibitionType(this.getExhibitionType())
                 .exposureType(this.getExposureType())
-                .image(this.getImage())
+                .image(this.getListImageUrl())
                 .title(this.getTitle())
                 .startDate(this.getStartDate())
                 .endDate(this.getEndDate())
-                .place(this.getPlace())
+                .place(this.getPlaceName())
                 .latitude(this.getLatitude())
                 .longitude(this.getLongitude())
                 .regionType(this.getRegionType())
-                .place(this.getPlace())
+                .place(this.getPlaceName())
                 .fee(this.getFee())
                 .price(this.getPrice())
-                .url(this.getUrl())
+                .url(this.getHomepageUrl())
                 .time(this.getTime())
                 .ticketUrl(this.getTicketUrl())
                 .itemDetailEntity(itemDetail)

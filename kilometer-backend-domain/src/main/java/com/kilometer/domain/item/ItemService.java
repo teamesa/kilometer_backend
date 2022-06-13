@@ -16,6 +16,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -26,22 +27,29 @@ public class ItemService {
     private final DetailImageRepository detailImageRepository;
 
     public void saveItem(ItemSaveRequest item) {
-        ItemDetail itemDetail = saveItemDetail(item);
-        saveDetailImage(item, itemDetail);
+        ItemDetail itemDetail = null;
+        if(StringUtils.hasText(item.getIntroduce())) {
+            itemDetail = saveItemDetail(item);
+        }
         saveItemEntity(item, itemDetail);
     }
 
     private ItemDetail saveItemDetail(ItemSaveRequest item) {
+
         ItemDetail itemDetail = item.makeItemDetail();
         itemDetailRepository.save(itemDetail);
+
+        saveDetailImage(item, itemDetail);
         return itemDetail;
     }
 
     private void saveDetailImage(ItemSaveRequest item, ItemDetail itemDetail) {
-        for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
-            DetailImage detailImage = item.makeDetailImage(itemDetail, i);
-            detailImageRepository.save(detailImage);
-        }
+        List<DetailImage> detailImages = item.getDetailImageUrls().stream()
+            .map(url -> DetailImage.makeEntity(url, itemDetail))
+            .collect(Collectors.toList());
+
+        itemDetail.setDetailImages(detailImages);
+        detailImageRepository.saveAll(detailImages);
     }
 
     private void saveItemEntity(ItemSaveRequest item, ItemDetail itemDetail) {

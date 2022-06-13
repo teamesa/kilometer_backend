@@ -67,7 +67,7 @@
         <tr>
             <td class="subTitle">장소명</td>
             <td colspan="3">
-                <input type="text" id="place" th:field="*{place}" placeholder="장소를 입력하세요">
+                <input type="text" id="place" th:field="*{placeName}" placeholder="장소를 입력하세요">
             </td>
         </tr>
         <tr>
@@ -115,7 +115,7 @@
         <tr>
             <td class="subTitle">홈페이지링크</td>
             <td colspan="3">
-                <input type="text" id="url" th:field="*{url}" placeholder="링크를 입력하세요">
+                <input type="text" id="url" th:field="*{homepageUrl}" placeholder="링크를 입력하세요">
             </td>
         </tr>
         <tr>
@@ -125,12 +125,18 @@
             </td>
         </tr>
         <tr>
-            <td class="subTitle">대표이미지 *</td>
+            <td class="subTitle">리스트 이미지 *</td>
             <td colspan="3">
-                <input type="file" id="image" th:field="*{image}">
-                <div id="preview">
-                    <img id="existing" width="100px" height="100px" th:src="*{image}" alt="이미지 없음">
-                </div>
+                <input type="file" id="listImageUrl" th:field="*{listImageUrl}" placeholder="사진">
+                <div id="listPreview"></div>
+                <a href="#" class="btn-delete">삭제</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="subTitle">썸네일 이미지 *</td>
+            <td colspan="3">
+                <input type="file" id="thumbnailImageUrl" th:field="*{thumbnailImageUrl}" placeholder="사진">
+                <div id="thumbnailPreview"></div>
                 <a href="#" class="btn-delete">삭제</a>
             </td>
         </tr>
@@ -148,16 +154,15 @@
             <td colspan="3">
                 <div id="btnDiv">
                     <div data-name="fileDiv">
-                        <label for="detailImageUrl[0]">파일1</label>
-                        <input type="file" id="detailImageUrl[0]" th:field="*{detailImageUrl[0]}">
+                        <label for="detailImageUrls[0]">파일1</label>
+                        <input type="file" id="detailImageUrls[0]" th:field="*{detailImageUrls[0]}">
                         <button type="button" onclick="addFile()"> 추가</button>
                         <button type="button" onclick="removeFile(this)"> 삭제</button>
                     </div>
                 </div>
-                <div th:each="image : *{detailImages}">
+                <div th:each="image : *{getDetailImageUrls}">
                     <div data-image="savedImageDiv">
-                        <img width="100px" height="100px" th:src="${image.images}" alt="이미지 없음">
-                        <div th:text="${image.id}"></div>
+                        <img width="100px" height="100px" th:src="${image}" alt="이미지 없음">
                         <button type="button" onclick="removeImage(this)"> 삭제</button>
                     </div>
                 </div>
