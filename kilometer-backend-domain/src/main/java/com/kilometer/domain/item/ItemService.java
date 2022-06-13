@@ -112,9 +112,7 @@ public class ItemService {
 
     public void deleteItem(Long itemId) {
         Preconditions.notNull(itemId, "id must not be null");
-        ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
-        itemRepository.delete(itemEntity);
+        itemRepository.deleteById(itemId);
     }
 
     public DetailResponse findToDetailResponseById(Long itemId) {
