@@ -2,10 +2,12 @@ package com.kilometer.domain.archive.entity;
 
 import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
+import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -67,11 +69,11 @@ public class Archive {
 
     @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<VisitedPlace> visitedPlaces = List.of();
+    private List<VisitedPlace> visitedPlaces = new ArrayList<>();
 
-    @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<ArchiveImage> archiveImages = List.of();
+    private List<ArchiveImage> archiveImages = new ArrayList<>();
 
     public ArchiveInfo makeInfo() {
         String food = "";
@@ -100,12 +102,24 @@ public class Archive {
     }
 
     public void setVisitedPlaces(List<VisitedPlace> places) {
-        this.visitedPlaces = places;
+        if(!this.visitedPlaces.isEmpty()) {
+            this.visitedPlaces.clear();
+        }
+        this.visitedPlaces.addAll(places);
         this.visitedPlaces.forEach(place -> place.setArchive(this));
     }
 
-    public void setPhotos(List<ArchiveImage> photos) {
-        this.archiveImages = photos;
+    public void setImages(List<ArchiveImage> images) {
+        if(!this.archiveImages.isEmpty()) {
+            this.archiveImages.clear();
+        }
+        this.archiveImages.addAll(images);
         this.archiveImages.forEach(photo -> photo.setArchive(this));
+    }
+
+    public void update(ArchiveRequest request) {
+        this.comment = request.getComment();
+        this.isVisibleAtItem = request.isVisibleAtItem();
+        this.starRating = request.getStarRating();
     }
 }

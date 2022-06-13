@@ -35,7 +35,7 @@ public class ArchiveImage {
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "archive")
     private Archive archive;
 

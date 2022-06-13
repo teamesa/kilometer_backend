@@ -23,8 +23,10 @@ import org.junit.platform.commons.util.Preconditions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ArchiveService {
 
@@ -34,6 +36,7 @@ public class ArchiveService {
     private final ArchiveImageRepository archiveImageRepository;
     private final PagingStatusService pagingStatusService;
 
+    @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
         Preconditions.notNull(archiveRequest.getComment(),
             "Comment must not be null");
@@ -58,21 +61,9 @@ public class ArchiveService {
             throw new IllegalArgumentException("이미 Archive가 존재합니다. id : " + findedArchive.get(0));
         }
 
-        List<VisitedPlace> places = new ArrayList<>();
-        for (PlaceInfo info : archiveRequest.getPlaceInfos()) {
-            places.add(VisitedPlace.builder()
-                .placeType(PlaceType.valueOf(info.getPlaceType()))
-                .placeName(info.getName())
-                .address(info.getAddress())
-                .roadAddress(info.getRoadAddress())
-                .build());
-        }
+        List<VisitedPlace> places = makeVisitedPlace(archiveRequest);
 
-        List<ArchiveImage> photos = new ArrayList<>();
-        archiveRequest.getPhotoUrls().forEach(url -> {
-            ArchiveImage photo = ArchiveImage.builder().imageUrl(url).build();
-            photos.add(photo);
-        });
+        List<ArchiveImage> images = makeArchiveImages(archiveRequest);
 
         Archive archive = Archive.builder()
             .comment(archiveRequest.getComment())
@@ -83,11 +74,33 @@ public class ArchiveService {
             .build();
 
         archive.setVisitedPlaces(places);
-        archive.setPhotos(photos);
+        archive.setImages(images);
 
         archiveRepository.save(archive);
 
         return archive.makeInfo();
+    }
+
+    private List<ArchiveImage> makeArchiveImages(ArchiveRequest archiveRequest) {
+        List<ArchiveImage> photos = new ArrayList<>();
+        archiveRequest.getPhotoUrls().forEach(url -> {
+            ArchiveImage photo = ArchiveImage.builder().imageUrl(url).build();
+            photos.add(photo);
+        });
+        return photos;
+    }
+
+    private List<VisitedPlace> makeVisitedPlace(ArchiveRequest archiveRequest) {
+        List<VisitedPlace> places = new ArrayList<>();
+        for (PlaceInfo info : archiveRequest.getPlaceInfos()) {
+            places.add(VisitedPlace.builder()
+                .placeType(PlaceType.valueOf(info.getPlaceType()))
+                .placeName(info.getName())
+                .address(info.getAddress())
+                .roadAddress(info.getRoadAddress())
+                .build());
+        }
+        return places;
     }
 
     public ArchiveResponse findAllByItemId(Long itemId, RequestPagingStatus requestPagingStatus,
@@ -129,4 +142,26 @@ public class ArchiveService {
         return result;
     }
 
+    @Transactional
+    public ArchiveInfo update(Long userId, ArchiveRequest request) {
+        Preconditions.notNull(userId, "id must not be null");
+        Preconditions.notNull(request.getItemId(), "Item id must not be null");
+
+        Archive archive = findByItemIdAndUserId(userId, request.getItemId());
+        archive.update(request);
+
+        List<VisitedPlace> places = makeVisitedPlace(request);
+        List<ArchiveImage> images = makeArchiveImages(request);
+
+        archive.setImages(images);
+        archive.setVisitedPlaces(places);
+
+        return archive.makeInfo();
+    }
+
+    private Archive findByItemIdAndUserId(Long userId, Long itemId) {
+        return archiveRepository.findByItemIdAndUserId(itemId, userId)
+            .orElseThrow(() -> new IllegalArgumentException(
+                "존재하지 않는 요청입니다. itemId : " + itemId + "/ userId : " + userId));
+    }
 }
