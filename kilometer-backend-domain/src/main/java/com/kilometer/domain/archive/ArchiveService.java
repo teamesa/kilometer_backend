@@ -5,7 +5,7 @@ import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.entity.Archive;
-import com.kilometer.domain.archive.entity.ArchivePhoto;
+import com.kilometer.domain.archive.entity.ArchiveImage;
 import com.kilometer.domain.archive.entity.VisitedPlace;
 import com.kilometer.domain.archive.queryDto.ArchiveSelectResult;
 import com.kilometer.domain.archive.request.ArchiveRequest;
@@ -15,15 +15,14 @@ import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class ArchiveService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final ArchiveRepository archiveRepository;
-    private final ArchivePhotoRepository archivePhotoRepository;
+    private final ArchiveImageRepository archiveImageRepository;
     private final PagingStatusService pagingStatusService;
 
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
@@ -69,9 +68,9 @@ public class ArchiveService {
                 .build());
         }
 
-        List<ArchivePhoto> photos = new ArrayList<>();
+        List<ArchiveImage> photos = new ArrayList<>();
         archiveRequest.getPhotoUrls().forEach(url -> {
-            ArchivePhoto photo = ArchivePhoto.builder().imageUrl(url).build();
+            ArchiveImage photo = ArchiveImage.builder().imageUrl(url).build();
             photos.add(photo);
         });
 

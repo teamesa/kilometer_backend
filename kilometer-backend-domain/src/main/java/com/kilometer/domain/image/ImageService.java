@@ -16,14 +16,18 @@ public class ImageService {
     private final S3Uploader s3Uploader;
 
     public String upload(byte[] file, String fileName, long maxFileSize) throws IOException {
-        Preconditions.condition((file.length > 0 && file.length <= maxFileSize),"The file size out of range.");
-        Preconditions.condition(StringUtils.hasText(fileName),"The file name must not be empty or null.");
-        Preconditions.condition((fileName.length() > 0 && fileName.length() <= 256),"The file name must be between 1 and 256 characters in length");
-        Preconditions.condition(checkPhotoFileExtension(fileName), "The file extension must be specified extension.");
+        Preconditions.condition((file.length > 0 && file.length <= maxFileSize),
+            "The file size out of range.");
+        Preconditions.condition(StringUtils.hasText(fileName),
+            "The file name must not be empty or null.");
+        Preconditions.condition((fileName.length() > 0 && fileName.length() <= 256),
+            "The file name must be between 1 and 256 characters in length");
+        Preconditions.condition(checkPhotoFileExtension(fileName),
+            "The file extension must be specified extension.");
         return s3Uploader.upload(file, fileName);
     }
 
     private boolean checkPhotoFileExtension(String fileName) {
-        return Pattern.compile(FileUtils.PHOTO_FILE_EXTENSION_REGEX).matcher(fileName).matches();
+        return Pattern.compile(FileUtils.PHOTO_FILE_EXTENSION_REGEX).matcher(fileName).find();
     }
 }

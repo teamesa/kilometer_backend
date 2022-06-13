@@ -84,8 +84,8 @@
             <td class="subTitle">입장료 *</td>
             <td colspan="3">
                 <div th:each="type : ${feeTypes}">
-                    <input type="radio" th:field="*{fee}" th:value="${type.name()}">
-                    <label th:for="${#ids.prev('fee')}" th:text="${type.description}">
+                    <input type="radio" th:field="*{feeType}" th:value="${type.name()}">
+                    <label th:for="${#ids.prev('feeType')}" th:text="${type.description}">
                         무료
                     </label>
                 </div>
@@ -121,7 +121,7 @@
         <tr>
             <td class="subTitle">시간</td>
             <td colspan="3">
-                <input type="text" id="time" th:field="*{time}" placeholder="시간를 입력하세요">
+                <input type="text" id="time" th:field="*{operatingTime}" placeholder="시간를 입력하세요">
             </td>
         </tr>
         <tr>

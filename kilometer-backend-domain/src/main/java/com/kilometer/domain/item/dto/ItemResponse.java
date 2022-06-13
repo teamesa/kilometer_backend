@@ -24,7 +24,7 @@ public class ItemResponse {
     private ExhibitionType exhibitionType;
     private ExposureType exposureType;
     private RegionType regionType;
-    private FeeType fee;
+    private FeeType feeType;
 
     private String listImageUrl;
     private String thumbnailImageUrl;
@@ -43,7 +43,7 @@ public class ItemResponse {
 
     private String price;
     private String homepageUrl;
-    private String time;
+    private String operatingTime;
     private String ticketUrl;
 
     // ItemDetail & DetailImage

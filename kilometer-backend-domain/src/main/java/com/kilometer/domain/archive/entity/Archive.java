@@ -53,13 +53,16 @@ public class Archive {
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @Builder.Default
+    private boolean isDeleted = false;
+
     //======= 연관관계 =======
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "itemId")
+    @JoinColumn(name = "item")
     private ItemEntity item;
 
     @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -68,7 +71,7 @@ public class Archive {
 
     @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL)
     @Builder.Default
-    private List<ArchivePhoto> archivePhotos = List.of();
+    private List<ArchiveImage> archiveImages = List.of();
 
     public ArchiveInfo makeInfo() {
         String food = "";
@@ -101,8 +104,8 @@ public class Archive {
         this.visitedPlaces.forEach(place -> place.setArchive(this));
     }
 
-    public void setPhotos(List<ArchivePhoto> photos) {
-        this.archivePhotos = photos;
-        this.archivePhotos.forEach(photo -> photo.setArchive(this));
+    public void setPhotos(List<ArchiveImage> photos) {
+        this.archiveImages = photos;
+        this.archiveImages.forEach(photo -> photo.setArchive(this));
     }
 }

@@ -6,14 +6,13 @@ import com.kilometer.domain.item.FeeType;
 import com.kilometer.domain.item.RegionType;
 import com.kilometer.domain.item.dto.ItemSaveRequest;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Builder
@@ -59,10 +58,10 @@ public class ItemForm {
             .longitude(this.longitude)
             .regionType(this.regionType)
             .placeName(this.place)
-            .fee(this.fee)
+            .feeType(this.fee)
             .price(this.price)
             .homepageUrl(this.url)
-            .time(this.time)
+            .operatingTime(this.time)
             .ticketUrl(this.ticketUrl)
             .introduce(this.introduce)
             .detailImageUrls(this.detailImageUrls)
@@ -74,22 +73,21 @@ public class ItemForm {
         return ItemUpdateRequest.builder()
             .exhibitionType(this.exhibitionType)
             .exposureType(this.exposureType)
-            .image(s3ImageUrl)
+            .listImageUrl(s3ImageUrl)
             .title(this.title)
             .startDate(this.startDate)
             .endDate(this.endDate)
             .latitude(this.latitude)
             .longitude(this.longitude)
             .regionType(this.regionType)
-            .place(this.place)
-            .fee(this.fee)
+            .placeName(this.place)
+            .feeType(this.fee)
             .price(this.price)
-            .url(this.url)
-            .time(this.time)
+            .homepageUrl(this.url)
+            .operatingTime(this.time)
             .ticketUrl(this.ticketUrl)
             .introduce(this.introduce)
             .detailImageUrl(multiS3ImageUrl)
-            .deleteImage(deleteImage)
             .build();
     }
 }

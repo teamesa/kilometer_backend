@@ -1,5 +1,6 @@
 package com.kilometer.domain.archive.entity;
 
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,8 +19,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "archive_photo")
-public class ArchivePhoto {
+@Table(name = "archive_image")
+public class ArchiveImage {
 
     @Id
     @GeneratedValue
@@ -27,8 +28,15 @@ public class ArchivePhoto {
 
     private String imageUrl;
 
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "archiveId")
+    @JoinColumn(name = "archive")
     private Archive archive;
 
     public void setArchive(Archive archive) {

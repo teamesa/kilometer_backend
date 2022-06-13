@@ -12,7 +12,6 @@ import com.kilometer.domain.item.ItemService;
 import com.kilometer.domain.item.RegionType;
 import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemSaveRequest;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -108,7 +107,7 @@ public class ItemController {
             .exhibitionType(EXHIBITION)
             .regionType(SEOUL)
             .exposureType(ON)
-            .fee(FREE)
+            .feeType(FREE)
             .startDate(LocalDate.now())
             .endDate(LocalDate.now())
             .build();
