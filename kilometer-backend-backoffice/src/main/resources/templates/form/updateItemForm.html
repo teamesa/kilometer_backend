@@ -197,7 +197,7 @@
         }
     }
 
-    $.ajax("/form/items/" + editId + "/edit")
+    $.ajax("/form/items/edit/" + editId)
         .done(function () {
             $("#image").on('change', function () {
                 readInputFile(this);

@@ -1,21 +1,31 @@
 package com.kilometer.domain.item;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
 @Builder
+@Where(clause = "isDeleted=false")
+@SQLDelete(sql = "UPDATE item_detail_image SET isDeleted=true where id=?")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "item_detail_image")
 public class ItemDetailImage {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     private String imageUrl;
@@ -23,6 +33,9 @@ public class ItemDetailImage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item")
     private ItemEntity item;
+
+    @Builder.Default
+    private boolean isDeleted = false;
 
     public static ItemDetailImage makeEntity(String imageUrl) {
         return ItemDetailImage.builder()

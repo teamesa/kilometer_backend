@@ -1,7 +1,7 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.item.dto.ItemRequest;
 import com.kilometer.domain.item.dto.ItemResponse;
-import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import com.kilometer.domain.item.dto.SummaryResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ import org.springframework.util.StringUtils;
 @Entity
 @Builder
 @Where(clause = "isDeleted=false")
-@SQLDelete(sql = "UPDATE item SET isDeleted = true where id=?")
+@SQLDelete(sql = "UPDATE `item` SET isDeleted = true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "item")
@@ -85,11 +85,11 @@ public class ItemEntity {
     @OneToOne(mappedBy = "item", fetch = FetchType.LAZY)
     private ItemDetail itemDetail;
 
-    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     @Builder.Default
     private List<ItemDetailImage> itemDetailImages = new ArrayList<>();
 
-    public void update(ItemUpdateRequest item) {
+    public void update(ItemRequest item) {
         this.exhibitionType = item.getExhibitionType();
         this.exposureType = item.getExposureType();
         this.listImageUrl = item.getListImageUrl();
@@ -106,7 +106,6 @@ public class ItemEntity {
         this.homepageUrl = item.getHomepageUrl();
         this.operatingTime = item.getOperatingTime();
         this.ticketUrl = item.getTicketUrl();
-        this.itemDetail.update(item.getIntroduce());
     }
 
     public ItemResponse makeResponse() {

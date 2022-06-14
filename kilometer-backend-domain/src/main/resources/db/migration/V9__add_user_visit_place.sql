@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS user_visit_place
     createdAt   DATETIME     NOT NULL DEFAULT current_timestamp,
     updatedAt   DATETIME     NOT NULL DEFAULT current_timestamp,
 
+    isDeleted   TINYINT(1)   NOT NULL DEFAULT FALSE,
+
     PRIMARY KEY (id),
     CONSTRAINT archive_visit_place_archive_fk FOREIGN KEY (archive) REFERENCES archive (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );

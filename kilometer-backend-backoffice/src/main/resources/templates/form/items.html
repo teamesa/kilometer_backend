@@ -62,7 +62,7 @@
                 <td th:text="${item.price}"></td>
                 <td th:text="${item.getHomepageUrl}"></td>
                 <td>
-                    <form action="" th:action="@{/form/items/{id}/edit (id=${item.id})}" method="get">
+                    <form action="" th:action="@{/form/items/edit/{id} (id=${item.id})}" method="get">
                         <button class="button2" type="submit">수정</button>
                     </form>
                 </td>

@@ -20,7 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemSaveRequest {
+public class ItemRequest {
 
     private ExhibitionType exhibitionType;
     private ExposureType exposureType;
@@ -57,7 +57,7 @@ public class ItemSaveRequest {
 
     public List<ItemDetailImage> makeItemDetailImage() {
         return this.detailImageUrls.stream()
-            .map(imageUrl -> ItemDetailImage.makeEntity(imageUrl))
+            .map(ItemDetailImage::makeEntity)
             .collect(Collectors.toList());
     }
 

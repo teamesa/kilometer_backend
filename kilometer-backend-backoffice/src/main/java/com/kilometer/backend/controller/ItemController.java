@@ -5,7 +5,6 @@ import static com.kilometer.domain.item.ExposureType.ON;
 import static com.kilometer.domain.item.FeeType.FREE;
 import static com.kilometer.domain.item.RegionType.SEOUL;
 
-import com.kilometer.backend.controller.dto.ItemForm;
 import com.kilometer.domain.item.ExhibitionType;
 import com.kilometer.domain.item.ExposureType;
 import com.kilometer.domain.item.FeeType;
@@ -84,8 +83,8 @@ public class ItemController {
     }
 
     @PostMapping(BoUrlUtils.ITEM_EDIT)
-    public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemForm item) {
-        itemService.updateItem(itemId, item.makeItemRequest());
+    public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemRequest item) {
+        itemService.updateItem(itemId, item);
         return "redirect:/form/items";
     }
 

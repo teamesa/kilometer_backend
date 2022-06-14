@@ -2,10 +2,10 @@ CREATE TABLE IF NOT EXISTS item
 (
     id                BIGINT(20)    NOT NULL AUTO_INCREMENT,
 
-    exposureType      VARCHAR(255)  NOT NULL DEFAULT 'ON',
-    exhibitionType    VARCHAR(255)  NOT NULL DEFAULT 'EXHIBITION',
-    regionType        VARCHAR(255)  NOT NULL DEFAULT 'SEOUL',
-    feeType           VARCHAR(255)  NOT NULL DEFAULT 'FREE',
+    exposureType      VARCHAR(255)  NOT NULL,
+    exhibitionType    VARCHAR(255)  NOT NULL,
+    regionType        VARCHAR(255)  NOT NULL,
+    feeType           VARCHAR(255)  NOT NULL,
 
     listImageUrl      VARCHAR(3000) NOT NULL,
     thumbnailImageUrl VARCHAR(3000) NOT NULL,

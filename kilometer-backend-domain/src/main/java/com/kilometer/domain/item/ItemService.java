@@ -1,8 +1,8 @@
 package com.kilometer.domain.item;
 
 import com.kilometer.domain.item.dto.DetailResponse;
+import com.kilometer.domain.item.dto.ItemRequest;
 import com.kilometer.domain.item.dto.ItemResponse;
-import com.kilometer.domain.item.dto.ItemSaveRequest;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.dto.SummaryResponse;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
@@ -14,9 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ItemService {
 
@@ -24,33 +26,37 @@ public class ItemService {
     private final ItemDetailRepository itemDetailRepository;
     private final ItemDetailImageRepository itemDetailImageRepository;
 
-    public void saveItem(ItemSaveRequest request) {
+    @Transactional
+    public void saveItem(ItemRequest request) {
         ItemEntity item = saveItemEntity(request);
-        if (StringUtils.hasText(request.getIntroduce())) {
-            saveItemDetail(request, item);
-        }
 
-        if (!request.getDetailImageUrls().isEmpty()) {
-            saveDetailImage(request, item);
-        }
+        saveItemDetail(request, item);
 
+        saveDetailImage(request, item);
     }
 
-    private ItemDetail saveItemDetail(ItemSaveRequest request, ItemEntity item) {
+    private void saveItemDetail(ItemRequest request, ItemEntity item) {
+        if (!StringUtils.hasText(request.getIntroduce())) {
+            return;
+        }
+
         ItemDetail itemDetail = request.makeItemDetail();
         itemDetail.setItemEntity(item);
         itemDetailRepository.save(itemDetail);
-        return itemDetail;
     }
 
-    private void saveDetailImage(ItemSaveRequest request, ItemEntity item) {
+    private void saveDetailImage(ItemRequest request, ItemEntity item) {
+        if (request.getDetailImageUrls().isEmpty()) {
+            return;
+        }
+
         List<ItemDetailImage> itemDetailImages = request.makeItemDetailImage();
         itemDetailImages.forEach(detailImage -> detailImage.setItemEntity(item));
 
         itemDetailImageRepository.saveAll(itemDetailImages);
     }
 
-    private ItemEntity saveItemEntity(ItemSaveRequest request) {
+    private ItemEntity saveItemEntity(ItemRequest request) {
         return itemRepository.save(request.makeItemEntity());
     }
 
@@ -83,33 +89,50 @@ public class ItemService {
         return itemRepository.findById(itemId).map(ItemEntity::makeSummaryResponse);
     }
 
-//    @Transactional
-//    public void updateItem(Long itemId, ItemUpdateRequest item) {
-//        Preconditions.notNull(itemId, "id must not be null");
-//        Preconditions.notNull(item, "item must not be null");
-//
-//        ItemEntity itemEntity = itemRepository.findById(itemId)
-//            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
-//        updateDetailImage(item, itemEntity);
-//        itemEntity.update(item);
-//
-//    }
+    @Transactional
+    public void updateItem(Long itemId, ItemRequest request) {
+        Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.notNull(request, "item must not be null");
 
-//    private void updateDetailImage(ItemUpdateRequest item, ItemEntity itemEntity) {
-//        for (int i = 0; i < item.getDeleteImage().size(); i++) {
-//            detailImageRepository.deleteById(item.getDeleteImage().get(i));
-//        }
-//        ItemDetail itemDetail = itemEntity.getItemDetail();
-//        //추가로 들어온 이미지 저장
-//        for (int i = 0; i < item.getDetailImageUrl().size(); i++) {
-//            ItemDetailImage itemDetailImage = ItemDetailImage.builder()
-//                .url(item.getDetailImageUrl().get(i))
-//                .itemDetailEntity(itemDetail)
-//                .build();
-//            detailImageRepository.save(itemDetailImage);
-//        }
-//    }
+        ItemEntity itemEntity = itemRepository.findById(itemId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id=" + itemId));
 
+        itemEntity.update(request);
+        updateItemDetail(request, itemEntity);
+        updateItemDetailImage(request, itemEntity);
+
+
+    }
+
+    private void deleteDetailImages(List<ItemDetailImage> images) {
+        itemDetailImageRepository.deleteAll(images);
+    }
+
+    private void deleteItemDetail(ItemDetail itemDetail) {
+        itemDetailRepository.delete(itemDetail);
+    }
+
+    private void updateItemDetailImage(ItemRequest request, ItemEntity item) {
+        deleteDetailImages(item.getItemDetailImages());
+        saveDetailImage(request, item);
+    }
+
+    private void updateItemDetail(ItemRequest request, ItemEntity item) {
+        ItemDetail itemDetail = item.getItemDetail();
+        if (itemDetail != null) {
+            if (StringUtils.hasText(request.getIntroduce())) {
+                itemDetail.update(request.getIntroduce());
+            } else {
+                deleteItemDetail(itemDetail);
+            }
+        } else {
+            if (StringUtils.hasText(request.getIntroduce())) {
+                saveItemDetail(request, item);
+            }
+        }
+    }
+
+    @Transactional
     public void deleteItem(Long itemId) {
         Preconditions.notNull(itemId, "id must not be null");
         itemRepository.deleteById(itemId);
