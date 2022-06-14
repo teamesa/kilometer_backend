@@ -12,8 +12,8 @@ public class FileUtils {
 
     public static final String PHOTO_FILE_EXTENSION_REGEX = ".(png|PNG|jpeg|JPEG|jpg|JPG|gif|GIF)$";
 
-    public static String getFilePath() {
-        return S3_ROOT + "/" + LocalDate.now();
+    public static String getFilePath(String folderName) {
+        return S3_ROOT + "/" + folderName + "/" + LocalDate.now();
     }
 
     public static String getFileName(String originFileName) {

@@ -33,6 +33,7 @@ cloud:
   aws:
     s3:
       bucket: kilometer-image
+      folderName: bo
     region:
       static: ap-northeast-2
     stack:

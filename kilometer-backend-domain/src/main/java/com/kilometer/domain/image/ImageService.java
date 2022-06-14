@@ -15,7 +15,8 @@ public class ImageService {
 
     private final S3Uploader s3Uploader;
 
-    public String upload(byte[] file, String fileName, long maxFileSize) throws IOException {
+    public String upload(byte[] file, String fileName, String folderName, long maxFileSize)
+        throws IOException {
         Preconditions.condition((file.length > 0 && file.length <= maxFileSize),
             "The file size out of range.");
         Preconditions.condition(StringUtils.hasText(fileName),
@@ -24,7 +25,7 @@ public class ImageService {
             "The file name must be between 1 and 256 characters in length");
         Preconditions.condition(checkPhotoFileExtension(fileName),
             "The file extension must be specified extension.");
-        return s3Uploader.upload(file, fileName);
+        return s3Uploader.upload(file, fileName, folderName);
     }
 
     private boolean checkPhotoFileExtension(String fileName) {

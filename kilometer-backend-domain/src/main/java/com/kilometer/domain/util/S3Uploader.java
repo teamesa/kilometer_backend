@@ -22,12 +22,12 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(byte[] bytes, String fileName) throws IOException {
+    public String upload(byte[] bytes, String fileName, String folderName) throws IOException {
         Preconditions.notNull(bytes, "File must be not null.");
         File uploadFile = convert(bytes, fileName)
             .orElseThrow(() -> new IllegalArgumentException("File로 전환이 실패했습니다."));
 
-        return upload(uploadFile, FileUtils.getFilePath());
+        return upload(uploadFile, FileUtils.getFilePath(folderName));
     }
 
     private String upload(File uploadFile, String dirName) {
