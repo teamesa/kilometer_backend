@@ -43,16 +43,20 @@ public class ItemEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private ExhibitionType exhibitionType;
+    @Builder.Default
+    private ExhibitionType exhibitionType = ExhibitionType.EXHIBITION;
 
     @Enumerated(EnumType.STRING)
-    private ExposureType exposureType;
+    @Builder.Default
+    private ExposureType exposureType = ExposureType.ON;
 
     @Enumerated(EnumType.STRING)
-    private RegionType regionType;
+    @Builder.Default
+    private RegionType regionType = RegionType.SEOUL;
 
     @Enumerated(EnumType.STRING)
-    private FeeType feeType;
+    @Builder.Default
+    private FeeType feeType = FeeType.FREE;
 
     private String listImageUrl;
     private String thumbnailImageUrl;
