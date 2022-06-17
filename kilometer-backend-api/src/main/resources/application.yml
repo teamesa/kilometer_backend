@@ -67,7 +67,7 @@ cloud:
   aws:
     s3:
       bucket: kilometer-image
-      folderName: user
+      folderName: api
     region:
       static: ap-northeast-2
     stack:

@@ -28,20 +28,3 @@ spring:
 
 logging:
   config: classpath:log4j2.xml
-  level:
-    com:
-      amazonaws:
-        util:
-          EC2MetadataUtils: error
-
-cloud:
-  aws:
-    s3:
-      bucket: kilometer-image
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
-    credentials:
-      accessKey: ${s3.accessKey}
-      secretKey: ${s3.secretKey}
