@@ -21,20 +21,27 @@ public class ItemResponse {
 
     private Long id;
 
-    private ExhibitionType exhibitionType;
-    private ExposureType exposureType;
-    private RegionType regionType;
-    private FeeType feeType;
+    @Builder.Default
+    private ExhibitionType exhibitionType = ExhibitionType.EXHIBITION;
+    @Builder.Default
+    private ExposureType exposureType = ExposureType.ON;
+    @Builder.Default
+    private RegionType regionType = RegionType.SEOUL;
+    @Builder.Default
+    private FeeType feeType = FeeType.FREE;
 
     private String listImageUrl;
     private String thumbnailImageUrl;
 
     private String title;
 
+    @Builder.Default
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
+    private LocalDate startDate = LocalDate.now();
+
+    @Builder.Default
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
+    private LocalDate endDate = LocalDate.now();
 
     private String placeName;
 
@@ -49,4 +56,9 @@ public class ItemResponse {
     // ItemDetail & DetailImage
     private String introduce;
     private List<String> detailImageUrls;
+
+    public static ItemResponse empty() {
+        return ItemResponse.builder()
+            .build();
+    }
 }

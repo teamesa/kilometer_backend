@@ -57,34 +57,34 @@ public class ItemController {
 
     @GetMapping
     public String items(Model model) {
-        List<ItemResponse> items = itemService.findItems();
+        List<ItemResponse> items = itemService.findAll();
         model.addAttribute("items", items);
         return "form/items";
     }
 
     @GetMapping(BoUrlUtils.ITEM_ADD)
-    public String addForm(Model model) {
-        ItemResponse defaultOptions = makeDefaultOption();
-        model.addAttribute("item", defaultOptions);
+    public String getEmptyItem(Model model) {
+        ItemResponse itemResponse = ItemResponse.empty();
+        model.addAttribute("item", itemResponse);
         return "form/addForm";
     }
 
     @PostMapping(BoUrlUtils.ITEM_ADD)
-    public String addItem(@ModelAttribute ItemRequest item) {
-        itemService.saveItem(item);
+    public String addItem(@ModelAttribute ItemRequest itemRequest) {
+        itemService.saveItem(itemRequest);
         return "redirect:/form/items";
     }
 
-    @GetMapping(BoUrlUtils.ITEM_EDIT)
-    public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
-        ItemResponse findOne = itemService.findOne(itemId);
-        model.addAttribute("item", findOne);
+    @GetMapping(BoUrlUtils.ITEM_ID)
+    public String getItem(@PathVariable("itemId") Long itemId, Model model) {
+        ItemResponse itemResponse = itemService.findOne(itemId);
+        model.addAttribute("item", itemResponse);
         return "form/updateItemForm";
     }
 
     @PostMapping(BoUrlUtils.ITEM_EDIT)
-    public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemRequest item) {
-        itemService.updateItem(itemId, item);
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemRequest itemRequest) {
+        itemService.updateItem(itemId, itemRequest);
         return "redirect:/form/items";
     }
 
@@ -92,22 +92,5 @@ public class ItemController {
     public String deleteItem(@PathVariable("itemId") Long itemId) {
         itemService.deleteItem(itemId);
         return "redirect:/form/items";
-    }
-
-    @GetMapping("/response-test")
-    @ResponseBody
-    public List<ItemResponse> responseItemEntity() {
-        return itemService.findItems();
-    }
-
-    private ItemResponse makeDefaultOption() {
-        return ItemResponse.builder()
-            .exhibitionType(EXHIBITION)
-            .regionType(SEOUL)
-            .exposureType(ON)
-            .feeType(FREE)
-            .startDate(LocalDate.now())
-            .endDate(LocalDate.now())
-            .build();
     }
 }

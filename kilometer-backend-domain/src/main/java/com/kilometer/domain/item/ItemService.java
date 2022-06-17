@@ -68,9 +68,8 @@ public class ItemService {
         return itemRepository.findTop10ByQuery(query);
     }
 
-    public List<ItemResponse> findItems() {
-        return itemRepository.findAll()
-            .stream()
+    public List<ItemResponse> findAll() {
+        return itemRepository.findAll().stream()
             .map(ItemEntity::makeResponse)
             .collect(Collectors.toList());
     }
