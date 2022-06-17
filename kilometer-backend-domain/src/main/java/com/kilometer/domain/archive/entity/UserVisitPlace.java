@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -16,14 +15,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
 @Builder
+@Where(clause = "isDeleted=false")
+@SQLDelete(sql = "UPDATE user_visit_place SET isDeleted=true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user_visit_place")
-public class VisitedPlace {
+public class UserVisitPlace {
 
     @Id
     @GeneratedValue
@@ -48,6 +51,9 @@ public class VisitedPlace {
 
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @Builder.Default
+    private boolean isDeleted = false;
 
     public void setArchive(Archive archive) {
         this.archive = archive;

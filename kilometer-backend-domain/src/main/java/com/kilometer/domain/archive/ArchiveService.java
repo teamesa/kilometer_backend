@@ -3,11 +3,13 @@ package com.kilometer.domain.archive;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
-import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.entity.Archive;
 import com.kilometer.domain.archive.entity.ArchiveImage;
-import com.kilometer.domain.archive.entity.VisitedPlace;
+import com.kilometer.domain.archive.entity.UserVisitPlace;
 import com.kilometer.domain.archive.queryDto.ArchiveSelectResult;
+import com.kilometer.domain.archive.repository.ArchiveImageRepository;
+import com.kilometer.domain.archive.repository.ArchiveRepository;
+import com.kilometer.domain.archive.repository.UserVisitPlaceRepository;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
@@ -15,7 +17,6 @@ import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class ArchiveService {
     private final ItemRepository itemRepository;
     private final ArchiveRepository archiveRepository;
     private final ArchiveImageRepository archiveImageRepository;
+    private final UserVisitPlaceRepository userVisitPlaceRepository;
     private final PagingStatusService pagingStatusService;
 
     @Transactional
@@ -61,46 +63,37 @@ public class ArchiveService {
             throw new IllegalArgumentException("이미 Archive가 존재합니다. id : " + findedArchive.get(0));
         }
 
-        List<VisitedPlace> places = makeVisitedPlace(archiveRequest);
-
-        List<ArchiveImage> images = makeArchiveImages(archiveRequest);
-
-        Archive archive = Archive.builder()
-            .comment(archiveRequest.getComment())
-            .starRating(archiveRequest.getStarRating())
-            .isVisibleAtItem(archiveRequest.isVisibleAtItem())
-            .user(user)
-            .item(item)
-            .build();
-
-        archive.setVisitedPlaces(places);
-        archive.setImages(images);
-
-        archiveRepository.save(archive);
+        Archive archive = saveArchive(archiveRequest, user, item);
+        saveArchiveImages(archiveRequest, archive);
+        saveUserVisitPlace(archiveRequest, archive);
 
         return archive.makeInfo();
     }
 
-    private List<ArchiveImage> makeArchiveImages(ArchiveRequest archiveRequest) {
-        List<ArchiveImage> photos = new ArrayList<>();
-        archiveRequest.getPhotoUrls().forEach(url -> {
-            ArchiveImage photo = ArchiveImage.builder().imageUrl(url).build();
-            photos.add(photo);
-        });
-        return photos;
+    private Archive saveArchive(ArchiveRequest archiveRequest, User user, ItemEntity item) {
+        Archive archive = archiveRequest.makeArchive();
+        archive.setUser(user);
+        archive.setItem(item);
+        archiveRepository.save(archive);
+        return archive;
     }
 
-    private List<VisitedPlace> makeVisitedPlace(ArchiveRequest archiveRequest) {
-        List<VisitedPlace> places = new ArrayList<>();
-        for (PlaceInfo info : archiveRequest.getPlaceInfos()) {
-            places.add(VisitedPlace.builder()
-                .placeType(PlaceType.valueOf(info.getPlaceType()))
-                .placeName(info.getName())
-                .address(info.getAddress())
-                .roadAddress(info.getRoadAddress())
-                .build());
+    private void saveArchiveImages(ArchiveRequest archiveRequest, Archive archive) {
+        if (archiveRequest.getPhotoUrls().isEmpty()) {
+            return;
         }
-        return places;
+        List<ArchiveImage> archiveImages = archiveRequest.makeArchiveImages();
+        archiveImages.forEach(archiveImage -> archiveImage.setArchive(archive));
+        archiveImageRepository.saveAll(archiveImages);
+    }
+
+    private void saveUserVisitPlace(ArchiveRequest archiveRequest, Archive archive) {
+        if (archiveRequest.getPlaceInfos().isEmpty()) {
+            return;
+        }
+        List<UserVisitPlace> userVisitPlaces = archiveRequest.makeVisitedPlace();
+        userVisitPlaces.forEach(userVisitPlace -> userVisitPlace.setArchive(archive));
+        userVisitPlaceRepository.saveAll(userVisitPlaces);
     }
 
     public ArchiveResponse findAllByItemId(Long itemId, RequestPagingStatus requestPagingStatus,
@@ -148,15 +141,36 @@ public class ArchiveService {
         Preconditions.notNull(request.getItemId(), "Item id must not be null");
 
         Archive archive = findByItemIdAndUserId(userId, request.getItemId());
+
         archive.update(request);
-
-        List<VisitedPlace> places = makeVisitedPlace(request);
-        List<ArchiveImage> images = makeArchiveImages(request);
-
-        archive.setImages(images);
-        archive.setVisitedPlaces(places);
+        updateArchiveImages(request, archive);
+        updateUserVisitPlace(request, archive);
 
         return archive.makeInfo();
+    }
+
+    private void updateArchiveImages(ArchiveRequest archiveRequest, Archive archive) {
+        deleteArchiveImages(archive);
+        saveArchiveImages(archiveRequest, archive);
+    }
+
+    private void deleteArchiveImages(Archive archive) {
+        if (archive.getArchiveImages().isEmpty()) {
+            return;
+        }
+        archiveImageRepository.deleteAll(archive.getArchiveImages());
+    }
+
+    private void updateUserVisitPlace(ArchiveRequest archiveRequest, Archive archive) {
+        deleteUserVisitPlace(archive);
+        saveUserVisitPlace(archiveRequest, archive);
+    }
+
+    private void deleteUserVisitPlace(Archive archive) {
+        if (archive.getUserVisitPlaces().isEmpty()) {
+            return;
+        }
+        userVisitPlaceRepository.deleteAll(archive.getUserVisitPlaces());
     }
 
     private Archive findByItemIdAndUserId(Long userId, Long itemId) {
