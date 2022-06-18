@@ -4,23 +4,24 @@ import com.kilometer.domain.item.ExhibitionType;
 import com.kilometer.domain.item.ExposureType;
 import com.kilometer.domain.item.FeeType;
 import com.kilometer.domain.item.RegionType;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemUpdateRequest {
+
     private ExhibitionType exhibitionType;
     private ExposureType exposureType;
-    private String image;
+    private String listImageUrl;
+    private String thumbnailImageUrl;
     private String title;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -29,16 +30,15 @@ public class ItemUpdateRequest {
     private LocalDate endDate;
 
     private String term;
-    private String place;
+    private String placeName;
     private Double latitude;
     private Double longitude;
     private RegionType regionType;
-    private FeeType fee;
+    private FeeType feeType;
     private String price;
-    private String url;
-    private String time;
+    private String homepageUrl;
+    private String operatingTime;
     private String ticketUrl;
     private String introduce;
     private List<String> detailImageUrl;
-    private List<Long> deleteImage;
 }

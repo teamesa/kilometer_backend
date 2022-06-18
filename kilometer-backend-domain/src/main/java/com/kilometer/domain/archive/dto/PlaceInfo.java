@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive.dto;
 
-import com.kilometer.domain.archive.entity.VisitedPlace;
+import com.kilometer.domain.archive.entity.UserVisitPlace;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,12 +15,12 @@ public class PlaceInfo {
     private String address;
     private String roadAddress;
 
-    public static PlaceInfo makePlaceInfo(VisitedPlace visitedPlace) {
+    public static PlaceInfo makePlaceInfo(UserVisitPlace userVisitPlace) {
         return PlaceInfo.builder()
-            .placeType(String.valueOf(visitedPlace.getPlaceType()))
-            .name(visitedPlace.getPlaceName())
-            .address(visitedPlace.getAddress())
-            .roadAddress(visitedPlace.getRoadAddress())
+            .placeType(String.valueOf(userVisitPlace.getPlaceType()))
+            .name(userVisitPlace.getPlaceName())
+            .address(userVisitPlace.getAddress())
+            .roadAddress(userVisitPlace.getRoadAddress())
             .build();
     }
 }
