@@ -103,7 +103,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .antMatchers("/hello-example").permitAll()
                         .antMatchers(HttpMethod.POST,ApiUrlUtils.SEARCH_ROOT).permitAll()
                         .antMatchers(ApiUrlUtils.ITEM_ROOT+"/**").permitAll()
-                        .antMatchers(HttpMethod.GET, ApiUrlUtils.ARCHIVE_ITEM).permitAll()
+                        .antMatchers(HttpMethod.GET, ApiUrlUtils.ARCHIVE_ROOT + ApiUrlUtils.ARCHIVE_ITEM).permitAll()
                         .antMatchers(HttpMethod.GET,ApiUrlUtils.SEARCH_ROOT+ApiUrlUtils.SEARCH_AUTO_COMPLETE).permitAll()
                         // swagger
                         .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
