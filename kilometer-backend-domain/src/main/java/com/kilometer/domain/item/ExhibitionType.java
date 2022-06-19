@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ExhibitionType {
 
-    EXHIBITION("전시회"), MUSICAL("뮤지컬"), FESTIVAL("뮤직페스티벌"), CONCERT("콘서트");
+    ALL("모두"), EXHIBITION("전시회"), MUSICAL("뮤지컬"), FESTIVAL("뮤직페스티벌"), CONCERT("콘서트");
 
     private final String description;
 }
