@@ -15,6 +15,10 @@ public class ApiUrlUtils {
     public static final String ARCHIVE_MY = "/my";
 
     public static final String IMAGE_ROOT = ROOT + "/image";
+    public static final String ITEM_ROOT = ROOT + "/item";
+    public static final String ITEM_ID = "/{itemId}";
+    public static final String ITEM_INFO = "/info" + ITEM_ID;
+    public static final String ITEM_DETAIL = "/detail"+ITEM_ID;
 
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
