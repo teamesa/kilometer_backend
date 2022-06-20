@@ -5,7 +5,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="../../static/css/buttons.css" th:href="@{/css/buttons.css}">
     <link rel="stylesheet" href="../../static/css/lists.css" th:href="@{/css/lists.css}">
-    <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
 
@@ -40,7 +40,8 @@
                 <th>순번</th>
                 <th>컨텐츠ID</th>
                 <th>FO 전시여부 : 미전시 / 전시</th>
-                <th>대표이미지</th>
+                <th>리스트이미지</th>
+                <th>썸네일이미지</th>
                 <th>메인타이틀</th>
                 <th>입장료</th>
                 <th>요금</th>
@@ -54,18 +55,19 @@
                 <td th:text="${itemStat.index} + 1"></td>
                 <td th:text="${item.id}"></td>
                 <td th:text="${item.exposureType.description}"></td>
-                <td><img src="" th:src="${item.image}" width=100 height=100 alt="이미지 없음"></td>
+                <td><img src="" th:src="${item.listImageUrl}" width=100 height=100 alt="이미지 없음"></td>
+                <td><img src="" th:src="${item.thumbnailImageUrl}" width=100 height=100 alt="이미지 없음"></td>
                 <td th:text="${item.title}"></td>
-                <td th:text="${item.fee.description}"></td>
+                <td th:text="${item.feeType.description}"></td>
                 <td th:text="${item.price}"></td>
-                <td th:text="${item.url}"></td>
+                <td th:text="${item.getHomepageUrl}"></td>
                 <td>
-                    <form action="" th:action="@{/form/items/{id}/edit (id=${item.id})}" method="get">
+                    <form action="" th:action="@{/form/items/{id} (id=${item.id})}" method="get">
                         <button class="button2" type="submit">수정</button>
                     </form>
                 </td>
                 <td>
-                    <form action="" th:action="@{/form/items/{id}/delete (id=${item.id})}" method="post">
+                    <form action="" th:action="@{/form/items/delete/{id} (id=${item.id})}" method="post">
                         <button class="button2" type="submit">삭제</button>
                     </form>
                 </td>

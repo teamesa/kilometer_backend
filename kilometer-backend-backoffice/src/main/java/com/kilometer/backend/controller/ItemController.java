@@ -1,32 +1,39 @@
 package com.kilometer.backend.controller;
 
-import com.kilometer.backend.controller.dto.ItemForm;
-import com.kilometer.backend.utils.FileUtils;
-import com.kilometer.domain.item.*;
-import com.kilometer.domain.item.dto.ItemResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
-
 import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
 import static com.kilometer.domain.item.ExposureType.ON;
 import static com.kilometer.domain.item.FeeType.FREE;
 import static com.kilometer.domain.item.RegionType.SEOUL;
 
+import com.kilometer.domain.item.ExhibitionType;
+import com.kilometer.domain.item.ExposureType;
+import com.kilometer.domain.item.FeeType;
+import com.kilometer.domain.item.ItemService;
+import com.kilometer.domain.item.RegionType;
+import com.kilometer.domain.item.dto.ItemRequest;
+import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.util.BoUrlUtils;
+import java.time.LocalDate;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 @Slf4j
 @Controller
-@RequestMapping("/form/items")
+@RequestMapping(BoUrlUtils.ITEM_ROOT)
 @RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
-    private final FileUtils fileUtils;
+
 
     @ModelAttribute("exhibitionTypes")
     public ExhibitionType[] exhibitionTypes() {
@@ -50,72 +57,40 @@ public class ItemController {
 
     @GetMapping
     public String items(Model model) {
-        List<ItemResponse> items = itemService.findItems();
+        List<ItemResponse> items = itemService.findAll();
         model.addAttribute("items", items);
         return "form/items";
     }
 
-    @GetMapping("/add")
-    public String addForm(Model model) {
-        ItemResponse defaultOptions = makeDefaultOption();
-        model.addAttribute("item", defaultOptions);
+    @GetMapping(BoUrlUtils.ITEM_ADD)
+    public String getEmptyItem(Model model) {
+        ItemResponse itemResponse = ItemResponse.empty();
+        model.addAttribute("item", itemResponse);
         return "form/addForm";
     }
 
-    @PostMapping("/add")
-    public String addItem(@ModelAttribute ItemForm item) throws IOException {
-        itemService.saveItem(item.makeItemSaveRequest(
-                fileUtils.getS3ImageUrl(item),
-                fileUtils.getS3MultiImageUrl(item)
-        ));
+    @PostMapping(BoUrlUtils.ITEM_ADD)
+    public String addItem(@ModelAttribute ItemRequest itemRequest) {
+        itemService.saveItem(itemRequest);
         return "redirect:/form/items";
     }
 
-    @GetMapping("/{itemId}/edit")
-    public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
-        ItemResponse findOne = itemService.findOne(itemId);
-        model.addAttribute("item", findOne);
+    @GetMapping(BoUrlUtils.ITEM_ID)
+    public String getItem(@PathVariable("itemId") Long itemId, Model model) {
+        ItemResponse itemResponse = itemService.findOne(itemId);
+        model.addAttribute("item", itemResponse);
         return "form/updateItemForm";
     }
 
-    @PostMapping("/{itemId}/edit")
-    public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemForm item) throws IOException {
-        itemService.updateItem(itemId, item.makeItemUpdateRequest(
-                fileUpdateCheck(itemId, fileUtils.getS3ImageUrl(item)),
-                fileUtils.getS3MultiImageUrl(item),
-                fileUtils.getDeleteImage(item)
-        ));
+    @PostMapping(BoUrlUtils.ITEM_EDIT)
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemRequest itemRequest) {
+        itemService.updateItem(itemId, itemRequest);
         return "redirect:/form/items";
     }
 
-    @PostMapping("/{itemId}/delete")
+    @PostMapping(BoUrlUtils.ITEM_DELETE)
     public String deleteItem(@PathVariable("itemId") Long itemId) {
         itemService.deleteItem(itemId);
         return "redirect:/form/items";
-    }
-
-    @GetMapping("/response-test")
-    @ResponseBody
-    public List<ItemResponse> responseItemEntity() {
-        return itemService.findItems();
-    }
-
-    private ItemResponse makeDefaultOption() {
-        return ItemResponse.builder()
-                .exhibitionType(EXHIBITION)
-                .regionType(SEOUL)
-                .exposureType(ON)
-                .fee(FREE)
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now())
-                .build();
-    }
-
-    private String fileUpdateCheck(Long itemId, String s3ImageUrl) {
-        if (s3ImageUrl.equals("")) {
-            ItemResponse findItem = itemService.findOne(itemId);
-            s3ImageUrl = findItem.getImage();
-        }
-        return s3ImageUrl;
     }
 }

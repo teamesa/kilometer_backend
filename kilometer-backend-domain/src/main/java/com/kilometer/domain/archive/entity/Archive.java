@@ -2,12 +2,12 @@ package com.kilometer.domain.archive.entity;
 
 import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
+import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.user.User;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -53,28 +53,31 @@ public class Archive {
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @Builder.Default
+    private boolean isDeleted = false;
+
     //======= 연관관계 =======
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "itemId")
+    @JoinColumn(name = "item")
     private ItemEntity item;
 
-    @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "archive")
     @Builder.Default
-    private List<VisitedPlace> visitedPlaces = List.of();
+    private List<UserVisitPlace> userVisitPlaces = new ArrayList<>();
 
-    @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "archive")
     @Builder.Default
-    private List<ArchivePhoto> archivePhotos = List.of();
+    private List<ArchiveImage> archiveImages = new ArrayList<>();
 
     public ArchiveInfo makeInfo() {
         String food = "";
         String cafe = "";
 
-        for (VisitedPlace place : visitedPlaces) {
+        for (UserVisitPlace place : userVisitPlaces) {
             if (PlaceType.CAFE == place.getPlaceType()) {
                 cafe = place.getPlaceName();
             } else {
@@ -96,13 +99,33 @@ public class Archive {
             .build();
     }
 
-    public void setVisitedPlaces(List<VisitedPlace> places) {
-        this.visitedPlaces = places;
-        this.visitedPlaces.forEach(place -> place.setArchive(this));
+    public void setUserVisitPlaces(List<UserVisitPlace> places) {
+        if (!this.userVisitPlaces.isEmpty()) {
+            this.userVisitPlaces.clear();
+        }
+        this.userVisitPlaces.addAll(places);
+        this.userVisitPlaces.forEach(place -> place.setArchive(this));
     }
 
-    public void setPhotos(List<ArchivePhoto> photos) {
-        this.archivePhotos = photos;
-        this.archivePhotos.forEach(photo -> photo.setArchive(this));
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setItem(ItemEntity item) {
+        this.item = item;
+    }
+
+    public void setImages(List<ArchiveImage> images) {
+        if (!this.archiveImages.isEmpty()) {
+            this.archiveImages.clear();
+        }
+        this.archiveImages.addAll(images);
+        this.archiveImages.forEach(photo -> photo.setArchive(this));
+    }
+
+    public void update(ArchiveRequest request) {
+        this.comment = request.getComment();
+        this.isVisibleAtItem = request.isVisibleAtItem();
+        this.starRating = request.getStarRating();
     }
 }
