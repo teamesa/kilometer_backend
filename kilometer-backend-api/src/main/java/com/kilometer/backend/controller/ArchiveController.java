@@ -29,7 +29,7 @@ public class ArchiveController {
     public ItemDetailResponse<ArchiveResponse> archives(
         @ApiParam(value = "조회할 전시글 ID", required = true) @PathVariable Long itemId,
         @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus,
-        @ApiParam(value = "아카이브 정렬 기준", required = true, defaultValue = "MODIFY_DESC : 수정일 기준 정렬")
+        @ApiParam(value = "아카이브 정렬 기준", required = true, defaultValue = "MODIFY_DESC")
         @RequestParam(defaultValue = "MODIFY_DESC") ArchiveSortType sortType) {
         ArchiveResponse response = archiveService.findAllByItemId(itemId, requestPagingStatus,
             sortType);
