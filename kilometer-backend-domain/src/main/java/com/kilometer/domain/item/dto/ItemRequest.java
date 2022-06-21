@@ -8,6 +8,7 @@ import com.kilometer.domain.item.ItemDetailImage;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.RegionType;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.StringUtils;
 
 @Data
 @Builder
@@ -47,7 +49,7 @@ public class ItemRequest {
     private String ticketUrl;
     private String introduce;
     @Builder.Default
-    private List<String> detailImageUrls = List.of();
+    private List<String> detailImageUrls = new ArrayList<>();
 
     public ItemDetail makeItemDetail() {
         return ItemDetail.builder()
@@ -57,6 +59,7 @@ public class ItemRequest {
 
     public List<ItemDetailImage> makeItemDetailImage() {
         return this.detailImageUrls.stream()
+            .filter(StringUtils::hasText)
             .map(ItemDetailImage::makeEntity)
             .collect(Collectors.toList());
     }

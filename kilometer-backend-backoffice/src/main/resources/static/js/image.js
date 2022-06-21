@@ -2,7 +2,10 @@ var appVue = new Vue({
     el: '#wrap',
     data: {
         listImageUrl: '',
-        thumbnailImage: '',
+        thumbnailImageUrl: '',
+        detailImageUrl: '',
+        fileIndex: 0,
+        currentIndex: 0,
     },
     methods: {
         listImageS3Upload: function (event) {
@@ -29,9 +32,9 @@ var appVue = new Vue({
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(function (response) {
-                this.thumbnailImage = response.data;
-                $('#thumbnailPreview').html("<img style=\"width: 100px; height: 100px;\" src=" + this.thumbnailImage + ">");
-                $('#thumbnailImageUrl').val(this.thumbnailImage);
+                this.thumbnailImageUrl = response.data;
+                $('#thumbnailPreview').html("<img style=\"width: 100px; height: 100px;\" src=" + this.thumbnailImageUrl + ">");
+                $('#thumbnailImageUrl').val(this.thumbnailImageUrl);
             })
         },
 
@@ -54,6 +57,40 @@ var appVue = new Vue({
             $input.val("");
             $listImageUrl.val("");
             $preview.empty();
+        },
+
+        checkDetailImageS3Upload: function (id) {
+            this.currentIndex = id;
+        },
+
+        detailImageS3Upload: function (event) {
+            let formData = new FormData();
+            let file = event.target.files[0];
+            let index = Number($(event.target).attr('data-index'));
+            formData.append("file", file);
+            axios.post('/form/image/list', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(function (response) {
+                this.detailImageUrl = response.data;
+                $('#detailImageUrls\\[' + index + '\\]').val(this.detailImageUrl);
+            })
+        },
+
+        addFile: function () {
+            let index = ++this.fileIndex;
+
+            const fileHtml = `
+        <div data-name="fileDiv">
+            <input type="hidden" id="detailImageUrls[${this.fileIndex}]" name="detailImageUrls[${this.fileIndex}]">
+            <input type="file" id="inputDetailImage[${this.fileIndex}]" data-index="${this.fileIndex}">
+            <button type="button" onclick="removeFile(this)"> 삭제 </button>
+        </div>
+	`;
+            $('#btnDiv').append(fileHtml);
+            console.log(index);
+            $(document).on('change', '#inputDetailImage\\[' + index + '\\]', this.detailImageS3Upload);
         }
     }
 })

@@ -159,12 +159,12 @@
                 <td>소개이미지</td>
                 <td colspan="3">
                     <div id="btnDiv">
-<!--                        <div data-name="fileDiv">-->
-<!--                            <label for="detailImageUrl[0]">파일1</label>-->
-<!--                            <input type="file" id="detailImageUrl[0]" th:field="*{detailImageUrls[0]}">-->
-<!--                            <button type="button" onclick="addFile()"> 추가</button>-->
-<!--                            <button type="button" onclick="removeFile(this)"> 삭제</button>-->
-<!--                        </div>-->
+                        <div data-name="fileDiv">
+                            <input type="hidden" id="detailImageUrls[0]" th:field="*{detailImageUrls[0]}">
+                            <input type="file" id="inputDetailImage[0]" data-index="0" @change="detailImageS3Upload">
+                            <button type="button" @click="addFile"> 추가</button>
+                            <button type="button" onclick="removeFile(this)"> 삭제</button>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -184,31 +184,13 @@
 </div>
 
 <script th:inline="javascript">
-    let fileIdx = 0;
-
-    function addFile() {
-        fileIdx++;
-        const fileHtml = `
-        <div data-name="fileDiv">
-            <label for="detailImageUrl[${fileIdx}]">파일${fileIdx + 1}</label>
-            <input type="file" id="detailImageUrl[${fileIdx}]" name="detailImageUrl[${fileIdx}]">
-            <button type="button" onclick="removeFile(this)"> 삭제 </button>
-        </div>
-	`;
-        $('#btnDiv').append(fileHtml);
-    }
-
     function removeFile(elem) {
-
-        fileIdx--;
-
         const prevTag = $(elem).prev().prop('tagName');
         if (prevTag === 'BUTTON') {
             const file = $(elem).prevAll('input[type="file"]');
             file.val('');
             return false;
         }
-
         const target = $(elem).parents('div[data-name="fileDiv"]');
         target.remove();
     }
