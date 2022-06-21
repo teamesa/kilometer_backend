@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive.dto;
 
-import com.kilometer.domain.archive.entity.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

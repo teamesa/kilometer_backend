@@ -1,8 +1,7 @@
-package com.kilometer.domain.archive.queryDto;
+package com.kilometer.domain.archive.dto;
 
 import com.kilometer.domain.archive.PlaceType;
-import com.kilometer.domain.archive.dto.ArchiveInfo;
-import com.kilometer.domain.archive.entity.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,8 @@
-package com.kilometer.domain.archive.repository;
+package com.kilometer.domain.archive;
 
+import com.kilometer.domain.archive.dto.ArchiveSelectResult;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
-import com.kilometer.domain.archive.entity.QArchive;
-import com.kilometer.domain.archive.entity.QUserVisitPlace;
-import com.kilometer.domain.archive.queryDto.ArchiveSelectResult;
+import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlace;
 import com.kilometer.domain.user.QUser;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;

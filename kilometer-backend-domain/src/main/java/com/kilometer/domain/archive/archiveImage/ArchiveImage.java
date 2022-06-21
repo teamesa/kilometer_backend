@@ -1,5 +1,6 @@
-package com.kilometer.domain.archive.entity;
+package com.kilometer.domain.archive.archiveImage;
 
+import com.kilometer.domain.archive.Archive;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -1,10 +1,10 @@
 package com.kilometer.domain.archive.request;
 
+import com.kilometer.domain.archive.Archive;
 import com.kilometer.domain.archive.PlaceType;
+import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.dto.PlaceInfo;
-import com.kilometer.domain.archive.entity.Archive;
-import com.kilometer.domain.archive.entity.ArchiveImage;
-import com.kilometer.domain.archive.entity.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;

@@ -1,16 +1,12 @@
 package com.kilometer.domain.archive;
 
+import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
+import com.kilometer.domain.archive.dto.ArchiveSelectResult;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
-import com.kilometer.domain.archive.entity.Archive;
-import com.kilometer.domain.archive.entity.ArchiveImage;
-import com.kilometer.domain.archive.entity.UserVisitPlace;
-import com.kilometer.domain.archive.queryDto.ArchiveSelectResult;
-import com.kilometer.domain.archive.repository.ArchiveImageRepository;
-import com.kilometer.domain.archive.repository.ArchiveRepository;
-import com.kilometer.domain.archive.repository.UserVisitPlaceRepository;
 import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.paging.PagingStatusService;
@@ -34,8 +30,8 @@ public class ArchiveService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final ArchiveRepository archiveRepository;
-    private final ArchiveImageRepository archiveImageRepository;
-    private final UserVisitPlaceRepository userVisitPlaceRepository;
+    private final ArchiveImageService archiveImageService;
+    private final UserVisitPlaceService userVisitPlaceService;
     private final PagingStatusService pagingStatusService;
 
     @Transactional
@@ -57,15 +53,16 @@ public class ArchiveService {
             .orElseThrow(() -> new IllegalArgumentException(
                 "Item does not exists 없습니다. id = " + archiveRequest.getItemId()));
 
-        List<Archive> findedArchive = archiveRepository.findAllByItemAndUser(item, user);
+        List<Archive> findArchive = archiveRepository.findAllByItemIdAndUserId(item.getId(),
+            user.getId());
 
-        if (!findedArchive.isEmpty()) {
-            throw new IllegalArgumentException("이미 Archive가 존재합니다. id : " + findedArchive.get(0));
+        if (!findArchive.isEmpty()) {
+            throw new IllegalArgumentException("이미 Archive가 존재합니다. id : " + findArchive.get(0));
         }
 
         Archive archive = saveArchive(archiveRequest, user, item);
-        saveArchiveImages(archiveRequest, archive);
-        saveUserVisitPlace(archiveRequest, archive);
+        archiveImageService.saveAll(archiveRequest, archive);
+        userVisitPlaceService.saveAll(archiveRequest, archive);
 
         return archive.makeInfo();
     }
@@ -76,24 +73,6 @@ public class ArchiveService {
         archive.setItem(item);
         archiveRepository.save(archive);
         return archive;
-    }
-
-    private void saveArchiveImages(ArchiveRequest archiveRequest, Archive archive) {
-        if (archiveRequest.getPhotoUrls().isEmpty()) {
-            return;
-        }
-        List<ArchiveImage> archiveImages = archiveRequest.makeArchiveImages();
-        archiveImages.forEach(archiveImage -> archiveImage.setArchive(archive));
-        archiveImageRepository.saveAll(archiveImages);
-    }
-
-    private void saveUserVisitPlace(ArchiveRequest archiveRequest, Archive archive) {
-        if (archiveRequest.getPlaceInfos().isEmpty()) {
-            return;
-        }
-        List<UserVisitPlace> userVisitPlaces = archiveRequest.makeVisitedPlace();
-        userVisitPlaces.forEach(userVisitPlace -> userVisitPlace.setArchive(archive));
-        userVisitPlaceRepository.saveAll(userVisitPlaces);
     }
 
     public ArchiveResponse findAllByItemId(Long itemId, RequestPagingStatus requestPagingStatus,
@@ -150,28 +129,15 @@ public class ArchiveService {
     }
 
     private void updateArchiveImages(ArchiveRequest archiveRequest, Archive archive) {
-        deleteArchiveImages(archive);
-        saveArchiveImages(archiveRequest, archive);
-    }
-
-    private void deleteArchiveImages(Archive archive) {
-        if (archive.getArchiveImages().isEmpty()) {
-            return;
-        }
-        archiveImageRepository.deleteAll(archive.getArchiveImages());
+        archiveImageService.deleteAll(archive.getArchiveImages());
+        archiveImageService.saveAll(archiveRequest, archive);
     }
 
     private void updateUserVisitPlace(ArchiveRequest archiveRequest, Archive archive) {
-        deleteUserVisitPlace(archive);
-        saveUserVisitPlace(archiveRequest, archive);
+        userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
+        userVisitPlaceService.saveAll(archiveRequest, archive);
     }
 
-    private void deleteUserVisitPlace(Archive archive) {
-        if (archive.getUserVisitPlaces().isEmpty()) {
-            return;
-        }
-        userVisitPlaceRepository.deleteAll(archive.getUserVisitPlaces());
-    }
 
     private Archive findByItemIdAndUserId(Long userId, Long itemId) {
         return archiveRepository.findByItemIdAndUserId(itemId, userId)

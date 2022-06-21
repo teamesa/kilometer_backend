@@ -1,7 +1,7 @@
-package com.kilometer.domain.archive.repository;
+package com.kilometer.domain.archive;
 
+import com.kilometer.domain.archive.dto.ArchiveSelectResult;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
-import com.kilometer.domain.archive.queryDto.ArchiveSelectResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
