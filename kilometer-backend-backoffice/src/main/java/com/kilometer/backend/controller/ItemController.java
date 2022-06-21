@@ -1,30 +1,16 @@
 package com.kilometer.backend.controller;
 
-import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
-import static com.kilometer.domain.item.ExposureType.ON;
-import static com.kilometer.domain.item.FeeType.FREE;
-import static com.kilometer.domain.item.RegionType.SEOUL;
-
-import com.kilometer.domain.item.ExhibitionType;
-import com.kilometer.domain.item.ExposureType;
-import com.kilometer.domain.item.FeeType;
-import com.kilometer.domain.item.ItemService;
-import com.kilometer.domain.item.RegionType;
+import com.kilometer.domain.item.*;
 import com.kilometer.domain.item.dto.ItemRequest;
 import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.util.BoUrlUtils;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -75,7 +61,7 @@ public class ItemController {
         return "redirect:/form/items";
     }
 
-    @GetMapping(BoUrlUtils.ITEM_ID)
+    @GetMapping(BoUrlUtils.ITEM_EDIT)
     public String getItem(@PathVariable("itemId") Long itemId, Model model) {
         ItemResponse itemResponse = itemService.findOne(itemId);
         model.addAttribute("item", itemResponse);
