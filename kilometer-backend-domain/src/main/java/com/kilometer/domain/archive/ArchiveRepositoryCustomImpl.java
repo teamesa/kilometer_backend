@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive;
 
-import com.kilometer.domain.archive.dto.ArchiveSelectResult;
+import com.kilometer.domain.archive.dto.ArchiveFetchUser;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlace;
 import com.kilometer.domain.user.QUser;
@@ -25,10 +25,10 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<ArchiveSelectResult> findAllByItemId(Pageable pageable, ArchiveSortType sortType,
+    public Page<ArchiveFetchUser> findAllByItemId(Pageable pageable, ArchiveSortType sortType,
         long itemId) {
-        List<ArchiveSelectResult> archives = queryFactory
-            .select(Projections.fields(ArchiveSelectResult.class,
+        List<ArchiveFetchUser> archives = queryFactory
+            .select(Projections.fields(ArchiveFetchUser.class,
                     archive.id,
                     user.name,
                     user.imageUrl,
@@ -41,8 +41,6 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .from(archive)
             .leftJoin(user)
             .on(user.id.eq(archive.user.id))
-            .leftJoin(userVisitPlace)
-            .on(userVisitPlace.archive.id.eq(archive.id))
             .where(
                 archive.item.id.eq(itemId),
                 archive.isVisibleAtItem.eq(true)

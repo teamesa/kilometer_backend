@@ -9,6 +9,7 @@ import com.kilometer.domain.user.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -78,11 +79,11 @@ public class Archive {
         String food = "";
         String cafe = "";
 
-        for (UserVisitPlace place : userVisitPlaces) {
-            if (PlaceType.CAFE == place.getPlaceType()) {
-                cafe = place.getPlaceName();
-            } else {
-                food = place.getPlaceName();
+        for (UserVisitPlace userVisitPlace : userVisitPlaces) {
+            if (PlaceType.FOOD.equals(userVisitPlace.getPlaceType())) {
+                food = userVisitPlace.getPlaceName();
+            } else if (PlaceType.CAFE.equals(userVisitPlace.getPlaceType())) {
+                cafe = userVisitPlace.getPlaceName();
             }
         }
 
@@ -97,6 +98,9 @@ public class Archive {
             .comment(this.comment)
             .food(food)
             .cafe(cafe)
+            .photoUrls(archiveImages.stream()
+                .map(ArchiveImage::getImageUrl)
+                .collect(Collectors.toList()))
             .build();
     }
 
