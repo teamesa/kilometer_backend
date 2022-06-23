@@ -26,7 +26,7 @@ public class ArchiveInfo {
     private Integer starRating;
     private Integer heartCount;
     @Builder.Default
-    private Boolean isHearted = false;
+    private boolean isHearted = false;
     private String comment;
     private String food;
     private String cafe;
@@ -54,7 +54,7 @@ public class ArchiveInfo {
             .updatedAt(archiveFetchUser.getUpdatedAt())
             .starRating(archiveFetchUser.getStarRating())
             .heartCount(archiveFetchUser.getHeartCount())
-            .isHearted(archiveFetchUser.getIsHeart())
+            .isHearted(archiveFetchUser.isHeart())
             .comment(archiveFetchUser.getComment())
             .food(food)
             .cafe(cafe)

@@ -15,6 +15,6 @@ public class ArchiveFetchUser {
     private Integer starRating;
     private Integer heartCount;
     private String comment;
-    private Boolean isHeart;
+    private boolean isHeart;
 
 }
