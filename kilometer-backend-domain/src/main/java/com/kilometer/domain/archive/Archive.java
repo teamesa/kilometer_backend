@@ -75,35 +75,6 @@ public class Archive {
     @Builder.Default
     private List<ArchiveImage> archiveImages = new ArrayList<>();
 
-    public ArchiveInfo makeInfo() {
-        String food = "";
-        String cafe = "";
-
-        for (UserVisitPlace userVisitPlace : userVisitPlaces) {
-            if (PlaceType.FOOD.equals(userVisitPlace.getPlaceType())) {
-                food = userVisitPlace.getPlaceName();
-            } else if (PlaceType.CAFE.equals(userVisitPlace.getPlaceType())) {
-                cafe = userVisitPlace.getPlaceName();
-            }
-        }
-
-        return ArchiveInfo.builder()
-            .id(this.id)
-            .userProfileUrl(this.user.getImageUrl())
-            .userName(this.user.getName())
-            .updatedAt(this.updatedAt)
-            .starRating(this.starRating)
-            .heartCount(this.heartCount)
-            .isHearted(false)
-            .comment(this.comment)
-            .food(food)
-            .cafe(cafe)
-            .photoUrls(archiveImages.stream()
-                .map(ArchiveImage::getImageUrl)
-                .collect(Collectors.toList()))
-            .build();
-    }
-
     public void setUser(User user) {
         this.user = user;
     }

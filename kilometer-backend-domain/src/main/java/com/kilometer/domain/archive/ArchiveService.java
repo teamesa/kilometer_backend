@@ -32,6 +32,7 @@ public class ArchiveService {
     private final ArchiveImageService archiveImageService;
     private final UserVisitPlaceService userVisitPlaceService;
     private final PagingStatusService pagingStatusService;
+    private final ArchiveAggregateConverter archiveAggregateConverter;
 
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
@@ -48,7 +49,7 @@ public class ArchiveService {
         archiveImageService.saveAll(archiveRequest, archive);
         userVisitPlaceService.saveAll(archiveRequest, archive);
 
-        return archive.makeInfo();
+        return archiveAggregateConverter.convertArchiveInfo(archive);
     }
 
     private void archiveRequestValidate(ArchiveRequest archiveRequest) {
@@ -89,12 +90,14 @@ public class ArchiveService {
     }
 
     private List<ArchiveInfo> convertArchiveInfos(Page<ArchiveFetchUser> items) {
-       return items.stream()
+        return items.stream()
             .map(archiveFetchUser -> {
-                List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(archiveFetchUser.getId());
+                List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
+                    archiveFetchUser.getId());
                 List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
                     archiveFetchUser.getId());
-                return ArchiveInfo.makeInfo(archiveFetchUser, archiveImages, userVisitPlaces);
+                return archiveAggregateConverter.convertArchiveInfo(archiveFetchUser, archiveImages,
+                    userVisitPlaces);
             })
             .collect(Collectors.toList());
     }
@@ -106,7 +109,8 @@ public class ArchiveService {
         return ArchiveResponse.builder().build();
     }
 
-    private ArchiveResponse convertingItemArchive(ResponsePagingStatus responsePagingStatus, List<ArchiveInfo> archiveInfos,         Double avgStarRating) {
+    private ArchiveResponse convertingItemArchive(ResponsePagingStatus responsePagingStatus,
+        List<ArchiveInfo> archiveInfos, Double avgStarRating) {
         return ArchiveResponse.builder()
             .responsePagingStatus(responsePagingStatus)
             .avgStarRating(avgStarRating)
@@ -133,7 +137,7 @@ public class ArchiveService {
         updateArchiveImages(request, archive);
         updateUserVisitPlace(request, archive);
 
-        return archive.makeInfo();
+        return archiveAggregateConverter.convertArchiveInfo(archive);
     }
 
     private void updateArchiveImages(ArchiveRequest archiveRequest, Archive archive) {

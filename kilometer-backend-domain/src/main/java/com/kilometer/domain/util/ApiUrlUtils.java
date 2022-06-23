@@ -11,6 +11,7 @@ public class ApiUrlUtils {
     public static final String ARCHIVE_ROOT = ROOT + "/archive";
 
     public static final String ARCHIVE_ITEM = "/{itemId}";
+    public static final String ARCHIVE_ITEM_PATTERN = ARCHIVE_ROOT + "/%s";
 
     public static final String ARCHIVE_MY = "/my";
 
@@ -18,5 +19,9 @@ public class ApiUrlUtils {
 
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
+    }
+
+    public static String getArchiveUrl(long itemId) {
+        return String.format(ARCHIVE_ITEM_PATTERN+"?status=",itemId);
     }
 }
