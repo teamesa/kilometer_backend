@@ -7,6 +7,7 @@ import com.kilometer.backend.security.security.oauth2.HttpCookieOAuth2Authorizat
 import com.kilometer.backend.security.security.oauth2.OAuth2AuthenticationFailureHandler;
 import com.kilometer.backend.security.security.oauth2.OAuth2AuthenticationSuccessHandler;
 
+import com.kilometer.domain.util.ApiUrlUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -100,8 +101,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                         .antMatchers("/", "/test").permitAll()
                         .antMatchers("/hello-example").permitAll()
-                        .antMatchers(HttpMethod.POST,"/api/search").permitAll()
-                        .antMatchers(HttpMethod.GET,"/api/search/auto-complete").permitAll()
+                        .antMatchers(HttpMethod.POST,ApiUrlUtils.SEARCH_ROOT).permitAll()
+                        .antMatchers(ApiUrlUtils.ITEM_ROOT+"/**").permitAll()
+                        .antMatchers(HttpMethod.GET, ApiUrlUtils.ARCHIVE_ROOT + ApiUrlUtils.ARCHIVE_ITEM).permitAll()
+                        .antMatchers(HttpMethod.GET,ApiUrlUtils.SEARCH_ROOT+ApiUrlUtils.SEARCH_AUTO_COMPLETE).permitAll()
                         // swagger
                         .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
                         .anyRequest().authenticated()

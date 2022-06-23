@@ -103,6 +103,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private BooleanExpression eqExhibitionType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
             .map(FilterOptions::getExhibitionType)
+            .filter(exhibitionType -> exhibitionType != ExhibitionType.ALL)
             .map(itemEntity.exhibitionType::eq)
             .orElse(null);
     }
