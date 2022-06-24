@@ -140,7 +140,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">썸네일 이미지 *</td>
+                <td class="subTitle">상세 이미지 *</td>
                 <td colspan="3">
                     <input type="hidden" id="thumbnailImageUrl" th:field="*{thumbnailImageUrl}">
                     <input type="file" id="inputThumbnailImage" @change="thumbnailImageS3Upload">
@@ -162,20 +162,21 @@
             <tr>
                 <td>소개이미지</td>
                 <td colspan="3">
-                    <!--                <div id="btnDiv">-->
-                    <!--                    <div data-name="fileDiv">-->
-                    <!--                        <label for="detailImageUrls[0]">파일1</label>-->
-                    <!--                        <input type="file" id="detailImageUrls[0]" th:field="*{detailImageUrls[0]}">-->
-                    <!--                        <button type="button" onclick="addFile()"> 추가</button>-->
-                    <!--                        <button type="button" onclick="removeFile(this)"> 삭제</button>-->
-                    <!--                    </div>-->
-                    <!--                </div>-->
-                    <!--                <div th:each="image : *{detailImageUrls}">-->
-                    <!--                    <div data-image="savedImageDiv">-->
-                    <!--                        <img width="100px" height="100px" th:src="${image}" alt="이미지 없음">-->
-                    <!--                        <button type="button" onclick="removeImage(this)"> 삭제</button>-->
-                    <!--                    </div>-->
-                    <!--                </div>-->
+                    <div id="btnDiv">
+                        <div data-name="fileDiv">
+                            <input type="hidden" id="detailImageUrls[0]" name="detailImageUrls[0]">
+                            <input type="file" id="inputDetailImage[0]" data-index="0" @change="detailImageS3Upload">
+                            <button type="button" @click="addFile"> 추가</button>
+                            <button type="button" onclick="removeFile(this)"> 삭제</button>
+                        </div>
+                    </div>
+                    <div th:each="image : *{detailImageUrlsAndIndex}">
+                        <div data-image="savedImageDiv">
+                            <img width="100px" height="100px" th:src="${image.getImages()}" alt="이미지 없음">
+                            <input type="hidden" th:value="${image.getId()}">
+                            <button type="button" onclick="removeImage(this)"> 삭제</button>
+                        </div>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -194,96 +195,27 @@
 </form>
 
 <script th:inline="javascript">
-
-    var editId = [[${item.id}]];
-
-    function readInputFile(input) {
-        console.log(input.files);
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#existing').remove();
-                $('#preview').html("<img style=\"width: 100px; height: 100px;\" src=" + e.target.result + ">");
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    $.ajax("/form/items/edit/" + editId)
-        .done(function () {
-            $("#image").on('change', function () {
-                readInputFile(this);
-            });
-        })
-
-
-    // 등록 이미지 삭제 ( input file reset )
-    function resetInputFile($input, $preview) {
-        var agent = navigator.userAgent.toLowerCase();
-        if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
-            // ie 일때
-            $input.replaceWith($input.clone(true));
-            $preview.empty();
-        } else {
-            //other
-            $input.val("");
-            $preview.empty();
-        }
-    }
-
-    $(".btn-delete").click(function (event) {
-        var $input = $("#image");
-        var $preview = $('#preview');
-        resetInputFile($input, $preview);
-    });
-</script>
-
-<script th:inline="javascript">
-    let fileIdx = 0;
     let deleteImageIdx = 0;
 
-    function addFile() {
-        fileIdx++;
-        const fileHtml = `
-        <div data-name="fileDiv">
-            <label for="detailImageUrl[${fileIdx}]">파일${fileIdx + 1}</label>
-            <input type="file" id="detailImageUrl[${fileIdx}]" name="detailImageUrl[${fileIdx}]">
-            <button type="button" onclick="removeFile(this)"> 삭제 </button>
-        </div>
-	`;
-        $('#btnDiv').append(fileHtml);
-    }
-
     function removeFile(elem) {
-
-        fileIdx--;
-
         const prevTag = $(elem).prev().prop('tagName');
         if (prevTag === 'BUTTON') {
             const file = $(elem).prevAll('input[type="file"]');
             file.val('');
             return false;
         }
-
         const target = $(elem).parents('div[data-name="fileDiv"]');
         target.remove();
     }
 
     function removeImage(elem) {
-
-        console.log("hihi1");
-
-        let imageId = $(elem).prev().text();
+        let imageId = Number($(elem).prev().val());
         const fileHtml = `
-        <div data-image="savedImageDiv">
-            <input type="hidden" name="deleteImageIndex[${deleteImageIdx}]" value="${imageId}">
-        </div>
+        <input type="hidden" name="deleteDetailImages[${deleteImageIdx}]" value="${imageId}">
 	`;
         $('#btnDiv').append(fileHtml);
 
         deleteImageIdx++;
-
-        console.log("hihi2");
 
         const target = $(elem).parents('div[data-image="savedImageDiv"]');
         target.remove();
