@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -56,6 +57,8 @@ public class ItemResponse {
     // ItemDetail & DetailImage
     private String introduce;
     private List<String> detailImageUrls;
+
+    private List<ItemDetailImages> detailImageUrlsAndIndex = new ArrayList<>();
 
     public static ItemResponse empty() {
         return ItemResponse.builder()

@@ -99,12 +99,10 @@ public class ItemService {
         itemEntity.update(request);
         updateItemDetail(request, itemEntity);
         updateItemDetailImage(request, itemEntity);
-
-
     }
 
-    private void deleteDetailImages(List<ItemDetailImage> images) {
-        itemDetailImageRepository.deleteAll(images);
+    private void deleteDetailImages(List<Long> imageIndex) {
+        itemDetailImageRepository.deleteAllById(imageIndex);
     }
 
     private void deleteItemDetail(ItemDetail itemDetail) {
@@ -112,7 +110,7 @@ public class ItemService {
     }
 
     private void updateItemDetailImage(ItemRequest request, ItemEntity item) {
-        deleteDetailImages(item.getItemDetailImages());
+        deleteDetailImages(request.getDeleteDetailImages());
         saveDetailImage(request, item);
     }
 
