@@ -36,14 +36,12 @@ public class ArchiveService {
 
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
-        archiveRequestValidate(archiveRequest);
+        validateArchiveRequest(archiveRequest);
 
-        List<Archive> findArchive = archiveRepository.findAllByItemIdAndUserId(
-            archiveRequest.getItemId(), userId);
-
-        if (!findArchive.isEmpty()) {
-            throw new IllegalArgumentException("이미 Archive가 존재합니다. id : " + findArchive.get(0));
-        }
+        Preconditions.condition(
+            !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
+            String.format("기 등록한 Archive가 있습니다. ItemId : %d / UserId : %d",
+                archiveRequest.getItemId(), userId));
 
         Archive archive = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
         archiveImageService.saveAll(archiveRequest, archive);
@@ -52,7 +50,7 @@ public class ArchiveService {
         return archiveAggregateConverter.convertArchiveInfo(archive);
     }
 
-    private void archiveRequestValidate(ArchiveRequest archiveRequest) {
+    private void validateArchiveRequest(ArchiveRequest archiveRequest) {
         Preconditions.notNull(archiveRequest.getComment(),
             "Comment must not be null");
         Preconditions.condition(

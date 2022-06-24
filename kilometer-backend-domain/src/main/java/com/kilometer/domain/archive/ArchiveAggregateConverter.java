@@ -68,15 +68,8 @@ public class ArchiveAggregateConverter {
     }
 
     private Map<PlaceType, String> convertFoodAndCafe(List<UserVisitPlace> userVisitPlaces) {
-        Map<PlaceType, String> placeTypes = new HashMap<>();
-        for (UserVisitPlace userVisitPlace : userVisitPlaces) {
-            if (PlaceType.FOOD.equals(userVisitPlace.getPlaceType())) {
-                placeTypes.put(PlaceType.FOOD, userVisitPlace.getPlaceName());
-            } else if (PlaceType.CAFE.equals(userVisitPlace.getPlaceType())) {
-                placeTypes.put(PlaceType.CAFE, userVisitPlace.getPlaceName());
-            }
-        }
-        return placeTypes;
+        return userVisitPlaces.stream()
+            .collect(Collectors.toMap(UserVisitPlace::getPlaceType, UserVisitPlace::getPlaceName));
     }
 
 }
