@@ -2,9 +2,8 @@ package com.kilometer.domain.user.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -14,6 +13,5 @@ public class UserUpdateRequest {
     private String email;
     private String gender;
     private String phoneNumber;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birthDay;
+    private LocalDate birthDay;
 }

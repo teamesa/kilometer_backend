@@ -1,10 +1,8 @@
 package com.kilometer.domain.user.dto;
 
 import com.kilometer.domain.user.Gender;
-import org.springframework.format.datetime.DateFormatter;
 
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public class NaverOAuth2UserInfo extends OAuth2UserInfo {
@@ -46,12 +44,11 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo {
     }
 
     @Override
-    public Date getBirthDate() {
+    public LocalDateTime getBirthDate() {
         String birthDay = (String) attributes.get("birthday");
         String birthYear = (String) attributes.get("birthyear");
-        DateFormatter dateFormatter = new DateFormatter("yyyy-MM-dd");
         try {
-            return dateFormatter.parse(String.format("%s-%s", birthYear, birthDay), Locale.getDefault());
+            return LocalDateTime.parse(String.format("%s-%s", birthYear, birthDay));
         } catch (Exception e) {
             return null;
         }

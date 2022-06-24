@@ -69,13 +69,7 @@ class UserFormValidator {
         }
 
         try {
-            Preconditions.condition(10 <= phoneNumberLength, "핸드폰 번호를 올바르게 입력해주세요.");
-        } catch (PreconditionViolationException e) {
-            exceptions.add(new UserValidationException(e, UserForm.phoneNumber));
-        }
-
-        try {
-            Preconditions.condition(11 >= phoneNumberLength, "핸드폰 번호를 올바르게 입력해주세요.");
+            Preconditions.condition(phoneNumberLength == 10 || phoneNumberLength == 11, "핸드폰 번호를 올바르게 입력해주세요.");
         } catch (PreconditionViolationException e) {
             exceptions.add(new UserValidationException(e, UserForm.phoneNumber));
         }

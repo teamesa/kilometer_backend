@@ -5,6 +5,7 @@ public class ApiUrlUtils {
     public static final String SEARCH_ROOT = ROOT + "/search";
     public static final String SEARCH_AUTO_COMPLETE = "/auto-complete";
     public static final String PICK_ROOT = ROOT + "/pick";
+    public static final String USER_ROOT = ROOT + "/user";
     public static final String PICK_ITEM = "/{itemId}";
     public static final String PICK_ITEM_PATTERN = PICK_ROOT + "/%s";
 
@@ -15,6 +16,8 @@ public class ApiUrlUtils {
     public static final String ARCHIVE_MY = "/my";
 
     public static final String IMAGE_ROOT = ROOT + "/image";
+
+    public static final String USER_ME = "/me";
 
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);

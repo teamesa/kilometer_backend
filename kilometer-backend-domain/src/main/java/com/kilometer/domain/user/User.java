@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -40,7 +40,7 @@ public class User {
     private String phoneNumber;
 
     @Column
-    private Date birthdate;
+    private LocalDateTime birthdate;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -87,7 +87,7 @@ public class User {
         this.email = userUpdateRequest.getEmail();
         this.gender = Gender.valueOf(userUpdateRequest.getGender());
         this.phoneNumber = userUpdateRequest.getPhoneNumber();
-        this.birthdate = userUpdateRequest.getBirthDay();
+        this.birthdate = userUpdateRequest.getBirthDay().atStartOfDay();
         return this;
     }
 }
