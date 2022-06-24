@@ -26,6 +26,7 @@ import java.util.Optional;
 
 @SuppressWarnings("rawtypes")
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
+
     private final JPAQueryFactory queryFactory;
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
     private final static QPick pick = QPick.pick;
@@ -37,44 +38,45 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     @Override
     public Page<SearchItemResponse> findAllBySortOption(ListQueryRequest queryRequest) {
         List<SearchItemResponse> items = queryFactory
-                .select(Projections.fields(SearchItemResponse.class,
-                                itemEntity.id,
-                                itemEntity.image,
-                                itemEntity.title,
-                                itemEntity.exhibitionType,
-                                itemEntity.fee,
-                                itemEntity.startDate,
-                                itemEntity.endDate,
-                                pick.isHearted
-                        )
+            .select(Projections.fields(SearchItemResponse.class,
+                    itemEntity.id,
+                    itemEntity.image,
+                    itemEntity.title,
+                    itemEntity.exhibitionType,
+                    itemEntity.fee,
+                    itemEntity.startDate,
+                    itemEntity.endDate,
+                    pick.isHearted
                 )
-                .from(itemEntity)
-                .leftJoin(pick)
-                .on(pick.pickedItem.eq(itemEntity), eqUserId(queryRequest.getUserId()))
-                .where(
-                        itemEntity.exposureType.eq(ExposureType.ON),
-                        eqTitle(queryRequest.getQueryString()),
-                        eqExhibitionType(queryRequest.getFilterOptions()),
-                        eqFeeType(queryRequest.getFilterOptions()),
-                        eqRegionType(queryRequest.getFilterOptions()),
-                        eqProgressType(queryRequest.getFilterOptions())
-                )
-                .offset(queryRequest.getPageable().getOffset())
-                .limit(queryRequest.getPageable().getPageSize())
-                .orderBy(getOrderSpecifier(queryRequest.getSearchSortType()))
-                .fetch();
+            )
+            .from(itemEntity)
+            .leftJoin(pick)
+            .on(pick.pickedItem.eq(itemEntity), eqUserId(queryRequest.getUserId()))
+            .where(
+                itemEntity.exposureType.eq(ExposureType.ON),
+                eqTitle(queryRequest.getQueryString()),
+                eqExhibitionType(queryRequest.getFilterOptions()),
+                eqFeeType(queryRequest.getFilterOptions()),
+                eqRegionType(queryRequest.getFilterOptions()),
+                eqProgressType(queryRequest.getFilterOptions())
+            )
+            .offset(queryRequest.getPageable().getOffset())
+            .limit(queryRequest.getPageable().getPageSize())
+            .orderBy(getOrderSpecifier(queryRequest.getSearchSortType()))
+            .fetch();
 
         int count = queryFactory
-                .select(itemEntity.id)
-                .from(itemEntity)
-                .where(
-                        itemEntity.exposureType.eq(ExposureType.ON),
-                        eqExhibitionType(queryRequest.getFilterOptions()),
-                        eqFeeType(queryRequest.getFilterOptions()),
-                        eqRegionType(queryRequest.getFilterOptions()),
-                        eqProgressType(queryRequest.getFilterOptions())
-                )
-                .fetch().size();
+            .select(itemEntity.id)
+            .from(itemEntity)
+            .where(
+                itemEntity.exposureType.eq(ExposureType.ON),
+                eqTitle(queryRequest.getQueryString()),
+                eqExhibitionType(queryRequest.getFilterOptions()),
+                eqFeeType(queryRequest.getFilterOptions()),
+                eqRegionType(queryRequest.getFilterOptions()),
+                eqProgressType(queryRequest.getFilterOptions())
+            )
+            .fetch().size();
 
         return new PageImpl<>(items, queryRequest.getPageable(), count);
     }
@@ -82,55 +84,57 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     @Override
     public Page<AutoCompleteItem> findTop10ByQuery(String query) {
         List<AutoCompleteItem> items = queryFactory.select(
-                        Projections.fields(AutoCompleteItem.class,
-                                itemEntity.id,
-                                itemEntity.title,
-                                itemEntity.title.indexOf(query).as("searchedTextLocationStart"),
-                                itemEntity.title.indexOf(query).add(query.length()).as("searchedTextLocationEnd"),
-                                Expressions.asString(FrontUrlUtils.getFrontDetailPrefix()).append(itemEntity.id.stringValue()).as("link")
-                        )
+                Projections.fields(AutoCompleteItem.class,
+                    itemEntity.id,
+                    itemEntity.title,
+                    itemEntity.title.indexOf(query).as("searchedTextLocationStart"),
+                    itemEntity.title.indexOf(query).add(query.length()).as("searchedTextLocationEnd"),
+                    Expressions.asString(FrontUrlUtils.getFrontDetailPrefix())
+                        .append(itemEntity.id.stringValue()).as("link")
                 )
-                .where(itemEntity.title.containsIgnoreCase(query))
-                .from(itemEntity)
-                .orderBy(itemEntity.id.desc())
-                .limit(10)
-                .fetch();
+            )
+            .where(itemEntity.title.containsIgnoreCase(query))
+            .from(itemEntity)
+            .orderBy(itemEntity.id.desc())
+            .limit(10)
+            .fetch();
 
         return new PageImpl<>(items);
     }
 
     private BooleanExpression eqExhibitionType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-                .map(FilterOptions::getExhibitionType)
-                .map(itemEntity.exhibitionType::eq)
-                .orElse(null);
+            .map(FilterOptions::getExhibitionType)
+            .filter(exhibitionType -> exhibitionType != ExhibitionType.ALL)
+            .map(itemEntity.exhibitionType::eq)
+            .orElse(null);
     }
 
     private BooleanExpression eqFeeType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-                .map(FilterOptions::getFeeTypes)
-                .map(Collection::stream)
-                .map(it -> it.map(itemEntity.fee::eq))
-                .flatMap(it -> it.reduce(BooleanExpression::or))
-                .orElse(null);
+            .map(FilterOptions::getFeeTypes)
+            .map(Collection::stream)
+            .map(it -> it.map(itemEntity.fee::eq))
+            .flatMap(it -> it.reduce(BooleanExpression::or))
+            .orElse(null);
     }
 
     private BooleanExpression eqRegionType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-                .map(FilterOptions::getRegionTypes)
-                .map(Collection::stream)
-                .map(it -> it.map(itemEntity.regionType::eq))
-                .flatMap(it -> it.reduce(BooleanExpression::or))
-                .orElse(null);
+            .map(FilterOptions::getRegionTypes)
+            .map(Collection::stream)
+            .map(it -> it.map(itemEntity.regionType::eq))
+            .flatMap(it -> it.reduce(BooleanExpression::or))
+            .orElse(null);
     }
 
     private BooleanExpression eqProgressType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-                .map(FilterOptions::getProgressTypes)
-                .map(Collection::stream)
-                .map(it -> it.map(this::getExpressionByProgressDateType))
-                .flatMap(it -> it.reduce(BooleanExpression::or))
-                .orElse(null);
+            .map(FilterOptions::getProgressTypes)
+            .map(Collection::stream)
+            .map(it -> it.map(this::getExpressionByProgressDateType))
+            .flatMap(it -> it.reduce(BooleanExpression::or))
+            .orElse(null);
     }
 
     private BooleanExpression getExpressionByProgressDateType(ProgressDateType type) {
@@ -158,9 +162,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     private BooleanExpression eqTitle(String query) {
         return Optional.ofNullable(query)
-                .filter(StringUtils::isNotBlank)
-                .map(it -> itemEntity.title.containsIgnoreCase(query))
-                .orElse(null);
+            .filter(StringUtils::isNotBlank)
+            .map(it -> itemEntity.title.containsIgnoreCase(query))
+            .orElse(null);
     }
 
     private OrderSpecifier getOrderSpecifier(SearchSortType searchSortType) {
