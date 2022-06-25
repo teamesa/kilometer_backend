@@ -51,8 +51,6 @@ public class ItemRequest {
     @Builder.Default
     private List<String> detailImageUrls = new ArrayList<>();
 
-    private List<Long> deleteDetailImages = new ArrayList<>();
-
     public ItemDetail makeItemDetail() {
         return ItemDetail.builder()
             .introduce(this.introduce)

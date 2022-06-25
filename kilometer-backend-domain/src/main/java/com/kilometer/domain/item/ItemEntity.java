@@ -1,8 +1,7 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.item.dto.ItemRequest;
-import com.kilometer.domain.item.dto.ItemResponse;
-import com.kilometer.domain.item.dto.SummaryResponse;
+import com.kilometer.domain.item.dto.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -93,7 +92,7 @@ public class ItemEntity {
     @Builder.Default
     private List<ItemDetailImage> itemDetailImages = new ArrayList<>();
 
-    public void update(ItemRequest item) {
+    public void update(ItemUpdateRequest item) {
         this.exhibitionType = item.getExhibitionType();
         this.exposureType = item.getExposureType();
         this.listImageUrl = item.getListImageUrl();
@@ -136,6 +135,31 @@ public class ItemEntity {
                     .map(ItemDetailImage::getImageUrl)
                     .collect(Collectors.toList()))
                 .orElse(new ArrayList<>()))
+            .introduce(Optional.ofNullable(this.itemDetail)
+                .map(ItemDetail::getIntroduce)
+                .orElse(""))
+            .build();
+    }
+
+    public ItemUpdateResponse makeUpdateResponse() {
+        return ItemUpdateResponse.builder()
+            .id(this.id)
+            .exhibitionType(this.exhibitionType)
+            .exposureType(this.exposureType)
+            .listImageUrl(this.listImageUrl)
+            .thumbnailImageUrl(this.thumbnailImageUrl)
+            .title(this.title)
+            .startDate(this.startDate)
+            .endDate(this.endDate)
+            .placeName(this.placeName)
+            .latitude(this.latitude)
+            .longitude(this.longitude)
+            .regionType(this.regionType)
+            .feeType(this.feeType)
+            .price(this.price)
+            .homepageUrl(this.homepageUrl)
+            .operatingTime(this.operatingTime)
+            .ticketUrl(this.ticketUrl)
             .detailImageUrlsAndIndex(Optional.ofNullable(this.itemDetailImages)
                     .map(itemDetailImages -> itemDetailImages.stream()
                             .map(ItemDetailImage::getItemDetailImage)

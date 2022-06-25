@@ -7,6 +7,8 @@ import com.kilometer.domain.item.ItemService;
 import com.kilometer.domain.item.RegionType;
 import com.kilometer.domain.item.dto.ItemRequest;
 import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.ItemUpdateRequest;
+import com.kilometer.domain.item.dto.ItemUpdateResponse;
 import com.kilometer.domain.util.BoUrlUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,14 +73,14 @@ public class ItemController {
 
     @GetMapping(BoUrlUtils.ITEM_EDIT)
     public String getItem(@PathVariable("itemId") Long itemId, Model model) {
-        ItemResponse itemResponse = itemService.findOne(itemId);
-        model.addAttribute("item", itemResponse);
+        ItemUpdateResponse itemUpdateResponse = itemService.findUpdateOne(itemId);
+        model.addAttribute("item", itemUpdateResponse);
         return "form/updateItemForm";
     }
 
     @PostMapping(BoUrlUtils.ITEM_EDIT)
-    public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemRequest itemRequest) {
-        itemService.updateItem(itemId, itemRequest);
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemUpdateRequest itemUpdateRequest) {
+        itemService.updateEditItem(itemId, itemUpdateRequest);
         return "redirect:/form/items";
     }
 
