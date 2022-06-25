@@ -29,10 +29,12 @@ spring:
     enabled: true
     baseline-on-migrate: true
     baseline-version: 0
+
 cloud:
   aws:
     s3:
       bucket: kilometer-image
+      folderName: bo
     region:
       static: ap-northeast-2
     stack:
@@ -43,8 +45,3 @@ cloud:
 
 logging:
   config: classpath:log4j2.xml
-  level:
-    com:
-      amazonaws:
-        util:
-          EC2MetadataUtils: error

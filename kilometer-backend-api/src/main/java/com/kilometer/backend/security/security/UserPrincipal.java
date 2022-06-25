@@ -76,9 +76,4 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     public long getId() {
         return user.getId();
     }
-
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> getBody() {
-        return (Map<String, Object>) OBJECT_MAPPER.convertValue(user, Map.class);
-    }
 }

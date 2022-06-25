@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
@@ -23,12 +22,12 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        Preconditions.notNull(multipartFile, "File must be not null.");
-        File uploadFile = convert(multipartFile)
-            .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+    public String upload(byte[] bytes, String fileName, String folderName) throws IOException {
+        Preconditions.notNull(bytes, "File must be not null.");
+        File uploadFile = convert(bytes, fileName)
+            .orElseThrow(() -> new IllegalArgumentException("File로 전환이 실패했습니다."));
 
-        return upload(uploadFile, dirName);
+        return upload(uploadFile, FileUtils.getFilePath(folderName));
     }
 
     private String upload(File uploadFile, String dirName) {
@@ -52,15 +51,14 @@ public class S3Uploader {
         }
     }
 
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(file.getOriginalFilename());
+    private Optional<File> convert(byte[] bytes, String fileName) throws IOException {
+        File convertFile = new File(FileUtils.getFileName(fileName));
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
+                fos.write(bytes);
             }
             return Optional.of(convertFile);
         }
-
         return Optional.empty();
     }
 }

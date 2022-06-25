@@ -6,7 +6,7 @@ import com.kilometer.domain.user.Role;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -17,7 +17,7 @@ public class UserResponse {
     private String imageUrl;
     private Role role;
     private String phoneNumber;
-    private Date birthdate;
+    private LocalDateTime birthdate;
     private Gender gender;
     private AuthProvider provider;
     private boolean isCreated;

@@ -1,6 +1,7 @@
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor(
             "javax.persistence:javax.persistence-api",
@@ -9,7 +10,6 @@ dependencies {
     )
     implementation "org.flywaydb:flyway-mysql:8.5.10"
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-    implementation 'org.springframework:spring-web:5.3.9'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 

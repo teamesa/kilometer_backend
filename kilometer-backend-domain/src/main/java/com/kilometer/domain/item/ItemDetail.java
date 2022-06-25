@@ -1,19 +1,17 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.item.dto.DetailResponse;
+import static javax.persistence.FetchType.EAGER;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static javax.persistence.FetchType.EAGER;
 
 @Getter
 @Entity
@@ -29,16 +27,16 @@ public class ItemDetail {
 
     private String introduce;
 
-    @OneToMany(mappedBy = "itemDetailEntity", fetch = EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    @Builder.Default
-    private List<DetailImage> images = new ArrayList<>();
+    @OneToOne(fetch = EAGER)
+    @JoinColumn(name = "item")
+    private ItemEntity item;
 
-    public DetailResponse makeResponse() {
-        List<String> photo = images.stream().map(DetailImage::getUrl).collect(Collectors.toList());
-        return DetailResponse.builder()
-                .summary(introduce)
-                .photo(photo)
-                .build();
+    public void update(String introduce) {
+        this.introduce = introduce;
+    }
+
+    public void setItemEntity(ItemEntity item) {
+        this.item = item;
+        item.setItemDetail(this);
     }
 }

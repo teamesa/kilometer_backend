@@ -1,41 +1,51 @@
 package com.kilometer.domain.archive;
 
+import com.kilometer.domain.archive.archiveImage.ArchiveImage;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
+import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
-import com.kilometer.domain.archive.dto.PlaceInfo;
-import com.kilometer.domain.archive.entity.Archive;
-import com.kilometer.domain.archive.entity.ArchivePhoto;
-import com.kilometer.domain.archive.entity.VisitedPlace;
-import com.kilometer.domain.archive.queryDto.ArchiveSelectResult;
 import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
-import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
+import com.kilometer.domain.paging.ResponsePagingStatus;
 import com.kilometer.domain.user.User;
-import com.kilometer.domain.user.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ArchiveService {
 
-    private final UserRepository userRepository;
-    private final ItemRepository itemRepository;
     private final ArchiveRepository archiveRepository;
-    private final ArchivePhotoRepository archivePhotoRepository;
+    private final ArchiveImageService archiveImageService;
+    private final UserVisitPlaceService userVisitPlaceService;
     private final PagingStatusService pagingStatusService;
+    private final ArchiveAggregateConverter archiveAggregateConverter;
 
+    @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
+        validateArchiveRequest(archiveRequest, userId);
+
+        Archive archive = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
+        archiveImageService.saveAll(archiveRequest, archive);
+        userVisitPlaceService.saveAll(archiveRequest, archive);
+
+        return archiveAggregateConverter.convertArchiveInfo(archive);
+    }
+
+    private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
         Preconditions.notNull(archiveRequest.getComment(),
             "Comment must not be null");
         Preconditions.condition(
@@ -46,49 +56,18 @@ public class ArchiveService {
         Preconditions.notNull(archiveRequest.getPlaceInfos(),
             "Place infos must not be null");
 
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+        Preconditions.condition(
+            !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
+            String.format("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d",
+                archiveRequest.getItemId(), userId));
+    }
 
-        ItemEntity item = itemRepository.findById(archiveRequest.getItemId())
-            .orElseThrow(() -> new IllegalArgumentException(
-                "Item does not exists 없습니다. id = " + archiveRequest.getItemId()));
-
-        List<Archive> findedArchive = archiveRepository.findAllByItemAndUser(item, user);
-
-        if (!findedArchive.isEmpty()) {
-            throw new IllegalArgumentException("이미 Archive가 존재합니다. id : " + findedArchive.get(0));
-        }
-
-        List<VisitedPlace> places = new ArrayList<>();
-        for (PlaceInfo info : archiveRequest.getPlaceInfos()) {
-            places.add(VisitedPlace.builder()
-                .placeType(PlaceType.valueOf(info.getPlaceType()))
-                .placeName(info.getName())
-                .address(info.getAddress())
-                .roadAddress(info.getRoadAddress())
-                .build());
-        }
-
-        List<ArchivePhoto> photos = new ArrayList<>();
-        archiveRequest.getPhotoUrls().forEach(url -> {
-            ArchivePhoto photo = ArchivePhoto.builder().imageUrl(url).build();
-            photos.add(photo);
-        });
-
-        Archive archive = Archive.builder()
-            .comment(archiveRequest.getComment())
-            .starRating(archiveRequest.getStarRating())
-            .isVisibleAtItem(archiveRequest.isVisibleAtItem())
-            .user(user)
-            .item(item)
-            .build();
-
-        archive.setVisitedPlaces(places);
-        archive.setPhotos(photos);
-
+    private Archive saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {
+        Archive archive = archiveRequest.makeArchive();
+        archive.setUser(User.builder().id(userId).build());
+        archive.setItem(ItemEntity.builder().id(itemId).build());
         archiveRepository.save(archive);
-
-        return archive.makeInfo();
+        return archive;
     }
 
     public ArchiveResponse findAllByItemId(Long itemId, RequestPagingStatus requestPagingStatus,
@@ -98,10 +77,27 @@ public class ArchiveService {
         Preconditions.notNull(sortType, "sort type value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<ArchiveSelectResult> items = archiveRepository.findAllByItemId(pageable, sortType,
+        Page<ItemArchiveDto> items = archiveRepository.findAllByItemId(pageable, sortType,
             itemId);
 
-        return convertingItemArchive(items, getStarRatingAvgByItemId(itemId));
+        List<ArchiveInfo> archiveInfos = convertArchiveInfos(items);
+        Double starRatingAvg = getStarRatingAvgByItemId(itemId);
+        ResponsePagingStatus responsePagingStatus = pagingStatusService.convert(items, null);
+
+        return convertingItemArchive(responsePagingStatus, archiveInfos, starRatingAvg);
+    }
+
+    private List<ArchiveInfo> convertArchiveInfos(Page<ItemArchiveDto> items) {
+        return items.stream()
+            .map(archiveFetchUser -> {
+                List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
+                    archiveFetchUser.getId());
+                List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
+                    archiveFetchUser.getId());
+                return archiveAggregateConverter.convertArchiveInfo(archiveFetchUser, archiveImages,
+                    userVisitPlaces);
+            })
+            .collect(Collectors.toList());
     }
 
     public ArchiveResponse findAllByUserId(Long userId, RequestPagingStatus requestPagingStatus) {
@@ -111,14 +107,12 @@ public class ArchiveService {
         return ArchiveResponse.builder().build();
     }
 
-    private ArchiveResponse convertingItemArchive(Page<ArchiveSelectResult> archiveSelectResults,
-        Double avgStarRating) {
-        List<ArchiveInfo> infos = archiveSelectResults.stream().map(ArchiveSelectResult::convert)
-            .collect(Collectors.toList());
+    private ArchiveResponse convertingItemArchive(ResponsePagingStatus responsePagingStatus,
+        List<ArchiveInfo> archiveInfos, Double avgStarRating) {
         return ArchiveResponse.builder()
-            .responsePagingStatus(pagingStatusService.convert(archiveSelectResults, null))
+            .responsePagingStatus(responsePagingStatus)
             .avgStarRating(avgStarRating)
-            .archives(infos)
+            .archives(archiveInfos)
             .build();
     }
 
@@ -130,4 +124,34 @@ public class ArchiveService {
         return result;
     }
 
+    @Transactional
+    public ArchiveInfo update(Long userId, ArchiveRequest request) {
+        Preconditions.notNull(userId, "id must not be null");
+        Preconditions.notNull(request.getItemId(), "Item id must not be null");
+
+        Archive archive = findByItemIdAndUserId(userId, request.getItemId());
+
+        archive.update(request);
+        updateArchiveImages(request, archive);
+        updateUserVisitPlace(request, archive);
+
+        return archiveAggregateConverter.convertArchiveInfo(archive);
+    }
+
+    private void updateArchiveImages(ArchiveRequest archiveRequest, Archive archive) {
+        archiveImageService.deleteAll(archive.getArchiveImages());
+        archiveImageService.saveAll(archiveRequest, archive);
+    }
+
+    private void updateUserVisitPlace(ArchiveRequest archiveRequest, Archive archive) {
+        userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
+        userVisitPlaceService.saveAll(archiveRequest, archive);
+    }
+
+
+    private Archive findByItemIdAndUserId(Long userId, Long itemId) {
+        return archiveRepository.findByItemIdAndUserId(itemId, userId)
+            .orElseThrow(() -> new IllegalArgumentException(
+                "존재하지 않는 요청입니다. itemId : " + itemId + "/ userId : " + userId));
+    }
 }

@@ -7,22 +7,20 @@ import com.kilometer.domain.search.dto.ListQueryRequest;
 import com.kilometer.domain.search.request.FilterOptions;
 import com.kilometer.domain.search.request.ProgressDateType;
 import com.kilometer.domain.search.request.SearchSortType;
-import com.querydsl.core.types.OrderSpecifier;
 import com.kilometer.domain.util.FrontUrlUtils;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.junit.platform.commons.util.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-
-import javax.persistence.EntityManager;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityManager;
+import org.junit.platform.commons.util.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 @SuppressWarnings("rawtypes")
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
@@ -40,12 +38,13 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         List<SearchItemResponse> items = queryFactory
             .select(Projections.fields(SearchItemResponse.class,
                     itemEntity.id,
-                    itemEntity.image,
+                    itemEntity.listImageUrl,
                     itemEntity.title,
                     itemEntity.exhibitionType,
-                    itemEntity.fee,
+                    itemEntity.feeType,
                     itemEntity.startDate,
                     itemEntity.endDate,
+                    itemEntity.pickCount,
                     pick.isHearted
                 )
             )
@@ -114,7 +113,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         return Optional.ofNullable(filterOptions)
             .map(FilterOptions::getFeeTypes)
             .map(Collection::stream)
-            .map(it -> it.map(itemEntity.fee::eq))
+            .map(it -> it.map(itemEntity.feeType::eq))
             .flatMap(it -> it.reduce(BooleanExpression::or))
             .orElse(null);
     }

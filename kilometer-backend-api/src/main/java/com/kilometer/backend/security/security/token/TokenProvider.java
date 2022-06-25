@@ -24,7 +24,6 @@ public class TokenProvider {
         Date expiryDate = new Date(now.getTime() + appProperties.getTokenExpirationMsec());
 
         return Jwts.builder()
-                .setClaims(userPrincipal.getBody())
                 .setSubject(Long.toString(userPrincipal.getId()))
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)

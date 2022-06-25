@@ -1,36 +1,35 @@
 package com.kilometer.backend.controller;
 
-import com.kilometer.backend.controller.dto.ItemForm;
-import com.kilometer.backend.controller.file.S3Uploader;
-import com.kilometer.domain.item.*;
+import com.kilometer.domain.item.ExhibitionType;
+import com.kilometer.domain.item.ExposureType;
+import com.kilometer.domain.item.FeeType;
+import com.kilometer.domain.item.ItemService;
+import com.kilometer.domain.item.RegionType;
+import com.kilometer.domain.item.dto.ItemRequest;
 import com.kilometer.domain.item.dto.ItemResponse;
-import com.kilometer.domain.item.dto.ItemSaveRequest;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
+import com.kilometer.domain.item.dto.ItemUpdateResponse;
+import com.kilometer.domain.util.BoUrlUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
-
-import static com.kilometer.domain.item.ExhibitionType.EXHIBITION;
-import static com.kilometer.domain.item.FeeType.FREE;
-import static com.kilometer.domain.item.ExposureType.ON;
-import static com.kilometer.domain.item.RegionType.SEOUL;
 
 @Slf4j
 @Controller
-@RequestMapping("/form/items")
+@RequestMapping(BoUrlUtils.ITEM_ROOT)
 @RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
-    private final S3Uploader s3Uploader;
+
 
     @ModelAttribute("exhibitionTypes")
     public ExhibitionType[] exhibitionTypes() {
@@ -54,106 +53,40 @@ public class ItemController {
 
     @GetMapping
     public String items(Model model) {
-        List<ItemResponse> items = itemService.findItems();
+        List<ItemResponse> items = itemService.findAll();
         model.addAttribute("items", items);
         return "form/items";
     }
 
-    @GetMapping("/add")
-    public String addForm(Model model) {
-        ItemResponse defaultOptions = ItemResponse.builder().exhibitionType(EXHIBITION).regionType(SEOUL).exposureType(ON).fee(FREE).startDate(LocalDate.now()).endDate(LocalDate.now()).build();
-        model.addAttribute("item", defaultOptions);
+    @GetMapping(BoUrlUtils.ITEM_ADD)
+    public String getEmptyItem(Model model) {
+        ItemResponse itemResponse = ItemResponse.empty();
+        model.addAttribute("item", itemResponse);
         return "form/addForm";
     }
 
-    @PostMapping("/add")
-    public String addItem(@ModelAttribute ItemForm item) throws IOException {
-        String s3ImageUrl = fileExists(item);
-        ItemSaveRequest build = ItemSaveRequest.builder()
-                .exhibitionType(item.getExhibitionType())
-                .exposureType(item.getExposureType())
-                .image(s3ImageUrl)
-                .title(item.getTitle())
-                .startDate(item.getStartDate())
-                .endDate(item.getEndDate())
-                .latitude(item.getLatitude())
-                .longitude(item.getLongitude())
-                .regionType(item.getRegionType())
-                .place(item.getPlace())
-                .fee(item.getFee())
-                .price(item.getPrice())
-                .url(item.getUrl())
-                .time(item.getTime())
-                .ticketUrl(item.getTicketUrl())
-                .build();
-        itemService.saveItem(build);
+    @PostMapping(BoUrlUtils.ITEM_ADD)
+    public String addItem(@ModelAttribute ItemRequest itemRequest) {
+        itemService.saveItem(itemRequest);
         return "redirect:/form/items";
     }
 
-    private String fileExists(ItemForm item) throws IOException {
-        MultipartFile image = item.getImage();
-        String s3ImageUrl = "";
-        String originalFilename = image.getOriginalFilename();
-        if (StringUtils.hasText(originalFilename)) {
-            s3ImageUrl = s3Uploader.upload(image, "static");
-        }
-        return s3ImageUrl;
-    }
-
-    @GetMapping("/{itemId}/edit")
-    public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
-        ItemResponse findOne = itemService.findOne(itemId);
-        model.addAttribute("item", findOne);
+    @GetMapping(BoUrlUtils.ITEM_EDIT)
+    public String getItem(@PathVariable("itemId") Long itemId, Model model) {
+        ItemUpdateResponse itemUpdateResponse = itemService.findUpdateOne(itemId);
+        model.addAttribute("item", itemUpdateResponse);
         return "form/updateItemForm";
     }
 
-    @PostMapping("/{itemId}/edit")
-    public String updateForm(@PathVariable Long itemId, @ModelAttribute ItemForm item) throws IOException {
-        String imageUrl = updateFileExists(itemId, item);
-        ItemUpdateRequest build = ItemUpdateRequest.builder()
-                .exhibitionType(item.getExhibitionType())
-                .exposureType(item.getExposureType())
-                .image(imageUrl)
-                .title(item.getTitle())
-                .startDate(item.getStartDate())
-                .endDate(item.getEndDate())
-                .latitude(item.getLatitude())
-                .longitude(item.getLongitude())
-                .regionType(item.getRegionType())
-                .place(item.getPlace())
-                .fee(item.getFee())
-                .price(item.getPrice())
-                .url(item.getUrl())
-                .time(item.getTime())
-                .ticketUrl(item.getTicketUrl())
-                .build();
-        itemService.updateItem(itemId, build);
+    @PostMapping(BoUrlUtils.ITEM_EDIT)
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemUpdateRequest itemUpdateRequest) {
+        itemService.updateEditItem(itemId, itemUpdateRequest);
         return "redirect:/form/items";
     }
 
-    private String updateFileExists(Long itemId, ItemForm item) throws IOException {
-        MultipartFile image = item.getImage();
-        String imageUrl;
-        String originalFilename = image.getOriginalFilename();
-        if (StringUtils.hasText(originalFilename)) {
-            imageUrl = s3Uploader.upload(image, "static");
-        } else {
-            ItemResponse findItem = itemService.findOne(itemId);
-            imageUrl = findItem.getImage();
-        }
-        return imageUrl;
-    }
-
-    @PostMapping("/{itemId}/delete")
+    @PostMapping(BoUrlUtils.ITEM_DELETE)
     public String deleteItem(@PathVariable("itemId") Long itemId) {
         itemService.deleteItem(itemId);
         return "redirect:/form/items";
     }
-
-    @GetMapping("/response-test")
-    @ResponseBody
-    public List<ItemResponse> responseItemEntity() {
-        return itemService.findItems();
-    }
-
 }
