@@ -2,6 +2,7 @@ package com.kilometer.domain.user;
 
 import com.kilometer.domain.user.dto.OAuth2UserInfo;
 import com.kilometer.domain.user.dto.UserResponse;
+import com.kilometer.domain.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final UserFormValidator userFormValidator;
     private final UserRepository userRepository;
     private final NameGenerator nameGenerator;
 
@@ -24,7 +26,13 @@ public class UserService {
         return userRepository.findById(id).map(User::toResponse);
     }
 
-
+    public Optional<UserResponse> updateUser(UserUpdateRequest userUpdateRequest) {
+        userFormValidator.validateUserForm(userUpdateRequest);
+        return userRepository.findById(userUpdateRequest.getId())
+                .map(user -> user.update(userUpdateRequest))
+                .map(userRepository::save)
+                .map(User::toResponse);
+    }
 
     // DB에 존재하지 않을 경우 새로 등록
     public UserResponse registerNewUser(AuthProvider provider, OAuth2UserInfo oAuth2UserInfo) {
