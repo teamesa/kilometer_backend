@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive;
 
-import com.kilometer.domain.archive.dto.ArchiveFetchUser;
+import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlace;
 import com.kilometer.domain.user.QUser;
@@ -25,10 +25,10 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<ArchiveFetchUser> findAllByItemId(Pageable pageable, ArchiveSortType sortType,
+    public Page<ItemArchiveDto> findAllByItemId(Pageable pageable, ArchiveSortType sortType,
         long itemId) {
-        List<ArchiveFetchUser> archives = queryFactory
-            .select(Projections.fields(ArchiveFetchUser.class,
+        List<ItemArchiveDto> archives = queryFactory
+            .select(Projections.fields(ItemArchiveDto.class,
                     archive.id,
                     user.name,
                     user.imageUrl,

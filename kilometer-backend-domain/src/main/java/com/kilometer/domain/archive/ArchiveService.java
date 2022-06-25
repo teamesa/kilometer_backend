@@ -4,7 +4,7 @@ import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
-import com.kilometer.domain.archive.dto.ArchiveFetchUser;
+import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
@@ -36,12 +36,7 @@ public class ArchiveService {
 
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
-        validateArchiveRequest(archiveRequest);
-
-        Preconditions.condition(
-            !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
-            String.format("기 등록한 Archive가 있습니다. ItemId : %d / UserId : %d",
-                archiveRequest.getItemId(), userId));
+        validateArchiveRequest(archiveRequest, userId);
 
         Archive archive = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
         archiveImageService.saveAll(archiveRequest, archive);
@@ -50,7 +45,7 @@ public class ArchiveService {
         return archiveAggregateConverter.convertArchiveInfo(archive);
     }
 
-    private void validateArchiveRequest(ArchiveRequest archiveRequest) {
+    private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
         Preconditions.notNull(archiveRequest.getComment(),
             "Comment must not be null");
         Preconditions.condition(
@@ -60,6 +55,11 @@ public class ArchiveService {
             "Photo urls must not be null");
         Preconditions.notNull(archiveRequest.getPlaceInfos(),
             "Place infos must not be null");
+
+        Preconditions.condition(
+            !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
+            String.format("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d",
+                archiveRequest.getItemId(), userId));
     }
 
     private Archive saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {
@@ -77,7 +77,7 @@ public class ArchiveService {
         Preconditions.notNull(sortType, "sort type value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<ArchiveFetchUser> items = archiveRepository.findAllByItemId(pageable, sortType,
+        Page<ItemArchiveDto> items = archiveRepository.findAllByItemId(pageable, sortType,
             itemId);
 
         List<ArchiveInfo> archiveInfos = convertArchiveInfos(items);
@@ -87,7 +87,7 @@ public class ArchiveService {
         return convertingItemArchive(responsePagingStatus, archiveInfos, starRatingAvg);
     }
 
-    private List<ArchiveInfo> convertArchiveInfos(Page<ArchiveFetchUser> items) {
+    private List<ArchiveInfo> convertArchiveInfos(Page<ItemArchiveDto> items) {
         return items.stream()
             .map(archiveFetchUser -> {
                 List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(

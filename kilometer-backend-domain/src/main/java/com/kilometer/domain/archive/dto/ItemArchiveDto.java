@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ArchiveFetchUser {
+public class ItemArchiveDto {
 
     private Long id;
     private String name;

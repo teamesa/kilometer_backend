@@ -1,12 +1,11 @@
 package com.kilometer.domain.archive;
 
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
-import com.kilometer.domain.archive.dto.ArchiveFetchUser;
+import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.heart.ArchiveHeart;
 import com.kilometer.domain.archive.heart.ArchiveHeartGenerator;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,23 +18,23 @@ public class ArchiveAggregateConverter {
 
     private final ArchiveHeartGenerator archiveHeartGenerator;
 
-    public ArchiveInfo convertArchiveInfo(ArchiveFetchUser archiveFetchUser,
+    public ArchiveInfo convertArchiveInfo(ItemArchiveDto itemArchiveDto,
         List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
 
         ArchiveHeart archiveHeart = archiveHeartGenerator.generateArchiveHeart(
-            archiveFetchUser);
+            itemArchiveDto);
 
         return ArchiveInfo.builder()
-            .id(archiveFetchUser.getId())
-            .userName(archiveFetchUser.getName())
-            .userProfileUrl(archiveFetchUser.getImageUrl())
-            .updatedAt(archiveFetchUser.getUpdatedAt())
-            .starRating(archiveFetchUser.getStarRating())
-            .heartCount(archiveFetchUser.getHeartCount())
+            .id(itemArchiveDto.getId())
+            .userName(itemArchiveDto.getName())
+            .userProfileUrl(itemArchiveDto.getImageUrl())
+            .updatedAt(itemArchiveDto.getUpdatedAt())
+            .starRating(itemArchiveDto.getStarRating())
+            .heartCount(itemArchiveDto.getHeartCount())
             .heart(archiveHeart)
-            .comment(archiveFetchUser.getComment())
+            .comment(itemArchiveDto.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD,""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE,""))
             .photoUrls(archiveImages.stream()
