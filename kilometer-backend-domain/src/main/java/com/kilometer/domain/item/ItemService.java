@@ -1,10 +1,6 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.item.dto.DetailResponse;
-import com.kilometer.domain.item.dto.ItemRequest;
-import com.kilometer.domain.item.dto.ItemResponse;
-import com.kilometer.domain.item.dto.SearchItemResponse;
-import com.kilometer.domain.item.dto.SummaryResponse;
+import com.kilometer.domain.item.dto.*;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
 import java.util.List;
@@ -30,27 +26,25 @@ public class ItemService {
     public void saveItem(ItemRequest request) {
         ItemEntity item = saveItemEntity(request);
 
-        saveItemDetail(request, item);
+        saveItemDetail(request.makeItemDetail(), item);
 
-        saveDetailImage(request, item);
+        saveDetailImage(request.makeItemDetailImage(), item);
     }
 
-    private void saveItemDetail(ItemRequest request, ItemEntity item) {
-        if (!StringUtils.hasText(request.getIntroduce())) {
+    private void saveItemDetail(ItemDetail itemDetail, ItemEntity item) {
+        if (!StringUtils.hasText(itemDetail.getIntroduce())) {
             return;
         }
 
-        ItemDetail itemDetail = request.makeItemDetail();
         itemDetail.setItemEntity(item);
         itemDetailRepository.save(itemDetail);
     }
 
-    private void saveDetailImage(ItemRequest request, ItemEntity item) {
-        if (request.getDetailImageUrls().isEmpty()) {
+    private void saveDetailImage(List<ItemDetailImage> itemDetailImages, ItemEntity item) {
+        if (itemDetailImages.isEmpty()) {
             return;
         }
 
-        List<ItemDetailImage> itemDetailImages = request.makeItemDetailImage();
         itemDetailImages.forEach(detailImage -> detailImage.setItemEntity(item));
 
         itemDetailImageRepository.saveAll(itemDetailImages);
@@ -82,6 +76,14 @@ public class ItemService {
         return itemEntity.makeResponse();
     }
 
+    public ItemUpdateResponse findUpdateOne(Long itemId) {
+        Preconditions.notNull(itemId, "id must not be null");
+
+        ItemEntity itemEntity = itemRepository.findById(itemId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
+        return itemEntity.makeUpdateResponse();
+    }
+
     public Optional<SummaryResponse> findToSummaryResponseById(Long itemId) {
         Preconditions.notNull(itemId, "id must not be null");
 
@@ -89,34 +91,32 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateItem(Long itemId, ItemRequest request) {
+    public void updateEditItem(Long itemId, ItemUpdateRequest request) {
         Preconditions.notNull(itemId, "id must not be null");
         Preconditions.notNull(request, "item must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id=" + itemId));
+                .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id=" + itemId));
 
         itemEntity.update(request);
         updateItemDetail(request, itemEntity);
         updateItemDetailImage(request, itemEntity);
-
-
     }
 
-    private void deleteDetailImages(List<ItemDetailImage> images) {
-        itemDetailImageRepository.deleteAll(images);
+    private void deleteDetailImages(List<Long> imageIndex) {
+        itemDetailImageRepository.deleteAllById(imageIndex);
     }
 
     private void deleteItemDetail(ItemDetail itemDetail) {
         itemDetailRepository.delete(itemDetail);
     }
 
-    private void updateItemDetailImage(ItemRequest request, ItemEntity item) {
-        deleteDetailImages(item.getItemDetailImages());
-        saveDetailImage(request, item);
+    private void updateItemDetailImage(ItemUpdateRequest request, ItemEntity item) {
+        deleteDetailImages(request.getDeleteDetailImages());
+        saveDetailImage(request.makeUpdateItemDetailImage(), item);
     }
 
-    private void updateItemDetail(ItemRequest request, ItemEntity item) {
+    private void updateItemDetail(ItemUpdateRequest request, ItemEntity item) {
         ItemDetail itemDetail = item.getItemDetail();
         if (itemDetail != null) {
             if (StringUtils.hasText(request.getIntroduce())) {
@@ -126,7 +126,7 @@ public class ItemService {
             }
         } else {
             if (StringUtils.hasText(request.getIntroduce())) {
-                saveItemDetail(request, item);
+                saveItemDetail(request.makeUpdateItemDetail(), item);
             }
         }
     }

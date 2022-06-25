@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemResponse {
+public class ItemUpdateResponse {
 
     private Long id;
 
@@ -56,10 +56,10 @@ public class ItemResponse {
 
     // ItemDetail & DetailImage
     private String introduce;
-    private List<String> detailImageUrls;
+    private List<ItemDetailImages> detailImageUrlsAndIndex = new ArrayList<>();
 
-    public static ItemResponse empty() {
-        return ItemResponse.builder()
+    public static ItemUpdateResponse empty() {
+        return ItemUpdateResponse.builder()
             .build();
     }
 }
