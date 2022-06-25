@@ -34,7 +34,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                     user.imageUrl,
                     archive.updatedAt,
                     archive.starRating,
-                    archive.heartCount,
+                    archive.likeCount,
                     archive.comment
                 )
             )
@@ -76,7 +76,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     private OrderSpecifier getOrderSpecifier(ArchiveSortType sortType) {
         if (sortType == ArchiveSortType.LIKE_DESC) {
-            return archive.heartCount.desc();
+            return archive.likeCount.desc();
         }
         return archive.updatedAt.desc();
     }

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS archive
 
     comment         VARCHAR(1000) NULL,
     starRating      INT           NOT NULL DEFAULT 5,
-    heartCount      INT           NOT NULL DEFAULT 0,
+    likeCount       INT           NOT NULL DEFAULT 0,
 
     isVisibleAtItem TINYINT(1)    NOT NULL DEFAULT TRUE,
 

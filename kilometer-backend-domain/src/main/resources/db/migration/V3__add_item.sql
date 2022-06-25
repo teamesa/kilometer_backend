@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS item
     ticketUrl         VARCHAR(3000) NULL,
     operatingTime     VARCHAR(500)  NULL,
 
+    pickCount         INT           NOT NULL DEFAULT 0,
+
     startDate         DATE          NOT NULL,
     endDate           DATE          NOT NULL,
 
