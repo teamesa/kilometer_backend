@@ -55,7 +55,7 @@ public class ArchiveAggregateConverter {
             .userName(archive.getUser().getName())
             .updatedAt(archive.getUpdatedAt())
             .starRating(archive.getStarRating())
-            .heartCount(archive.getHeartCount())
+            .heartCount(archive.getLikeCount())
             .heart(archiveHeart)
             .comment(archive.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD,""))

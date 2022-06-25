@@ -44,7 +44,7 @@ public class Archive {
     private int starRating;
 
     @Builder.Default
-    private int heartCount = 0;
+    private int likeCount = 0;
 
     @Builder.Default
     private boolean isVisibleAtItem = true;
