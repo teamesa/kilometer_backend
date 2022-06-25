@@ -1,6 +1,7 @@
 package com.kilometer.domain.user;
 
 import com.kilometer.domain.user.dto.UserResponse;
+import com.kilometer.domain.user.dto.UserUpdateRequest;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -39,7 +40,7 @@ public class User {
     private String phoneNumber;
 
     @Column
-    private Date birthdate;
+    private LocalDateTime birthdate;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -79,5 +80,14 @@ public class User {
                 .phoneNumber(this.phoneNumber)
                 .isCreated(isCreated)
                 .build();
+    }
+
+    public User update(UserUpdateRequest userUpdateRequest) {
+        this.name = userUpdateRequest.getName();
+        this.email = userUpdateRequest.getEmail();
+        this.gender = Gender.valueOf(userUpdateRequest.getGender());
+        this.phoneNumber = userUpdateRequest.getPhoneNumber();
+        this.birthdate = userUpdateRequest.getBirthDay().atStartOfDay();
+        return this;
     }
 }
