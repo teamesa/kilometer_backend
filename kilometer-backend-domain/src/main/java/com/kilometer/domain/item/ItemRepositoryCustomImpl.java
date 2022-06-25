@@ -44,6 +44,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                     itemEntity.feeType,
                     itemEntity.startDate,
                     itemEntity.endDate,
+                    itemEntity.pickCount,
                     pick.isHearted
                 )
             )

@@ -1,8 +1,9 @@
-package com.kilometer.domain.archive.repository;
+package com.kilometer.domain.archive.userVisitPlace;
 
-import com.kilometer.domain.archive.entity.UserVisitPlace;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserVisitPlaceRepository extends JpaRepository<UserVisitPlace, Long> {
 
+    List<UserVisitPlace> findAllByArchiveId(Long archiveId);
 }
