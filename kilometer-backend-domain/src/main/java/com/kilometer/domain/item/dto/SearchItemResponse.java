@@ -1,7 +1,7 @@
 package com.kilometer.domain.item.dto;
 
-import com.kilometer.domain.item.ExhibitionType;
-import com.kilometer.domain.item.FeeType;
+import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
 import lombok.Data;
 import lombok.NoArgsConstructor;

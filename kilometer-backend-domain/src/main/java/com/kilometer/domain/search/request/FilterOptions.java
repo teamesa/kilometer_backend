@@ -1,8 +1,8 @@
 package com.kilometer.domain.search.request;
 
-import com.kilometer.domain.item.ExhibitionType;
-import com.kilometer.domain.item.FeeType;
-import com.kilometer.domain.item.RegionType;
+import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.FeeType;
+import com.kilometer.domain.item.enumType.RegionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

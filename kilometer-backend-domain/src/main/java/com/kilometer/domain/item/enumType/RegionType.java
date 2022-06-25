@@ -1,4 +1,4 @@
-package com.kilometer.domain.item;
+package com.kilometer.domain.item.enumType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
