@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,34 +21,45 @@ import java.util.List;
 public class ItemResponse {
 
     private Long id;
-    private ExhibitionType exhibitionType;
-    private ExposureType exposureType;
-    private String image;
+
+    @Builder.Default
+    private ExhibitionType exhibitionType = ExhibitionType.EXHIBITION;
+    @Builder.Default
+    private ExposureType exposureType = ExposureType.ON;
+    @Builder.Default
+    private RegionType regionType = RegionType.SEOUL;
+    @Builder.Default
+    private FeeType feeType = FeeType.FREE;
+
+    private String listImageUrl;
+    private String thumbnailImageUrl;
+
     private String title;
 
+    @Builder.Default
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
+    private LocalDate startDate = LocalDate.now();
 
-    private String place;
+    @Builder.Default
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDate = LocalDate.now();
+
+    private String placeName;
+
     private Double latitude;
     private Double longitude;
-    private RegionType regionType;
-    private FeeType fee;
-    private String price;
-    private String url;
-    private String time;
-    private String ticketUrl;
-    private String introduce;
-    private List<String> detailImageUrl;
 
-    public ItemResponse(ExhibitionType exhibitionType, ExposureType exposureType, LocalDate startDate, LocalDate endDate, RegionType regionType, FeeType fee) {
-        this.exhibitionType = exhibitionType;
-        this.exposureType = exposureType;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.regionType = regionType;
-        this.fee = fee;
+    private String price;
+    private String homepageUrl;
+    private String operatingTime;
+    private String ticketUrl;
+
+    // ItemDetail & DetailImage
+    private String introduce;
+    private List<String> detailImageUrls;
+
+    public static ItemResponse empty() {
+        return ItemResponse.builder()
+            .build();
     }
 }

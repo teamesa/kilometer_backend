@@ -1,0 +1,28 @@
+.tg {
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: left;
+    vertical-align: top
+}
+
+.tg td, th {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    overflow: hidden;
+    padding: 5px 20px;
+    word-break: normal;
+}
+
+.tg .mainTitle {
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+}
+
+.tg .subTitle {
+    background-color: #efefef;
+}

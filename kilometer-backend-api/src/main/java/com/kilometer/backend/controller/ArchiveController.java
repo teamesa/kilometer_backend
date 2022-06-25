@@ -46,6 +46,14 @@ public class ArchiveController {
         return archiveService.save(userId, request);
     }
 
+    @PutMapping
+    public ArchiveInfo updateArchive(
+        @ApiParam(value = "수정할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
+        long userId = getLoginUserId();
+        return archiveService.update(userId, request);
+    }
+
+
     @GetMapping(ApiUrlUtils.ARCHIVE_MY)
     public ItemDetailResponse<ArchiveResponse> myArchives(
         @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus) {

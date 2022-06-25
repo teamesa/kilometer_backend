@@ -13,6 +13,7 @@ public class ApiUrlUtils {
 
     public static final String ARCHIVE_ITEM = "/{itemId}";
 
+
     public static final String ARCHIVE_MY = "/my";
 
     public static final String IMAGE_ROOT = ROOT + "/image";
@@ -21,9 +22,16 @@ public class ApiUrlUtils {
     public static final String ITEM_INFO = "/info" + ITEM_ID;
     public static final String ITEM_DETAIL = "/detail"+ITEM_ID;
 
+    public static final String LIKE_ROOT = ROOT + "/like";
+    public static final String LIKE_ITEM_PATTERN = LIKE_ROOT + "/%s";
+
     public static final String USER_ME = "/me";
 
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
+    }
+
+    public static String getLikeArchiveUrl(long itemId) {
+        return String.format(LIKE_ITEM_PATTERN+"?status=",itemId);
     }
 }
