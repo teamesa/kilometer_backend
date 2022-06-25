@@ -18,4 +18,5 @@ public class SearchItemResponse {
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean isHearted;
+    private int pickCount;
 }

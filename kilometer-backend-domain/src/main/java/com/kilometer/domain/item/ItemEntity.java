@@ -84,6 +84,8 @@ public class ItemEntity {
     private LocalDateTime updatedAt = LocalDateTime.now();
     @Builder.Default
     private boolean isDeleted = false;
+    @Builder.Default
+    private int pickCount = 0;
 
     @OneToOne(mappedBy = "item", fetch = FetchType.LAZY)
     private ItemDetail itemDetail;

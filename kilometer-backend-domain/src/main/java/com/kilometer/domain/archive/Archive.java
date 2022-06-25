@@ -1,13 +1,15 @@
-package com.kilometer.domain.archive.entity;
+package com.kilometer.domain.archive;
 
-import com.kilometer.domain.archive.PlaceType;
+import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.user.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,7 +44,7 @@ public class Archive {
     private int starRating;
 
     @Builder.Default
-    private int heartCount = 0;
+    private int likeCount = 0;
 
     @Builder.Default
     private boolean isVisibleAtItem = true;
@@ -73,54 +75,12 @@ public class Archive {
     @Builder.Default
     private List<ArchiveImage> archiveImages = new ArrayList<>();
 
-    public ArchiveInfo makeInfo() {
-        String food = "";
-        String cafe = "";
-
-        for (UserVisitPlace place : userVisitPlaces) {
-            if (PlaceType.CAFE == place.getPlaceType()) {
-                cafe = place.getPlaceName();
-            } else {
-                food = place.getPlaceName();
-            }
-        }
-
-        return ArchiveInfo.builder()
-            .id(this.id)
-            .userProfileUrl(this.user.getImageUrl())
-            .userName(this.user.getName())
-            .updatedAt(this.updatedAt)
-            .starRating(this.starRating)
-            .heartCount(this.heartCount)
-            .isHearted(false)
-            .comment(this.comment)
-            .food(food)
-            .cafe(cafe)
-            .build();
-    }
-
-    public void setUserVisitPlaces(List<UserVisitPlace> places) {
-        if (!this.userVisitPlaces.isEmpty()) {
-            this.userVisitPlaces.clear();
-        }
-        this.userVisitPlaces.addAll(places);
-        this.userVisitPlaces.forEach(place -> place.setArchive(this));
-    }
-
     public void setUser(User user) {
         this.user = user;
     }
 
     public void setItem(ItemEntity item) {
         this.item = item;
-    }
-
-    public void setImages(List<ArchiveImage> images) {
-        if (!this.archiveImages.isEmpty()) {
-            this.archiveImages.clear();
-        }
-        this.archiveImages.addAll(images);
-        this.archiveImages.forEach(photo -> photo.setArchive(this));
     }
 
     public void update(ArchiveRequest request) {
