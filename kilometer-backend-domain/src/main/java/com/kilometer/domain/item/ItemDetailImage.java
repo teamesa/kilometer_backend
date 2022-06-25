@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.kilometer.domain.item.dto.ItemDetailImages;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,5 +47,12 @@ public class ItemDetailImage {
 
     public void setItemEntity(ItemEntity item) {
         this.item = item;
+    }
+
+    public ItemDetailImages getItemDetailImage() {
+        return ItemDetailImages.builder()
+                .id(this.id)
+                .images(this.imageUrl)
+                .build();
     }
 }

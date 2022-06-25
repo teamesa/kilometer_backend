@@ -41,7 +41,7 @@
                 <th>컨텐츠ID</th>
                 <th>FO 전시여부 : 미전시 / 전시</th>
                 <th>리스트이미지</th>
-                <th>썸네일이미지</th>
+                <th>상세이미지</th>
                 <th>메인타이틀</th>
                 <th>입장료</th>
                 <th>요금</th>
@@ -62,7 +62,7 @@
                 <td th:text="${item.price}"></td>
                 <td th:text="${item.getHomepageUrl}"></td>
                 <td>
-                    <form action="" th:action="@{/form/items/{id} (id=${item.id})}" method="get">
+                    <form action="" th:action="@{/form/items/edit/{id} (id=${item.id})}" method="get">
                         <button class="button2" type="submit">수정</button>
                     </form>
                 </td>
