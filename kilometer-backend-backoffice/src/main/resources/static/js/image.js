@@ -68,7 +68,7 @@ var appVue = new Vue({
             let file = event.target.files[0];
             let index = Number($(event.target).attr('data-index'));
             formData.append("file", file);
-            axios.post('/form/image/list', formData, {
+            axios.post('/form/image/default', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
