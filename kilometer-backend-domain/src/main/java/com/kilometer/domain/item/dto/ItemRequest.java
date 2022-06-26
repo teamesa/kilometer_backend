@@ -1,12 +1,12 @@
 package com.kilometer.domain.item.dto;
 
-import com.kilometer.domain.item.ExhibitionType;
-import com.kilometer.domain.item.ExposureType;
-import com.kilometer.domain.item.FeeType;
-import com.kilometer.domain.item.ItemDetail;
-import com.kilometer.domain.item.ItemDetailImage;
 import com.kilometer.domain.item.ItemEntity;
-import com.kilometer.domain.item.RegionType;
+import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.enumType.FeeType;
+import com.kilometer.domain.item.enumType.RegionType;
+import com.kilometer.domain.item.itemDetail.ItemDetail;
+import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

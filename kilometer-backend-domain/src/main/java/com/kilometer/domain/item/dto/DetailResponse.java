@@ -1,7 +1,7 @@
 package com.kilometer.domain.item.dto;
 
-import com.kilometer.domain.item.ItemDetail;
-import com.kilometer.domain.item.ItemDetailImage;
+import com.kilometer.domain.item.itemDetail.ItemDetail;
+import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

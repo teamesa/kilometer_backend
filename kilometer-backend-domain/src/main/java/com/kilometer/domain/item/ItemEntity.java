@@ -1,7 +1,14 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.item.dto.*;
-
+import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.ItemUpdateRequest;
+import com.kilometer.domain.item.dto.ItemUpdateResponse;
+import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.enumType.FeeType;
+import com.kilometer.domain.item.enumType.RegionType;
+import com.kilometer.domain.item.itemDetail.ItemDetail;
+import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,7 +32,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.util.StringUtils;
 
 @Getter
 @Entity
@@ -163,39 +169,14 @@ public class ItemEntity {
             .operatingTime(this.operatingTime)
             .ticketUrl(this.ticketUrl)
             .detailImageUrlsAndIndex(Optional.ofNullable(this.itemDetailImages)
-                    .map(itemDetailImages -> itemDetailImages.stream()
-                            .map(ItemDetailImage::getItemDetailImage)
-                            .collect(Collectors.toList()))
-                    .orElse(new ArrayList<>()))
+                .map(itemDetailImages -> itemDetailImages.stream()
+                    .map(ItemDetailImage::getItemDetailImage)
+                    .collect(Collectors.toList()))
+                .orElse(new ArrayList<>()))
             .introduce(Optional.ofNullable(this.itemDetail)
                 .map(ItemDetail::getIntroduce)
                 .orElse(""))
             .build();
-    }
-
-    public SummaryResponse makeSummaryResponse() {
-        return SummaryResponse.builder()
-            .type(String.valueOf(this.exhibitionType.getDescription()))
-            .progress(this.exposureType == ExposureType.ON)
-            .thumbnailImageUrl(this.thumbnailImageUrl)
-            .title(this.title)
-            .term(this.startDate + " ~ " + this.endDate)
-            .place(this.placeName)
-            .lat(this.latitude)
-            .lng(this.longitude)
-            .feeType((this.feeType == FeeType.COST) ? "유료" : "무료")
-            .price((StringUtils.hasText(this.price)) ? this.price : null)
-            .ticketUrl((StringUtils.hasText(this.ticketUrl)) ? this.ticketUrl : null)
-            .time((StringUtils.hasText(this.operatingTime)) ? this.operatingTime : null)
-            .homePageUrl((StringUtils.hasText(this.homepageUrl)) ? this.homepageUrl : null)
-            .build();
-    }
-
-    public void setDetailImages(List<ItemDetailImage> itemDetailImages) {
-        if (!this.itemDetailImages.isEmpty()) {
-            this.itemDetailImages.clear();
-        }
-        this.itemDetailImages.addAll(itemDetailImages);
     }
 
     public void setItemDetail(ItemDetail itemDetail) {

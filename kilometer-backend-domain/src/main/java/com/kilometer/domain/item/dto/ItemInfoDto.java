@@ -3,20 +3,27 @@ package com.kilometer.domain.item.dto;
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
-public class SearchItemResponse {
+public class ItemInfoDto {
 
     private Long id;
-    private String listImageUrl;
-    private String title;
     private ExhibitionType exhibitionType;
     private FeeType feeType;
+    private String title;
+    private String thumbnailImageUrl;
     private LocalDate startDate;
     private LocalDate endDate;
-    private boolean isHearted;
+    private String placeName;
+    private Double latitude;
+    private Double longitude;
+    private String price;
+    private String ticketUrl;
+    private String operatingTime;
+    private String homePageUrl;
     private int pickCount;
+    private boolean isHeart;
 }

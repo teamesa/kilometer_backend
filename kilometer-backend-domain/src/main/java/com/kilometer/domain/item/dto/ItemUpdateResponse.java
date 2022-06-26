@@ -1,18 +1,17 @@
 package com.kilometer.domain.item.dto;
 
-import com.kilometer.domain.item.ExhibitionType;
-import com.kilometer.domain.item.ExposureType;
-import com.kilometer.domain.item.FeeType;
-import com.kilometer.domain.item.RegionType;
+import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.enumType.FeeType;
+import com.kilometer.domain.item.enumType.RegionType;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Builder
@@ -56,6 +55,7 @@ public class ItemUpdateResponse {
 
     // ItemDetail & DetailImage
     private String introduce;
+    @Builder.Default
     private List<ItemDetailImages> detailImageUrlsAndIndex = new ArrayList<>();
 
     public static ItemUpdateResponse empty() {
