@@ -1,12 +1,15 @@
 package com.kilometer.domain.user;
 
+import com.kilometer.domain.image.ImageService;
 import com.kilometer.domain.user.dto.OAuth2UserInfo;
+import com.kilometer.domain.user.dto.UserProfileUpdate;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -15,6 +18,7 @@ public class UserService {
     private final UserFormValidator userFormValidator;
     private final UserRepository userRepository;
     private final NameGenerator nameGenerator;
+    private final ImageService imageService;
 
     public Optional<UserResponse> findByEmail(String email) {
         Preconditions.notBlank(email, "eamil cannot be blank");
@@ -48,5 +52,18 @@ public class UserService {
                 .providerId(oAuth2UserInfo.getId())
                 .build();
         return userRepository.save(newUser).toResponse(true);
+    }
+
+    public Optional<UserResponse> updateUserProfile(UserProfileUpdate profileUpdate) throws IOException {
+        String profileUrl = imageService.upload(profileUpdate.getFile(),
+                profileUpdate.getFileName(),
+                profileUpdate.getFolderName(),
+                profileUpdate.getMaxFileSize()
+        );
+
+        return userRepository.findById(profileUpdate.getUserId())
+                .map(user -> user.updateProfile(profileUrl))
+                .map(userRepository::save)
+                .map(User::toResponse);
     }
 }

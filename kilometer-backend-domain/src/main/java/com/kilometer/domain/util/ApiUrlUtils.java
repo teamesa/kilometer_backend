@@ -26,6 +26,7 @@ public class ApiUrlUtils {
     public static final String LIKE_ITEM_PATTERN = LIKE_ROOT + "/%s";
 
     public static final String USER_ME = "/me";
+    public static final String USER_PROFILE = "/profile";
 
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
