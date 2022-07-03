@@ -8,6 +8,7 @@ import com.kilometer.domain.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -15,7 +16,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private static final String DEFAULT_PROFILE_IMAGE = "https://ssl.pstatic.net/static/pwe/address/img_profile.png";
+    private static final String NAVER_DEFAULT_PROFILE_IMAGE = "https://ssl.pstatic.net/static/pwe/address/img_profile.png";
 
     private final UserFormValidator userFormValidator;
     private final UserRepository userRepository;
@@ -70,7 +71,7 @@ public class UserService {
     }
 
     private String profileImageToNull(String profileImage) {
-        if (profileImage.equals(DEFAULT_PROFILE_IMAGE)) {
+        if (StringUtils.hasText(profileImage) && NAVER_DEFAULT_PROFILE_IMAGE.equals(profileImage)) {
             return null;
         }
         return profileImage;
