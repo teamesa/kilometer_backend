@@ -69,7 +69,7 @@ public class UserService {
                 .map(User::toResponse);
     }
 
-    public String profileImageToNull(String profileImage) {
+    private String profileImageToNull(String profileImage) {
         if (profileImage.equals(DEFAULT_PROFILE_IMAGE)) {
             return null;
         }
