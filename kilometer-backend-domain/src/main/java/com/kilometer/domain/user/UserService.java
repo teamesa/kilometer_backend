@@ -15,6 +15,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private static final String DEFAULT_PROFILE_IMAGE = "https://ssl.pstatic.net/static/pwe/address/img_profile.png";
+
     private final UserFormValidator userFormValidator;
     private final UserRepository userRepository;
     private final NameGenerator nameGenerator;
@@ -43,7 +45,7 @@ public class UserService {
         User newUser = User.builder()
                 .name(nameGenerator.makeRandomName())
                 .email(oAuth2UserInfo.getEmail())
-                .imageUrl(oAuth2UserInfo.getImageUrl())
+                .imageUrl(profileImageToNull(oAuth2UserInfo.getImageUrl()))
                 .gender(oAuth2UserInfo.getGender())
                 .phoneNumber(oAuth2UserInfo.getPhoneNumber())
                 .birthdate(oAuth2UserInfo.getBirthDate())
@@ -65,5 +67,12 @@ public class UserService {
                 .map(user -> user.updateProfile(profileUrl))
                 .map(userRepository::save)
                 .map(User::toResponse);
+    }
+
+    public String profileImageToNull(String profileImage) {
+        if (profileImage.equals(DEFAULT_PROFILE_IMAGE)) {
+            return null;
+        }
+        return profileImage;
     }
 }
