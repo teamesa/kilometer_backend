@@ -13,10 +13,8 @@ import lombok.NoArgsConstructor;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SummaryResponse {
-
+public class ItemInfoResponse {
     private String type;
-    private boolean progress; // 빠져도 될 것 같음. 전시 상태 ON/OFF
     private String title;
     private String term;
     private String place;
@@ -28,4 +26,6 @@ public class SummaryResponse {
     private String time;
     private String homePageUrl;
     private String thumbnailImageUrl;
+
+    private ItemInfoAdditionalInfo itemInfoAdditionalInfo;
 }

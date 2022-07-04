@@ -1,10 +1,10 @@
 package com.kilometer.backend.controller;
 
-import com.kilometer.domain.item.ExhibitionType;
-import com.kilometer.domain.item.ExposureType;
-import com.kilometer.domain.item.FeeType;
+import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.item.ItemService;
-import com.kilometer.domain.item.RegionType;
+import com.kilometer.domain.item.enumType.RegionType;
 import com.kilometer.domain.item.dto.ItemRequest;
 import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;

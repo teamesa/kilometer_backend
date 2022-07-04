@@ -1,6 +1,9 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.pick.QPick;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
@@ -99,6 +102,35 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .fetch();
 
         return new PageImpl<>(items);
+    }
+
+    @Override
+    public Optional<ItemInfoDto> findInfoByItemIdAndUserId(Long itemId, Long userId) {
+        return Optional.ofNullable(queryFactory.select(
+                Projections.fields(ItemInfoDto.class,
+                    itemEntity.id,
+                    itemEntity.exhibitionType,
+                    itemEntity.feeType,
+                    itemEntity.title,
+                    itemEntity.thumbnailImageUrl,
+                    itemEntity.startDate,
+                    itemEntity.endDate,
+                    itemEntity.placeName,
+                    itemEntity.latitude,
+                    itemEntity.longitude,
+                    itemEntity.price,
+                    itemEntity.ticketUrl,
+                    itemEntity.operatingTime,
+                    itemEntity.homepageUrl,
+                    itemEntity.pickCount,
+                    pick.isHearted
+                )
+            )
+            .from(itemEntity)
+            .leftJoin(pick)
+            .on(pick.pickedItem.eq(itemEntity), eqUserId(userId))
+            .where(itemEntity.id.eq(itemId))
+            .fetchOne());
     }
 
     private BooleanExpression eqExhibitionType(FilterOptions filterOptions) {

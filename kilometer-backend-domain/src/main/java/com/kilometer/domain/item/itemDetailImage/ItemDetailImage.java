@@ -1,5 +1,6 @@
-package com.kilometer.domain.item;
+package com.kilometer.domain.item.itemDetailImage;
 
+import com.kilometer.domain.item.ItemEntity;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

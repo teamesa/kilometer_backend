@@ -90,4 +90,9 @@ public class User {
         this.birthdate = userUpdateRequest.getBirthDay().atStartOfDay();
         return this;
     }
+
+    public User updateProfile(String profileImage) {
+        this.imageUrl = profileImage;
+        return this;
+    }
 }
