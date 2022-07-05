@@ -1,4 +1,4 @@
-package com.kilometer.domain.search.badge;
+package com.kilometer.domain.badge;
 
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.enumType.FeeType;
@@ -7,28 +7,28 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListItemBadgeGenerator {
+public class ItemBadgeGenerator {
 
     private static final String ONGOING_PROGRESS_TYPE_TEXT = "ON";
     private static final String END_PROGRESS_TYPE_TEXT = "OFF";
     private static final String UPCOMING_PROGRESS_TYPE_TEXT = "UPCOMING";
 
-    public ListItemBadge generateTypeListItemBadge(SearchItemResponse itemResponse) {
-        return ListItemBadge.builder()
+    public ItemBadge generateTypeListItemBadge(SearchItemResponse itemResponse) {
+        return ItemBadge.builder()
             .isTypeBadge(true)
             .text(itemResponse.getExhibitionType().getDescription())
             .build();
     }
 
-    public List<ListItemBadge> generateAdditionalItemBadgeList(SearchItemResponse itemResponse) {
-        ListItemBadge progressTypeBadge = makeProgressTypeBadge(itemResponse.getStartDate(),
+    public List<ItemBadge> generateAdditionalItemBadgeList(SearchItemResponse itemResponse) {
+        ItemBadge progressTypeBadge = makeProgressTypeBadge(itemResponse.getStartDate(),
             itemResponse.getEndDate());
-        ListItemBadge feeTypeBadge = makeFeeTypeBadge(itemResponse.getFeeType());
+        ItemBadge feeTypeBadge = makeFeeTypeBadge(itemResponse.getFeeType());
 
         return List.of(progressTypeBadge, feeTypeBadge);
     }
 
-    private ListItemBadge makeProgressTypeBadge(LocalDate startDate, LocalDate endDate) {
+    private ItemBadge makeProgressTypeBadge(LocalDate startDate, LocalDate endDate) {
         LocalDate now = LocalDate.now();
 
         String text;
@@ -40,14 +40,14 @@ public class ListItemBadgeGenerator {
             text = ONGOING_PROGRESS_TYPE_TEXT;
         }
 
-        return ListItemBadge.builder()
+        return ItemBadge.builder()
             .isTypeBadge(false)
             .text(text)
             .build();
     }
 
-    private ListItemBadge makeFeeTypeBadge(FeeType feeType) {
-        return ListItemBadge.builder()
+    private ItemBadge makeFeeTypeBadge(FeeType feeType) {
+        return ItemBadge.builder()
             .isTypeBadge(false)
             .text(feeType.getDescription())
             .build();
