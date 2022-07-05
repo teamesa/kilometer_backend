@@ -1,6 +1,7 @@
 package com.kilometer.domain.badge;
 
 import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +18,13 @@ public class ItemBadgeGenerator {
         return ItemBadge.builder()
             .isTypeBadge(true)
             .text(itemResponse.getExhibitionType().getDescription())
+            .build();
+    }
+
+    public ItemBadge generateTypeItemBadge(ExhibitionType exhibitionType) {
+        return ItemBadge.builder()
+            .isTypeBadge(true)
+            .text(exhibitionType.getDescription())
             .build();
     }
 

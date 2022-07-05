@@ -1,8 +1,9 @@
 package com.kilometer.domain.archive;
 
-import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
-import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlace;
+import com.kilometer.domain.archive.dto.ItemArchiveDto;
+import com.kilometer.domain.archive.dto.MyArchiveDto;
+import com.kilometer.domain.item.QItemEntity;
 import com.kilometer.domain.user.QUser;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -18,7 +19,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final static QArchive archive = QArchive.archive;
     private final static QUser user = QUser.user;
-    private final static QUserVisitPlace userVisitPlace = QUserVisitPlace.userVisitPlace;
+    private final static QItemEntity itemEntity = QItemEntity.itemEntity;
 
     public ArchiveRepositoryCustomImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
@@ -55,6 +56,41 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .from(archive)
             .where(
                 archive.item.id.eq(itemId)
+            )
+            .fetch().size();
+
+        return new PageImpl<>(archives, pageable, count);
+    }
+
+    @Override
+    public Page<MyArchiveDto> findAllByUserId(Pageable pageable, ArchiveSortType sortType,
+        long userId) {
+
+        List<MyArchiveDto> archives = queryFactory
+            .select(Projections.fields(MyArchiveDto.class,
+                archive.id,
+                itemEntity.title,
+                itemEntity.exhibitionType,
+                itemEntity.thumbnailImageUrl,
+                archive.comment,
+                archive.updatedAt
+            ))
+            .from(archive)
+            .leftJoin(itemEntity)
+            .on(itemEntity.id.eq(archive.item.id))
+            .where(
+                archive.user.id.eq(userId)
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .orderBy(getOrderSpecifier(sortType))
+            .fetch();
+
+        int count = queryFactory
+            .select(archive.id)
+            .from(archive)
+            .where(
+                archive.user.id.eq(userId)
             )
             .fetch().size();
 

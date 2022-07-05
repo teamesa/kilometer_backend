@@ -10,11 +10,9 @@ public class ApiUrlUtils {
     public static final String PICK_ITEM_PATTERN = PICK_ROOT + "/%s";
 
     public static final String ARCHIVE_ROOT = ROOT + "/archive";
-
-    public static final String ARCHIVE_ITEM = "/{itemId}";
-
-
+    public static final String ARCHIVE_ID = "/{archiveId}";
     public static final String ARCHIVE_MY = "/my";
+    public static final String ARCHIVE_PATTERN = ARCHIVE_ROOT + "/%s";
 
     public static final String IMAGE_ROOT = ROOT + "/image";
     public static final String ITEM_ROOT = ROOT + "/item";
@@ -34,5 +32,9 @@ public class ApiUrlUtils {
 
     public static String getLikeArchiveUrl(long itemId) {
         return String.format(LIKE_ITEM_PATTERN+"?status=",itemId);
+    }
+
+    public static String getArchiveUrl(long archiveId) {
+        return String.format(ARCHIVE_PATTERN,archiveId);
     }
 }
