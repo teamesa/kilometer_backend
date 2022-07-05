@@ -31,7 +31,7 @@ public class ListItemAggregateConverter {
         Preconditions.notNull(item, String.format(
             "converting can not be run will null item response, please check this, %s", item));
         PresentationImage image = presentationImageGenerator.generatePresentationImage(item);
-        ItemBadge typeBadge = badgeGenerator.generateTypeListItemBadge(item);
+        ItemBadge typeBadge = badgeGenerator.generateTypeItemBadge(item);
         List<ItemBadge> additionalBadgeList = badgeGenerator.generateAdditionalItemBadgeList(
             item);
         ListItemAdditionalInfo listItemAdditionalInfo = additionalInfoGenerator.generateListItemAdditionalInfo(

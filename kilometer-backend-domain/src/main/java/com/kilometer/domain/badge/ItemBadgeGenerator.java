@@ -13,7 +13,7 @@ public class ItemBadgeGenerator {
     private static final String END_PROGRESS_TYPE_TEXT = "OFF";
     private static final String UPCOMING_PROGRESS_TYPE_TEXT = "UPCOMING";
 
-    public ItemBadge generateTypeListItemBadge(SearchItemResponse itemResponse) {
+    public ItemBadge generateTypeItemBadge(SearchItemResponse itemResponse) {
         return ItemBadge.builder()
             .isTypeBadge(true)
             .text(itemResponse.getExhibitionType().getDescription())
