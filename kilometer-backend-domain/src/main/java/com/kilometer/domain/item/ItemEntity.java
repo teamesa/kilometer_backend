@@ -190,7 +190,7 @@ public class ItemEntity {
     }
 
     public ItemEntity minusPickCount() {
-        this.pickCount = Math.max(this.pickCount-1, 0);
+        this.pickCount = Math.max(this.pickCount - 1, 0);
         return this;
     }
 }
