@@ -1,7 +1,7 @@
 package com.kilometer.domain.search.badge;
 
-import com.kilometer.domain.item.FeeType;
 import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Component;

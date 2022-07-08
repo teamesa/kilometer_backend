@@ -1,7 +1,8 @@
-package com.kilometer.domain.item;
+package com.kilometer.domain.item.itemDetail;
 
 import static javax.persistence.FetchType.EAGER;
 
+import com.kilometer.domain.item.ItemEntity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

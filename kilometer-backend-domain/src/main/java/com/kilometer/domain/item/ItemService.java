@@ -1,10 +1,20 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.item.dto.*;
+import com.kilometer.domain.item.dto.DetailResponse;
+import com.kilometer.domain.item.dto.ItemInfoDto;
+import com.kilometer.domain.item.dto.ItemInfoResponse;
+import com.kilometer.domain.item.dto.ItemRequest;
+import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.ItemUpdateRequest;
+import com.kilometer.domain.item.dto.ItemUpdateResponse;
+import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.item.itemDetail.ItemDetail;
+import com.kilometer.domain.item.itemDetail.ItemDetailRepository;
+import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
+import com.kilometer.domain.item.itemDetailImage.ItemDetailImageRepository;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +32,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemDetailRepository itemDetailRepository;
     private final ItemDetailImageRepository itemDetailImageRepository;
+    private final ItemAggregateConverter itemAggregateConverter;
 
     @Transactional
     public void saveItem(ItemRequest request) {
@@ -85,10 +96,23 @@ public class ItemService {
         return itemEntity.makeUpdateResponse();
     }
 
-    public Optional<SummaryResponse> findToSummaryResponseById(Long itemId) {
+    public ItemInfoResponse getItemInfo(Long itemId, Long userId) {
         Preconditions.notNull(itemId, "id must not be null");
 
-        return itemRepository.findById(itemId).map(ItemEntity::makeSummaryResponse);
+        ItemInfoDto itemInfoDto = itemRepository.findInfoByItemIdAndUserId(itemId, userId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id = " + itemId));
+
+        return itemAggregateConverter.convert(itemInfoDto);
+    }
+
+    public DetailResponse getItemDetail(Long itemId) {
+        Preconditions.notNull(itemId, "id must not be null");
+
+        ItemEntity itemEntity = itemRepository.findById(itemId)
+            .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + itemId));
+
+        return DetailResponse.makeResponse(itemEntity.getItemDetail(),
+            itemEntity.getItemDetailImages());
     }
 
     @Transactional
@@ -97,7 +121,7 @@ public class ItemService {
         Preconditions.notNull(request, "item must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id=" + itemId));
+            .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id=" + itemId));
 
         itemEntity.update(request);
         updateItemDetail(request, itemEntity);

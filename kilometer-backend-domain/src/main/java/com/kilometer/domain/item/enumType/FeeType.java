@@ -1,13 +1,13 @@
-package com.kilometer.domain.item;
+package com.kilometer.domain.item.enumType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ExposureType {
+public enum FeeType {
 
-    ON("전시"), OFF("미전시");
+    FREE("무료"), COST("유료");
 
     private final String description;
 }
