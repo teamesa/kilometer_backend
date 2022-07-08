@@ -2,10 +2,7 @@ package com.kilometer.domain.archive;
 
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
-import com.kilometer.domain.archive.dto.ArchiveInfo;
-import com.kilometer.domain.archive.dto.ArchiveResponse;
-import com.kilometer.domain.archive.dto.ItemArchiveDto;
-import com.kilometer.domain.archive.dto.ArchiveSortType;
+import com.kilometer.domain.archive.dto.*;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
@@ -15,6 +12,7 @@ import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
 import com.kilometer.domain.user.User;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -122,6 +120,10 @@ public class ArchiveService {
             result = Math.round(result * 10) / 10.0;
         }
         return result;
+    }
+
+    public Map<Long, ArchiveSummary> getArchiveInfoByItemIds(List<Long> itemIds) {
+        return archiveRepository.findAllArchiveInfosByItemIds(itemIds);
     }
 
     @Transactional

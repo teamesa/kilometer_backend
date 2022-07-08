@@ -131,6 +131,7 @@ public class ItemEntity {
             .price(this.price)
             .homepageUrl(this.homepageUrl)
             .operatingTime(this.operatingTime)
+            .itemPickCount(this.pickCount)
             .ticketUrl(this.ticketUrl)
             .detailImageUrls(Optional.ofNullable(this.itemDetailImages)
                 .map(itemDetailImages -> itemDetailImages.stream()
@@ -200,5 +201,15 @@ public class ItemEntity {
 
     public void setItemDetail(ItemDetail itemDetail) {
         this.itemDetail = itemDetail;
+    }
+
+    public ItemEntity plusPickCount() {
+        this.pickCount++;
+        return this;
+    }
+
+    public ItemEntity minusPickCount() {
+        this.pickCount = Math.max(this.pickCount-1, 0);
+        return this;
     }
 }

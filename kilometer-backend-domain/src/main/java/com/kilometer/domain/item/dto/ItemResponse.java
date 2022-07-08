@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -53,6 +52,7 @@ public class ItemResponse {
     private String homepageUrl;
     private String operatingTime;
     private String ticketUrl;
+    private int itemPickCount;
 
     // ItemDetail & DetailImage
     private String introduce;
