@@ -2,6 +2,7 @@ package com.kilometer.domain.util;
 
 public class FrontUrlUtils {
     private static final String FRONT_DETAIL = "/detail/";
+    private static final String FRONT_ARCHIVE = "/archive";
     private static final String FRONT_DETAIL_URL_PATTERN = FRONT_DETAIL + "%s";
 
     private static final String FRONT_MY_ARCHIVE_TITLE = "MY 아카이브";
@@ -22,4 +23,6 @@ public class FrontUrlUtils {
     public static String getFrontMyArchiveTitle() {
         return FRONT_MY_ARCHIVE_TITLE;
     }
+
+    public static String getFrontArchivePrefix() { return FRONT_ARCHIVE;}
 }
