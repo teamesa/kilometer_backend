@@ -167,11 +167,11 @@ public class ArchiveService {
     private List<MyArchiveInfo> convertMyArchiveInfos(Page<MyArchiveDto> archives) {
         return archives.stream()
             .map(myArchiveDto -> {
-                List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
+                boolean existImages = archiveImageService.existArchiveImagesByArchiveId(
                     myArchiveDto.getId());
                 List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
                     myArchiveDto.getId());
-                return archiveAggregateConverter.convertMyArchiveInfo(myArchiveDto, archiveImages, userVisitPlaces);
+                return archiveAggregateConverter.convertMyArchiveInfo(myArchiveDto, existImages, userVisitPlaces);
             })
             .collect(Collectors.toList());
     }

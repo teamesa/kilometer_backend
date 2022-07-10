@@ -61,9 +61,9 @@ public class ArchiveController {
     }
 
 
-    @GetMapping(ApiUrlUtils.ARCHIVE_MY)
+    @PostMapping(ApiUrlUtils.ARCHIVE_MY)
     public MyArchiveResponse myArchives(
-        @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus) {
+        @ApiParam(value = "아카이브 페이지 정보", required = true) @RequestBody RequestPagingStatus requestPagingStatus) {
         Long userId = getLoginUserId();
         return archiveService.findAllByUserId(userId, requestPagingStatus,
             ArchiveSortType.MODIFY_DESC);

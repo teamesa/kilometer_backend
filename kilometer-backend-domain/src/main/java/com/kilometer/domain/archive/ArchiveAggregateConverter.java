@@ -74,7 +74,7 @@ public class ArchiveAggregateConverter {
     }
 
     public MyArchiveInfo convertMyArchiveInfo(MyArchiveDto myArchiveDto,
-        List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
+        boolean existImages, List<UserVisitPlace> userVisitPlaces) {
 
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(ExhibitionType.EXHIBITION);
 
@@ -84,7 +84,7 @@ public class ArchiveAggregateConverter {
             .places(convertVisitPlaces(userVisitPlaces))
             .typeBadge(itemBadge)
             .updatedAt(myArchiveDto.getUpdatedAt())
-            .existArchiveImages(!archiveImages.isEmpty())
+            .existArchiveImages(existImages)
             .api(ApiUrlUtils.getArchiveUrl(myArchiveDto.getId()))
             .build();
     }
