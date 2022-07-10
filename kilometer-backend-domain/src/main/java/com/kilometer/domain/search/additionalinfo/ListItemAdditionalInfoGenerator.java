@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 public class ListItemAdditionalInfoGenerator {
     public ListItemAdditionalInfo generateListItemAdditionalInfo(SearchItemResponse response) {
         return ListItemAdditionalInfo.builder()
-                .heartCount(10)
-                .grade(5)
-                .archiveCount(10)
+                .heartCount(response.getPickCount())
+                .grade(response.getAvgStarRating())
+                .archiveCount(response.getArchiveCount())
                 .build();
     }
 }
