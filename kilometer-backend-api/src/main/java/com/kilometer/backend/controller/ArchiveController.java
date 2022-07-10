@@ -1,20 +1,27 @@
 package com.kilometer.backend.controller;
 
+import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
+
 import com.kilometer.domain.archive.ArchiveService;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
-import com.kilometer.domain.dto.ItemDetailResponse;
+import com.kilometer.domain.dto.GeneralResponse;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.util.ApiUrlUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,14 +33,14 @@ public class ArchiveController {
 
     @GetMapping(ApiUrlUtils.ITEM_ID)
     @ApiOperation(value = "전시글에서 아카이브 조회")
-    public ItemDetailResponse<ArchiveResponse> archives(
+    public GeneralResponse<ArchiveResponse> archives(
         @ApiParam(value = "조회할 전시글 ID", required = true) @PathVariable Long itemId,
         @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus,
         @ApiParam(value = "아카이브 정렬 기준", required = true, defaultValue = "MODIFY_DESC")
         @RequestParam(defaultValue = "MODIFY_DESC") ArchiveSortType sortType) {
         ArchiveResponse response = archiveService.findAllByItemId(itemId, requestPagingStatus,
             sortType);
-        return ItemDetailResponse.<ArchiveResponse>builder()
+        return GeneralResponse.<ArchiveResponse>builder()
             .title(ARCHIVE_TITLE)
             .contents(response)
             .build();
@@ -58,7 +65,8 @@ public class ArchiveController {
     public MyArchiveResponse myArchives(
         @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus) {
         Long userId = getLoginUserId();
-        return archiveService.findAllByUserId(userId, requestPagingStatus, ArchiveSortType.MODIFY_DESC);
+        return archiveService.findAllByUserId(userId, requestPagingStatus,
+            ArchiveSortType.MODIFY_DESC);
     }
 
 
