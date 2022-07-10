@@ -22,5 +22,5 @@ public class MyArchiveInfo {
     private LocalDateTime updatedAt;
     private boolean existArchiveImages;
     private String itemImageUrl;
-    private String link;
+    private String api;
 }

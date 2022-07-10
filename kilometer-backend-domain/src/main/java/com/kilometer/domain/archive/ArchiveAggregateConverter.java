@@ -85,7 +85,7 @@ public class ArchiveAggregateConverter {
             .typeBadge(itemBadge)
             .updatedAt(myArchiveDto.getUpdatedAt())
             .existArchiveImages(!archiveImages.isEmpty())
-            .link(ApiUrlUtils.getArchiveUrl(myArchiveDto.getId()))
+            .api(ApiUrlUtils.getArchiveUrl(myArchiveDto.getId()))
             .build();
     }
 
