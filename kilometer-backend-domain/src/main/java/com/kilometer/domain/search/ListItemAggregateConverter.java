@@ -5,8 +5,8 @@ import com.kilometer.domain.item.heart.ItemHeart;
 import com.kilometer.domain.item.heart.ItemHeartGenerator;
 import com.kilometer.domain.search.additionalinfo.ListItemAdditionalInfo;
 import com.kilometer.domain.search.additionalinfo.ListItemAdditionalInfoGenerator;
-import com.kilometer.domain.search.badge.ListItemBadge;
-import com.kilometer.domain.search.badge.ListItemBadgeGenerator;
+import com.kilometer.domain.badge.ItemBadge;
+import com.kilometer.domain.badge.ItemBadgeGenerator;
 import com.kilometer.domain.search.dto.ListItem;
 import com.kilometer.domain.search.presentationimage.PresentationImage;
 import com.kilometer.domain.search.presentationimage.PresentationImageGenerator;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class ListItemAggregateConverter {
 
     private final PresentationImageGenerator presentationImageGenerator;
-    private final ListItemBadgeGenerator badgeGenerator;
+    private final ItemBadgeGenerator badgeGenerator;
     private final ListItemAdditionalInfoGenerator additionalInfoGenerator;
     private final ListItemTitleGenerator titleGenerator;
     private final ItemHeartGenerator heartGenerator;
@@ -31,8 +31,8 @@ public class ListItemAggregateConverter {
         Preconditions.notNull(item, String.format(
             "converting can not be run will null item response, please check this, %s", item));
         PresentationImage image = presentationImageGenerator.generatePresentationImage(item);
-        ListItemBadge typeBadge = badgeGenerator.generateTypeListItemBadge(item);
-        List<ListItemBadge> additionalBadgeList = badgeGenerator.generateAdditionalItemBadgeList(
+        ItemBadge typeBadge = badgeGenerator.generateTypeItemBadge(item);
+        List<ItemBadge> additionalBadgeList = badgeGenerator.generateAdditionalItemBadgeList(
             item);
         ListItemAdditionalInfo listItemAdditionalInfo = additionalInfoGenerator.generateListItemAdditionalInfo(
             item);

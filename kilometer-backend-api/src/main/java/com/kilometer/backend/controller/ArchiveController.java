@@ -4,6 +4,7 @@ import com.kilometer.domain.archive.ArchiveService;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
+import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.dto.ItemDetailResponse;
 import com.kilometer.domain.paging.RequestPagingStatus;
@@ -21,10 +22,9 @@ import static com.kilometer.backend.security.security.SecurityUtils.getLoginUser
 public class ArchiveController {
 
     private final static String ARCHIVE_TITLE = "아카이브";
-    private final static String MY_ARCHIVE_TITLE = "MY 아카이브";
     private final ArchiveService archiveService;
 
-    @GetMapping(ApiUrlUtils.ARCHIVE_ITEM)
+    @GetMapping(ApiUrlUtils.ITEM_ID)
     @ApiOperation(value = "전시글에서 아카이브 조회")
     public ItemDetailResponse<ArchiveResponse> archives(
         @ApiParam(value = "조회할 전시글 ID", required = true) @PathVariable Long itemId,
@@ -55,14 +55,10 @@ public class ArchiveController {
 
 
     @GetMapping(ApiUrlUtils.ARCHIVE_MY)
-    public ItemDetailResponse<ArchiveResponse> myArchives(
+    public MyArchiveResponse myArchives(
         @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus) {
         Long userId = getLoginUserId();
-        ArchiveResponse response = archiveService.findAllByUserId(userId, requestPagingStatus);
-        return ItemDetailResponse.<ArchiveResponse>builder()
-            .title(MY_ARCHIVE_TITLE)
-            .contents(response)
-            .build();
+        return archiveService.findAllByUserId(userId, requestPagingStatus, ArchiveSortType.MODIFY_DESC);
     }
 
 

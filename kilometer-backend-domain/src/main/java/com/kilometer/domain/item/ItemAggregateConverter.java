@@ -4,7 +4,6 @@ import com.kilometer.domain.item.dto.ItemInfoAdditionalInfo;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.ItemInfoResponse;
 import com.kilometer.domain.item.heart.ItemHeartGenerator;
-import com.kilometer.domain.util.ApiUrlUtils;
 import com.kilometer.domain.util.FrontUrlUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
