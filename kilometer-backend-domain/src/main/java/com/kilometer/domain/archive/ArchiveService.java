@@ -9,7 +9,6 @@ import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
-import com.kilometer.domain.archive.dto.*;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
@@ -20,7 +19,6 @@ import com.kilometer.domain.paging.ResponsePagingStatus;
 import com.kilometer.domain.user.User;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -96,10 +94,6 @@ public class ArchiveService {
         String title = convertMyArchiveTitle(responsePagingStatus.getTotalContentsCount());
 
         return convertingMyArchiveResponse(responsePagingStatus, myArchiveInfos, title);
-    }
-
-    public Map<Long, ArchiveSummary> getArchiveInfoByItemIds(List<Long> itemIds) {
-        return archiveRepository.findAllArchiveInfosByItemIds(itemIds);
     }
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
