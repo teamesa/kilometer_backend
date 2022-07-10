@@ -2,7 +2,6 @@ package com.kilometer.domain.archive.archiveImage;
 
 import com.kilometer.domain.archive.Archive;
 import com.kilometer.domain.archive.request.ArchiveRequest;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -37,5 +36,10 @@ public class ArchiveImageService {
     public List<ArchiveImage> findAllByArchiveId(Long archiveId) {
         Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
         return archiveImageRepository.findAllByArchiveId(archiveId);
+    }
+
+    public boolean existArchiveImagesByArchiveId(Long archiveId) {
+        Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
+        return archiveImageRepository.existsArchiveImagesByArchiveId(archiveId);
     }
 }
