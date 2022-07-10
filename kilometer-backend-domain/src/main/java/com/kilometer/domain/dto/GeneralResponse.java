@@ -1,6 +1,5 @@
 package com.kilometer.domain.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +7,8 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class ItemDetailResponse<T> {
+public class GeneralResponse<T> {
+
     private String title;
     private T contents;
 }
