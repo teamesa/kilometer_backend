@@ -39,3 +39,11 @@
     background-color: #101c30;
     color: #ececec;
 }
+
+.centerDiv1 {
+    text-align: center;
+}
+
+.centerDiv2 {
+    display:inline-block
+}

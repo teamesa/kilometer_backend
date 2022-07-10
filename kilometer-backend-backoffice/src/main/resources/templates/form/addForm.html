@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <link rel="stylesheet" href="../../static/css/table.css" th:href="@{/css/table.css}">
+    <link rel="stylesheet" href="../../static/css/form.css" th:href="@{/css/form.css}">
+    <link rel="stylesheet" href="../../static/css/buttons.css" th:href="@{/css/buttons.css}">
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -16,62 +18,64 @@
         <table class="tg">
             <colgroup>
                 <col width="10%">
-                <col width="*%">
+                <col width="40%">
                 <col width="10%">
-                <col width="*%">
+                <col width="40%">
             </colgroup>
             <thead>
             <tr>
-                <th class="mainTitle" colspan="4">문화생활 등록</th>
+                <th class="mainTitle mainTitleForm" colspan="4">
+                    <h2>문화생활 등록</h2>
+                </th>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td class="mainTitle" colspan="4">기본정보</td>
+                <td class="mainTitle" colspan="4">
+                    <h2>기본정보</h2>
+                </td>
             </tr>
             <tr>
-                <td class="subTitle">문화생활 유형 *</td>
+                <td class="subTitle">문화생활 유형 <em class="asterisk">*</em></td>
                 <td>
-                    <div th:each="type, typeStat : ${exhibitionTypes}">
+                    <span th:each="type, typeStat : ${exhibitionTypes}">
                         <input type="radio" th:field="*{exhibitionType}" th:value="${type.name()}">
                         <label th:for="${#ids.prev('exhibitionType')}" th:text="${type.description}">
                             전시
-                        </label>
-                    </div>
+                        </label>&nbsp;&nbsp;
+                    </span>
                 </td>
-                <td class="subTitle">FO 전시여부 *</td>
+                <td class="subTitle">FO 전시여부 <em class="asterisk">*</em></td>
                 <td>
-                    <div th:each="type, typeStat : ${exposureTypes}">
+                    <span th:each="type, typeStat : ${exposureTypes}">
                         <input type="radio" th:field="*{exposureType}" th:value="${type.name()}">
                         <label th:for="${#ids.prev('exposureType')}" th:text="${type.description}">
                             전시
-                        </label>
-                    </div>
+                        </label>&nbsp;&nbsp;
+                    </span>
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">진행기간</td>
+                <td class="subTitle">진행기간 <em class="asterisk">*</em></td>
                 <td colspan="3">
                     <div>
-                        <label for="startDate">시작일 * </label>
-                        <input type="date" id="startDate" th:field="*{startDate}">
-                    </div>
-                    <div>
-                        <label for="endDate">종료일 * </label>
+                        <label for="startDate">시작일</label>
+                        <input type="date" id="startDate" th:field="*{startDate}"> ~
+                        <label for="endDate">종료일</label>
                         <input type="date" id="endDate" th:field="*{endDate}">
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">메인타이틀 *</td>
+                <td class="subTitle">메인타이틀 <em class="asterisk">*</em></td>
                 <td colspan="3">
-                    <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
+                    <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" style="width:400px;">
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">장소명 *</td>
+                <td class="subTitle">장소명 <em class="asterisk">*</em></td>
                 <td colspan="3">
-                    <input type="text" id="placeName" th:field="*{placeName}" placeholder="장소를 입력하세요">
+                    <input type="text" id="placeName" th:field="*{placeName}" placeholder="장소를 입력하세요" style="width:400px;">
                 </td>
             </tr>
             <tr>
@@ -85,14 +89,14 @@
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">입장료 *</td>
+                <td class="subTitle">입장료 <em class="asterisk">*</em></td>
                 <td colspan="3">
-                    <div th:each="type : ${feeTypes}">
+                    <span th:each="type : ${feeTypes}">
                         <input type="radio" th:field="*{feeType}" th:value="${type.name()}">
                         <label th:for="${#ids.prev('feeType')}" th:text="${type.description}">
                             무료
-                        </label>
-                    </div>
+                        </label>&nbsp;&nbsp;
+                    </span>
                 </td>
             </tr>
             <tr>
@@ -102,34 +106,34 @@
                 </td>
                 <td class="subTitle">티켓구매 URL</td>
                 <td>
-                    <input type="text" id="ticketUrl" th:field="*{ticketUrl}" placeholder="티켓 구매 url 입력하세요">
+                    <input type="text" id="ticketUrl" th:field="*{ticketUrl}" placeholder="티켓 구매 url 입력하세요" style="width:400px;">
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">지역구분 *</td>
+                <td class="subTitle">지역구분 <em class="asterisk">*</em></td>
                 <td colspan="3">
-                    <div th:each="type : ${regionTypes}">
+                    <span th:each="type : ${regionTypes}">
                         <input type="radio" th:field="*{regionType}" th:value="${type.name()}">
                         <label th:for="${#ids.prev('regionType')}" th:text="${type.description}">
                             Seoul
-                        </label>
-                    </div>
+                        </label>&nbsp;&nbsp;
+                    </span>
                 </td>
             </tr>
             <tr>
                 <td class="subTitle">홈페이지링크</td>
                 <td colspan="3">
-                    <input type="text" id="homepageUrl" th:field="*{homepageUrl}" placeholder="링크를 입력하세요">
+                    <input type="text" id="homepageUrl" th:field="*{homepageUrl}" placeholder="링크를 입력하세요" style="width:400px;">
                 </td>
             </tr>
             <tr>
                 <td class="subTitle">시간</td>
                 <td colspan="3">
-                    <input type="text" id="time" th:field="*{operatingTime}" placeholder="시간를 입력하세요">
+                    <input type="text" id="time" th:field="*{operatingTime}" placeholder="시간를 입력하세요" style="width:400px;">
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">리스트 이미지 *</td>
+                <td class="subTitle">리스트 이미지 <em class="asterisk">*</em></td>
                 <td colspan="3">
                     <input type="hidden" id="listImageUrl" th:field="*{listImageUrl}">
                     <input type="file" id="inputListImage" @change="listImageS3Upload">
@@ -138,7 +142,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">상세 이미지 *</td>
+                <td class="subTitle">상세 이미지 <em class="asterisk">*</em></td>
                 <td colspan="3">
                     <input type="hidden" id="thumbnailImageUrl" th:field="*{thumbnailImageUrl}">
                     <input type="file" id="inputThumbnailImage" @change="thumbnailImageS3Upload">
@@ -147,12 +151,12 @@
                 </td>
             </tr>
             <tr>
-                <td class="mainTitle" colspan="4">소개</td>
+                <td class="mainTitle" colspan="4"><h2>소개</h2></td>
             </tr>
             <tr>
                 <td>소개</td>
                 <td colspan="3">
-                    <input type="text" id="introduce" th:field="*{introduce}" placeholder="소개글">
+                    <textarea cols="50" rows="7" id="introduce" th:field="*{introduce}" placeholder="소개글"></textarea>
                 </td>
             </tr>
             <tr>
@@ -169,18 +173,15 @@
                 </td>
             </tr>
             <tr>
-                <td class="mainTitle" colspan="4">
-                    <button type="submit">저장</button>
+                <td class="mainTitle centerDiv1" colspan="4">
+                    <div class="centerDiv2"><button type="submit" class="button">저장</button></div>
+                    <div class="centerDiv2"><button type="button" onclick="location.href='items.html'"
+                                 th:onclick="|location.href='@{/form/items}'|" class="button">취소</button></div>
                 </td>
             </tr>
             </tbody>
         </table>
     </form>
-
-    <form action="/form/items" method="get">
-        <button type="submit" class="button">취소</button>
-    </form>
-
 </div>
 
 <script th:inline="javascript">
