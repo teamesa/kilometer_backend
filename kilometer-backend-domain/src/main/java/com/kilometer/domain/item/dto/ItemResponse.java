@@ -52,6 +52,7 @@ public class ItemResponse {
     private String homepageUrl;
     private String operatingTime;
     private String ticketUrl;
+    private int itemPickCount;
 
     // ItemDetail & DetailImage
     private String introduce;

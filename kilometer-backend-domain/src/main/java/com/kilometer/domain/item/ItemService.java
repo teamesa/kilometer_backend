@@ -15,6 +15,7 @@ import com.kilometer.domain.item.itemDetailImage.ItemDetailImageRepository;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -161,5 +162,34 @@ public class ItemService {
         itemRepository.deleteById(itemId);
     }
 
+    public DetailResponse findToDetailResponseById(Long itemId) {
+        Preconditions.notNull(itemId, "id must not be null");
 
+        ItemEntity itemEntity = itemRepository.findById(itemId)
+            .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + itemId));
+
+        return DetailResponse.makeResponse(itemEntity.getItemDetail(),
+            itemEntity.getItemDetailImages());
+    }
+
+    public void plusItemPickCount(Long itemId) {
+        Preconditions.notNull(itemId, "id must not be null");
+
+        updateAndDoFunction(ItemEntity::plusPickCount, itemId);
+    }
+
+    public void minusItemPickCount(Long itemId) {
+        Preconditions.notNull(itemId, "id must not be null");
+
+        updateAndDoFunction(ItemEntity::minusPickCount, itemId);
+    }
+
+    private void updateAndDoFunction(Function<ItemEntity, ItemEntity> itemEntityItemEntityFunction, long itemId) {
+        Function<Long, ItemResponse> generated = it -> itemRepository.findById(it)
+                .map(itemEntityItemEntityFunction)
+                .map(itemRepository::save)
+                .map(ItemEntity::makeResponse)
+                .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + it));
+        generated.apply(itemId);
+    }
 }
