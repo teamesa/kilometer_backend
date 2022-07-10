@@ -93,7 +93,13 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 .join(archive.item, QItemEntity.itemEntity)
                 .where(archive.item.id.in(itemIds))
                 .groupBy(archive.item.id)
-                .fetch().stream().collect(Collectors.toMap(ArchiveSummary::getItemId, Function.identity(), (k1, k2) -> k2));
+                .fetch()
+                .stream()
+                .collect(
+                        Collectors.toMap(
+                                ArchiveSummary::getItemId, Function.identity(), (k1, k2) -> k2
+                        )
+                );
     }
 
     @SuppressWarnings("rawtypes")
