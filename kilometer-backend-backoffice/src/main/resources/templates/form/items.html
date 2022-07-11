@@ -50,40 +50,28 @@
             </colgroup>
             <thead class="listBoard2">
             <tr>
-                <th>순번</th>
                 <th>컨텐츠ID</th>
-                <th>FO 전시여부 : 미전시 / 전시</th>
                 <th>리스트이미지</th>
-                <th>상세이미지</th>
+                <th>문화생활유형</th>
                 <th>메인타이틀</th>
+                <th>시작일</th>
+                <th>종료일</th>
                 <th>입장료</th>
-                <th>요금</th>
-                <th>url</th>
-                <th></th>
-                <th></th>
+                <th>등록일시</th>
+                <th>최종수정일시</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="item, itemStat: ${items}">
-                <td th:text="${itemStat.index} + 1"></td>
                 <td th:text="${item.id}"></td>
-                <td th:text="${item.exposureType.description}"></td>
                 <td><img src="" th:src="${item.listImageUrl}" width=100 height=100 alt="이미지 없음"></td>
-                <td><img src="" th:src="${item.thumbnailImageUrl}" width=100 height=100 alt="이미지 없음"></td>
-                <td th:text="${item.title}"></td>
+                <td th:text="${item.getExhibitionType().getDescription()}"></td>
+                <td><a th:href="@{/form/items/edit/{id} (id=${item.id})}" th:text="${item.title}"></a></td>
+                <td th:text="${item.getStartDate()}"></td>
+                <td th:text="${item.getEndDate()}"></td>
                 <td th:text="${item.feeType.description}"></td>
-                <td th:text="${item.price}"></td>
-                <td th:text="${item.getHomepageUrl}"></td>
-                <td>
-                    <form action="" th:action="@{/form/items/edit/{id} (id=${item.id})}" method="get">
-                        <button class="button2" type="submit">수정</button>
-                    </form>
-                </td>
-                <td>
-                    <form action="" th:action="@{/form/items/delete/{id} (id=${item.id})}" method="post">
-                        <button class="button2" type="submit">삭제</button>
-                    </form>
-                </td>
+                <td th:text="${item.getCreatedAt()}"></td>
+                <td th:text="${item.getUpdatedAt()}"></td>
             </tr>
             </tbody>
         </table>

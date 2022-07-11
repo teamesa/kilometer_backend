@@ -5,6 +5,7 @@ import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.item.enumType.RegionType;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,9 @@ public class ItemResponse {
     private String introduce;
     @Builder.Default
     private List<String> detailImageUrls = new ArrayList<>();
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public static ItemResponse empty() {
         return ItemResponse.builder()

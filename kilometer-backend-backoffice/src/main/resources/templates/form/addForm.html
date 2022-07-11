@@ -129,11 +129,17 @@
             <tr>
                 <td class="subTitle">시간</td>
                 <td colspan="3">
-                    <input type="text" id="time" th:field="*{operatingTime}" placeholder="시간를 입력하세요" style="width:400px;">
+                    <textarea id="time" th:field="*{operatingTime}" placeholder="시간를 입력하세요" style="width:400px;"></textarea>
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">리스트 이미지 <em class="asterisk">*</em></td>
+                <td class="subTitle">
+                    리스트 이미지 <em class="asterisk">*</em>
+                    <small>
+                        (750*500)<br/>
+                        최대 60KB
+                    </small>
+                </td>
                 <td colspan="3">
                     <input type="hidden" id="listImageUrl" th:field="*{listImageUrl}">
                     <input type="file" id="inputListImage" @change="listImageS3Upload">
@@ -142,7 +148,13 @@
                 </td>
             </tr>
             <tr>
-                <td class="subTitle">상세 이미지 <em class="asterisk">*</em></td>
+                <td class="subTitle">
+                    상세 이미지 <em class="asterisk">*</em>
+                    <small>
+                        (750*1000)<br/>
+                        최대 60MB
+                    </small>
+                </td>
                 <td colspan="3">
                     <input type="hidden" id="thumbnailImageUrl" th:field="*{thumbnailImageUrl}">
                     <input type="file" id="inputThumbnailImage" @change="thumbnailImageS3Upload">

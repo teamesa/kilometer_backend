@@ -117,6 +117,7 @@ public class ItemEntity {
         this.homepageUrl = item.getHomepageUrl();
         this.operatingTime = item.getOperatingTime();
         this.ticketUrl = item.getTicketUrl();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public ItemResponse makeResponse() {
@@ -147,6 +148,8 @@ public class ItemEntity {
             .introduce(Optional.ofNullable(this.itemDetail)
                 .map(ItemDetail::getIntroduce)
                 .orElse(""))
+            .createdAt(this.createdAt)
+            .updatedAt(this.updatedAt)
             .build();
     }
 
