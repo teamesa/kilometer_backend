@@ -21,6 +21,7 @@ public class ApiUrlUtils {
     public static final String ITEM_DETAIL = "/detail"+ITEM_ID;
 
     public static final String LIKE_ROOT = ROOT + "/like";
+    public static final String LIKE_ARCHIVE = "/{archiveId}";
     public static final String LIKE_ITEM_PATTERN = LIKE_ROOT + "/%s";
 
     public static final String USER_ME = "/me";

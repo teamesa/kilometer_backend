@@ -23,6 +23,8 @@ import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -106,6 +108,14 @@ public class ArchiveService {
 
     public Map<Long, ArchiveSummary> getArchiveInfoByItemIds(List<Long> itemIds) {
         return archiveRepository.findAllArchiveInfosByItemIds(itemIds);
+    }
+
+    public void updateArchiveLikeCount(boolean status, Long archiveId) {
+        if(status) {
+            updateArchiveLikeCount(Archive::plusLikeCount,archiveId);
+        } else {
+            updateArchiveLikeCount(Archive::minusLikeCount,archiveId);
+        }
     }
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
@@ -204,5 +214,13 @@ public class ArchiveService {
         if(totalContentsCount == 0)
             return FrontUrlUtils.getFrontMyArchiveTitle();
         return FrontUrlUtils.getFrontMyArchiveTitlePattern(totalContentsCount);
+    }
+
+    private void updateArchiveLikeCount(Function<Archive, Archive> mapper, Long archiveId) {
+        Consumer<Long> generated = it -> archiveRepository.findById(archiveId)
+            .map(mapper)
+            .map(archiveRepository::save)
+            .orElseThrow(() -> new IllegalArgumentException("Archive가 존재하지 않습니다. id = "+it));
+        generated.accept(archiveId);
     }
 }
