@@ -95,7 +95,7 @@ public class Archive {
     }
 
     public Archive minusLikeCount() {
-        this.likeCount--;
+        this.likeCount = Math.max(this.likeCount - 1, 0);
         return this;
     }
 }
