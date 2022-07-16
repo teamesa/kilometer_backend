@@ -11,7 +11,7 @@ public class MyArchiveDto {
     private Long id;
     private String title;
     private ExhibitionType exhibitionType;
-    private String thumbnailImageUrl;
+    private String listImageUrl;
     private String comment;
     private LocalDateTime updatedAt;
 }

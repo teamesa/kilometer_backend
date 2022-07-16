@@ -21,6 +21,6 @@ public class MyArchiveInfo {
     @JsonFormat(pattern = "yyyy.MM.dd")
     private LocalDateTime updatedAt;
     private boolean existArchiveImages;
-    private String itemImageUrl;
+    private String listImageUrl;
     private String api;
 }
