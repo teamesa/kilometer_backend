@@ -73,15 +73,20 @@ public class ArchiveService {
         return archiveAggregateConverter.convertArchiveInfo(archive);
     }
 
-    public ArchiveResponse findAllByItemId(Long itemId, RequestPagingStatus requestPagingStatus,
-        ArchiveSortType sortType) {
+    public ArchiveResponse findAllByItemIdAndUserId(Long itemId, Long userId,
+        RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
         Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.notNull(userId, "id must not be null");
         Preconditions.notNull(requestPagingStatus, "page value must not be null");
         Preconditions.notNull(sortType, "sort type value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<ItemArchiveDto> items = archiveRepository.findAllByItemId(pageable, sortType,
-            itemId);
+        Page<ItemArchiveDto> items = archiveRepository.findAllByItemIdAndUserId(pageable,
+            ArchiveQueryRequest.builder()
+                .archiveSortType(sortType)
+                .itemId(itemId)
+                .userId(userId)
+                .build());
 
         List<ArchiveInfo> archiveInfos = convertArchiveInfos(items);
         Double starRatingAvg = getStarRatingAvgByItemId(itemId);
@@ -96,7 +101,11 @@ public class ArchiveService {
         Preconditions.notNull(requestPagingStatus, "page value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<MyArchiveDto> archives = archiveRepository.findAllByUserId(pageable, sortType, userId);
+        Page<MyArchiveDto> archives = archiveRepository.findAllByUserId(pageable,
+            ArchiveQueryRequest.builder()
+                .archiveSortType(sortType)
+                .userId(userId)
+                .build());
 
         List<MyArchiveInfo> myArchiveInfos = convertMyArchiveInfos(archives);
         ResponsePagingStatus responsePagingStatus = pagingStatusService.convert(archives, null);
@@ -111,10 +120,10 @@ public class ArchiveService {
     }
 
     public void updateArchiveLikeCount(boolean status, Long archiveId) {
-        if(status) {
-            updateArchiveLikeCount(Archive::plusLikeCount,archiveId);
+        if (status) {
+            updateArchiveLikeCount(Archive::plusLikeCount, archiveId);
         } else {
-            updateArchiveLikeCount(Archive::minusLikeCount,archiveId);
+            updateArchiveLikeCount(Archive::minusLikeCount, archiveId);
         }
     }
 
@@ -187,7 +196,8 @@ public class ArchiveService {
                     myArchiveDto.getId());
                 List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
                     myArchiveDto.getId());
-                return archiveAggregateConverter.convertMyArchiveInfo(myArchiveDto, existImages, userVisitPlaces);
+                return archiveAggregateConverter.convertMyArchiveInfo(myArchiveDto, existImages,
+                    userVisitPlaces);
             })
             .collect(Collectors.toList());
     }
@@ -211,8 +221,9 @@ public class ArchiveService {
     }
 
     private String convertMyArchiveTitle(long totalContentsCount) {
-        if(totalContentsCount == 0)
+        if (totalContentsCount == 0) {
             return FrontUrlUtils.getFrontMyArchiveTitle();
+        }
         return FrontUrlUtils.getFrontMyArchiveTitlePattern(totalContentsCount);
     }
 
@@ -220,7 +231,7 @@ public class ArchiveService {
         Consumer<Long> generated = it -> archiveRepository.findById(archiveId)
             .map(mapper)
             .map(archiveRepository::save)
-            .orElseThrow(() -> new IllegalArgumentException("Archive가 존재하지 않습니다. id = "+it));
+            .orElseThrow(() -> new IllegalArgumentException("Archive가 존재하지 않습니다. id = " + it));
         generated.accept(archiveId);
     }
 }

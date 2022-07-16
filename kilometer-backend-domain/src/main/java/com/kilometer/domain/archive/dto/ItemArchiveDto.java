@@ -15,6 +15,6 @@ public class ItemArchiveDto {
     private Integer starRating;
     private Integer heartCount;
     private String comment;
-    private boolean isHeart;
+    private boolean isHearted;
 
 }

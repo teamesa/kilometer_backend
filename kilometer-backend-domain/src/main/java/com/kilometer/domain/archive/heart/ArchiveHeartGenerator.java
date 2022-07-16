@@ -9,7 +9,7 @@ public class ArchiveHeartGenerator {
 
     public ArchiveHeart generateArchiveHeart(ItemArchiveDto itemArchiveDto) {
         return ArchiveHeart.builder()
-            .heartClicked(itemArchiveDto.isHeart())
+            .heartClicked(itemArchiveDto.isHearted())
             .link(ApiUrlUtils.getLikeArchiveUrl(itemArchiveDto.getId()))
             .build();
     }
