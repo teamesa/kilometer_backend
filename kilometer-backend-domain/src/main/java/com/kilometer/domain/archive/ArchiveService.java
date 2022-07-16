@@ -3,13 +3,13 @@ package com.kilometer.domain.archive;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
+import com.kilometer.domain.archive.dto.ArchiveQueryRequest;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
-import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
+import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
-import com.kilometer.domain.archive.dto.*;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
@@ -22,8 +22,6 @@ import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -113,10 +111,6 @@ public class ArchiveService {
         String title = convertMyArchiveTitle(responsePagingStatus.getTotalContentsCount());
 
         return convertingMyArchiveResponse(responsePagingStatus, myArchiveInfos, title);
-    }
-
-    public Map<Long, ArchiveSummary> getArchiveInfoByItemIds(List<Long> itemIds) {
-        return archiveRepository.findAllArchiveInfosByItemIds(itemIds);
     }
 
     public void updateArchiveLikeCount(boolean status, Long archiveId) {
@@ -227,11 +221,11 @@ public class ArchiveService {
         return FrontUrlUtils.getFrontMyArchiveTitlePattern(totalContentsCount);
     }
 
-    private Archive updateArchiveLikeCount(Function<Archive, Archive> mapper, Long archiveId) {
+    private void updateArchiveLikeCount(Function<Archive, Archive> mapper, Long archiveId) {
         Function<Long, Archive> generated = it -> archiveRepository.findById(archiveId)
             .map(mapper)
             .map(archiveRepository::save)
             .orElseThrow(() -> new IllegalArgumentException("Archive가 존재하지 않습니다. id = " + it));
-        return generated.apply(archiveId);
+        generated.apply(archiveId);
     }
 }
