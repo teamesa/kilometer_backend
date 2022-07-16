@@ -1,7 +1,5 @@
 package com.kilometer.domain.search;
 
-import com.kilometer.domain.archive.ArchiveService;
-import com.kilometer.domain.archive.dto.ArchiveSummary;
 import com.kilometer.domain.item.ItemService;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.paging.PagingStatusService;
@@ -14,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +19,6 @@ public class SearchService {
     private final ItemService itemService;
     private final ListItemAggregateConverter listItemAggregateConverter;
     private final PagingStatusService pagingStatusService;
-    private final ArchiveService archiveService;
 
     public SearchResponse search(SearchRequest searchRequest, long userId) {
         Preconditions.notNull(searchRequest, String.format("this service can not be run will null object, please check this, %s", searchRequest));
@@ -39,8 +34,7 @@ public class SearchService {
                 .build();
 
         Page<SearchItemResponse> pageableItems = itemService.getItemBySearchOptions(queryRequest);
-        Map<Long, ArchiveSummary> archiveSummaries = archiveService.getArchiveInfoByItemIds(pageableItems.stream().map(SearchItemResponse::getId).collect(Collectors.toList()));
-        return convertingItems(pageableItems.map(it -> it.update(archiveSummaries.get(it.getId()))), searchRequest.getQueryString());
+        return convertingItems(pageableItems, searchRequest.getQueryString());
     }
 
     private SearchResponse convertingItems(Page<SearchItemResponse> pageableItems, String query) {

@@ -1,7 +1,6 @@
 package com.kilometer.domain.archive;
 
 import com.kilometer.domain.archive.dto.ArchiveSortType;
-import com.kilometer.domain.archive.dto.ArchiveSummary;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.item.QItemEntity;
@@ -10,9 +9,6 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -112,30 +108,6 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 archive.item.id.eq(itemId)
             )
             .fetchOne();
-    }
-
-    @Override
-    public Map<Long, ArchiveSummary> findAllArchiveInfosByItemIds(List<Long> itemIds) {
-        if (itemIds.isEmpty()) {
-            return Map.of();
-        }
-        return queryFactory
-            .select(Projections.fields(ArchiveSummary.class,
-                archive.item.id.as("itemId"),
-                archive.starRating.avg().as("avgStarRating"),
-                archive.item.id.count().as("archiveCount")
-            ))
-            .from(archive)
-            .join(archive.item, QItemEntity.itemEntity)
-            .where(archive.item.id.in(itemIds))
-            .groupBy(archive.item.id)
-            .fetch()
-            .stream()
-            .collect(
-                Collectors.toMap(
-                    ArchiveSummary::getItemId, Function.identity(), (k1, k2) -> k2
-                )
-            );
     }
 
     @SuppressWarnings("rawtypes")
