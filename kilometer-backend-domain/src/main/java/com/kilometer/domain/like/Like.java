@@ -27,7 +27,7 @@ public class Like {
     private Long id;
 
     @Builder.Default
-    private boolean isHearted = false;
+    private boolean isLiked = false;
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -43,8 +43,8 @@ public class Like {
     @JoinColumn(name="likedArchive")
     private Archive likedArchive;
 
-    public Like changeIsHearted(boolean status) {
-        this.isHearted = status;
+    public Like changeIsLiked(boolean status) {
+        this.isLiked = status;
         this.updatedAt = LocalDateTime.now();
         return this;
     }

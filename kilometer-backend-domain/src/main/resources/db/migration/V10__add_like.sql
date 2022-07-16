@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS archive_like
     id           BIGINT(20) NOT NULL AUTO_INCREMENT,
     likedUser    BIGINT(20) NOT NULL,
     likedArchive BIGINT(20) NOT NULL,
-    isHearted    TINYINT(1) NOT NULL DEFAULT FALSE,
+    isLiked    TINYINT(1) NOT NULL DEFAULT FALSE,
     createdAt    DATETIME   NOT NULL DEFAULT current_timestamp,
     updatedAt    DATETIME   NOT NULL DEFAULT current_timestamp,
     PRIMARY KEY (id),

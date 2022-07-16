@@ -15,6 +15,7 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
     private final ArchiveService archiveService;
+
     @Transactional
     public LikeResponse makeLikeStatus(Long archiveId, Long userId, boolean status) {
         Preconditions.notNull(archiveId, "Archive id must not be null");
@@ -24,21 +25,22 @@ public class LikeService {
         User likedUser = User.builder().id(userId).build();
 
         Like like = likeRepository.findByLikedArchiveAndLikedUser(likedArchive, likedUser)
-            .map(it -> it.changeIsHearted(status))
             .orElse(
                 Like.builder()
-                    .isHearted(status)
+                    .isLiked(status)
                     .likedArchive(likedArchive)
                     .likedUser(likedUser)
                     .build()
             );
 
+        if(like.isLiked() != status) {
+            like.changeIsLiked(status);
+            archiveService.updateArchiveLikeCount(status, archiveId);
+        }
         likeRepository.save(like);
 
-        archiveService.updateArchiveLikeCount(status, archiveId);
-
         return LikeResponse.builder()
-            .content(like.isHearted())
+            .content(like.isLiked())
             .build();
     }
 }

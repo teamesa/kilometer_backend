@@ -44,7 +44,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                     archive.starRating,
                     archive.likeCount,
                     archive.comment,
-                    like.isHearted
+                    like.isLiked
                 )
             )
             .from(archive)

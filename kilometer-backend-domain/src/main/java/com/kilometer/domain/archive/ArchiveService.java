@@ -227,11 +227,11 @@ public class ArchiveService {
         return FrontUrlUtils.getFrontMyArchiveTitlePattern(totalContentsCount);
     }
 
-    private void updateArchiveLikeCount(Function<Archive, Archive> mapper, Long archiveId) {
-        Consumer<Long> generated = it -> archiveRepository.findById(archiveId)
+    private Archive updateArchiveLikeCount(Function<Archive, Archive> mapper, Long archiveId) {
+        Function<Long, Archive> generated = it -> archiveRepository.findById(archiveId)
             .map(mapper)
             .map(archiveRepository::save)
             .orElseThrow(() -> new IllegalArgumentException("Archive가 존재하지 않습니다. id = " + it));
-        generated.accept(archiveId);
+        return generated.apply(archiveId);
     }
 }

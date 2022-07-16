@@ -1,21 +1,21 @@
-package com.kilometer.domain.archive.heart;
+package com.kilometer.domain.like.dto;
 
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.util.ApiUrlUtils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ArchiveHeartGenerator {
+public class ArchiveLikeGenerator {
 
-    public ArchiveHeart generateArchiveHeart(ItemArchiveDto itemArchiveDto) {
-        return ArchiveHeart.builder()
-            .heartClicked(itemArchiveDto.isHearted())
+    public ArchiveLike generateArchiveLike(ItemArchiveDto itemArchiveDto) {
+        return ArchiveLike.builder()
+            .heartClicked(itemArchiveDto.isLiked())
             .link(ApiUrlUtils.getLikeArchiveUrl(itemArchiveDto.getId()))
             .build();
     }
 
-    public ArchiveHeart generateArchiveHeart(long archiveId) {
-        return ArchiveHeart.builder()
+    public ArchiveLike generateArchiveLike(long archiveId) {
+        return ArchiveLike.builder()
             .heartClicked(false)
             .link(ApiUrlUtils.getLikeArchiveUrl(archiveId))
             .build();
