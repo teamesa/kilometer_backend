@@ -1,5 +1,6 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.archive.QArchive;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.enumType.ExhibitionType;
@@ -12,6 +13,7 @@ import com.kilometer.domain.search.request.ProgressDateType;
 import com.kilometer.domain.search.request.SearchSortType;
 import com.kilometer.domain.util.FrontUrlUtils;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -31,6 +33,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
     private final static QPick pick = QPick.pick;
+    private final static QArchive archive = QArchive.archive;
 
     public ItemRepositoryCustomImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
@@ -48,22 +51,29 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                     itemEntity.startDate,
                     itemEntity.endDate,
                     itemEntity.pickCount,
-                    pick.isHearted
+                    pick.isHearted,
+                    archive.starRating.avg().as("avgStarRating"),
+                    archive.item.id.count().as("archiveCount")
                 )
             )
             .from(itemEntity)
             .leftJoin(pick)
             .on(pick.pickedItem.eq(itemEntity), eqUserId(queryRequest.getUserId()))
+            .leftJoin(archive)
+            .on(archive.item.eq(itemEntity))
             .where(
                 itemEntity.exposureType.eq(ExposureType.ON),
+                archive.isVisibleAtItem.eq(true),
                 eqTitle(queryRequest.getQueryString()),
                 eqExhibitionType(queryRequest.getFilterOptions()),
                 eqFeeType(queryRequest.getFilterOptions()),
                 eqRegionType(queryRequest.getFilterOptions()),
-                eqProgressType(queryRequest.getFilterOptions())
+                eqProgressType(queryRequest.getFilterOptions()),
+                filterByOrderOption(queryRequest.getSearchSortType())
             )
             .offset(queryRequest.getPageable().getOffset())
             .limit(queryRequest.getPageable().getPageSize())
+            .groupBy(itemEntity.id)
             .orderBy(getOrderSpecifier(queryRequest.getSearchSortType()))
             .fetch();
 
@@ -203,10 +213,22 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             case END_DATE_ASC:
                 return itemEntity.endDate.asc();
             case GRADE_DESC:
+                return archive.starRating.avg().desc();
             case HEART_DESC:
+                return itemEntity.pickCount.desc();
             case ENROLL_DESC:
             default:
                 return itemEntity.id.desc();
         }
+    }
+
+    private Predicate filterByOrderOption(SearchSortType searchSortType) {
+        LocalDate now = LocalDate.now();
+
+        if (searchSortType == SearchSortType.END_DATE_ASC) {
+            return itemEntity.endDate.goe(now);
+        }
+
+        return null;
     }
 }

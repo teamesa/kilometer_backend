@@ -11,6 +11,7 @@ import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
 import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,29 @@ public class ArchiveAggregateConverter {
             .id(archive.getId())
             .userProfileUrl(archive.getUser().getImageUrl())
             .userName(archive.getUser().getName())
+            .updatedAt(archive.getUpdatedAt())
+            .starRating(archive.getStarRating())
+            .heartCount(archive.getLikeCount())
+            .heart(archiveHeart)
+            .comment(archive.getComment())
+            .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
+            .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
+            .photoUrls(archive.getArchiveImages().stream()
+                .map(ArchiveImage::getImageUrl)
+                .collect(Collectors.toList()))
+            .build();
+    }
+
+    public ArchiveInfo convertArchiveInfo(Archive archive, UserResponse userResponse) {
+
+        Map<PlaceType, String> placeTypes = convertFoodAndCafe(archive.getUserVisitPlaces());
+
+        ArchiveHeart archiveHeart = archiveHeartGenerator.generateArchiveHeart(archive.getId());
+
+        return ArchiveInfo.builder()
+            .id(archive.getId())
+            .userProfileUrl(userResponse.getImageUrl())
+            .userName(userResponse.getName())
             .updatedAt(archive.getUpdatedAt())
             .starRating(archive.getStarRating())
             .heartCount(archive.getLikeCount())

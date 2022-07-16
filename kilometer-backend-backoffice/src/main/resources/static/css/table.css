@@ -31,3 +31,7 @@ table {
 .tg .subTitle {
     background-color: #efefef;
 }
+
+.subTitle small {
+    color: gray;
+}
