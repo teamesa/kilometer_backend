@@ -28,7 +28,8 @@ public class ItemAggregateConverter {
             .ticketUrl(itemInfoDto.getTicketUrl())
             .time(itemInfoDto.getOperatingTime())
             .homePageUrl(itemInfoDto.getHomePageUrl())
-            .thumbnailImageUrl(itemInfoDto.getThumbnailImageUrl())
+            .detailImageUrl(itemInfoDto.getThumbnailImageUrl())
+            .listImageUrl(itemInfoDto.getListImageUrl())
             .itemInfoAdditionalInfo(
                 ItemInfoAdditionalInfo.builder()
                     .heartCount(itemInfoDto.getPickCount())

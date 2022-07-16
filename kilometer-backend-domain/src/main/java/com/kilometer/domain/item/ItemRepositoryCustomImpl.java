@@ -123,6 +123,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                     itemEntity.feeType,
                     itemEntity.title,
                     itemEntity.thumbnailImageUrl,
+                    itemEntity.listImageUrl,
                     itemEntity.startDate,
                     itemEntity.endDate,
                     itemEntity.placeName,
