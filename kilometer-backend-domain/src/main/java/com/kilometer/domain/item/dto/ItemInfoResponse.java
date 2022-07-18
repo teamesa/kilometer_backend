@@ -25,7 +25,8 @@ public class ItemInfoResponse {
     private String ticketUrl;
     private String time;
     private String homePageUrl;
-    private String thumbnailImageUrl;
+    private String detailImageUrl;
+    private String listImageUrl;
 
     private ItemInfoAdditionalInfo itemInfoAdditionalInfo;
 }
