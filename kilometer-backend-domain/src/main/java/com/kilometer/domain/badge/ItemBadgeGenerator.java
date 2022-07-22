@@ -5,6 +5,8 @@ import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
 import java.util.List;
+
+import com.kilometer.domain.pick.Pick;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,6 +34,14 @@ public class ItemBadgeGenerator {
         ItemBadge progressTypeBadge = makeProgressTypeBadge(itemResponse.getStartDate(),
             itemResponse.getEndDate());
         ItemBadge feeTypeBadge = makeFeeTypeBadge(itemResponse.getFeeType());
+
+        return List.of(progressTypeBadge, feeTypeBadge);
+    }
+
+    public List<ItemBadge> generateAdditionalItemBadgeList(Pick itemResponse) {
+        ItemBadge progressTypeBadge = makeProgressTypeBadge(itemResponse.getPickedItem().getStartDate(),
+            itemResponse.getPickedItem().getEndDate());
+        ItemBadge feeTypeBadge = makeFeeTypeBadge(itemResponse.getPickedItem().getFeeType());
 
         return List.of(progressTypeBadge, feeTypeBadge);
     }

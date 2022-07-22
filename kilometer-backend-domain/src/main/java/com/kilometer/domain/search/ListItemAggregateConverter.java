@@ -3,6 +3,7 @@ package com.kilometer.domain.search;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.heart.ItemHeart;
 import com.kilometer.domain.item.heart.ItemHeartGenerator;
+import com.kilometer.domain.pick.Pick;
 import com.kilometer.domain.search.additionalinfo.ListItemAdditionalInfo;
 import com.kilometer.domain.search.additionalinfo.ListItemAdditionalInfoGenerator;
 import com.kilometer.domain.badge.ItemBadge;
@@ -48,5 +49,24 @@ public class ListItemAggregateConverter {
             .heart(heart)
             .listItemAdditionalInfo(listItemAdditionalInfo)
             .build();
+    }
+
+    public ListItem convert(Pick item) {
+        Preconditions.notNull(item, String.format(
+                "converting can not be run will null item response, please check this, %s", item));
+        PresentationImage image = presentationImageGenerator.generatePresentationImage(item);
+        ItemBadge typeBadge = badgeGenerator.generateTypeItemBadge(item.getPickedItem().getExhibitionType());
+        List<ItemBadge> additionalBadgeList = badgeGenerator.generateAdditionalItemBadgeList(item);
+        ListItemTitle title = titleGenerator.generateListItemTitle(item);
+        ItemHeart heart = heartGenerator.generateItemHeart(item);
+
+        return ListItem.builder()
+                .id(item.getId())
+                .presentationImage(image)
+                .typeBadge(typeBadge)
+                .additionalBadgeList(additionalBadgeList)
+                .title(title)
+                .heart(heart)
+                .build();
     }
 }
