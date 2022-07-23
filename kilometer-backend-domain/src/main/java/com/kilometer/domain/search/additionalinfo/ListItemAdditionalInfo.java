@@ -9,6 +9,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class ListItemAdditionalInfo {
     private int heartCount;
-    private float grade;
-    private float archiveCount;
+    private double grade;
+    private long archiveCount;
 }
