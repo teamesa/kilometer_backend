@@ -13,8 +13,8 @@ public class ItemArchiveDto {
     private String imageUrl;
     private LocalDateTime updatedAt;
     private Integer starRating;
-    private Integer heartCount;
+    private Integer likeCount;
     private String comment;
-    private boolean isHeart;
+    private boolean isLiked;
 
 }

@@ -1,7 +1,7 @@
 package com.kilometer.domain.archive.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kilometer.domain.archive.heart.ArchiveHeart;
+import com.kilometer.domain.like.dto.ArchiveLike;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,8 +21,8 @@ public class ArchiveInfo {
     @JsonFormat(pattern = "yyyy.MM.dd")
     private LocalDateTime updatedAt;
     private Integer starRating;
-    private Integer heartCount;
-    private ArchiveHeart heart;
+    private Integer likeCount;
+    private ArchiveLike heart;
     private String comment;
     private String food;
     private String cafe;

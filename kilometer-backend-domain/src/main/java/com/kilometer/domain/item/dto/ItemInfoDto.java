@@ -15,6 +15,7 @@ public class ItemInfoDto {
     private FeeType feeType;
     private String title;
     private String thumbnailImageUrl;
+    private String listImageUrl;
     private LocalDate startDate;
     private LocalDate endDate;
     private String placeName;

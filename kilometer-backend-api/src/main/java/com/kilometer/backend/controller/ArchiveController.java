@@ -38,8 +38,9 @@ public class ArchiveController {
         @ApiParam(value = "아카이브 페이지 정보", required = true) RequestPagingStatus requestPagingStatus,
         @ApiParam(value = "아카이브 정렬 기준", required = true, defaultValue = "MODIFY_DESC")
         @RequestParam(defaultValue = "MODIFY_DESC") ArchiveSortType sortType) {
-        ArchiveResponse response = archiveService.findAllByItemId(itemId, requestPagingStatus,
-            sortType);
+        long userId = getLoginUserId();
+        ArchiveResponse response = archiveService.findAllByItemIdAndUserId(itemId, userId,
+            requestPagingStatus, sortType);
         return GeneralResponse.<ArchiveResponse>builder()
             .title(ARCHIVE_TITLE)
             .contents(response)

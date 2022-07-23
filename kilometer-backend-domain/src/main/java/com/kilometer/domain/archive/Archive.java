@@ -88,4 +88,14 @@ public class Archive {
         this.isVisibleAtItem = request.isVisibleAtItem();
         this.starRating = request.getStarRating();
     }
+
+    public Archive plusLikeCount() {
+        this.likeCount++;
+        return this;
+    }
+
+    public Archive minusLikeCount() {
+        this.likeCount = Math.max(this.likeCount - 1, 0);
+        return this;
+    }
 }

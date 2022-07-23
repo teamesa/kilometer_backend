@@ -5,8 +5,8 @@ import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
-import com.kilometer.domain.archive.heart.ArchiveHeart;
-import com.kilometer.domain.archive.heart.ArchiveHeartGenerator;
+import com.kilometer.domain.like.dto.ArchiveLike;
+import com.kilometer.domain.like.dto.ArchiveLikeGenerator;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ArchiveAggregateConverter {
 
-    private final ArchiveHeartGenerator archiveHeartGenerator;
+    private final ArchiveLikeGenerator archiveLikeGenerator;
     private final ItemBadgeGenerator itemBadgeGenerator;
 
     public ArchiveInfo convertArchiveInfo(ItemArchiveDto itemArchiveDto,
@@ -31,7 +31,7 @@ public class ArchiveAggregateConverter {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
 
-        ArchiveHeart archiveHeart = archiveHeartGenerator.generateArchiveHeart(
+        ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(
             itemArchiveDto);
 
         return ArchiveInfo.builder()
@@ -40,8 +40,8 @@ public class ArchiveAggregateConverter {
             .userProfileUrl(itemArchiveDto.getImageUrl())
             .updatedAt(itemArchiveDto.getUpdatedAt())
             .starRating(itemArchiveDto.getStarRating())
-            .heartCount(itemArchiveDto.getHeartCount())
-            .heart(archiveHeart)
+            .likeCount(itemArchiveDto.getLikeCount())
+            .heart(archiveLike)
             .comment(itemArchiveDto.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
@@ -55,7 +55,7 @@ public class ArchiveAggregateConverter {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(archive.getUserVisitPlaces());
 
-        ArchiveHeart archiveHeart = archiveHeartGenerator.generateArchiveHeart(archive.getId());
+        ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archive.getId());
 
         return ArchiveInfo.builder()
             .id(archive.getId())
@@ -63,8 +63,8 @@ public class ArchiveAggregateConverter {
             .userName(archive.getUser().getName())
             .updatedAt(archive.getUpdatedAt())
             .starRating(archive.getStarRating())
-            .heartCount(archive.getLikeCount())
-            .heart(archiveHeart)
+            .likeCount(archive.getLikeCount())
+            .heart(archiveLike)
             .comment(archive.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
@@ -78,7 +78,7 @@ public class ArchiveAggregateConverter {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(archive.getUserVisitPlaces());
 
-        ArchiveHeart archiveHeart = archiveHeartGenerator.generateArchiveHeart(archive.getId());
+        ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archive.getId());
 
         return ArchiveInfo.builder()
             .id(archive.getId())
@@ -86,8 +86,8 @@ public class ArchiveAggregateConverter {
             .userName(userResponse.getName())
             .updatedAt(archive.getUpdatedAt())
             .starRating(archive.getStarRating())
-            .heartCount(archive.getLikeCount())
-            .heart(archiveHeart)
+            .likeCount(archive.getLikeCount())
+            .heart(archiveLike)
             .comment(archive.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
@@ -106,6 +106,7 @@ public class ArchiveAggregateConverter {
             .title(myArchiveDto.getTitle())
             .comment(myArchiveDto.getComment())
             .places(convertVisitPlaces(userVisitPlaces))
+            .listImageUrl(myArchiveDto.getListImageUrl())
             .typeBadge(itemBadge)
             .updatedAt(myArchiveDto.getUpdatedAt())
             .existArchiveImages(existImages)

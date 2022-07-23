@@ -60,10 +60,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .leftJoin(pick)
             .on(pick.pickedItem.eq(itemEntity), eqUserId(queryRequest.getUserId()))
             .leftJoin(archive)
-            .on(archive.item.eq(itemEntity))
+            .on(archive.item.eq(itemEntity).and(archive.isVisibleAtItem.eq(true)))
             .where(
                 itemEntity.exposureType.eq(ExposureType.ON),
-                archive.isVisibleAtItem.eq(true),
                 eqTitle(queryRequest.getQueryString()),
                 eqExhibitionType(queryRequest.getFilterOptions()),
                 eqFeeType(queryRequest.getFilterOptions()),
@@ -123,6 +122,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                     itemEntity.feeType,
                     itemEntity.title,
                     itemEntity.thumbnailImageUrl,
+                    itemEntity.listImageUrl,
                     itemEntity.startDate,
                     itemEntity.endDate,
                     itemEntity.placeName,

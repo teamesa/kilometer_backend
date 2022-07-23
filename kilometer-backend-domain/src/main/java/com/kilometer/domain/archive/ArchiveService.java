@@ -3,9 +3,10 @@ package com.kilometer.domain.archive;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
+import com.kilometer.domain.archive.dto.ArchiveQueryRequest;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
-import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
+import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
@@ -21,6 +22,7 @@ import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -69,15 +71,20 @@ public class ArchiveService {
         return archiveAggregateConverter.convertArchiveInfo(archive);
     }
 
-    public ArchiveResponse findAllByItemId(Long itemId, RequestPagingStatus requestPagingStatus,
-        ArchiveSortType sortType) {
+    public ArchiveResponse findAllByItemIdAndUserId(Long itemId, Long userId,
+        RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
         Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.notNull(userId, "id must not be null");
         Preconditions.notNull(requestPagingStatus, "page value must not be null");
         Preconditions.notNull(sortType, "sort type value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<ItemArchiveDto> items = archiveRepository.findAllByItemId(pageable, sortType,
-            itemId);
+        Page<ItemArchiveDto> items = archiveRepository.findAllByItemIdAndUserId(pageable,
+            ArchiveQueryRequest.builder()
+                .archiveSortType(sortType)
+                .itemId(itemId)
+                .userId(userId)
+                .build());
 
         List<ArchiveInfo> archiveInfos = convertArchiveInfos(items);
         Double starRatingAvg = getStarRatingAvgByItemId(itemId);
@@ -92,7 +99,11 @@ public class ArchiveService {
         Preconditions.notNull(requestPagingStatus, "page value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<MyArchiveDto> archives = archiveRepository.findAllByUserId(pageable, sortType, userId);
+        Page<MyArchiveDto> archives = archiveRepository.findAllByUserId(pageable,
+            ArchiveQueryRequest.builder()
+                .archiveSortType(sortType)
+                .userId(userId)
+                .build());
 
         List<MyArchiveInfo> myArchiveInfos = convertMyArchiveInfos(archives);
         ResponsePagingStatus responsePagingStatus = pagingStatusService.convert(archives, null);
@@ -100,6 +111,14 @@ public class ArchiveService {
         String title = convertMyArchiveTitle(responsePagingStatus.getTotalContentsCount());
 
         return convertingMyArchiveResponse(responsePagingStatus, myArchiveInfos, title);
+    }
+
+    public void updateArchiveLikeCount(boolean status, Long archiveId) {
+        if (status) {
+            updateArchiveLikeCount(Archive::plusLikeCount, archiveId);
+        } else {
+            updateArchiveLikeCount(Archive::minusLikeCount, archiveId);
+        }
     }
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
@@ -171,7 +190,8 @@ public class ArchiveService {
                     myArchiveDto.getId());
                 List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
                     myArchiveDto.getId());
-                return archiveAggregateConverter.convertMyArchiveInfo(myArchiveDto, existImages, userVisitPlaces);
+                return archiveAggregateConverter.convertMyArchiveInfo(myArchiveDto, existImages,
+                    userVisitPlaces);
             })
             .collect(Collectors.toList());
     }
@@ -195,8 +215,17 @@ public class ArchiveService {
     }
 
     private String convertMyArchiveTitle(long totalContentsCount) {
-        if(totalContentsCount == 0)
+        if (totalContentsCount == 0) {
             return FrontUrlUtils.getFrontMyArchiveTitle();
+        }
         return FrontUrlUtils.getFrontMyArchiveTitlePattern(totalContentsCount);
+    }
+
+    private void updateArchiveLikeCount(Function<Archive, Archive> mapper, Long archiveId) {
+        Function<Long, Archive> generated = it -> archiveRepository.findById(archiveId)
+            .map(mapper)
+            .map(archiveRepository::save)
+            .orElseThrow(() -> new IllegalArgumentException("Archive가 존재하지 않습니다. id = " + it));
+        generated.apply(archiveId);
     }
 }

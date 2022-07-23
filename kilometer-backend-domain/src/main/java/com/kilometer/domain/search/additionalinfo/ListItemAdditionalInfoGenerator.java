@@ -8,7 +8,7 @@ public class ListItemAdditionalInfoGenerator {
     public ListItemAdditionalInfo generateListItemAdditionalInfo(SearchItemResponse response) {
         return ListItemAdditionalInfo.builder()
                 .heartCount(response.getPickCount())
-                .grade((float) response.getAvgStarRating())
+                .grade(response.getAvgStarRating())
                 .archiveCount(response.getArchiveCount())
                 .build();
     }
