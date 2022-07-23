@@ -106,6 +106,7 @@ public class ArchiveAggregateConverter {
             .title(myArchiveDto.getTitle())
             .comment(myArchiveDto.getComment())
             .places(convertVisitPlaces(userVisitPlaces))
+            .listImageUrl(myArchiveDto.getListImageUrl())
             .typeBadge(itemBadge)
             .updatedAt(myArchiveDto.getUpdatedAt())
             .existArchiveImages(existImages)

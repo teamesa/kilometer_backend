@@ -76,7 +76,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 archive.id,
                 itemEntity.title,
                 itemEntity.exhibitionType,
-                itemEntity.thumbnailImageUrl,
+                itemEntity.listImageUrl,
                 archive.comment,
                 archive.updatedAt
             ))
