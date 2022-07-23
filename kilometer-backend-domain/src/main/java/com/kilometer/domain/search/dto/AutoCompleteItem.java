@@ -10,5 +10,6 @@ public class AutoCompleteItem {
     private String title;
     private Integer searchedTextLocationStart;
     private Integer searchedTextLocationEnd;
+    private String listImageUrl;
     private String link;
 }

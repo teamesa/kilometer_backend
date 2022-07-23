@@ -100,6 +100,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                     itemEntity.title,
                     itemEntity.title.indexOf(query).as("searchedTextLocationStart"),
                     itemEntity.title.indexOf(query).add(query.length()).as("searchedTextLocationEnd"),
+                    itemEntity.listImageUrl,
                     Expressions.asString(FrontUrlUtils.getFrontDetailPrefix())
                         .append(itemEntity.id.stringValue()).as("link")
                 )
