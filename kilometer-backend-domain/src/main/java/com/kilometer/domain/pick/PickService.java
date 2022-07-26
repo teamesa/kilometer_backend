@@ -3,6 +3,9 @@ package com.kilometer.domain.pick;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemService;
 import com.kilometer.domain.paging.PagingStatusService;
+import com.kilometer.domain.pick.dto.MyPickResponse;
+import com.kilometer.domain.pick.dto.PickItemResponse;
+import com.kilometer.domain.pick.dto.PickResponse;
 import com.kilometer.domain.search.ListItemAggregateConverter;
 import com.kilometer.domain.search.dto.ListItem;
 import com.kilometer.domain.search.request.SearchRequest;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,13 +62,17 @@ public class PickService {
         Pageable pageable = pagingStatusService.makePageable(searchRequest);
 
         Page<Pick> pageablePicks = pickRepository.findByPickedUser(pickedUser, pageable);
-        long pickCount = pickRepository.countByPickedUser(pickedUser);
+        long pickCount = pageablePicks.getTotalElements();
 
         return convertingItems(pageablePicks, pickCount, searchRequest.getQueryString());
     }
 
     private MyPickResponse convertingItems(Page<Pick> pageablePicks, long pickCount, String query) {
-        List<ListItem> items = pageablePicks.map(listItemAggregateConverter::convert).getContent();
+        List<ListItem> items = pageablePicks.stream()
+                .map(PickItemResponse::makePickItemResponse)
+                .collect(Collectors.toList()).stream()
+                .map(listItemAggregateConverter::convert)
+                .collect(Collectors.toList());
 
         return MyPickResponse.builder()
                 .count(pickCount)

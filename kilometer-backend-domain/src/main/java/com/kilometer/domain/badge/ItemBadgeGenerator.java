@@ -1,13 +1,12 @@
 package com.kilometer.domain.badge;
 
-import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;
+import com.kilometer.domain.search.ItemInfoExtraction;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.util.List;
-
-import com.kilometer.domain.pick.Pick;
-import org.springframework.stereotype.Component;
 
 @Component
 public class ItemBadgeGenerator {
@@ -16,13 +15,6 @@ public class ItemBadgeGenerator {
     private static final String END_PROGRESS_TYPE_TEXT = "OFF";
     private static final String UPCOMING_PROGRESS_TYPE_TEXT = "UPCOMING";
 
-    public ItemBadge generateTypeItemBadge(SearchItemResponse itemResponse) {
-        return ItemBadge.builder()
-            .isTypeBadge(true)
-            .text(itemResponse.getExhibitionType().getDescription())
-            .build();
-    }
-
     public ItemBadge generateTypeItemBadge(ExhibitionType exhibitionType) {
         return ItemBadge.builder()
             .isTypeBadge(true)
@@ -30,18 +22,17 @@ public class ItemBadgeGenerator {
             .build();
     }
 
-    public List<ItemBadge> generateAdditionalItemBadgeList(SearchItemResponse itemResponse) {
-        ItemBadge progressTypeBadge = makeProgressTypeBadge(itemResponse.getStartDate(),
-            itemResponse.getEndDate());
-        ItemBadge feeTypeBadge = makeFeeTypeBadge(itemResponse.getFeeType());
-
-        return List.of(progressTypeBadge, feeTypeBadge);
+    public ItemBadge generateTypeItemBadge(ItemInfoExtraction item) {
+        return ItemBadge.builder()
+            .isTypeBadge(true)
+            .text(item.getExhibitionType().getDescription())
+            .build();
     }
 
-    public List<ItemBadge> generateAdditionalItemBadgeList(Pick itemResponse) {
-        ItemBadge progressTypeBadge = makeProgressTypeBadge(itemResponse.getPickedItem().getStartDate(),
-            itemResponse.getPickedItem().getEndDate());
-        ItemBadge feeTypeBadge = makeFeeTypeBadge(itemResponse.getPickedItem().getFeeType());
+    public List<ItemBadge> generateAdditionalItemBadgeList(ItemInfoExtraction item) {
+        ItemBadge progressTypeBadge = makeProgressTypeBadge(item.getStartDate(),
+            item.getEndDate());
+        ItemBadge feeTypeBadge = makeFeeTypeBadge(item.getFeeType());
 
         return List.of(progressTypeBadge, feeTypeBadge);
     }

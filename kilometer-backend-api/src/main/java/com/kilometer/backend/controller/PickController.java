@@ -2,8 +2,8 @@ package com.kilometer.backend.controller;
 
 import com.kilometer.backend.security.security.CurrentUser;
 import com.kilometer.backend.security.security.UserPrincipal;
-import com.kilometer.domain.pick.MyPickResponse;
-import com.kilometer.domain.pick.PickResponse;
+import com.kilometer.domain.pick.dto.MyPickResponse;
+import com.kilometer.domain.pick.dto.PickResponse;
 import com.kilometer.domain.pick.PickService;
 import com.kilometer.domain.search.request.SearchRequest;
 import com.kilometer.domain.util.ApiUrlUtils;

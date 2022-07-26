@@ -1,4 +1,4 @@
-package com.kilometer.domain.pick;
+package com.kilometer.domain.pick.dto;
 
 import com.kilometer.domain.paging.ResponsePagingStatus;
 import com.kilometer.domain.search.dto.ListItem;

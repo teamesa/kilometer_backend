@@ -2,6 +2,7 @@ package com.kilometer.domain.search.presentationimage;
 
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.pick.Pick;
+import com.kilometer.domain.search.ItemInfoExtraction;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.time.LocalDate;
 import java.time.Period;
@@ -15,8 +16,7 @@ public class PresentationImageGenerator {
     private static final String DIM_HEX_CODE = "#000";
     private static final Double DIM_OPACITY = 0.55;
 
-
-    public PresentationImage generatePresentationImage(SearchItemResponse item) {
+    public PresentationImage generatePresentationImage(ItemInfoExtraction item) {
         LocalDate now = LocalDate.now();
 
         if (now.isBefore(item.getStartDate())) {
@@ -25,18 +25,6 @@ public class PresentationImageGenerator {
             return makeEndImage(item.getId(), item.getListImageUrl());
         } else {
             return makeOngoingImage(item.getId(), item.getListImageUrl());
-        }
-    }
-
-    public PresentationImage generatePresentationImage(Pick item) {
-        LocalDate now = LocalDate.now();
-
-        if (now.isBefore(item.getPickedItem().getStartDate())) {
-            return makeUpcomingImage(item.getPickedItem().getId(), item.getPickedItem().getListImageUrl(), item.getPickedItem().getStartDate());
-        } else if (now.isAfter(item.getPickedItem().getEndDate())) {
-            return makeEndImage(item.getPickedItem().getId(), item.getPickedItem().getListImageUrl());
-        } else {
-            return makeOngoingImage(item.getPickedItem().getId(), item.getPickedItem().getListImageUrl());
         }
     }
 
