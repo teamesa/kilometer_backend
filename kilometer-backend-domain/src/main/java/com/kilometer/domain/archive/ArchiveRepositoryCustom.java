@@ -16,5 +16,6 @@ public interface ArchiveRepositoryCustom {
     Page<MyArchiveDto> findAllByUserId(Pageable pageable, ArchiveQueryRequest queryRequest);
 
     List<ArchiveDetailDto> findAllByArchiveIdAndUserId(long archiveId, long userId);
+
     Double avgStarRatingByItemId(long itemId);
 }

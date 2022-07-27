@@ -136,7 +136,8 @@ public class ArchiveService {
         List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
             archiveDetailDto.getId());
 
-        return archiveAggregateConverter.convertArchiveDetail(archiveDetailDto, userVisitPlaces, archiveImages);
+        return archiveAggregateConverter.convertArchiveDetail(archiveDetailDto, userVisitPlaces,
+            archiveImages);
     }
 
 

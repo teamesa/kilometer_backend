@@ -13,7 +13,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,7 +31,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<ItemArchiveDto> findAllByItemIdAndUserId(Pageable pageable, ArchiveQueryRequest queryRequest) {
+    public Page<ItemArchiveDto> findAllByItemIdAndUserId(Pageable pageable,
+        ArchiveQueryRequest queryRequest) {
         List<ItemArchiveDto> archives = queryFactory
             .select(Projections.fields(ItemArchiveDto.class,
                     archive.id,
@@ -107,13 +107,13 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     @Override
     public List<ArchiveDetailDto> findAllByArchiveIdAndUserId(long archiveId, long userId) {
         return queryFactory.select(Projections.fields(ArchiveDetailDto.class,
-            archive.id,
-            itemEntity.exhibitionType,
-            archive.updatedAt,
-            itemEntity.title,
-            archive.comment,
-            archive.starRating,
-            user.id.eq(userId).as("isWrited")
+                archive.id,
+                itemEntity.exhibitionType,
+                archive.updatedAt,
+                itemEntity.title,
+                archive.comment,
+                archive.starRating,
+                user.id.eq(userId).as("isWrited")
             ))
             .from(archive)
             .leftJoin(itemEntity)
