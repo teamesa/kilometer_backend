@@ -2,6 +2,8 @@ package com.kilometer.domain.archive;
 
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
+import com.kilometer.domain.archive.dto.ArchiveDetailDto;
+import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveQueryRequest;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
@@ -120,6 +122,23 @@ public class ArchiveService {
             updateArchiveLikeCount(Archive::minusLikeCount, archiveId);
         }
     }
+
+    public ArchiveDetailResponse findByArchiveIdAndUserId(Long archiveId, Long userId) {
+        Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
+        Preconditions.notNull(userId, "User id must not be null : " + userId);
+
+        ArchiveDetailDto archiveDetailDto = archiveRepository.findAllByArchiveIdAndUserId(
+                archiveId, userId).stream().findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Archive does not exist"));
+
+        List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
+            archiveDetailDto.getId());
+        List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
+            archiveDetailDto.getId());
+
+        return archiveAggregateConverter.convertArchiveDetail(archiveDetailDto, userVisitPlaces, archiveImages);
+    }
+
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
         Preconditions.notNull(archiveRequest.getComment(),
