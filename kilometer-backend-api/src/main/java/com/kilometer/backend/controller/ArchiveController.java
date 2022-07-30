@@ -3,6 +3,7 @@ package com.kilometer.backend.controller;
 import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
 
 import com.kilometer.domain.archive.ArchiveService;
+import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
@@ -45,6 +46,14 @@ public class ArchiveController {
             .title(ARCHIVE_TITLE)
             .contents(response)
             .build();
+    }
+
+    @GetMapping(ApiUrlUtils.ARCHIVE_DETAIL)
+    @ApiOperation(value = "상세 아카이브 조회")
+    public ArchiveDetailResponse archive(
+        @ApiParam(value = "조회할 아카이브 ID", required = true) @PathVariable Long archiveId) {
+        Long userId = getLoginUserId();
+        return archiveService.findByArchiveIdAndUserId(archiveId, userId);
     }
 
     @PostMapping
