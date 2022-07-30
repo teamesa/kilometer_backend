@@ -127,8 +127,7 @@ public class ArchiveService {
         Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
         Preconditions.notNull(userId, "User id must not be null : " + userId);
 
-        ArchiveDetailDto archiveDetailDto = archiveRepository.findAllByArchiveIdAndUserId(
-                archiveId, userId).stream().findFirst()
+        ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserId(archiveId, userId)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exist"));
 
         List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(

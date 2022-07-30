@@ -13,6 +13,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -105,8 +106,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public List<ArchiveDetailDto> findAllByArchiveIdAndUserId(long archiveId, long userId) {
-        return queryFactory.select(Projections.fields(ArchiveDetailDto.class,
+    public Optional<ArchiveDetailDto> findByArchiveIdAndUserId(long archiveId, long userId) {
+        return Optional.ofNullable(queryFactory.select(Projections.fields(ArchiveDetailDto.class,
                 archive.id,
                 itemEntity.exhibitionType,
                 archive.updatedAt,
@@ -121,10 +122,9 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .leftJoin(user)
             .on(user.id.eq(archive.user.id))
             .where(
-                archive.id.eq(archiveId),
-                archive.isVisibleAtItem.isTrue()
+                archive.id.eq(archiveId)
             )
-            .fetch();
+            .fetchOne());
     }
 
     @Override

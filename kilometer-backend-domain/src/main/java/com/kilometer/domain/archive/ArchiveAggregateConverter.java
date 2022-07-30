@@ -161,7 +161,7 @@ public class ArchiveAggregateConverter {
         }
 
         return List.of(
-            LinkInfo.of("수정", ApiUrlUtils.ARCHIVE_ROOT),
+            LinkInfo.of("수정", ApiUrlUtils.ARCHIVE_MODIFY),
             LinkInfo.of("삭제", ApiUrlUtils.getArchiveUrl(archiveId)));
 
     }
