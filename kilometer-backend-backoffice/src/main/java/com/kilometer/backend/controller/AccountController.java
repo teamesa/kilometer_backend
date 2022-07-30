@@ -1,5 +1,6 @@
 package com.kilometer.backend.controller;
 
+import com.kilometer.backend.security.AccountPasswordEncoder;
 import com.kilometer.domain.account.Account;
 import com.kilometer.domain.account.AccountRequest;
 import com.kilometer.domain.account.AccountService;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController {
 
     private final AccountService accountService;
+    private final AccountPasswordEncoder accountPasswordEncoder;
 
     @GetMapping("/account/{role}/{username}/{password}")
     public Account createAccount(@ModelAttribute AccountRequest account) {
+        accountPasswordEncoder.encodePassword(account);
         return accountService.save(account);
     }
 
