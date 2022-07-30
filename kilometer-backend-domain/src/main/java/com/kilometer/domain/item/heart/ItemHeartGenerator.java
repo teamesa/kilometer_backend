@@ -1,12 +1,13 @@
 package com.kilometer.domain.item.heart;
 
-import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.search.ItemInfoExtraction;
 import com.kilometer.domain.util.ApiUrlUtils;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ItemHeartGenerator {
-    public ItemHeart generateItemHeart(SearchItemResponse item) {
+
+    public ItemHeart generateItemHeart(ItemInfoExtraction item) {
         return ItemHeart.builder()
                 .id(item.getId())
                 .heartClicked(item.isHearted())

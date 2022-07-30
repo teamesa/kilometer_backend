@@ -1,6 +1,8 @@
 package com.kilometer.domain.search.presentationimage;
 
 import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.pick.Pick;
+import com.kilometer.domain.search.ItemInfoExtraction;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.time.LocalDate;
 import java.time.Period;
@@ -14,8 +16,7 @@ public class PresentationImageGenerator {
     private static final String DIM_HEX_CODE = "#000";
     private static final Double DIM_OPACITY = 0.55;
 
-
-    public PresentationImage generatePresentationImage(SearchItemResponse item) {
+    public PresentationImage generatePresentationImage(ItemInfoExtraction item) {
         LocalDate now = LocalDate.now();
 
         if (now.isBefore(item.getStartDate())) {
