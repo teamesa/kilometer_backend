@@ -1,7 +1,7 @@
 package com.kilometer.backend.security;
 
-import com.kilometer.domain.account.Account;
-import com.kilometer.domain.account.AccountService;
+import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
+import com.kilometer.domain.backOfficeAccount.BackOfficeAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final AccountService accountService;
+    private final BackOfficeAccountService accountService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountService.findByUsername(username);
+        BackOfficeAccount account = accountService.findByUsername(username);
         if (account == null) {
             throw new UsernameNotFoundException(username);
         }

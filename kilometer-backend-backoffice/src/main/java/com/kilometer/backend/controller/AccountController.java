@@ -1,9 +1,9 @@
 package com.kilometer.backend.controller;
 
-import com.kilometer.backend.security.AccountPasswordEncoder;
-import com.kilometer.domain.account.Account;
-import com.kilometer.domain.account.AccountRequest;
-import com.kilometer.domain.account.AccountService;
+import com.kilometer.backend.security.BackOfficeAccountPasswordEncoder;
+import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
+import com.kilometer.domain.backOfficeAccount.BackOfficeAccountRequest;
+import com.kilometer.domain.backOfficeAccount.BackOfficeAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final AccountService accountService;
-    private final AccountPasswordEncoder accountPasswordEncoder;
+    private final BackOfficeAccountService accountService;
+    private final BackOfficeAccountPasswordEncoder accountPasswordEncoder;
 
     @GetMapping("/account/{role}/{username}/{password}")
-    public Account createAccount(@ModelAttribute AccountRequest account) {
+    public BackOfficeAccount createAccount(@ModelAttribute BackOfficeAccountRequest account) {
         accountPasswordEncoder.encodePassword(account);
         return accountService.save(account);
     }

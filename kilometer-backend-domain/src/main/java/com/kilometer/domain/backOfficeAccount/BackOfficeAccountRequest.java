@@ -1,4 +1,4 @@
-package com.kilometer.domain.account;
+package com.kilometer.domain.backOfficeAccount;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountRequest {
+public class BackOfficeAccountRequest {
 
     String username;
     String password;
     String role;
 
-    public Account makeAccount() {
-        return Account.builder()
+    public BackOfficeAccount makeAccount() {
+        return BackOfficeAccount.builder()
                 .username(this.username)
                 .password(this.password)
                 .role(this.role)

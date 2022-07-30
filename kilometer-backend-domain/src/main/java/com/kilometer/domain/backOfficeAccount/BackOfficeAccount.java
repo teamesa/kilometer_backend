@@ -1,4 +1,4 @@
-package com.kilometer.domain.account;
+package com.kilometer.domain.backOfficeAccount;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "account")
-public class Account {
+public class BackOfficeAccount {
 
     @Id
     @GeneratedValue
