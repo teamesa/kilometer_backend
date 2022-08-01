@@ -70,7 +70,6 @@ public class PickService {
     private MyPickResponse convertingItems(Page<Pick> pageablePicks, long pickCount, String query) {
         List<ListItem> items = pageablePicks.stream()
                 .map(PickItemResponse::makePickItemResponse)
-                .collect(Collectors.toList()).stream()
                 .map(listItemAggregateConverter::convert)
                 .collect(Collectors.toList());
 
