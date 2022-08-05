@@ -50,6 +50,7 @@ public class ItemRequest {
     private String introduce;
     @Builder.Default
     private List<String> detailImageUrls = new ArrayList<>();
+    private String regAccount;
 
     public ItemDetail makeItemDetail() {
         return ItemDetail.builder()
@@ -64,7 +65,7 @@ public class ItemRequest {
             .collect(Collectors.toList());
     }
 
-    public ItemEntity makeItemEntity() {
+    public ItemEntity makeItemEntity(String regAccount) {
         return ItemEntity.builder()
             .exhibitionType(this.getExhibitionType())
             .exposureType(this.getExposureType())
@@ -82,6 +83,7 @@ public class ItemRequest {
             .homepageUrl(this.getHomepageUrl())
             .operatingTime(this.getOperatingTime())
             .ticketUrl(this.getTicketUrl())
+            .regAccount(regAccount)
             .build();
     }
 }

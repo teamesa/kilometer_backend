@@ -36,8 +36,8 @@ public class ItemService {
     private final ItemAggregateConverter itemAggregateConverter;
 
     @Transactional
-    public void saveItem(ItemRequest request) {
-        ItemEntity item = saveItemEntity(request);
+    public void saveItem(ItemRequest request, String regAccount) {
+        ItemEntity item = saveItemEntity(request, regAccount);
 
         saveItemDetail(request.makeItemDetail(), item);
 
@@ -63,8 +63,8 @@ public class ItemService {
         itemDetailImageRepository.saveAll(itemDetailImages);
     }
 
-    private ItemEntity saveItemEntity(ItemRequest request) {
-        return itemRepository.save(request.makeItemEntity());
+    private ItemEntity saveItemEntity(ItemRequest request, String regAccount) {
+        return itemRepository.save(request.makeItemEntity(regAccount));
     }
 
     public Page<SearchItemResponse> getItemBySearchOptions(ListQueryRequest queryRequest) {
@@ -117,14 +117,14 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateEditItem(Long itemId, ItemUpdateRequest request) {
+    public void updateEditItem(Long itemId, ItemUpdateRequest request, String udtAccount) {
         Preconditions.notNull(itemId, "id must not be null");
         Preconditions.notNull(request, "item must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id=" + itemId));
 
-        itemEntity.update(request);
+        itemEntity.update(request, udtAccount);
         updateItemDetail(request, itemEntity);
         updateItemDetailImage(request, itemEntity);
     }
