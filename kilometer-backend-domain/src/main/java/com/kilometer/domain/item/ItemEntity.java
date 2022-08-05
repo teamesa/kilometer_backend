@@ -152,7 +152,9 @@ public class ItemEntity {
             .introduce(Optional.ofNullable(this.itemDetail)
                 .map(ItemDetail::getIntroduce)
                 .orElse(""))
+            .regAccount(this.regAccount)
             .createdAt(this.createdAt)
+            .udtAccount(this.udtAccount)
             .updatedAt(this.updatedAt)
             .build();
     }
