@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -66,8 +67,8 @@ public class ItemController {
     }
 
     @PostMapping(BoUrlUtils.ITEM_ADD)
-    public String addItem(@ModelAttribute ItemRequest itemRequest) {
-        itemService.saveItem(itemRequest);
+    public String addItem(@ModelAttribute ItemRequest itemRequest, Principal principal) {
+        itemService.saveItem(itemRequest, principal.getName());
         return "redirect:/form/items";
     }
 
@@ -79,8 +80,9 @@ public class ItemController {
     }
 
     @PostMapping(BoUrlUtils.ITEM_EDIT)
-    public String updateItem(@PathVariable Long itemId, @ModelAttribute ItemUpdateRequest itemUpdateRequest) {
-        itemService.updateEditItem(itemId, itemUpdateRequest);
+    public String updateItem(@PathVariable Long itemId,
+                             @ModelAttribute ItemUpdateRequest itemUpdateRequest, Principal principal) {
+        itemService.updateEditItem(itemId, itemUpdateRequest, principal.getName());
         return "redirect:/form/items";
     }
 
