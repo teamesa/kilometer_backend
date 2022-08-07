@@ -64,7 +64,8 @@ public class ArchiveService {
         Preconditions.notNull(userId, "id must not be null");
         Preconditions.notNull(request.getItemId(), "Item id must not be null");
 
-        Archive archive = findByItemIdAndUserId(userId, request.getItemId());
+        Archive archive = archiveRepository.findByItemIdAndUserId(request.getItemId(), userId)
+            .orElseThrow(() -> new IllegalArgumentException("Archive does not exist."));
 
         archive.update(request);
         updateArchiveImages(request, archive);
@@ -139,6 +140,15 @@ public class ArchiveService {
             archiveImages);
     }
 
+    public Long findArchiveIdByItemIdAndUserId(Long itemId, Long userId) {
+        Preconditions.notNull(itemId, "Archive id must not be null : " + itemId);
+        Preconditions.notNull(userId, "User id must not be null : " + userId);
+
+        return archiveRepository.findByItemIdAndUserId(itemId, userId)
+            .map(Archive::getId)
+            .orElse(null);
+    }
+
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
         Preconditions.notNull(archiveRequest.getComment(),
@@ -181,12 +191,6 @@ public class ArchiveService {
             result = Math.round(result * 10) / 10.0;
         }
         return result;
-    }
-
-    private Archive findByItemIdAndUserId(Long userId, Long itemId) {
-        return archiveRepository.findByItemIdAndUserId(itemId, userId)
-            .orElseThrow(() -> new IllegalArgumentException(
-                "존재하지 않는 요청입니다. itemId : " + itemId + "/ userId : " + userId));
     }
 
     private List<ArchiveInfo> convertArchiveInfos(Page<ItemArchiveDto> items) {
