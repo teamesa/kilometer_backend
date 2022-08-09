@@ -1,4 +1,4 @@
-package com.kilometer.domain.pick;
+package com.kilometer.domain.pick.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

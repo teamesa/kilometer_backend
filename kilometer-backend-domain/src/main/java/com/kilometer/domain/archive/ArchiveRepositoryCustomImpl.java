@@ -1,5 +1,6 @@
 package com.kilometer.domain.archive;
 
+import com.kilometer.domain.archive.dto.ArchiveDetailDto;
 import com.kilometer.domain.archive.dto.ArchiveQueryRequest;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
@@ -12,6 +13,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,7 +32,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<ItemArchiveDto> findAllByItemIdAndUserId(Pageable pageable, ArchiveQueryRequest queryRequest) {
+    public Page<ItemArchiveDto> findAllByItemIdAndUserId(Pageable pageable,
+        ArchiveQueryRequest queryRequest) {
         List<ItemArchiveDto> archives = queryFactory
             .select(Projections.fields(ItemArchiveDto.class,
                     archive.id,
@@ -100,6 +103,28 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .fetch().size();
 
         return new PageImpl<>(archives, pageable, count);
+    }
+
+    @Override
+    public Optional<ArchiveDetailDto> findByArchiveIdAndUserId(long archiveId, long userId) {
+        return Optional.ofNullable(queryFactory.select(Projections.fields(ArchiveDetailDto.class,
+                archive.id,
+                itemEntity.exhibitionType,
+                archive.updatedAt,
+                itemEntity.title,
+                archive.comment,
+                archive.starRating,
+                user.id.eq(userId).as("isWrited")
+            ))
+            .from(archive)
+            .leftJoin(itemEntity)
+            .on(itemEntity.id.eq(archive.item.id))
+            .leftJoin(user)
+            .on(user.id.eq(archive.user.id))
+            .where(
+                archive.id.eq(archiveId)
+            )
+            .fetchOne());
     }
 
     @Override

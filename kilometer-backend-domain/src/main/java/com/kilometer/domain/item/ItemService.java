@@ -1,5 +1,6 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.archive.ArchiveService;
 import com.kilometer.domain.item.dto.DetailResponse;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.ItemInfoResponse;
@@ -34,10 +35,11 @@ public class ItemService {
     private final ItemDetailRepository itemDetailRepository;
     private final ItemDetailImageRepository itemDetailImageRepository;
     private final ItemAggregateConverter itemAggregateConverter;
+    private final ArchiveService archiveService;
 
     @Transactional
-    public void saveItem(ItemRequest request) {
-        ItemEntity item = saveItemEntity(request);
+    public void saveItem(ItemRequest request, String regAccount) {
+        ItemEntity item = saveItemEntity(request, regAccount);
 
         saveItemDetail(request.makeItemDetail(), item);
 
@@ -63,8 +65,8 @@ public class ItemService {
         itemDetailImageRepository.saveAll(itemDetailImages);
     }
 
-    private ItemEntity saveItemEntity(ItemRequest request) {
-        return itemRepository.save(request.makeItemEntity());
+    private ItemEntity saveItemEntity(ItemRequest request, String regAccount) {
+        return itemRepository.save(request.makeItemEntity(regAccount));
     }
 
     public Page<SearchItemResponse> getItemBySearchOptions(ListQueryRequest queryRequest) {
@@ -103,7 +105,9 @@ public class ItemService {
         ItemInfoDto itemInfoDto = itemRepository.findInfoByItemIdAndUserId(itemId, userId)
             .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id = " + itemId));
 
-        return itemAggregateConverter.convert(itemInfoDto);
+        Long archiveId = archiveService.findArchiveIdByItemIdAndUserId(itemId, userId);
+
+        return itemAggregateConverter.convert(itemInfoDto, archiveId);
     }
 
     public DetailResponse getItemDetail(Long itemId) {
@@ -117,14 +121,14 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateEditItem(Long itemId, ItemUpdateRequest request) {
+    public void updateEditItem(Long itemId, ItemUpdateRequest request, String udtAccount) {
         Preconditions.notNull(itemId, "id must not be null");
         Preconditions.notNull(request, "item must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id=" + itemId));
 
-        itemEntity.update(request);
+        itemEntity.update(request, udtAccount);
         updateItemDetail(request, itemEntity);
         updateItemDetailImage(request, itemEntity);
     }
@@ -185,12 +189,13 @@ public class ItemService {
         updateAndDoFunction(ItemEntity::minusPickCount, itemId);
     }
 
-    private void updateAndDoFunction(Function<ItemEntity, ItemEntity> itemEntityItemEntityFunction, long itemId) {
+    private void updateAndDoFunction(Function<ItemEntity, ItemEntity> itemEntityItemEntityFunction,
+        long itemId) {
         Function<Long, ItemResponse> generated = it -> itemRepository.findById(it)
-                .map(itemEntityItemEntityFunction)
-                .map(itemRepository::save)
-                .map(ItemEntity::makeResponse)
-                .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + it));
+            .map(itemEntityItemEntityFunction)
+            .map(itemRepository::save)
+            .map(ItemEntity::makeResponse)
+            .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + it));
         generated.apply(itemId);
     }
 }

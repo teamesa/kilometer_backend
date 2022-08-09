@@ -54,6 +54,8 @@ public class ItemResponse {
     private String operatingTime;
     private String ticketUrl;
     private int itemPickCount;
+    private String regAccount;
+    private String udtAccount;
 
     // ItemDetail & DetailImage
     private String introduce;

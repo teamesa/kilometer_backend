@@ -24,7 +24,7 @@ public class ItemInfoDto {
     private String price;
     private String ticketUrl;
     private String operatingTime;
-    private String homePageUrl;
+    private String homepageUrl;
     private int pickCount;
     private boolean isHeart;
 }

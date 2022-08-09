@@ -93,6 +93,9 @@ public class ItemEntity {
     @Builder.Default
     private int pickCount = 0;
 
+    private String regAccount;
+    private String udtAccount;
+
     @OneToOne(mappedBy = "item", fetch = FetchType.LAZY)
     private ItemDetail itemDetail;
 
@@ -100,7 +103,7 @@ public class ItemEntity {
     @Builder.Default
     private List<ItemDetailImage> itemDetailImages = new ArrayList<>();
 
-    public void update(ItemUpdateRequest item) {
+    public void update(ItemUpdateRequest item, String udtAccount) {
         this.exhibitionType = item.getExhibitionType();
         this.exposureType = item.getExposureType();
         this.listImageUrl = item.getListImageUrl();
@@ -118,6 +121,7 @@ public class ItemEntity {
         this.operatingTime = item.getOperatingTime();
         this.ticketUrl = item.getTicketUrl();
         this.updatedAt = LocalDateTime.now();
+        this.udtAccount = udtAccount;
     }
 
     public ItemResponse makeResponse() {
@@ -148,7 +152,9 @@ public class ItemEntity {
             .introduce(Optional.ofNullable(this.itemDetail)
                 .map(ItemDetail::getIntroduce)
                 .orElse(""))
+            .regAccount(this.regAccount)
             .createdAt(this.createdAt)
+            .udtAccount(this.udtAccount)
             .updatedAt(this.updatedAt)
             .build();
     }
