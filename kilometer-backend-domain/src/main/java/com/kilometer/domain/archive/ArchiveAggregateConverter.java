@@ -16,6 +16,7 @@ import com.kilometer.domain.like.dto.ArchiveLikeGenerator;
 import com.kilometer.domain.linkInfo.LinkInfo;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
+import com.kilometer.domain.util.FrontUrlUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -161,7 +162,7 @@ public class ArchiveAggregateConverter {
         }
 
         return List.of(
-            LinkInfo.of("수정", ApiUrlUtils.ARCHIVE_MODIFY),
+            LinkInfo.of("수정", FrontUrlUtils.getFrontModifyUrl(archiveId)),
             LinkInfo.of("삭제", ApiUrlUtils.getArchiveUrl(archiveId)));
 
     }
