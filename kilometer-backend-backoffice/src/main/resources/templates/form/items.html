@@ -37,16 +37,16 @@
         <table class="listBoard1" id="itemList">
             <colgroup>
                 <col width="3%">
-                <col width="3%">
                 <col width="10%">
-                <col width="12%">
-                <col width="12%">
-                <col width="15%">
+                <col width="7%">
+                <col width="*">
                 <col width="10%">
                 <col width="10%">
-                <col width="15%">
-                <col width="5%">
-                <col width="5%">
+                <col width="7%">
+                <col width="7%">
+                <col width="10%">
+                <col width="7%">
+                <col width="10%">
             </colgroup>
             <thead class="listBoard2">
             <tr>
@@ -57,7 +57,9 @@
                 <th>시작일</th>
                 <th>종료일</th>
                 <th>입장료</th>
+                <th>등록자</th>
                 <th>등록일시</th>
+                <th>최종수정자</th>
                 <th>최종수정일시</th>
             </tr>
             </thead>
@@ -70,7 +72,9 @@
                 <td th:text="${item.getStartDate()}"></td>
                 <td th:text="${item.getEndDate()}"></td>
                 <td th:text="${item.feeType.description}"></td>
+                <td th:text="${item.getRegAccount()}"></td>
                 <td th:text="${item.getCreatedAt()}"></td>
+                <td th:text="${item.getUdtAccount()}"></td>
                 <td th:text="${item.getUpdatedAt()}"></td>
             </tr>
             </tbody>

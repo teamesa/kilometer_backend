@@ -14,7 +14,7 @@
 
 <!-- wrap : s -->
 <div id="wrap">
-    <form action="/form/items/add" th:object="${item}" method="post" enctype="multipart/form-data">
+    <form action="/form/items/add" th:action th:object="${item}" method="post" enctype="multipart/form-data">
         <table class="tg">
             <colgroup>
                 <col width="10%">
