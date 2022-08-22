@@ -34,19 +34,21 @@ public class PickService {
         User pickedUser = User.builder().id(userId).build();
 
         Pick pick = pickRepository.getPickByPickedUserAndPickedItem(pickedUser, pickedItem)
-                .map(it -> it.changeIsHearted(status))
                 .orElse(
                         Pick.builder()
-                                .isHearted(status)
+                                .isHearted(false)
                                 .pickedItem(pickedItem)
                                 .pickedUser(pickedUser)
                                 .build()
                 );
 
-        if (status) {
-            itemService.plusItemPickCount(itemId);
-        } else {
-            itemService.minusItemPickCount(itemId);
+        if(pick.isHearted() != status) {
+            pick.changeIsHearted(status);
+            if (status) {
+                itemService.plusItemPickCount(itemId);
+            } else {
+                itemService.minusItemPickCount(itemId);
+            }
         }
 
         return PickResponse.builder()
