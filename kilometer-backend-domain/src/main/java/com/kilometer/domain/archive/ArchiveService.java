@@ -81,8 +81,9 @@ public class ArchiveService {
         Archive archive = archiveRepository.findById(archiveId)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exists."));
 
-        if(!userId.equals(archive.getUser().getId()))
+        if (!userId.equals(archive.getUser().getId())) {
             throw new IllegalAccessException("Archives can only be deleted by the writer.");
+        }
 
         archiveImageService.deleteAll(archive.getArchiveImages());
         userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
@@ -143,7 +144,8 @@ public class ArchiveService {
         Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
         Preconditions.notNull(userId, "User id must not be null : " + userId);
 
-        ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserId(archiveId, userId)
+        ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserId(archiveId,
+                userId)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exist"));
 
         List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
