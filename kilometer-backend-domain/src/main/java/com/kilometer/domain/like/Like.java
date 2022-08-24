@@ -14,16 +14,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
 @Builder
+@Where(clause = "isDeleted=false")
+@SQLDelete(sql = "UPDATE archive_like SET isDeleted=true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "archive_like")
 public class Like {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Builder.Default
@@ -35,12 +40,15 @@ public class Like {
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @Builder.Default
+    private boolean isDeleted = false;
+
     @ManyToOne
-    @JoinColumn(name="likedUser")
+    @JoinColumn(name = "likedUser")
     private User likedUser;
 
     @ManyToOne
-    @JoinColumn(name="likedArchive")
+    @JoinColumn(name = "likedArchive")
     private Archive likedArchive;
 
     public Like changeIsLiked(boolean status) {

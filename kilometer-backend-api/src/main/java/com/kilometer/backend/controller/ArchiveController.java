@@ -10,6 +10,7 @@ import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.dto.GeneralResponse;
+import com.kilometer.domain.like.LikeService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.util.ApiUrlUtils;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,7 @@ public class ArchiveController {
 
     private final static String ARCHIVE_TITLE = "아카이브";
     private final ArchiveService archiveService;
+    private final LikeService likeService;
 
     @GetMapping(ApiUrlUtils.ITEM_ID)
     @ApiOperation(value = "전시글에서 아카이브 조회")
@@ -76,6 +78,7 @@ public class ArchiveController {
         @ApiParam(value = "삭제할 아카이브 아이디", required = true) @PathVariable Long archiveId)
         throws IllegalAccessException {
         Long userId = getLoginUserId();
+        likeService.deleteAll(archiveId);
         archiveService.delete(userId, archiveId);
     }
 

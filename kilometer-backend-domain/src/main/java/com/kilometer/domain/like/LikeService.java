@@ -43,4 +43,11 @@ public class LikeService {
             .content(like.isLiked())
             .build();
     }
+
+    @Transactional
+    public void deleteAll(Long archiveId) {
+        Preconditions.notNull(archiveId, "Archive id must not be null");
+        Archive archive = Archive.builder().id(archiveId).build();
+        likeRepository.deleteAllByLikedArchive(archive);
+    }
 }
