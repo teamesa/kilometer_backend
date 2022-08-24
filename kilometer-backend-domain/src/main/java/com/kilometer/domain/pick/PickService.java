@@ -42,8 +42,14 @@ public class PickService {
                     .pickedUser(pickedUser)
                     .build());
 
-        if(isAlreadyPicked(pick, nextPickedStatus))
+        if(!isAlreadyPicked(pick, nextPickedStatus)) {
             pick.changeIsHearted(nextPickedStatus);
+            if (nextPickedStatus) {
+                itemService.plusItemPickCount(itemId);
+            } else {
+                itemService.minusItemPickCount(itemId);
+            }
+        }
 
         return PickResponse.builder()
             .content(pickRepository.save(pick).isHearted())
@@ -81,15 +87,6 @@ public class PickService {
     }
 
     private boolean isAlreadyPicked(Pick pick, boolean nextPickedStatus) {
-        if (pick.isHearted() == nextPickedStatus) {
-            return false;
-        }
-        Long itemId = pick.getPickedItem().getId();
-        if (nextPickedStatus) {
-            itemService.plusItemPickCount(itemId);
-        } else {
-            itemService.minusItemPickCount(itemId);
-        }
-        return true;
+        return pick.isHearted() == nextPickedStatus;
     }
 }
