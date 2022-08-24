@@ -40,34 +40,24 @@ public class PickService {
                     .isHearted(false)
                     .pickedItem(pickedItem)
                     .pickedUser(pickedUser)
-                    .build()
-            );
+                    .build());
 
-        if (pick.isHearted() == nextPickedStatus) {
-            return PickResponse.builder()
-                .content(pick.isHearted())
-                .build();
-        }
-
-        pick.changeIsHearted(nextPickedStatus);
-        if (nextPickedStatus) {
-            itemService.plusItemPickCount(itemId);
-        } else {
-            itemService.minusItemPickCount(itemId);
-        }
+        if(isAlreadyPicked(pick, nextPickedStatus))
+            pick.changeIsHearted(nextPickedStatus);
 
         return PickResponse.builder()
             .content(pickRepository.save(pick).isHearted())
             .build();
     }
 
+
     public MyPickResponse getMyPick(SearchRequest searchRequest, long userId) {
         Preconditions.notNull(searchRequest,
             String.format("this service can not be run will null object, please check this, %s",
                 searchRequest));
         Preconditions.notNull(searchRequest.getRequestPagingStatus(),
-            String.format("this service can not be run will null object, please check this, %s",
-                searchRequest));
+        String.format("this service can not be run will null object, please check this, %s",
+        searchRequest));
 
         User pickedUser = User.builder().id(userId).build();
         Pageable pageable = pagingStatusService.makePageable(searchRequest);
@@ -77,7 +67,6 @@ public class PickService {
 
         return convertingItems(pageablePicks, pickCount, searchRequest.getQueryString());
     }
-
     private MyPickResponse convertingItems(Page<Pick> pageablePicks, long pickCount, String query) {
         List<ListItem> items = pageablePicks.stream()
             .map(PickItemResponse::makePickItemResponse)
@@ -89,5 +78,18 @@ public class PickService {
             .contents(items)
             .responsePagingStatus(pagingStatusService.convert(pageablePicks, query))
             .build();
+    }
+
+    private boolean isAlreadyPicked(Pick pick, boolean nextPickedStatus) {
+        if (pick.isHearted() == nextPickedStatus) {
+            return false;
+        }
+        Long itemId = pick.getPickedItem().getId();
+        if (nextPickedStatus) {
+            itemService.plusItemPickCount(itemId);
+        } else {
+            itemService.minusItemPickCount(itemId);
+        }
+        return true;
     }
 }
