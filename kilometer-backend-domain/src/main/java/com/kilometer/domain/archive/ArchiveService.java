@@ -74,6 +74,21 @@ public class ArchiveService {
         return archiveAggregateConverter.convertArchiveInfo(archive);
     }
 
+    @Transactional
+    public void delete(Long userId, Long archiveId) throws IllegalAccessException {
+        Preconditions.notNull(archiveId, "id must not be null");
+
+        Archive archive = archiveRepository.findById(archiveId)
+            .orElseThrow(() -> new IllegalArgumentException("Archive does not exists."));
+
+        if(!userId.equals(archive.getUser().getId()))
+            throw new IllegalAccessException("Archives can only be deleted by the writer.");
+
+        archiveImageService.deleteAll(archive.getArchiveImages());
+        userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
+        archiveRepository.delete(archive);
+    }
+
     public ArchiveResponse findAllByItemIdAndUserId(Long itemId, Long userId,
         RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
         Preconditions.notNull(itemId, "id must not be null");
