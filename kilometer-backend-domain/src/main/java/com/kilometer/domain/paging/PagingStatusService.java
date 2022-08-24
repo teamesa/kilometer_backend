@@ -1,6 +1,7 @@
 package com.kilometer.domain.paging;
 
 import com.kilometer.domain.archive.dto.ArchiveSortType;
+import com.kilometer.domain.pick.dto.PickSortType;
 import com.kilometer.domain.search.request.SearchRequest;
 import com.kilometer.domain.search.request.SearchSortType;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,17 @@ public class PagingStatusService {
                 .build();
     }
 
+    public ResponsePagingStatus convert(Page page) {
+        return ResponsePagingStatus.builder()
+                .currentPage(page.getNumber())
+                .totalContentsCount(page.getTotalElements())
+                .currentContentsCount(getCurrentContentsCount(page))
+                .pageSize(page.getNumber())
+                .nextPage(getNextPage(page))
+                .hasNext(page.hasNext())
+                .build();
+    }
+
     public Pageable makePageable(SearchRequest searchRequest) {
         int page = Optional.ofNullable(searchRequest)
                 .map(SearchRequest::getRequestPagingStatus)
@@ -50,16 +62,24 @@ public class PagingStatusService {
     }
 
     public Pageable makePageable(RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
-        int page = Optional.ofNullable(requestPagingStatus)
-                .map(RequestPagingStatus::getPageNumber)
-                .orElse(DEFAULT_PAGE_NUMBER);
+        int page = getPage(requestPagingStatus);
 
-        int size = Optional.ofNullable(requestPagingStatus)
-                .map(RequestPagingStatus::getPageSize)
-                .orElse(DEFAULT_PAGE_SIZE);
+        int size = getSize(requestPagingStatus);
 
         Sort sort = Optional.ofNullable(sortType)
                 .map(ArchiveSortType::getArchiveSortOption)
+                .orElse(DEFAULT_SORT_OPTION);
+
+        return PageRequest.of(page, size, sort);
+    }
+
+    public Pageable makePageable(RequestPagingStatus requestPagingStatus, PickSortType sortType) {
+        int page = getPage(requestPagingStatus);
+
+        int size = getSize(requestPagingStatus);
+
+        Sort sort = Optional.ofNullable(sortType)
+                .map(PickSortType::getPickSortOption)
                 .orElse(DEFAULT_SORT_OPTION);
 
         return PageRequest.of(page, size, sort);
@@ -79,5 +99,17 @@ public class PagingStatusService {
         } else {
             return HAS_NOT_NEXT_PAGE_NUMBER;
         }
+    }
+
+    private Integer getPage(RequestPagingStatus requestPagingStatus) {
+        return Optional.ofNullable(requestPagingStatus)
+                .map(RequestPagingStatus::getPageNumber)
+                .orElse(DEFAULT_PAGE_NUMBER);
+    }
+
+    private Integer getSize(RequestPagingStatus requestPagingStatus) {
+        return Optional.ofNullable(requestPagingStatus)
+                .map(RequestPagingStatus::getPageSize)
+                .orElse(DEFAULT_PAGE_SIZE);
     }
 }

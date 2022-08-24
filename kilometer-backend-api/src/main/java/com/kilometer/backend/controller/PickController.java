@@ -32,7 +32,6 @@ public class PickController {
         return pickService.makePickStatus(itemId, userPrincipal.getId(), status);
     }
 
-    @PreAuthorize("hasRole('USER')")
     @PostMapping
     @ApiOperation(value = "Pick 정보 API")
     public MyPickResponse getMyPick(@RequestBody PickRequest pickRequest) {
