@@ -42,13 +42,17 @@ public class PickService {
                     .pickedUser(pickedUser)
                     .build());
 
-        if(!isAlreadyPicked(pick, nextPickedStatus)) {
-            pick.changeIsHearted(nextPickedStatus);
-            if (nextPickedStatus) {
-                itemService.plusItemPickCount(itemId);
-            } else {
-                itemService.minusItemPickCount(itemId);
-            }
+        if(isAlreadyPicked(pick, nextPickedStatus)) {
+            return PickResponse.builder()
+                .content(pick.isHearted())
+                .build();
+        }
+
+        pick.changeIsHearted(nextPickedStatus);
+        if (nextPickedStatus) {
+            itemService.plusItemPickCount(itemId);
+        } else {
+            itemService.minusItemPickCount(itemId);
         }
 
         return PickResponse.builder()
