@@ -1,7 +1,6 @@
 package com.kilometer.domain.paging;
 
 import com.kilometer.domain.archive.dto.ArchiveSortType;
-import com.kilometer.domain.pick.dto.PickSortType;
 import com.kilometer.domain.search.request.SearchRequest;
 import com.kilometer.domain.search.request.SearchSortType;
 import org.springframework.data.domain.Page;
@@ -73,16 +72,12 @@ public class PagingStatusService {
         return PageRequest.of(page, size, sort);
     }
 
-    public Pageable makePageable(RequestPagingStatus requestPagingStatus, PickSortType sortType) {
+    public Pageable makePageable(RequestPagingStatus requestPagingStatus) {
         int page = getPage(requestPagingStatus);
 
         int size = getSize(requestPagingStatus);
 
-        Sort sort = Optional.ofNullable(sortType)
-                .map(PickSortType::getPickSortOption)
-                .orElse(DEFAULT_SORT_OPTION);
-
-        return PageRequest.of(page, size, sort);
+        return PageRequest.of(page, size);
     }
 
     private int getCurrentContentsCount(Page page) {
