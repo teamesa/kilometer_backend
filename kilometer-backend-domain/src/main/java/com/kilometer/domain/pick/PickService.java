@@ -69,7 +69,7 @@ public class PickService {
         User pickedUser = User.builder().id(userId).build();
         Pageable pageable = pagingStatusService.makePageable(pickRequest.getRequestPagingStatus());
 
-        Page<Pick> pageablePicks = pickRepository.findByPickedUserOrderByUpdatedAt(pickedUser, pageable);
+        Page<Pick> pageablePicks = pickRepository.findByPickedUserOrderByUpdatedAtDesc(pickedUser, pageable);
         long pickCount = pageablePicks.getTotalElements();
 
         return convertingItems(pageablePicks, pickCount);
