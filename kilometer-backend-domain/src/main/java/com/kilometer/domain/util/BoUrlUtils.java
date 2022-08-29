@@ -3,6 +3,7 @@ package com.kilometer.domain.util;
 public class BoUrlUtils {
 
     private static final String ROOT = "/form";
+    private static final String HOME_ROOT = "/home";
 
     public static final String ITEM_ROOT = ROOT + "/items";
     public static final String ITEM_ID = "/{itemId}";
@@ -14,4 +15,10 @@ public class BoUrlUtils {
     public static final String IMAGE_ROOT = ROOT + "/image";
     public static final String IMAGE_DEFAULT = "/default";
     public static final String IMAGE_LIST = "/list";
+
+    public static final String KEY_VISUAL = HOME_ROOT + "/key_visual";
+    public static final String KEY_VISUAL_EDIT = KEY_VISUAL + "/edit";
+
+    public static final String IMAGE_SWIPE = HOME_ROOT + "/image_swipe";
+    public static final String IMAGE_SWIPE_EDIT = IMAGE_SWIPE + "/edit";
 }

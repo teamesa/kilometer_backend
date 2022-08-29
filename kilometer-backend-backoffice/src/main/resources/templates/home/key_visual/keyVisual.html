@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>KeyVisual</title>
+    <link rel="stylesheet" href="../../static/css/menu.css" th:href="@{/css/menu.css}">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+
+<div>
+    <div th:replace="~{fragment/menu :: menu}"></div>
+
+    <h2>KeyVisual 관리</h2>
+
+    <br>
+
+    <form action="/home/key_visual/edit" th:action="@{/home/key_visual/edit}" method="get">
+        <button type="submit" class="button">수정</button>
+    </form>
+
+    <br>
+
+    <div>최종 수정자 : , 최종 수정일 : </div>
+
+    <div>
+        안녕하세요~ key visual
+    </div>
+</div>
+
+</body>
+</html>
