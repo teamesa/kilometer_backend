@@ -84,6 +84,7 @@ public class ItemRequest {
             .operatingTime(this.getOperatingTime())
             .ticketUrl(this.getTicketUrl())
             .regAccount(regAccount)
+            .udtAccount(regAccount)
             .build();
     }
 }

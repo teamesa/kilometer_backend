@@ -180,6 +180,7 @@
                             <input type="file" id="inputDetailImage[0]" data-index="0" @change="detailImageS3Upload">
                             <button type="button" @click="addFile"> 추가</button>
                             <button type="button" onclick="removeFile(this)"> 삭제</button>
+                            <div id="detailPreview[0]"></div>
                         </div>
                     </div>
                 </td>
@@ -202,6 +203,8 @@
         if (prevTag === 'BUTTON') {
             const file = $(elem).prevAll('input[type="file"]');
             file.val('');
+            const preview = $('#detailPreview\\[0\\]');
+            preview.empty();
             return false;
         }
         const target = $(elem).parents('div[data-name="fileDiv"]');
