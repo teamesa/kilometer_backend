@@ -5,10 +5,10 @@ import com.kilometer.domain.item.ItemService;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.pick.dto.MyPickResponse;
 import com.kilometer.domain.pick.dto.PickItemResponse;
+import com.kilometer.domain.pick.dto.PickRequest;
 import com.kilometer.domain.pick.dto.PickResponse;
 import com.kilometer.domain.search.ListItemAggregateConverter;
 import com.kilometer.domain.search.dto.ListItem;
-import com.kilometer.domain.search.request.SearchRequest;
 import com.kilometer.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -60,24 +60,22 @@ public class PickService {
             .build();
     }
 
-
-    public MyPickResponse getMyPick(SearchRequest searchRequest, long userId) {
-        Preconditions.notNull(searchRequest,
-            String.format("this service can not be run will null object, please check this, %s",
-                searchRequest));
-        Preconditions.notNull(searchRequest.getRequestPagingStatus(),
-        String.format("this service can not be run will null object, please check this, %s",
-        searchRequest));
+    public MyPickResponse getMyPicks(PickRequest pickRequest, long userId) {
+        Preconditions.notNull(pickRequest,
+                String.format("this service can not be run will null object, please check this, %s", pickRequest));
+        Preconditions.notNull(pickRequest.getRequestPagingStatus(),
+                String.format("this service can not be run will null object, please check this, %s", pickRequest));
 
         User pickedUser = User.builder().id(userId).build();
-        Pageable pageable = pagingStatusService.makePageable(searchRequest);
+        Pageable pageable = pagingStatusService.makePageable(pickRequest.getRequestPagingStatus());
 
-        Page<Pick> pageablePicks = pickRepository.findByPickedUser(pickedUser, pageable);
+        Page<Pick> pageablePicks = pickRepository.findByPickedUserOrderByUpdatedAtDesc(pickedUser, pageable);
         long pickCount = pageablePicks.getTotalElements();
 
-        return convertingItems(pageablePicks, pickCount, searchRequest.getQueryString());
+        return convertingItems(pageablePicks, pickCount);
     }
-    private MyPickResponse convertingItems(Page<Pick> pageablePicks, long pickCount, String query) {
+
+    private MyPickResponse convertingItems(Page<Pick> pageablePicks, long pickCount) {
         List<ListItem> items = pageablePicks.stream()
             .map(PickItemResponse::makePickItemResponse)
             .map(listItemAggregateConverter::convert)
@@ -86,7 +84,7 @@ public class PickService {
         return MyPickResponse.builder()
             .count(pickCount)
             .contents(items)
-            .responsePagingStatus(pagingStatusService.convert(pageablePicks, query))
+            .responsePagingStatus(pagingStatusService.convert(pageablePicks))
             .build();
     }
 

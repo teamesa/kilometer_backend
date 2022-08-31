@@ -26,5 +26,5 @@ public class ItemInfoDto {
     private String operatingTime;
     private String homepageUrl;
     private int pickCount;
-    private boolean isHeart;
+    private boolean isHearted;
 }
