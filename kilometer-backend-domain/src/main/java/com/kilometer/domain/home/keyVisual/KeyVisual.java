@@ -1,6 +1,7 @@
 package com.kilometer.domain.home.keyVisual;
 
 import com.kilometer.domain.home.keyVisual.dto.KeyVisualResponse;
+import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,23 +27,32 @@ public class KeyVisual {
     private Long id;
 
     private String imageUrl;
-    private String title;
-    private String subtitle;
-    private String homepageUrl;
+    private String upperTitle;
+    private String lowerTitle;
+    private String linkUrl;
 
-    private String updateAccount;
+    private String createdAccount;
     @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public KeyVisualResponse makeResponse() {
         return KeyVisualResponse.builder()
                 .id(this.id)
                 .imageUrl(this.imageUrl)
-                .title(this.title)
-                .subtitle(this.subtitle)
-                .homepageUrl(this.homepageUrl)
-                .updateAccount(this.updateAccount)
-                .updateAt(this.updatedAt)
+                .upperTitle(this.upperTitle)
+                .lowerTitle(this.lowerTitle)
+                .linkUrl(this.linkUrl)
+                .createdAccount(this.createdAccount)
+                .createdAt(this.createdAt)
                 .build();
+    }
+
+    public void update(KeyVisualUpdateResponse keyVisualUpdateResponse, String createdAccount) {
+        this.imageUrl = keyVisualUpdateResponse.getImageUrl();
+        this.upperTitle = keyVisualUpdateResponse.getUpperTitle();
+        this.lowerTitle = keyVisualUpdateResponse.getLowerTitle();
+        this.linkUrl = keyVisualUpdateResponse.getLinkUrl();
+        this.createdAccount = createdAccount;
+        this.createdAt = LocalDateTime.now();
     }
 }
