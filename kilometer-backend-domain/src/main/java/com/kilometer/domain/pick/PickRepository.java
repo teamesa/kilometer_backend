@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface PickRepository extends JpaRepository<Pick, Long> {
     Optional<Pick> getPickByPickedUserAndPickedItem(User user, ItemEntity itemEntity);
 
-    Page<Pick> findByPickedUserOrderByUpdatedAtDesc(User user, Pageable pageable);
+    Page<Pick> findByPickedUserAndIsHeartedOrderByUpdatedAtDesc(User user, boolean isHearted, Pageable pageable);
 }
