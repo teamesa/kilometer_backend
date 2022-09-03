@@ -1,11 +1,12 @@
 package com.kilometer.domain.like;
 
 import com.kilometer.domain.archive.Archive;
-import com.kilometer.domain.archive.ArchiveService;
+import com.kilometer.domain.archive.service.ArchiveService;
 import com.kilometer.domain.like.dto.LikeResponse;
 import com.kilometer.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LikeService {
 
     private final LikeRepository likeRepository;
+    @Autowired
     private final ArchiveService archiveService;
 
     @Transactional

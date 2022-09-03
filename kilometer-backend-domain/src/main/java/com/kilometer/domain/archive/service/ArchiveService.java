@@ -1,5 +1,8 @@
-package com.kilometer.domain.archive;
+package com.kilometer.domain.archive.service;
 
+import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveAggregateConverter;
+import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.dto.ArchiveDetailDto;
@@ -16,6 +19,7 @@ import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
+import com.kilometer.domain.like.LikeService;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
@@ -28,6 +32,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,6 +49,8 @@ public class ArchiveService {
     private final UserVisitPlaceService userVisitPlaceService;
     private final PagingStatusService pagingStatusService;
     private final ArchiveAggregateConverter archiveAggregateConverter;
+    @Autowired
+    private final LikeService likeService;
 
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
@@ -72,22 +79,6 @@ public class ArchiveService {
         updateUserVisitPlace(request, archive);
 
         return archiveAggregateConverter.convertArchiveInfo(archive);
-    }
-
-    @Transactional
-    public void delete(Long userId, Long archiveId) throws IllegalAccessException {
-        Preconditions.notNull(archiveId, "id must not be null");
-
-        Archive archive = archiveRepository.findById(archiveId)
-            .orElseThrow(() -> new IllegalArgumentException("Archive does not exists."));
-
-        if (!userId.equals(archive.getUser().getId())) {
-            throw new IllegalAccessException("Archives can only be deleted by the writer.");
-        }
-
-        archiveImageService.deleteAll(archive.getArchiveImages());
-        userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
-        archiveRepository.delete(archive);
     }
 
     public ArchiveResponse findAllByItemIdAndUserId(Long itemId, Long userId,
