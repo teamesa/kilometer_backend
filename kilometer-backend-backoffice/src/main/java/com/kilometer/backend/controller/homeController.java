@@ -24,14 +24,14 @@ public class homeController {
 
     @GetMapping(BoUrlUtils.KEY_VISUAL)
     public String keyVisual(Model model) {
-        List<KeyVisualResponse> keyVisualList = homeService.findAll();
+        List<KeyVisualResponse> keyVisualList = homeService.findAllByKeyVisual();
         model.addAttribute("keyVisualList", keyVisualList);
         return "home/key_visual/keyVisual";
     }
 
     @GetMapping(BoUrlUtils.KEY_VISUAL_EDIT)
     public String getKeyVisual(Model model) {
-        List<KeyVisualResponse> keyVisualList = homeService.findAll();
+        List<KeyVisualResponse> keyVisualList = homeService.findAllByKeyVisual();
         model.addAttribute("keyVisualList", keyVisualList);
         return "home/key_visual/updateKeyVisual";
     }
@@ -41,20 +41,5 @@ public class homeController {
                                   Principal principal) {
         homeService.updateKeyVisual(keyVisualUpdateResponseList.getKeyVisualList(), principal.getName());
         return "redirect:/home/key_visual";
-    }
-
-    @GetMapping(BoUrlUtils.IMAGE_SWIPE)
-    public String imageSwipe(Model model) {
-        return "home/image_swipe/imageSwipe";
-    }
-
-    @GetMapping(BoUrlUtils.IMAGE_SWIPE_EDIT)
-    public String getImageSwipe(Model model) {
-        return "home/image_swipe/updateImageSwipe";
-    }
-
-    @PostMapping(BoUrlUtils.IMAGE_SWIPE_EDIT)
-    public String updateImageSwipe(Model model) {
-        return "redirect:/home/image_swipe";
     }
 }

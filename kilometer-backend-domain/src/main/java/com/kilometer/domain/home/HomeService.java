@@ -19,7 +19,7 @@ public class HomeService {
 
     private final KeyVisualRepository keyVisualRepository;
 
-    public List<KeyVisualResponse> findAll() {
+    public List<KeyVisualResponse> findAllByKeyVisual() {
         return keyVisualRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
                 .map(KeyVisual::makeResponse)
                 .collect(Collectors.toList());
