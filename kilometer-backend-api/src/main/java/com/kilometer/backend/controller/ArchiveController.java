@@ -11,7 +11,7 @@ import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.dto.GeneralResponse;
-import com.kilometer.domain.like.LikeService;
+import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.util.ApiUrlUtils;
 import io.swagger.annotations.ApiOperation;

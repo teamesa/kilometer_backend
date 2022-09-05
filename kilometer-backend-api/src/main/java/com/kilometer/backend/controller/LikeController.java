@@ -2,11 +2,10 @@ package com.kilometer.backend.controller;
 
 import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
 
-import com.kilometer.domain.like.LikeService;
-import com.kilometer.domain.like.dto.LikeResponse;
+import com.kilometer.domain.archive.like.LikeService;
+import com.kilometer.domain.archive.like.dto.LikeResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

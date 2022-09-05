@@ -1,4 +1,4 @@
-package com.kilometer.domain.like;
+package com.kilometer.domain.archive.like;
 
 import com.kilometer.domain.archive.Archive;
 import com.kilometer.domain.user.User;

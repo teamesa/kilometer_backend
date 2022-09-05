@@ -1,8 +1,8 @@
-package com.kilometer.domain.like;
+package com.kilometer.domain.archive.like;
 
 import com.kilometer.domain.archive.Archive;
 import com.kilometer.domain.archive.service.ArchiveService;
-import com.kilometer.domain.like.dto.LikeResponse;
+import com.kilometer.domain.archive.like.dto.LikeResponse;
 import com.kilometer.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
