@@ -1,8 +1,5 @@
-package com.kilometer.domain.archive.service;
+package com.kilometer.domain.archive;
 
-import com.kilometer.domain.archive.Archive;
-import com.kilometer.domain.archive.ArchiveAggregateConverter;
-import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.dto.ArchiveDetailDto;
@@ -15,11 +12,11 @@ import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
+import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
-import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
@@ -32,7 +29,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -49,7 +45,6 @@ public class ArchiveService {
     private final UserVisitPlaceService userVisitPlaceService;
     private final PagingStatusService pagingStatusService;
     private final ArchiveAggregateConverter archiveAggregateConverter;
-    @Autowired
     private final LikeService likeService;
 
     @Transactional
@@ -157,6 +152,27 @@ public class ArchiveService {
             .orElse(null);
     }
 
+    @Transactional
+    public void delete(Long archiveId, Long userId) throws IllegalAccessException {
+        Preconditions.notNull(archiveId, "id must not be null");
+
+        Archive archive = archiveRepository.findById(archiveId)
+            .orElseThrow(() -> new IllegalArgumentException("Archive does not exists."));
+
+        if (!userId.equals(archive.getUser().getId())) {
+            throw new IllegalAccessException("Archives can only be deleted by the writer.");
+        }
+
+        // archive liked delete all
+        likeService.deleteAll(archiveId);
+
+        // archive image delete all
+        archiveImageService.deleteAll(archive.getArchiveImages());
+        userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
+
+        // delete archive
+        archiveRepository.delete(archive);
+    }
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
         Preconditions.notNull(archiveRequest.getComment(),

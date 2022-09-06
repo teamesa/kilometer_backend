@@ -1,6 +1,6 @@
 package com.kilometer.domain.item;
 
-import com.kilometer.domain.archive.service.ArchiveService;
+import com.kilometer.domain.archive.ArchiveService;
 import com.kilometer.domain.item.dto.DetailResponse;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.ItemInfoResponse;
