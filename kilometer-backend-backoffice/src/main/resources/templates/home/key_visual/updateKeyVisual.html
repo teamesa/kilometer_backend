@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>KeyVisual</title>
+    <link rel="stylesheet" href="../../../static/css/table.css" th:href="@{/css/table.css}">
+    <link rel="stylesheet" href="../../../static/css/form.css" th:href="@{/css/form.css}">
+    <link rel="stylesheet" href="../../../static/css/buttons.css" th:href="@{/css/buttons.css}">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<!-- wrap : s -->
+<div id="wrap">
+    <form action="" th:action method="post" enctype="multipart/form-data">
+        <table class="tg">
+            <colgroup>
+                <col width="*%">
+                <col width="23%">
+                <col width="23%">
+                <col width="23%">
+                <col width="23%">
+            </colgroup>
+            <thead>
+            <tr>
+                <th class="mainTitle mainTitleForm" colspan="5">
+                    <h2>키비주얼 관리</h2>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="subTitle">순번</td>
+                <td class="subTitle">이미지</td>
+                <td class="subTitle">타이틀1</td>
+                <td class="subTitle">타이틀2</td>
+                <td class="subTitle">URL</td>
+            </tr>
+            <tr th:each="keyVisual, keyVisualStat : ${keyVisualList}">
+                <td th:text="${keyVisual.id}"></td>
+                <input type="hidden"
+                       th:name="keyVisualList[__${keyVisualStat.index}__].id"
+                       th:value="${keyVisual.id}">
+                <td>
+                    <input type="text"
+                           th:name="keyVisualList[__${keyVisualStat.index}__].imageUrl"
+                           th:value="${keyVisual.imageUrl}">
+                </td>
+                <td>
+                    <input type="text"
+                           th:name="keyVisualList[__${keyVisualStat.index}__].upperTitle"
+                           th:value="${keyVisual.upperTitle}">
+                </td>
+                <td>
+                    <input type="text"
+                           th:name="keyVisualList[__${keyVisualStat.index}__].lowerTitle"
+                           th:value="${keyVisual.lowerTitle}">
+                </td>
+                <td>
+                    <input type="text"
+                           th:name="keyVisualList[__${keyVisualStat.index}__].linkUrl"
+                           th:value="${keyVisual.linkUrl}">
+                </td>
+            </tr>
+            <tr>
+                <td class="mainTitle centerDiv1" colspan="5">
+                    <div class="centerDiv2"><button type="submit" class="button">저장</button></div>
+                    <div class="centerDiv2"><button type="button" onclick="location.href='keyVisual.html'"
+                                                    th:onclick="|location.href='@{/home/key_visual}'|" class="button">취소</button></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+</body>
+</html>

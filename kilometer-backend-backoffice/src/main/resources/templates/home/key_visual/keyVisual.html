@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>KeyVisual</title>
+    <link rel="stylesheet" href="../../../static/css/buttons.css" th:href="@{/css/buttons.css}">
+    <link rel="stylesheet" href="../../../static/css/lists.css" th:href="@{/css/lists.css}">
+    <link rel="stylesheet" href="../../../static/css/menu.css" th:href="@{/css/menu.css}">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+
+<div>
+    <div th:replace="~{fragment/menu :: menu}"></div>
+
+    <h2>KeyVisual 관리</h2>
+
+    <br>
+
+    <form action="/home/key_visual/edit" th:action="@{/home/key_visual/edit}" method="get">
+        <button type="submit" class="button">수정</button>
+    </form>
+
+    <br>
+
+    <div>최종수정자 :
+        <span th:text="${keyVisualList[0].createdAccount}"></span>
+        , 최종수정일시 :
+        <span th:text="${keyVisualList[0].createdAt}"></span>
+    </div>
+
+    <br>
+
+    <div>
+        <table class="listBoard1" id="itemList">
+            <colgroup>
+                <col width="10%">
+                <col width="20%">
+                <col width="25%">
+                <col width="25%">
+                <col width="*">
+            </colgroup>
+            <thead class="listBoard2">
+            <tr>
+                <th>순번</th>
+                <th>이미지</th>
+                <th>타이틀1</th>
+                <th>타이틀2</th>
+                <th>URL</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="keyVisual : ${keyVisualList}">
+                <td th:text="${keyVisual.id}"></td>
+                <td><img src="" th:src="${keyVisual.imageUrl}" width=100 height=100 alt="이미지 없음"></td>
+                <td th:text="${keyVisual.upperTitle}"></td>
+                <td th:text="${keyVisual.lowerTitle}"></td>
+                <td th:text="${keyVisual.linkUrl}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
