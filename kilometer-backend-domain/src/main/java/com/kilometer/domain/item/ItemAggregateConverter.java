@@ -46,7 +46,7 @@ public class ItemAggregateConverter {
                 ItemInfoAdditionalInfo.builder()
                     .heartCount(itemInfoDto.getPickCount())
                     .heart(itemHeartGenerator.generateItemHeart(itemInfoDto.getId(),
-                        itemInfoDto.isHeart()))
+                        itemInfoDto.isHearted()))
                     .archiveLink(archiveLink)
                     .build())
             .build();
