@@ -1,0 +1,1 @@
+ALTER TABLE archive_like add isDeleted TINYINT(1) NOT NULL DEFAULT FALSE
