@@ -52,7 +52,12 @@
             <tbody>
             <tr th:each="keyVisual : ${keyVisualList}">
                 <td th:text="${keyVisual.id}"></td>
-                <td><img src="" th:src="${keyVisual.imageUrl}" width=100 height=100 alt="이미지 없음"></td>
+                <td>
+                    <img src=""
+                         th:src="${keyVisual.imageUrl}"
+                         th:if="${not #strings.isEmpty(keyVisual.imageUrl)}"
+                         width=100 height=100 alt="이미지 없음">
+                </td>
                 <td th:text="${keyVisual.upperTitle}"></td>
                 <td th:text="${keyVisual.lowerTitle}"></td>
                 <td th:text="${keyVisual.linkUrl}"></td>
