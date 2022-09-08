@@ -56,6 +56,11 @@
                              th:src="*{keyVisual.imageUrl}"
                              th:if="${not #strings.isEmpty(keyVisual.imageUrl)}">
                     </div>
+                    <button type="button"
+                            th:id="keyVisualDeleteIndex__${keyVisualStat.index}__"
+                            @click="keyVisualImageDelete">
+                        삭제
+                    </button>
                 </td>
                 <td>
                     <input type="text"

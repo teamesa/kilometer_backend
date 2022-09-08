@@ -111,5 +111,13 @@ var appVue = new Vue({
                 $('#keyVisual' + index).val(this.keyVisualImageUrl);
             })
         },
+
+        keyVisualImageDelete: function (event) {
+            let index = Number(event.target.id.substring(20));
+            let $input = $("#keyVisualIndex\\[" + index + "\\]");
+            let $preview = $('#keyVisualImage\\[' + index + '\\]');
+            let $listImageUrl = $("#keyVisual" + index);
+            this.resetInputFile($input, $preview, $listImageUrl);
+        },
     }
 })
