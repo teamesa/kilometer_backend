@@ -89,5 +89,12 @@ public class ArchiveController {
             ArchiveSortType.MODIFY_DESC);
     }
 
+    @PutMapping(ApiUrlUtils.ARCHIVE_LIKE_BY_ID)
+    public LikeResponse makeLikeResponse(@PathVariable Long archiveId,
+        @RequestParam boolean status) {
+        Long userId = getLoginUserId();
+        return archiveService.like(archiveId, userId, status);
+    }
+
 
 }
