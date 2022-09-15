@@ -5,11 +5,14 @@
     <title>Document</title>
     <link rel="stylesheet" href="../../static/css/buttons.css" th:href="@{/css/buttons.css}">
     <link rel="stylesheet" href="../../static/css/lists.css" th:href="@{/css/lists.css}">
+    <link rel="stylesheet" href="../../static/css/menu.css" th:href="@{/css/menu.css}">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
 
 <div>
+    <div th:replace="~{fragment/menu :: menu}"></div>
+
     <h2>문화생활 관리</h2>
 
     <br>
@@ -36,7 +39,7 @@
     <div>
         <table class="listBoard1" id="itemList">
             <colgroup>
-                <col width="3%">
+                <col width="4%">
                 <col width="10%">
                 <col width="7%">
                 <col width="*">

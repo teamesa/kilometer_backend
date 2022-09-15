@@ -74,6 +74,7 @@ var appVue = new Vue({
                 }
             }).then(function (response) {
                 this.detailImageUrl = response.data;
+                $('#detailPreview\\[' + index + '\\]').html("<img style=\"width: 100px; height: 100px;\" src=" + this.detailImageUrl + ">");
                 $('#detailImageUrls\\[' + index + '\\]').val(this.detailImageUrl);
             })
         },
@@ -86,6 +87,7 @@ var appVue = new Vue({
             <input type="hidden" id="detailImageUrls[${this.fileIndex}]" name="detailImageUrls[${this.fileIndex}]">
             <input type="file" id="inputDetailImage[${this.fileIndex}]" data-index="${this.fileIndex}">
             <button type="button" onclick="removeFile(this)"> 삭제 </button>
+            <div id="detailPreview[${this.fileIndex}]"></div>
         </div>
 	`;
             $('#btnDiv').append(fileHtml);
