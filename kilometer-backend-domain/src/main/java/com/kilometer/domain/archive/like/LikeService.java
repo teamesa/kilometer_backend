@@ -25,7 +25,7 @@ public class LikeService {
         User likedUser = User.builder().id(userId).build();
 
         return LikeDto.of(likeRepository.findByLikedArchiveAndLikedUser(likedArchive, likedUser)
-            .orElse(newLike(likedArchive, likedUser)));
+            .orElseGet(() -> newLike(likedArchive, likedUser)));
     }
 
     @Transactional
@@ -41,8 +41,12 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeDto updateLikeStatus(boolean status, Long likeId) {
-        Like like = Like.builder().id(likeId).isLiked(status).build();
+    public LikeDto updateLikeStatus(boolean status, Long likeId, Long archiveId, Long userId) {
+        Archive likedArchive = Archive.builder().id(archiveId).build();
+        User likedUser = User.builder().id(userId).build();
+
+        Like like = Like.builder().id(likeId).isLiked(status).likedArchive(likedArchive)
+            .likedUser(likedUser).build();
         return LikeDto.of(likeRepository.save(like));
     }
 }

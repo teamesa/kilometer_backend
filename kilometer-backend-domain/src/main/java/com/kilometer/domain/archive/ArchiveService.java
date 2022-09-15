@@ -149,7 +149,7 @@ public class ArchiveService {
 
         if (status != archiveLike.isLiked()) {
             updateArchiveLikeCount(status, archiveId);
-            likeService.updateLikeStatus(status, archiveLike.getId());
+            likeService.updateLikeStatus(status, archiveLike.getId(), archiveId, userId);
         }
         return LikeResponse.builder().content(status).build();
     }
