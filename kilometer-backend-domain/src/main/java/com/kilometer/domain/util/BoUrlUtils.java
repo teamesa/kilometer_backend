@@ -19,6 +19,6 @@ public class BoUrlUtils {
     public static final String KEY_VISUAL = HOME_ROOT + "/key_visual";
     public static final String KEY_VISUAL_EDIT = KEY_VISUAL + "/edit";
 
-    public static final String IMAGE_SWIPE = HOME_ROOT + "/image_swipe";
-    public static final String IMAGE_SWIPE_EDIT = IMAGE_SWIPE + "/edit";
+    public static final String HOME_MODULES = HOME_ROOT + "/modules";
+    public static final String HOME_MODULES_EDIT = HOME_MODULES + "/edit";
 }

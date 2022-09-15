@@ -4,6 +4,10 @@ import com.kilometer.domain.home.keyVisual.KeyVisual;
 import com.kilometer.domain.home.keyVisual.KeyVisualRepository;
 import com.kilometer.domain.home.keyVisual.dto.KeyVisualResponse;
 import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponse;
+import com.kilometer.domain.homeModules.Module;
+import com.kilometer.domain.homeModules.ModuleRepository;
+import com.kilometer.domain.homeModules.dto.ModuleResponse;
+import com.kilometer.domain.homeModules.dto.ModuleUpdateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 public class HomeService {
 
     private final KeyVisualRepository keyVisualRepository;
+    private final ModuleRepository moduleRepository;
 
     public List<KeyVisualResponse> findAllByKeyVisual() {
         return keyVisualRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
@@ -36,5 +41,16 @@ public class HomeService {
                     return keyVisual;
                 }).collect(Collectors.toList());
         keyVisualRepository.saveAll(keyVisuals);
+    }
+
+    public List<ModuleResponse> findAllByModule() {
+        return moduleRepository.findAll(Sort.by(Sort.Direction.ASC, "exposureOrderNumber")).stream()
+                        .map(Module::makeResponse)
+                        .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateModule(List<ModuleUpdateResponse> moduleList, String createdAccount) {
+
     }
 }

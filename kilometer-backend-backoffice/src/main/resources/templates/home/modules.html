@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Module</title>
+    <link rel="stylesheet" href="../../static/css/buttons.css" th:href="@{/css/buttons.css}">
+    <link rel="stylesheet" href="../../static/css/lists.css" th:href="@{/css/lists.css}">
+    <link rel="stylesheet" href="../../static/css/menu.css" th:href="@{/css/menu.css}">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+
+<div>
+    <div th:replace="~{fragment/menu :: menu}"></div>
+
+    <h2>Module 관리</h2>
+
+    <br>
+
+    <form action="/home/modules/edit" th:action="@{/home/modules/edit}" method="get">
+        <button type="submit" class="button">수정</button>
+    </form>
+
+    <br>
+
+    <div>최종수정자 :
+        <span th:if="${moduleList.size() != 0}"
+              th:text="${moduleList[0].createdAccount}">
+        </span>
+        , 최종수정일시 :
+        <span th:if="${moduleList.size() != 0}"
+              th:text="${moduleList[0].createdAt}">
+        </span>
+    </div>
+
+    <br>
+
+    <div>
+        <table class="listBoard1">
+            <colgroup>
+                <col width="10%">
+                <col width="20%">
+                <col width="25%">
+                <col width="25%">
+                <col width="*">
+            </colgroup>
+            <thead class="listBoard2">
+            <tr>
+                <th>모듈 순서</th>
+                <th>모듈 이름</th>
+                <th>타이틀1</th>
+                <th>타이틀2</th>
+                <th>추가 데이터</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${moduleList}">
+                <td th:text="${m.exposureOrderNumber}"></td>
+                <td th:text="${m.moduleName}"></td>
+                <td th:text="${m.upperModuleTitle}"></td>
+                <td th:text="${m.lowerModuleTitle}"></td>
+                <td th:text="${m.extraData}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

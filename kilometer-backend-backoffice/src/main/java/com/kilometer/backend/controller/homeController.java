@@ -3,6 +3,8 @@ package com.kilometer.backend.controller;
 import com.kilometer.domain.home.HomeService;
 import com.kilometer.domain.home.keyVisual.dto.KeyVisualResponse;
 import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponseList;
+import com.kilometer.domain.homeModules.dto.ModuleResponse;
+import com.kilometer.domain.homeModules.dto.ModuleUpdateResponseList;
 import com.kilometer.domain.util.BoUrlUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,5 +43,26 @@ public class homeController {
                                   Principal principal) {
         homeService.updateKeyVisual(keyVisualUpdateResponseList.getKeyVisualList(), principal.getName());
         return "redirect:/home/key_visual";
+    }
+
+    @GetMapping(BoUrlUtils.HOME_MODULES)
+    public String modules(Model model) {
+        List<ModuleResponse> moduleList = homeService.findAllByModule();
+        model.addAttribute("moduleList", moduleList);
+        return "home/modules";
+    }
+
+    @GetMapping(BoUrlUtils.HOME_MODULES_EDIT)
+    public String getModules(Model model) {
+        List<ModuleResponse> moduleList = homeService.findAllByModule();
+        model.addAttribute("moduleList", moduleList);
+        return "home/updateModules";
+    }
+
+    @PostMapping(BoUrlUtils.HOME_MODULES_EDIT)
+    public String updateModules(@ModelAttribute ModuleUpdateResponseList moduleUpdateResponseList,
+                                Principal principal) {
+        homeService.updateModule(moduleUpdateResponseList.getModuleList(), principal.getName());
+        return "redirect:/home/modules";
     }
 }
