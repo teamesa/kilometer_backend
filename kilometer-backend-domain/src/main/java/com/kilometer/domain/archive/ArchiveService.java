@@ -132,14 +132,11 @@ public class ArchiveService {
             throw new IllegalAccessException("Archives can only be deleted by the writer.");
         }
 
-        // archive liked delete all
         likeService.deleteAll(archiveId);
 
-        // archive image delete all
         archiveImageService.deleteAll(archive.getArchiveImages());
         userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
 
-        // delete archive
         archiveRepository.delete(archive);
     }
 
