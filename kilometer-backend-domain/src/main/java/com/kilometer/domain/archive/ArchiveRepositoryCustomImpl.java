@@ -6,7 +6,7 @@ import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.item.QItemEntity;
-import com.kilometer.domain.like.QLike;
+import com.kilometer.domain.archive.like.QLike;
 import com.kilometer.domain.user.QUser;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
