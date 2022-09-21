@@ -71,7 +71,9 @@
                 </td>
                 <td>
                     <div>
-                        <button type="button" class="button" onclick="removeRow(this)">삭제</button>
+                        <button type="button" class="button"
+                                th:id="moduleList[__${moduleStat.index}__]"
+                                onclick="removeRow(this)">삭제</button>
                     </div>
                 </td>
             </tr>
@@ -132,7 +134,7 @@
 
         let newCell6 = newRow.insertCell(5);
         let element6 = document.createElement('div');
-        element6.innerHTML = '<button type="button" class="button" onclick="removeRow(this)">삭제</button>';
+        element6.innerHTML = `<button type="button" class="button" id="moduleList[${index}]" onclick="removeRow(this)">삭제</button>`;
         newCell6.appendChild(element6);
 
         index++;
@@ -141,6 +143,20 @@
     function removeRow(elem) {
         let currentRow = $(elem).parent().parent().parent().index();
         $('#moduleTable')[0].deleteRow(currentRow + 1);
+        appendHiddenInput(elem);
+    }
+
+    function appendHiddenInput(elem) {
+        let currentIndex = Number($(elem).attr("id").substring(11, 12));
+        let tagName = $(elem).parent().parent().parent().children().first().prop('tagName');
+        if (tagName === 'INPUT') {
+            let moduleId = $(elem).parent().parent().parent().children().first().val();
+            let input = document.createElement('input');
+            input.type = "hidden";
+            input.name = "moduleList[" + currentIndex + "].id";
+            input.value = moduleId;
+            $('#moduleTable').append(input);
+        }
     }
 </script>
 
