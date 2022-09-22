@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Getter
 @Entity
@@ -53,7 +54,9 @@ public class Module {
                 .upperModuleTitle(this.upperModuleTitle)
                 .lowerModuleTitle(this.lowerModuleTitle)
                 .extraData(this.extraData)
-                .createdAccount(this.account.getUsername())
+                .createdAccount(Optional.ofNullable(this.account)
+                        .map(BackOfficeAccount::getUsername)
+                        .orElse(""))
                 .createdAt(this.createdAt)
                 .build();
     }
