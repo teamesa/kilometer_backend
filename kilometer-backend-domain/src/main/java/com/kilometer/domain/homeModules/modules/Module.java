@@ -1,4 +1,4 @@
-package com.kilometer.domain.homeModules;
+package com.kilometer.domain.homeModules.modules;
 
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
 import java.time.LocalDateTime;

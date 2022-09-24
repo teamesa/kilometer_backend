@@ -1,7 +1,7 @@
-package com.kilometer.domain.home.keyVisual;
+package com.kilometer.domain.homeModules.keyVisual;
 
-import com.kilometer.domain.home.keyVisual.dto.KeyVisualResponse;
-import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponse;
+import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualResponse;
+import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualUpdateResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

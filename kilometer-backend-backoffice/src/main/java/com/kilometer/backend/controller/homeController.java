@@ -1,8 +1,8 @@
 package com.kilometer.backend.controller;
 
-import com.kilometer.domain.home.HomeService;
-import com.kilometer.domain.home.keyVisual.dto.KeyVisualResponse;
-import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponseList;
+import com.kilometer.domain.homeModules.HomeModuleService;
+import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualResponse;
+import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualUpdateResponseList;
 import com.kilometer.domain.util.BoUrlUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,18 +20,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class homeController {
 
-    private final HomeService homeService;
+    private final HomeModuleService homeModuleService;
 
     @GetMapping(BoUrlUtils.KEY_VISUAL)
     public String keyVisual(Model model) {
-        List<KeyVisualResponse> keyVisualList = homeService.findAllByKeyVisual();
+        List<KeyVisualResponse> keyVisualList = homeModuleService.findAllByKeyVisual();
         model.addAttribute("keyVisualList", keyVisualList);
         return "home/key_visual/keyVisual";
     }
 
     @GetMapping(BoUrlUtils.KEY_VISUAL_EDIT)
     public String getKeyVisual(Model model) {
-        List<KeyVisualResponse> keyVisualList = homeService.findAllByKeyVisual();
+        List<KeyVisualResponse> keyVisualList = homeModuleService.findAllByKeyVisual();
         model.addAttribute("keyVisualList", keyVisualList);
         return "home/key_visual/updateKeyVisual";
     }
@@ -39,7 +39,7 @@ public class homeController {
     @PostMapping(BoUrlUtils.KEY_VISUAL_EDIT)
     public String updateKeyVisual(@ModelAttribute KeyVisualUpdateResponseList keyVisualUpdateResponseList,
                                   Principal principal) {
-        homeService.updateKeyVisual(keyVisualUpdateResponseList.getKeyVisualList(), principal.getName());
+        homeModuleService.updateKeyVisual(keyVisualUpdateResponseList.getKeyVisualList(), principal.getName());
         return "redirect:/home/key_visual";
     }
 }
