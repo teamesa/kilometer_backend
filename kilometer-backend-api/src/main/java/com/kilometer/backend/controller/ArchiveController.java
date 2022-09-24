@@ -8,6 +8,7 @@ import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
+import com.kilometer.domain.archive.like.dto.LikeResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.dto.GeneralResponse;
 import com.kilometer.domain.paging.RequestPagingStatus;
@@ -15,6 +16,7 @@ import com.kilometer.domain.util.ApiUrlUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,6 +72,14 @@ public class ArchiveController {
         return archiveService.update(userId, request);
     }
 
+    @DeleteMapping(ApiUrlUtils.ARCHIVE_ID)
+    public void deleteArchive(
+        @ApiParam(value = "삭제할 아카이브 아이디", required = true) @PathVariable Long archiveId)
+        throws IllegalAccessException {
+        Long userId = getLoginUserId();
+        archiveService.delete(archiveId, userId);
+    }
+
 
     @PostMapping(ApiUrlUtils.ARCHIVE_MY)
     public MyArchiveResponse myArchives(
@@ -77,6 +87,13 @@ public class ArchiveController {
         Long userId = getLoginUserId();
         return archiveService.findAllByUserId(userId, requestPagingStatus,
             ArchiveSortType.MODIFY_DESC);
+    }
+
+    @PutMapping(ApiUrlUtils.ARCHIVE_LIKE_BY_ID)
+    public LikeResponse makeLikeResponse(@PathVariable Long archiveId,
+        @RequestParam boolean status) {
+        Long userId = getLoginUserId();
+        return archiveService.like(archiveId, userId, status);
     }
 
 

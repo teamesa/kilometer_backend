@@ -44,24 +44,41 @@
                        th:name="keyVisualList[__${keyVisualStat.index}__].id"
                        th:value="${keyVisual.id}">
                 <td>
-                    <input type="text"
+                    <input type="hidden"
+                           th:id="keyVisual__${keyVisualStat.index}__"
                            th:name="keyVisualList[__${keyVisualStat.index}__].imageUrl"
                            th:value="${keyVisual.imageUrl}">
+                    <input type="file"
+                           th:id="keyVisualIndex__${keyVisualStat.index}__"
+                           @change="keyVisualImageS3Upload">
+                    <div th:id="keyVisualImage[__${keyVisualStat.index}__]">
+                        <img style="width: 100px; height: 100px;"
+                             th:src="*{keyVisual.imageUrl}"
+                             th:if="${not #strings.isEmpty(keyVisual.imageUrl)}">
+                    </div>
+                    <button type="button"
+                            th:id="keyVisualDeleteIndex__${keyVisualStat.index}__"
+                            @click="keyVisualImageDelete">
+                        삭제
+                    </button>
                 </td>
                 <td>
                     <input type="text"
                            th:name="keyVisualList[__${keyVisualStat.index}__].upperTitle"
-                           th:value="${keyVisual.upperTitle}">
+                           th:value="${keyVisual.upperTitle}"
+                           style="width: 100%;">
                 </td>
                 <td>
                     <input type="text"
                            th:name="keyVisualList[__${keyVisualStat.index}__].lowerTitle"
-                           th:value="${keyVisual.lowerTitle}">
+                           th:value="${keyVisual.lowerTitle}"
+                           style="width: 100%;">
                 </td>
                 <td>
                     <input type="text"
                            th:name="keyVisualList[__${keyVisualStat.index}__].linkUrl"
-                           th:value="${keyVisual.linkUrl}">
+                           th:value="${keyVisual.linkUrl}"
+                           style="width: 100%;">
                 </td>
             </tr>
             <tr>
@@ -75,5 +92,8 @@
         </table>
     </form>
 </div>
+
+<script src="../../../static/js/image.js" th:src="@{/js/image.js}"></script>
+
 </body>
 </html>

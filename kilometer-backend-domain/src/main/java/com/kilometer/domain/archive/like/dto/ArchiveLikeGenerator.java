@@ -1,4 +1,4 @@
-package com.kilometer.domain.like.dto;
+package com.kilometer.domain.archive.like.dto;
 
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.util.ApiUrlUtils;

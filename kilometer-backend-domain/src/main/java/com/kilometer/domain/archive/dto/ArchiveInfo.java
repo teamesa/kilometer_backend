@@ -1,7 +1,7 @@
 package com.kilometer.domain.archive.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kilometer.domain.like.dto.ArchiveLike;
+import com.kilometer.domain.archive.like.dto.ArchiveLike;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
