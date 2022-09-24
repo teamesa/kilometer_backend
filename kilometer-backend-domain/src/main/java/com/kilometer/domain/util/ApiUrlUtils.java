@@ -15,6 +15,9 @@ public class ApiUrlUtils {
     public static final String ARCHIVE_MY = "/my";
     public static final String ARCHIVE_DETAIL = "/detail" + ARCHIVE_ID;
     public static final String ARCHIVE_MODIFY = ARCHIVE_ROOT;
+    public static final String ARCHIVE_LIKE_ROOT = ARCHIVE_ROOT + "/like";
+    public static final String ARCHIVE_LIKE_BY_ID = ARCHIVE_LIKE_ROOT + ARCHIVE_ID;
+    public static final String LIKE_ITEM_PATTERN = ARCHIVE_LIKE_ROOT + "/%s";
     public static final String ARCHIVE_PATTERN = ARCHIVE_ROOT + "/%s";
 
     public static final String IMAGE_ROOT = ROOT + "/image";
@@ -23,9 +26,6 @@ public class ApiUrlUtils {
     public static final String ITEM_INFO = "/info" + ITEM_ID;
     public static final String ITEM_DETAIL = "/detail" + ITEM_ID;
 
-    public static final String LIKE_ROOT = ROOT + "/like";
-    public static final String LIKE_ARCHIVE = "/{archiveId}";
-    public static final String LIKE_ITEM_PATTERN = LIKE_ROOT + "/%s";
 
     public static final String USER_ME = "/me";
     public static final String USER_PROFILE = "/profile";

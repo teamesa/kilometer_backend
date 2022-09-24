@@ -12,6 +12,10 @@ import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
+import com.kilometer.domain.archive.like.Like;
+import com.kilometer.domain.archive.like.LikeService;
+import com.kilometer.domain.archive.like.dto.LikeDto;
+import com.kilometer.domain.archive.like.dto.LikeResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
@@ -44,6 +48,7 @@ public class ArchiveService {
     private final UserVisitPlaceService userVisitPlaceService;
     private final PagingStatusService pagingStatusService;
     private final ArchiveAggregateConverter archiveAggregateConverter;
+    private final LikeService likeService;
 
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
@@ -116,19 +121,42 @@ public class ArchiveService {
         return convertingMyArchiveResponse(responsePagingStatus, myArchiveInfos, title);
     }
 
-    public void updateArchiveLikeCount(boolean status, Long archiveId) {
-        if (status) {
-            updateArchiveLikeCount(Archive::plusLikeCount, archiveId);
-        } else {
-            updateArchiveLikeCount(Archive::minusLikeCount, archiveId);
+    @Transactional
+    public void delete(Long archiveId, Long userId) throws IllegalAccessException {
+        Preconditions.notNull(archiveId, "id must not be null");
+
+        Archive archive = archiveRepository.findById(archiveId)
+            .orElseThrow(() -> new IllegalArgumentException("Archive does not exists."));
+
+        if (!userId.equals(archive.getUser().getId())) {
+            throw new IllegalAccessException("Archives can only be deleted by the writer.");
         }
+
+        likeService.deleteAll(archiveId);
+
+        archiveImageService.deleteAll(archive.getArchiveImages());
+        userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
+
+        archiveRepository.delete(archive);
+    }
+
+    @Transactional
+    public LikeResponse like(Long archiveId, Long userId, boolean status) {
+        LikeDto archiveLike = likeService.findByArchiveIdAndUserId(archiveId, userId);
+
+        if (status != archiveLike.isLiked()) {
+            updateArchiveLikeCount(status, archiveId);
+            likeService.updateLikeStatus(status, archiveLike.getId(), archiveId, userId);
+        }
+        return LikeResponse.builder().content(status).build();
     }
 
     public ArchiveDetailResponse findByArchiveIdAndUserId(Long archiveId, Long userId) {
         Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
         Preconditions.notNull(userId, "User id must not be null : " + userId);
 
-        ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserId(archiveId, userId)
+        ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserId(archiveId,
+                userId)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exist"));
 
         List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
@@ -183,6 +211,14 @@ public class ArchiveService {
     private void updateUserVisitPlace(ArchiveRequest archiveRequest, Archive archive) {
         userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
         userVisitPlaceService.saveAll(archiveRequest, archive);
+    }
+
+    private void updateArchiveLikeCount(boolean status, Long archiveId) {
+        if (status) {
+            updateArchiveLikeCount(Archive::plusLikeCount, archiveId);
+        } else {
+            updateArchiveLikeCount(Archive::minusLikeCount, archiveId);
+        }
     }
 
     private Double getStarRatingAvgByItemId(Long itemId) {

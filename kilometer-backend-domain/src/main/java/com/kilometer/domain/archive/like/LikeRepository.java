@@ -1,4 +1,4 @@
-package com.kilometer.domain.like;
+package com.kilometer.domain.archive.like;
 
 import com.kilometer.domain.archive.Archive;
 import com.kilometer.domain.user.User;
@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface LikeRepository extends JpaRepository<Like,Long> {
 
     Optional<Like> findByLikedArchiveAndLikedUser(Archive archiveId, User userId);
+
+    void deleteAllByLikedArchive(Archive likedArchive);
 }
