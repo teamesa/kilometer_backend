@@ -5,8 +5,8 @@ import com.kilometer.domain.archive.dto.ArchiveQueryRequest;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
-import com.kilometer.domain.item.QItemEntity;
 import com.kilometer.domain.archive.like.QLike;
+import com.kilometer.domain.item.QItemEntity;
 import com.kilometer.domain.user.QUser;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -64,7 +64,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .select(archive.id)
             .from(archive)
             .where(
-                archive.item.id.eq(queryRequest.getItemId())
+                archive.item.id.eq(queryRequest.getItemId()),
+                archive.isVisibleAtItem.eq(true)
             )
             .fetch().size();
 
@@ -122,7 +123,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .leftJoin(user)
             .on(user.id.eq(archive.user.id))
             .where(
-                archive.id.eq(archiveId)
+                archive.id.eq(archiveId),
+                archive.isVisibleAtItem.eq(true)
             )
             .fetchOne());
     }
@@ -135,7 +137,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             )
             .from(archive)
             .where(
-                archive.item.id.eq(itemId)
+                archive.item.id.eq(itemId),
+                archive.isVisibleAtItem.eq(true)
             )
             .fetchOne();
     }
