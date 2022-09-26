@@ -17,6 +17,6 @@ public class HomeController {
 
     @GetMapping
     public HomeApiResponse homeApi() {
-        return moduleService.home();
+        return moduleService.getHomeModules();
     }
 }

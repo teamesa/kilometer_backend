@@ -1,19 +1,15 @@
 package com.kilometer.domain.homeModules;
 
-import com.kilometer.domain.homeModules.keyVisual.KeyVisual;
-import com.kilometer.domain.homeModules.keyVisual.KeyVisualRepository;
 import com.kilometer.domain.homeModules.keyVisual.KeyVisualService;
 import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualDataDto;
 import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualResponse;
 import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualUpdateResponse;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,9 +19,9 @@ public class HomeModuleService {
     private static final String KEY_VISUAL_MODULE_NAME = "keyVisual";
     private final KeyVisualService keyVisualService;
 
-    public HomeApiResponse home() {
+    public HomeApiResponse getHomeModules() {
         List<ModuleDto> modules = new ArrayList<>();
-        modules.add(new ModuleDto<>(KEY_VISUAL_MODULE_NAME, 0, keyVisual()));
+        modules.add(ModuleDto.of(KEY_VISUAL_MODULE_NAME, 0, keyVisual()));
         return HomeApiResponse.from(modules);
     }
 
