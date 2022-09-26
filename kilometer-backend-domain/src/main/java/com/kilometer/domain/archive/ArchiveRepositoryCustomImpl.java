@@ -99,8 +99,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .select(archive.id)
             .from(archive)
             .where(
-                archive.user.id.eq(queryRequest.getUserId()),
-                archive.isVisibleAtItem.eq(true)
+                archive.user.id.eq(queryRequest.getUserId())
             )
             .fetch().size();
 
