@@ -21,7 +21,7 @@ public class ItemAggregateConverter {
         if (archiveId != null) {
             archiveLink = LinkInfo.of(
                 FrontUrlUtils.getFrontModifyTitle(),
-                FrontUrlUtils.getFrontModifyUrl(archiveId));
+                FrontUrlUtils.getFrontModifyArchiveWithId(archiveId));
         } else {
             archiveLink = LinkInfo.of(
                 FrontUrlUtils.getFrontCreateTitle(),
