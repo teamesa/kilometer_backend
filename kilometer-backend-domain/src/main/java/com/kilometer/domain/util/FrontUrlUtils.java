@@ -28,7 +28,11 @@ public class FrontUrlUtils {
         return FRONT_MY_ARCHIVE_TITLE;
     }
 
-    public static String getFrontModifyUrl(Long archiveId) {
+    public static String getFrontModifyArchive() {
+        return String.format("%s",FRONT_MODIFY_URL);
+    }
+
+    public static String getFrontModifyArchiveWithId(Long archiveId) {
         return String.format("%s?id=%d",FRONT_MODIFY_URL,archiveId);
     }
 
