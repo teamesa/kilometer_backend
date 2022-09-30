@@ -3,13 +3,17 @@ package com.kilometer.backend.controller;
 import com.kilometer.domain.home.HomeService;
 import com.kilometer.domain.home.keyVisual.dto.KeyVisualResponse;
 import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponseList;
+import com.kilometer.domain.homeModules.ModuleValidator;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
-import com.kilometer.domain.homeModules.dto.ModuleUpdateResponseList;
+import com.kilometer.domain.homeModules.dto.ModuleResponseList;
+import com.kilometer.domain.homeModules.dto.ModuleUpdateRequestList;
+import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
 import com.kilometer.domain.util.BoUrlUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +27,7 @@ import java.util.List;
 public class homeController {
 
     private final HomeService homeService;
+    private final ModuleValidator moduleValidator;
 
     @GetMapping(BoUrlUtils.KEY_VISUAL)
     public String keyVisual(Model model) {
@@ -54,15 +59,24 @@ public class homeController {
 
     @GetMapping(BoUrlUtils.HOME_MODULES_EDIT)
     public String getModules(Model model) {
-        List<ModuleResponse> moduleList = homeService.findAllByModule();
+        ModuleResponseList moduleList = homeService.findAllByUpdateModule();
         model.addAttribute("moduleList", moduleList);
         return "home/updateModules";
     }
 
     @PostMapping(BoUrlUtils.HOME_MODULES_EDIT)
-    public String updateModules(@ModelAttribute ModuleUpdateResponseList moduleUpdateResponseList,
+    public String updateModules(@ModelAttribute("moduleList") ModuleUpdateRequestList moduleUpdateRequestList,
+                                BindingResult bindingResult,
                                 Principal principal) {
-        homeService.updateModule(moduleUpdateResponseList.getModuleList(), principal.getName());
+        List<ModuleUpdateRequest> validatedModules = moduleValidator.validateModule(
+                moduleUpdateRequestList.getModuleList(), bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "home/updateModules";
+        }
+
+        homeService.updateModule(validatedModules, principal.getName());
         return "redirect:/home/modules";
     }
 }

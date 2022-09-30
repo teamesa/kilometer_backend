@@ -9,14 +9,14 @@ import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponse;
 import com.kilometer.domain.homeModules.Module;
 import com.kilometer.domain.homeModules.ModuleRepository;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
-import com.kilometer.domain.homeModules.dto.ModuleUpdateResponse;
+import com.kilometer.domain.homeModules.dto.ModuleResponseList;
+import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,27 +54,36 @@ public class HomeService {
                 .collect(Collectors.toList());
     }
 
+    public ModuleResponseList findAllByUpdateModule() {
+        return ModuleResponseList.builder()
+                .moduleList(findAllByModule())
+                .build();
+    }
+
     @Transactional
-    public void updateModule(List<ModuleUpdateResponse> moduleList, String createdAccount) {
+    public void updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
         BackOfficeAccount account = backOfficeAccountService.findByUsername(createdAccount);
 
-        List<Module> updateModules = moduleList.stream()
-                .filter(ModuleUpdateResponse::isNotEmpty)
-                .filter(this::isNotDelete)
-                .map(moduleUpdateResponse -> moduleUpdateResponse.makeModule(account))
-                .collect(Collectors.toList());
+        List<Module> updateModules = deletedModules(moduleList, account);
 
         moduleRepository.saveAll(updateModules);
     }
 
-    private boolean isNotDelete(ModuleUpdateResponse moduleUpdateResponse) {
-        boolean isNotDelete = moduleUpdateResponse.getExposureOrderNumber() != null
-                || StringUtils.hasText(moduleUpdateResponse.getModuleName())
-                || StringUtils.hasText(moduleUpdateResponse.getUpperModuleTitle())
-                || StringUtils.hasText(moduleUpdateResponse.getLowerModuleTitle())
-                || StringUtils.hasText(moduleUpdateResponse.getExtraData());
+    private List<Module> deletedModules(List<ModuleUpdateRequest> checkedModules, BackOfficeAccount account) {
+        return checkedModules.stream()
+                .filter(this::isNotDeleteModule)
+                .map(moduleUpdateRequest -> moduleUpdateRequest.makeModule(account))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isNotDeleteModule(ModuleUpdateRequest moduleUpdateRequest) {
+        boolean isNotDelete = moduleUpdateRequest.getExposureOrderNumber() != null
+                || StringUtils.hasText(moduleUpdateRequest.getModuleName())
+                || StringUtils.hasText(moduleUpdateRequest.getUpperModuleTitle())
+                || StringUtils.hasText(moduleUpdateRequest.getLowerModuleTitle())
+                || StringUtils.hasText(moduleUpdateRequest.getExtraData());
         if (!isNotDelete) {
-            moduleRepository.deleteById(moduleUpdateResponse.getId());
+            moduleRepository.deleteById(moduleUpdateRequest.getId());
         }
         return isNotDelete;
     }

@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModuleUpdateResponse {
+public class ModuleUpdateRequest {
 
     private Long id;
     private Integer exposureOrderNumber;
@@ -23,6 +23,12 @@ public class ModuleUpdateResponse {
 
     public boolean isNotEmpty() {
         return id != null || exposureOrderNumber != null || StringUtils.hasText(moduleName)
+                || StringUtils.hasText(upperModuleTitle) || StringUtils.hasText(lowerModuleTitle)
+                || StringUtils.hasText(extraData);
+    }
+
+    public boolean isNotDelete() {
+        return id == null || exposureOrderNumber != null || StringUtils.hasText(moduleName)
                 || StringUtils.hasText(upperModuleTitle) || StringUtils.hasText(lowerModuleTitle)
                 || StringUtils.hasText(extraData);
     }

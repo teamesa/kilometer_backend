@@ -54,8 +54,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="m : ${moduleList}">
-                <td th:text="${m.exposureOrderNumber}"></td>
+            <tr th:each="m, mStat : ${moduleList}">
+                <td th:text="${mStat.count}"></td>
                 <td th:text="${m.moduleName}"></td>
                 <td th:text="${m.upperModuleTitle}"></td>
                 <td th:text="${m.lowerModuleTitle}"></td>

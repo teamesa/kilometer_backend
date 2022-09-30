@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class ModuleUpdateResponseList {
+public class ModuleResponseList {
 
-    private List<ModuleUpdateResponse> moduleList;
+    private List<ModuleResponse> moduleList;
 }
