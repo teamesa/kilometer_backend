@@ -1,6 +1,6 @@
-package com.kilometer.domain.homeModules.keyVisual.dto;
+package com.kilometer.domain.homeModules.modules.keyVisual.dto;
 
-import com.kilometer.domain.homeModules.keyVisual.KeyVisual;
+import com.kilometer.domain.homeModules.modules.keyVisual.KeyVisual;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

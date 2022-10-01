@@ -1,4 +1,4 @@
-package com.kilometer.domain.homeModules.keyVisual;
+package com.kilometer.domain.homeModules.modules.keyVisual;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,9 +1,13 @@
 package com.kilometer.domain.homeModules;
 
-import com.kilometer.domain.homeModules.keyVisual.KeyVisualService;
-import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualDataDto;
-import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualResponse;
-import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualUpdateResponse;
+import com.kilometer.domain.homeModules.enums.ModuleType;
+import com.kilometer.domain.homeModules.modules.Module;
+import com.kilometer.domain.homeModules.modules.ModuleHandlerAdapter;
+import com.kilometer.domain.homeModules.modules.ModuleRepository;
+import com.kilometer.domain.homeModules.modules.keyVisual.KeyVisualHandler;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualDataDto;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualResponse;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualUpdateResponse;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,25 +20,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeModuleService {
 
-    private static final String KEY_VISUAL_MODULE_NAME = "keyVisual";
-    private final KeyVisualService keyVisualService;
+    private final ModuleHandlerAdapter adapter;
+    private final ModuleRepository moduleRepository;
 
     public HomeApiResponse getHomeModules() {
-        List<ModuleDto> modules = new ArrayList<>();
-        modules.add(ModuleDto.of(KEY_VISUAL_MODULE_NAME, 0, keyVisual()));
-        return HomeApiResponse.from(modules);
-    }
-
-    private List<KeyVisualDataDto> keyVisual() {
-        return keyVisualService.generate();
-    }
-
-    public List<KeyVisualResponse> findAllByKeyVisual() {
-        return keyVisualService.findAllByKeyVisual();
-    }
-
-    @Transactional
-    public void updateKeyVisual(List<KeyVisualUpdateResponse> keyVisualList, String createdAccount) {
-        keyVisualService.updateKeyVisual(keyVisualList,createdAccount);
+        List<Module> modules = moduleRepository.findAll();
+        List<ModuleDto> result = new ArrayList<>();
+        for(int i=0;i<modules.size();i++) {
+            Module module = modules.get(i);
+            result.add(ModuleDto.of(module.getModuleName().getFrontName(), i,
+                adapter.getHandlerAdapter(modules.get(i).getModuleName()).generator(module.getExtraData())
+            ));
+        }
+        return HomeApiResponse.from(result);
     }
 }

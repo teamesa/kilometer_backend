@@ -1,8 +1,7 @@
-package com.kilometer.domain.homeModules.keyVisual;
+package com.kilometer.domain.homeModules.modules.keyVisual;
 
-import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualDataDto;
-import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualResponse;
-import com.kilometer.domain.homeModules.keyVisual.dto.KeyVisualUpdateResponse;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualResponse;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualUpdateResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -12,16 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class KeyVisualService {
 
     private final KeyVisualRepository keyVisualRepository;
-
-    public List<KeyVisualResponse> findAllByKeyVisual() {
-        return keyVisualRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
-            .map(KeyVisual::makeResponse)
-            .collect(Collectors.toList());
-    }
 
     @Transactional
     public void updateKeyVisual(List<KeyVisualUpdateResponse> keyVisualList,
@@ -37,10 +29,10 @@ public class KeyVisualService {
         keyVisualRepository.saveAll(keyVisuals);
     }
 
-    public List<KeyVisualDataDto> generate() {
-        List<KeyVisual> keyVisuals = keyVisualRepository.findAllOrderByIdAtAsc();
-        return keyVisuals.stream()
-            .map(KeyVisualDataDto::from)
+    @Transactional(readOnly = true)
+    public List<KeyVisualResponse> findAllByKeyVisual() {
+        return keyVisualRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
+            .map(KeyVisual::makeResponse)
             .collect(Collectors.toList());
     }
 }
