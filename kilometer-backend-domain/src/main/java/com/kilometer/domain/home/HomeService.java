@@ -78,7 +78,7 @@ public class HomeService {
 
     private boolean isNotDeleteModule(ModuleUpdateRequest moduleUpdateRequest) {
         boolean isNotDelete = moduleUpdateRequest.getExposureOrderNumber() != null
-                || StringUtils.hasText(moduleUpdateRequest.getModuleName())
+                || moduleUpdateRequest.getModuleName() != null
                 || StringUtils.hasText(moduleUpdateRequest.getUpperModuleTitle())
                 || StringUtils.hasText(moduleUpdateRequest.getLowerModuleTitle())
                 || StringUtils.hasText(moduleUpdateRequest.getExtraData());

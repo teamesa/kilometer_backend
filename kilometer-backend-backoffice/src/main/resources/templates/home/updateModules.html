@@ -55,9 +55,13 @@
                            th:value="${moduleStat.count}">
                 </td>
                 <td>
-                    <input type="text"
-                           th:name="moduleList[__${moduleStat.index}__].moduleName"
-                           th:value="${moduleData.moduleName}">
+                    <select th:field="*{moduleList[__${moduleStat.index}__].moduleName}"
+                            th:name="moduleList[__${moduleStat.index}__].moduleName">
+                        <option th:each="moduleType : ${moduleTypes}"
+                                th:value="${moduleType.name()}"
+                                th:text="${moduleType.description}">
+                        </option>
+                    </select>
                 </td>
                 <td>
                     <input type="text"
@@ -87,7 +91,7 @@
         <br>
         <div class="mainTitle centerDiv1">
             <div class="centerDiv2">
-                <button type="button" class="button" onclick="addRow()">추가</button>
+                <button type="button" class="button" th:onclick="addRow()">추가</button>
             </div>
             <div class="centerDiv2">
                 <button type="submit" class="button">저장</button>
@@ -102,7 +106,13 @@
 </div>
 
 <script th:inline="javascript">
-    let index = [[${moduleList.getModuleList().size()}]]
+    let index = [[${moduleList.getModuleList().size()}]];
+    let modulesValue = [[${moduleTypes}]];
+    let modulesText = [];
+
+    /*[# th:each="moduleType : ${moduleTypes}"]*/
+    modulesText.push([[${moduleType.description}]]);
+    /*[/]*/
 
     function addRow() {
         let newRow = $('#moduleTable')[0].insertRow();
@@ -110,31 +120,36 @@
         let newCell1 = newRow.insertCell(0);
         let element1 = document.createElement('input');
         element1.type = "text";
-        element1.name = "moduleList[" + index + "].exposureOrderNumber"
+        element1.name = "moduleList[" + index + "].exposureOrderNumber";
         newCell1.appendChild(element1);
 
         let newCell2 = newRow.insertCell(1);
-        let element2 = document.createElement('input');
-        element2.type = "text";
-        element2.name = "moduleList[" + index + "].moduleName"
+        let element2 = document.createElement('select');
+        element2.name = "moduleList[" + index + "].moduleName";
         newCell2.appendChild(element2);
+        for (let i = 0; i < modulesValue.length; i++) {
+            let option = document.createElement('option');
+            option.value = modulesValue[i];
+            option.text = modulesText[i];
+            element2.appendChild(option);
+        }
 
         let newCell3 = newRow.insertCell(2);
         let element3 = document.createElement('input');
         element3.type = "text";
-        element3.name = "moduleList[" + index + "].upperModuleTitle"
+        element3.name = "moduleList[" + index + "].upperModuleTitle";
         newCell3.appendChild(element3);
 
         let newCell4 = newRow.insertCell(3);
         let element4 = document.createElement('input');
         element4.type = "text";
-        element4.name = "moduleList[" + index + "].lowerModuleTitle"
+        element4.name = "moduleList[" + index + "].lowerModuleTitle";
         newCell4.appendChild(element4);
 
         let newCell5 = newRow.insertCell(4);
         let element5 = document.createElement('input');
         element5.type = "text";
-        element5.name = "moduleList[" + index + "].extraData"
+        element5.name = "moduleList[" + index + "].extraData";
         newCell5.appendChild(element5);
 
         let newCell6 = newRow.insertCell(5);

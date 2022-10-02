@@ -2,6 +2,7 @@ package com.kilometer.domain.homeModules;
 
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -32,7 +35,8 @@ public class Module {
     private Long id;
 
     private int exposureOrderNumber;
-    private String moduleName;
+    @Enumerated(EnumType.STRING)
+    private ModuleType moduleName;
     private String upperModuleTitle;
     private String lowerModuleTitle;
     private String extraData;

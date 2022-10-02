@@ -2,6 +2,7 @@ package com.kilometer.domain.homeModules.dto;
 
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
 import com.kilometer.domain.homeModules.Module;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,19 +17,19 @@ public class ModuleUpdateRequest {
 
     private Long id;
     private Integer exposureOrderNumber;
-    private String moduleName;
+    private ModuleType moduleName;
     private String upperModuleTitle;
     private String lowerModuleTitle;
     private String extraData;
 
     public boolean isNotEmpty() {
-        return id != null || exposureOrderNumber != null || StringUtils.hasText(moduleName)
+        return id != null || exposureOrderNumber != null || !ModuleType.EMPTY.equals(moduleName)
                 || StringUtils.hasText(upperModuleTitle) || StringUtils.hasText(lowerModuleTitle)
                 || StringUtils.hasText(extraData);
     }
 
     public boolean isNotDelete() {
-        return id == null || exposureOrderNumber != null || StringUtils.hasText(moduleName)
+        return id == null || exposureOrderNumber != null || moduleName != null
                 || StringUtils.hasText(upperModuleTitle) || StringUtils.hasText(lowerModuleTitle)
                 || StringUtils.hasText(extraData);
     }

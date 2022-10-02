@@ -1,5 +1,6 @@
 package com.kilometer.domain.homeModules.dto;
 
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ public class ModuleResponse {
 
     private Long id;
     private Integer exposureOrderNumber;
-    private String moduleName;
+    private ModuleType moduleName;
     private String upperModuleTitle;
     private String lowerModuleTitle;
     private String extraData;

@@ -1,6 +1,7 @@
 package com.kilometer.domain.homeModules;
 
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ public class ModuleValidator {
 
         validationDuplicationExposureOrderNumber(modules, bindingResult);
         validationEmptyExposureOrderNumber(modules, bindingResult);
+        validationEmptyModuleName(modules, bindingResult);
 
         return modules;
     }
@@ -48,6 +50,17 @@ public class ModuleValidator {
 
         if (isNull) {
             bindingResult.reject("checkedSequenceEmpty");
+        }
+    }
+
+    private void validationEmptyModuleName(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+        boolean isNull = modules.stream()
+                .filter(ModuleUpdateRequest::isNotDelete)
+                .map(ModuleUpdateRequest::getModuleName)
+                .anyMatch(ModuleType.EMPTY::equals);
+
+        if (isNull) {
+            bindingResult.reject("checkedModuleNameEmpty");
         }
     }
 }
