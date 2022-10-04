@@ -161,6 +161,10 @@
     }
 
     function removeRow(elem) {
+        if(confirm("정말 삭제하시겠습니까?") === false) {
+            return;
+        }
+
         let currentRow = $(elem).parent().parent().parent().index();
         $('#moduleTable')[0].deleteRow(currentRow + 1);
         appendHiddenInput(elem);
