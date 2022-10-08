@@ -13,8 +13,8 @@ public class ModuleHandlerAdapter {
 
     private final List<ModuleHandler> handlers;
 
-    public ModuleHandler getHandlerAdapter(ModuleType type) {
-        return handlers.stream().filter(handler -> handler.supports(type))
+    public ModuleHandler getHandlerAdapter(ModuleType moduleType) {
+        return handlers.stream().filter(handler -> handler.supports(moduleType))
             .findFirst().orElseThrow(() -> new IllegalArgumentException("Handler not exists"));
 
     }

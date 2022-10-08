@@ -12,5 +12,10 @@ public enum ModuleType {
     REAL_TIME_ARCHIVE("real-time-archive"),
     UPCOMING_ITEM("upcoming-item");
 
-    private String frontName;
+    private final String frontName;
+
+    @Override
+    public String toString() {
+        return frontName;
+    }
 }

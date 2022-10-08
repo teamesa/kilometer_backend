@@ -7,9 +7,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class HomeApiResponse {
-    private List<ModuleDto> modules;
+    private List<ModuleResponseDto> modules;
 
-    public static HomeApiResponse from(List<ModuleDto> modules) {
+    public static HomeApiResponse from(List<ModuleResponseDto> modules) {
         return new HomeApiResponse(modules);
     }
 }
