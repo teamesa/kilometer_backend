@@ -1,4 +1,4 @@
-package com.kilometer.domain.homeModules;
+package com.kilometer.domain.homeModules.modules;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
