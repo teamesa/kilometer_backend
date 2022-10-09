@@ -162,7 +162,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 itemEntity.title,
                 itemDetail.introduce.as("content"),
                 itemEntity.exhibitionType,
-                itemEntity.placeName
+                itemEntity.placeName,
+                itemEntity.thumbnailImageUrl
             ))
             .from(itemEntity)
             .leftJoin(itemDetail)
