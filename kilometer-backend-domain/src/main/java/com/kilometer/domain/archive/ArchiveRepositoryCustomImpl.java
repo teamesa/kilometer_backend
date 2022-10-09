@@ -12,9 +12,11 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,41 +35,41 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     @Override
     public Page<ItemArchiveDto> findAllByItemIdAndUserId(Pageable pageable,
-        ArchiveQueryRequest queryRequest) {
+                                                         ArchiveQueryRequest queryRequest) {
         List<ItemArchiveDto> archives = queryFactory
-            .select(Projections.fields(ItemArchiveDto.class,
-                    archive.id,
-                    user.name,
-                    user.imageUrl,
-                    archive.updatedAt,
-                    archive.starRating,
-                    archive.likeCount,
-                    archive.comment,
-                    like.isLiked
+                .select(Projections.fields(ItemArchiveDto.class,
+                                archive.id,
+                                user.name,
+                                user.imageUrl,
+                                archive.updatedAt,
+                                archive.starRating,
+                                archive.likeCount,
+                                archive.comment,
+                                like.isLiked
+                        )
                 )
-            )
-            .from(archive)
-            .leftJoin(user)
-            .on(user.id.eq(archive.user.id))
-            .leftJoin(like)
-            .on(like.likedArchive.eq(archive), eqUserId(queryRequest.getUserId()))
-            .where(
-                archive.item.id.eq(queryRequest.getItemId()),
-                archive.isVisibleAtItem.eq(true)
-            )
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
-            .orderBy(getOrderSpecifier(queryRequest.getArchiveSortType()))
-            .fetch();
+                .from(archive)
+                .leftJoin(user)
+                .on(user.id.eq(archive.user.id))
+                .leftJoin(like)
+                .on(like.likedArchive.eq(archive), eqUserId(queryRequest.getUserId()))
+                .where(
+                        archive.item.id.eq(queryRequest.getItemId()),
+                        eqIsVisible(queryRequest.isVisible())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(getOrderSpecifier(queryRequest.getArchiveSortType()))
+                .fetch();
 
         int count = queryFactory
-            .select(archive.id)
-            .from(archive)
-            .where(
-                archive.item.id.eq(queryRequest.getItemId()),
-                archive.isVisibleAtItem.eq(true)
-            )
-            .fetch().size();
+                .select(archive.id)
+                .from(archive)
+                .where(
+                        archive.item.id.eq(queryRequest.getItemId()),
+                        eqIsVisible(queryRequest.isVisible())
+                )
+                .fetch().size();
 
         return new PageImpl<>(archives, pageable, count);
     }
@@ -76,71 +78,71 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     public Page<MyArchiveDto> findAllByUserId(Pageable pageable, ArchiveQueryRequest queryRequest) {
 
         List<MyArchiveDto> archives = queryFactory
-            .select(Projections.fields(MyArchiveDto.class,
-                archive.id,
-                itemEntity.title,
-                itemEntity.exhibitionType,
-                itemEntity.listImageUrl,
-                archive.comment,
-                archive.updatedAt
-            ))
-            .from(archive)
-            .leftJoin(itemEntity)
-            .on(itemEntity.id.eq(archive.item.id))
-            .where(
-                archive.user.id.eq(queryRequest.getUserId())
-            )
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
-            .orderBy(getOrderSpecifier(queryRequest.getArchiveSortType()))
-            .fetch();
+                .select(Projections.fields(MyArchiveDto.class,
+                        archive.id,
+                        itemEntity.title,
+                        itemEntity.exhibitionType,
+                        itemEntity.listImageUrl,
+                        archive.comment,
+                        archive.updatedAt
+                ))
+                .from(archive)
+                .leftJoin(itemEntity)
+                .on(itemEntity.id.eq(archive.item.id))
+                .where(
+                        archive.user.id.eq(queryRequest.getUserId())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(getOrderSpecifier(queryRequest.getArchiveSortType()))
+                .fetch();
 
         int count = queryFactory
-            .select(archive.id)
-            .from(archive)
-            .where(
-                archive.user.id.eq(queryRequest.getUserId())
-            )
-            .fetch().size();
+                .select(archive.id)
+                .from(archive)
+                .where(
+                        archive.user.id.eq(queryRequest.getUserId())
+                )
+                .fetch().size();
 
         return new PageImpl<>(archives, pageable, count);
     }
 
     @Override
-    public Optional<ArchiveDetailDto> findByArchiveIdAndUserId(long archiveId, long userId) {
+    public Optional<ArchiveDetailDto> findByArchiveIdAndUserId(long archiveId, long userId, boolean isVisible) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(ArchiveDetailDto.class,
-                archive.id,
-                itemEntity.exhibitionType,
-                archive.updatedAt,
-                itemEntity.title,
-                archive.comment,
-                archive.starRating,
-                user.id.eq(userId).as("isWrited")
-            ))
-            .from(archive)
-            .leftJoin(itemEntity)
-            .on(itemEntity.id.eq(archive.item.id))
-            .leftJoin(user)
-            .on(user.id.eq(archive.user.id))
-            .where(
-                archive.id.eq(archiveId),
-                archive.isVisibleAtItem.eq(true)
-            )
-            .fetchOne());
+                        archive.id,
+                        itemEntity.exhibitionType,
+                        archive.updatedAt,
+                        itemEntity.title,
+                        archive.comment,
+                        archive.starRating,
+                        user.id.eq(userId).as("isWrited")
+                ))
+                .from(archive)
+                .leftJoin(itemEntity)
+                .on(itemEntity.id.eq(archive.item.id))
+                .leftJoin(user)
+                .on(user.id.eq(archive.user.id))
+                .where(
+                        archive.id.eq(archiveId),
+                        eqIsVisible(isVisible)
+                )
+                .fetchOne());
     }
 
     @Override
     public Double avgStarRatingByItemId(long itemId) {
         return queryFactory
-            .select(
-                archive.starRating.avg()
-            )
-            .from(archive)
-            .where(
-                archive.item.id.eq(itemId),
-                archive.isVisibleAtItem.eq(true)
-            )
-            .fetchOne();
+                .select(
+                        archive.starRating.avg()
+                )
+                .from(archive)
+                .where(
+                        archive.item.id.eq(itemId),
+                        archive.isVisibleAtItem.eq(true)
+                )
+                .fetchOne();
     }
 
     @SuppressWarnings("rawtypes")
@@ -157,5 +159,12 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
         } else {
             return like.likedUser.id.eq(userId);
         }
+    }
+
+    private BooleanExpression eqIsVisible(boolean isVisible) {
+        if (isVisible == false) {
+            return null;
+        }
+        return archive.isVisibleAtItem.eq(true);
     }
 }
