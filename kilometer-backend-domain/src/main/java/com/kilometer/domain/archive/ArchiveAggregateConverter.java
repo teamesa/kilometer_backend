@@ -114,7 +114,7 @@ public class ArchiveAggregateConverter {
             .typeBadge(itemBadge)
             .updatedAt(myArchiveDto.getUpdatedAt())
             .existArchiveImages(existImages)
-            .api(ApiUrlUtils.getArchiveUrl(myArchiveDto.getId()))
+            .api(ApiUrlUtils.getArchiveDetailUrl(myArchiveDto.getId()))
             .build();
     }
 
@@ -163,7 +163,7 @@ public class ArchiveAggregateConverter {
 
         return List.of(
             LinkInfo.of("수정", FrontUrlUtils.getFrontModifyArchiveWithId(archiveId)),
-            LinkInfo.of("삭제", ApiUrlUtils.getArchiveUrl(archiveId)));
+            LinkInfo.of("삭제", ApiUrlUtils.getArchiveDetailUrl(archiveId)));
 
     }
 }
