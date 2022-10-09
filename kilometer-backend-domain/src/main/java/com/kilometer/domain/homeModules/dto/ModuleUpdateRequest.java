@@ -1,8 +1,8 @@
 package com.kilometer.domain.homeModules.dto;
 
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
-import com.kilometer.domain.homeModules.Module;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
+import com.kilometer.domain.homeModules.modules.Module;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

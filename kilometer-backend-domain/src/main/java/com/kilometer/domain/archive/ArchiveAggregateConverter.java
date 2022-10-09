@@ -11,8 +11,8 @@ import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
 import com.kilometer.domain.item.enumType.ExhibitionType;
-import com.kilometer.domain.like.dto.ArchiveLike;
-import com.kilometer.domain.like.dto.ArchiveLikeGenerator;
+import com.kilometer.domain.archive.like.dto.ArchiveLike;
+import com.kilometer.domain.archive.like.dto.ArchiveLikeGenerator;
 import com.kilometer.domain.linkInfo.LinkInfo;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
@@ -162,7 +162,7 @@ public class ArchiveAggregateConverter {
         }
 
         return List.of(
-            LinkInfo.of("수정", FrontUrlUtils.getFrontModifyUrl(archiveId)),
+            LinkInfo.of("수정", FrontUrlUtils.getFrontModifyArchiveWithId(archiveId)),
             LinkInfo.of("삭제", ApiUrlUtils.getArchiveUrl(archiveId)));
 
     }

@@ -1,11 +1,10 @@
 package com.kilometer.domain.search.presentationimage;
 
-import com.kilometer.domain.item.dto.SearchItemResponse;
-import com.kilometer.domain.pick.Pick;
 import com.kilometer.domain.search.ItemInfoExtraction;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,7 +29,7 @@ public class PresentationImageGenerator {
 
     private PresentationImage makeUpcomingImage(long id, String url, LocalDate startDate) {
         LocalDate now = LocalDate.now();
-        int periodDays = Period.between(now, startDate).getDays();
+        int periodDays = (int) ChronoUnit.DAYS.between(now, startDate);
 
         return PresentationImage.builder()
             .url(url)

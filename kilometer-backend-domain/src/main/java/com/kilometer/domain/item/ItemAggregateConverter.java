@@ -6,6 +6,7 @@ import com.kilometer.domain.item.dto.ItemInfoResponse;
 import com.kilometer.domain.item.heart.ItemHeartGenerator;
 import com.kilometer.domain.linkInfo.LinkInfo;
 import com.kilometer.domain.util.FrontUrlUtils;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,18 +22,21 @@ public class ItemAggregateConverter {
         if (archiveId != null) {
             archiveLink = LinkInfo.of(
                 FrontUrlUtils.getFrontModifyTitle(),
-                FrontUrlUtils.getFrontModifyUrl(archiveId));
+                FrontUrlUtils.getFrontModifyArchiveWithId(archiveId));
         } else {
             archiveLink = LinkInfo.of(
                 FrontUrlUtils.getFrontCreateTitle(),
                 FrontUrlUtils.getFrontCreateUrl());
         }
 
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
         return ItemInfoResponse.builder()
             .type(itemInfoDto.getExhibitionType().getDescription())
             .feeType(itemInfoDto.getFeeType().getDescription())
             .title(itemInfoDto.getTitle())
-            .term(itemInfoDto.getStartDate() + " ~ " + itemInfoDto.getEndDate())
+            .term(itemInfoDto.getStartDate().format(dateTimeFormatter) + " ~ "
+                + itemInfoDto.getEndDate().format(dateTimeFormatter))
             .place(itemInfoDto.getPlaceName())
             .lat(itemInfoDto.getLatitude())
             .lng(itemInfoDto.getLongitude())

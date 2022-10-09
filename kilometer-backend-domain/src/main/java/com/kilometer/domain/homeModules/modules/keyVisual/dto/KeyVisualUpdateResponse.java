@@ -1,21 +1,19 @@
-package com.kilometer.domain.home.keyVisual.dto;
+package com.kilometer.domain.homeModules.modules.keyVisual.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
-public class KeyVisualResponse {
+public class KeyVisualUpdateResponse {
 
     private Long id;
     private String imageUrl;
     private String upperTitle;
     private String lowerTitle;
     private String linkUrl;
-    private String createdAccount;
-    private LocalDateTime createdAt;
 }

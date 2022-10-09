@@ -1,17 +1,17 @@
-package com.kilometer.domain.home;
+package com.kilometer.domain.homeModules;
 
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccountService;
-import com.kilometer.domain.home.keyVisual.KeyVisual;
-import com.kilometer.domain.home.keyVisual.KeyVisualRepository;
-import com.kilometer.domain.home.keyVisual.dto.KeyVisualResponse;
-import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponse;
-import com.kilometer.domain.homeModules.Module;
-import com.kilometer.domain.homeModules.ModuleRepository;
 import com.kilometer.domain.homeModules.ModuleValidator;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
 import com.kilometer.domain.homeModules.dto.ModuleResponseList;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
+import com.kilometer.domain.homeModules.modules.Module;
+import com.kilometer.domain.homeModules.modules.ModuleRepository;
+import com.kilometer.domain.homeModules.modules.keyVisual.KeyVisual;
+import com.kilometer.domain.homeModules.modules.keyVisual.KeyVisualRepository;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualResponse;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualUpdateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

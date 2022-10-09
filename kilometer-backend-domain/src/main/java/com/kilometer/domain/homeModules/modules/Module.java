@@ -1,4 +1,4 @@
-package com.kilometer.domain.homeModules;
+package com.kilometer.domain.homeModules.modules;
 
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
@@ -35,7 +35,7 @@ public class Module {
     private Long id;
 
     private int exposureOrderNumber;
-    @Enumerated(EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     private ModuleType moduleName;
     private String upperModuleTitle;
     private String lowerModuleTitle;

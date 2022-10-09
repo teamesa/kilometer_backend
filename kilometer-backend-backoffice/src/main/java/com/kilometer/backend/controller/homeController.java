@@ -1,14 +1,13 @@
 package com.kilometer.backend.controller;
 
-import com.kilometer.domain.home.HomeService;
-import com.kilometer.domain.home.keyVisual.dto.KeyVisualResponse;
-import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponseList;
-import com.kilometer.domain.homeModules.ModuleValidator;
+import com.kilometer.domain.homeModules.HomeService;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
 import com.kilometer.domain.homeModules.dto.ModuleResponseList;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequestList;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualResponse;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualUpdateResponseList;
 import com.kilometer.domain.util.BoUrlUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
