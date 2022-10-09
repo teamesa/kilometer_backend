@@ -1,5 +1,6 @@
 package com.kilometer.domain.homeModules;
 
+import com.kilometer.domain.homeModules.enums.ModuleType;
 import com.kilometer.domain.homeModules.modules.Module;
 import com.kilometer.domain.homeModules.modules.ModuleHandlerAdapter;
 import com.kilometer.domain.homeModules.modules.ModuleRepository;
@@ -17,9 +18,14 @@ public class HomeRenderingService {
     private final ModuleHandlerAdapter adapter;
     private final ModuleRepository moduleRepository;
 
+    public ModuleResponseDto<Object> getKeyVisual() {
+        ModuleType type = ModuleType.KEY_VISUAL;
+        return ModuleResponseDto.of(type,0, adapter.getHandlerAdapter(type).generator(null));
+    }
+
     public HomeApiResponse getHomeModules() {
         List<Module> modules = moduleRepository.findAll();
-        List<ModuleResponseDto> result = new ArrayList<>();
+        List<ModuleResponseDto<Object>> result = new ArrayList<>();
         for (int i = 0; i < modules.size(); i++) {
             Module module = modules.get(i);
             result.add(

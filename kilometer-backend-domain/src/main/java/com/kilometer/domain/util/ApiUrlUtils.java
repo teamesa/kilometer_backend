@@ -30,6 +30,7 @@ public class ApiUrlUtils {
     public static final String USER_ME = "/me";
     public static final String USER_PROFILE = "/profile";
     public static final String HOME_ROOT = ROOT + "/home";
+    public static final String KEY_VISUAL = "key-visual";
 
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
