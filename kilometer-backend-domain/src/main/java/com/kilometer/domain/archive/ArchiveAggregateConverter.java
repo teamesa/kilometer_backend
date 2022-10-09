@@ -17,9 +17,11 @@ import com.kilometer.domain.linkInfo.LinkInfo;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
 import com.kilometer.domain.util.FrontUrlUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -31,28 +33,28 @@ public class ArchiveAggregateConverter {
     private final ItemBadgeGenerator itemBadgeGenerator;
 
     public ArchiveInfo convertArchiveInfo(ItemArchiveDto itemArchiveDto,
-        List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
+                                          List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(
-            itemArchiveDto);
+                itemArchiveDto);
 
         return ArchiveInfo.builder()
-            .id(itemArchiveDto.getId())
-            .userName(itemArchiveDto.getName())
-            .userProfileUrl(itemArchiveDto.getImageUrl())
-            .updatedAt(itemArchiveDto.getUpdatedAt())
-            .starRating(itemArchiveDto.getStarRating())
-            .likeCount(itemArchiveDto.getLikeCount())
-            .heart(archiveLike)
-            .comment(itemArchiveDto.getComment())
-            .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
-            .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
-            .photoUrls(archiveImages.stream()
-                .map(ArchiveImage::getImageUrl)
-                .collect(Collectors.toList()))
-            .build();
+                .id(itemArchiveDto.getId())
+                .userName(itemArchiveDto.getName())
+                .userProfileUrl(itemArchiveDto.getImageUrl())
+                .updatedAt(itemArchiveDto.getUpdatedAt())
+                .starRating(itemArchiveDto.getStarRating())
+                .likeCount(itemArchiveDto.getLikeCount())
+                .heart(archiveLike)
+                .comment(itemArchiveDto.getComment())
+                .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
+                .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
+                .photoUrls(archiveImages.stream()
+                        .map(ArchiveImage::getImageUrl)
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     public ArchiveInfo convertArchiveInfo(Archive archive) {
@@ -62,20 +64,20 @@ public class ArchiveAggregateConverter {
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archive.getId());
 
         return ArchiveInfo.builder()
-            .id(archive.getId())
-            .userProfileUrl(archive.getUser().getImageUrl())
-            .userName(archive.getUser().getName())
-            .updatedAt(archive.getUpdatedAt())
-            .starRating(archive.getStarRating())
-            .likeCount(archive.getLikeCount())
-            .heart(archiveLike)
-            .comment(archive.getComment())
-            .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
-            .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
-            .photoUrls(archive.getArchiveImages().stream()
-                .map(ArchiveImage::getImageUrl)
-                .collect(Collectors.toList()))
-            .build();
+                .id(archive.getId())
+                .userProfileUrl(archive.getUser().getImageUrl())
+                .userName(archive.getUser().getName())
+                .updatedAt(archive.getUpdatedAt())
+                .starRating(archive.getStarRating())
+                .likeCount(archive.getLikeCount())
+                .heart(archiveLike)
+                .comment(archive.getComment())
+                .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
+                .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
+                .photoUrls(archive.getArchiveImages().stream()
+                        .map(ArchiveImage::getImageUrl)
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     public ArchiveInfo convertArchiveInfo(Archive archive, UserResponse userResponse) {
@@ -85,63 +87,64 @@ public class ArchiveAggregateConverter {
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archive.getId());
 
         return ArchiveInfo.builder()
-            .id(archive.getId())
-            .userProfileUrl(userResponse.getImageUrl())
-            .userName(userResponse.getName())
-            .updatedAt(archive.getUpdatedAt())
-            .starRating(archive.getStarRating())
-            .likeCount(archive.getLikeCount())
-            .heart(archiveLike)
-            .comment(archive.getComment())
-            .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
-            .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
-            .photoUrls(archive.getArchiveImages().stream()
-                .map(ArchiveImage::getImageUrl)
-                .collect(Collectors.toList()))
-            .build();
+                .id(archive.getId())
+                .userProfileUrl(userResponse.getImageUrl())
+                .userName(userResponse.getName())
+                .updatedAt(archive.getUpdatedAt())
+                .starRating(archive.getStarRating())
+                .likeCount(archive.getLikeCount())
+                .heart(archiveLike)
+                .comment(archive.getComment())
+                .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
+                .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
+                .photoUrls(archive.getArchiveImages().stream()
+                        .map(ArchiveImage::getImageUrl)
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     public MyArchiveInfo convertMyArchiveInfo(MyArchiveDto myArchiveDto,
-        boolean existImages, List<UserVisitPlace> userVisitPlaces) {
+                                              boolean existImages, List<UserVisitPlace> userVisitPlaces) {
 
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(ExhibitionType.EXHIBITION);
 
         return MyArchiveInfo.builder()
-            .title(myArchiveDto.getTitle())
-            .comment(myArchiveDto.getComment())
-            .places(convertVisitPlaces(userVisitPlaces))
-            .listImageUrl(myArchiveDto.getListImageUrl())
-            .typeBadge(itemBadge)
-            .updatedAt(myArchiveDto.getUpdatedAt())
-            .existArchiveImages(existImages)
-            .api(ApiUrlUtils.getArchiveUrl(myArchiveDto.getId()))
-            .build();
+                .title(myArchiveDto.getTitle())
+                .comment(myArchiveDto.getComment())
+                .places(convertVisitPlaces(userVisitPlaces))
+                .listImageUrl(myArchiveDto.getListImageUrl())
+                .typeBadge(itemBadge)
+                .updatedAt(myArchiveDto.getUpdatedAt())
+                .existArchiveImages(existImages)
+                .api(ApiUrlUtils.getArchiveUrl(myArchiveDto.getId()))
+                .build();
     }
 
     public ArchiveDetailResponse convertArchiveDetail(ArchiveDetailDto archiveDetailDto,
-        List<UserVisitPlace> visitPlaces, List<ArchiveImage> archiveImages) {
+                                                      List<UserVisitPlace> visitPlaces, List<ArchiveImage> archiveImages) {
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(
-            archiveDetailDto.getExhibitionType());
+                archiveDetailDto.getExhibitionType());
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(visitPlaces);
         List<LinkInfo> linkInfos = makeArchiveControlLink(archiveDetailDto.getId(),
-            archiveDetailDto.isWrited());
+                archiveDetailDto.isWrited());
         return ArchiveDetailResponse.builder()
-            .typeBadge(itemBadge)
-            .updatedAt(archiveDetailDto.getUpdatedAt())
-            .title(archiveDetailDto.getTitle())
-            .comment(archiveDetailDto.getComment())
-            .starRating(archiveDetailDto.getStarRating())
-            .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
-            .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
-            .photoUrls(
-                archiveImages.stream().map(ArchiveImage::getImageUrl).collect(Collectors.toList()))
-            .archiveAdditionalInfos(linkInfos)
-            .build();
+                .typeBadge(itemBadge)
+                .updatedAt(archiveDetailDto.getUpdatedAt())
+                .title(archiveDetailDto.getTitle())
+                .comment(archiveDetailDto.getComment())
+                .starRating(archiveDetailDto.getStarRating())
+                .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
+                .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
+                .photoUrls(
+                        archiveImages.stream().map(ArchiveImage::getImageUrl).collect(Collectors.toList()))
+                .archiveAdditionalInfos(linkInfos)
+                .visibleAtItem(archiveDetailDto.isVisibleAtItem())
+                .build();
     }
 
     private Map<PlaceType, String> convertFoodAndCafe(List<UserVisitPlace> userVisitPlaces) {
         return userVisitPlaces.stream()
-            .collect(Collectors.toMap(UserVisitPlace::getPlaceType, UserVisitPlace::getPlaceName));
+                .collect(Collectors.toMap(UserVisitPlace::getPlaceType, UserVisitPlace::getPlaceName));
     }
 
     private String convertVisitPlaces(List<UserVisitPlace> userVisitPlaces) {
@@ -162,8 +165,8 @@ public class ArchiveAggregateConverter {
         }
 
         return List.of(
-            LinkInfo.of("수정", FrontUrlUtils.getFrontModifyArchiveWithId(archiveId)),
-            LinkInfo.of("삭제", ApiUrlUtils.getArchiveUrl(archiveId)));
+                LinkInfo.of("수정", FrontUrlUtils.getFrontModifyArchiveWithId(archiveId)),
+                LinkInfo.of("삭제", ApiUrlUtils.getArchiveUrl(archiveId)));
 
     }
 }

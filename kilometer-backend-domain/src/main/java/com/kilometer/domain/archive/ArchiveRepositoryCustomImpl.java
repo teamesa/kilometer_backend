@@ -115,7 +115,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 itemEntity.title,
                 archive.comment,
                 archive.starRating,
-                user.id.eq(userId).as("isWrited")
+                user.id.eq(userId).as("isWrited"),
+                archive.isVisibleAtItem
             ))
             .from(archive)
             .leftJoin(itemEntity)
