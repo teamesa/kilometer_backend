@@ -14,11 +14,10 @@ public class ApiUrlUtils {
     public static final String ARCHIVE_ID = "/{archiveId}";
     public static final String ARCHIVE_MY = "/my";
     public static final String ARCHIVE_DETAIL = "/detail" + ARCHIVE_ID;
-    public static final String ARCHIVE_MODIFY = ARCHIVE_ROOT;
     public static final String ARCHIVE_LIKE_ROOT = ARCHIVE_ROOT + "/like";
     public static final String ARCHIVE_LIKE_BY_ID = ARCHIVE_LIKE_ROOT + ARCHIVE_ID;
     public static final String LIKE_ITEM_PATTERN = ARCHIVE_LIKE_ROOT + "/%s";
-    public static final String ARCHIVE_PATTERN = ARCHIVE_ROOT + "/%s";
+    public static final String ARCHIVE_DETAIL_PATTERN = ARCHIVE_ROOT + "/detail" + "/%s";
 
     public static final String IMAGE_ROOT = ROOT + "/image";
     public static final String ITEM_ROOT = ROOT + "/item";
@@ -39,7 +38,7 @@ public class ApiUrlUtils {
         return String.format(LIKE_ITEM_PATTERN + "?status=", itemId);
     }
 
-    public static String getArchiveUrl(long archiveId) {
-        return String.format(ARCHIVE_PATTERN, archiveId);
+    public static String getArchiveDetailUrl(long archiveId) {
+        return String.format(ARCHIVE_DETAIL_PATTERN, archiveId);
     }
 }
