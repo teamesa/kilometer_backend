@@ -28,7 +28,6 @@ import java.util.List;
 public class homeController {
 
     private final HomeService homeService;
-    private final ModuleValidator moduleValidator;
 
     @ModelAttribute("moduleTypes")
     public ModuleType[] moduleTypes() {
@@ -74,15 +73,17 @@ public class homeController {
     public String updateModules(@ModelAttribute("moduleList") ModuleUpdateRequestList moduleUpdateRequestList,
                                 BindingResult bindingResult,
                                 Principal principal) {
-        List<ModuleUpdateRequest> validatedModules = moduleValidator.validateModule(
-                moduleUpdateRequestList.getModuleList(), bindingResult);
+        List<ModuleUpdateRequest> modules = homeService.moduleFilter(moduleUpdateRequestList.getModuleList());
+
+        homeService.validateModule(modules, bindingResult);
 
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "home/updateModules";
         }
 
-        homeService.updateModule(validatedModules, principal.getName());
+        homeService.updateModule(modules, principal.getName());
+
         return "redirect:/home/modules";
     }
 }

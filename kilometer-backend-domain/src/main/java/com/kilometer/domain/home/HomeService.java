@@ -8,6 +8,7 @@ import com.kilometer.domain.home.keyVisual.dto.KeyVisualResponse;
 import com.kilometer.domain.home.keyVisual.dto.KeyVisualUpdateResponse;
 import com.kilometer.domain.homeModules.Module;
 import com.kilometer.domain.homeModules.ModuleRepository;
+import com.kilometer.domain.homeModules.ModuleValidator;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
 import com.kilometer.domain.homeModules.dto.ModuleResponseList;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +30,7 @@ public class HomeService {
     private final KeyVisualRepository keyVisualRepository;
     private final ModuleRepository moduleRepository;
     private final BackOfficeAccountService backOfficeAccountService;
+    private final ModuleValidator moduleValidator;
 
     public List<KeyVisualResponse> findAllByKeyVisual() {
         return keyVisualRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
@@ -60,16 +63,24 @@ public class HomeService {
                 .build();
     }
 
+    public List<ModuleUpdateRequest> moduleFilter(List<ModuleUpdateRequest> moduleList) {
+        return moduleValidator.filterByEmptyAndNull(moduleList);
+    }
+
+    public void validateModule(List<ModuleUpdateRequest> moduleList, BindingResult bindingResult) {
+        moduleValidator.validateModule(moduleList, bindingResult);
+    }
+
     @Transactional
     public void updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
         BackOfficeAccount account = backOfficeAccountService.findByUsername(createdAccount);
 
-        List<Module> updateModules = deletedModules(moduleList, account);
+        List<Module> saveAndUpdateModules = filterBySaveAndUpdateModules(moduleList, account);
 
-        moduleRepository.saveAll(updateModules);
+        moduleRepository.saveAll(saveAndUpdateModules);
     }
 
-    private List<Module> deletedModules(List<ModuleUpdateRequest> checkedModules, BackOfficeAccount account) {
+    private List<Module> filterBySaveAndUpdateModules(List<ModuleUpdateRequest> checkedModules, BackOfficeAccount account) {
         return checkedModules.stream()
                 .filter(this::isNotDeleteModule)
                 .map(moduleUpdateRequest -> moduleUpdateRequest.makeModule(account))
@@ -82,9 +93,13 @@ public class HomeService {
                 || StringUtils.hasText(moduleUpdateRequest.getUpperModuleTitle())
                 || StringUtils.hasText(moduleUpdateRequest.getLowerModuleTitle())
                 || StringUtils.hasText(moduleUpdateRequest.getExtraData());
+        deleteModule(moduleUpdateRequest, isNotDelete);
+        return isNotDelete;
+    }
+
+    private void deleteModule(ModuleUpdateRequest moduleUpdateRequest, boolean isNotDelete) {
         if (!isNotDelete) {
             moduleRepository.deleteById(moduleUpdateRequest.getId());
         }
-        return isNotDelete;
     }
 }

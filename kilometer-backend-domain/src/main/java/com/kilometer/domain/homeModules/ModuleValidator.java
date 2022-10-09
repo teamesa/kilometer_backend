@@ -2,32 +2,87 @@ package com.kilometer.domain.homeModules;
 
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
+import com.kilometer.domain.item.ItemService;
+import com.kilometer.domain.item.dto.ItemResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class ModuleValidator {
 
-    public List<ModuleUpdateRequest> validateModule(List<ModuleUpdateRequest> moduleList, BindingResult bindingResult) {
-        List<ModuleUpdateRequest> modules = removeEmpty(moduleList);
+    private final ItemService itemService;
 
+    public List<ModuleUpdateRequest> filterByEmptyAndNull(List<ModuleUpdateRequest> modules) {
+        return modules.stream()
+                .filter(ModuleUpdateRequest::isNotEmpty)
+                .filter(ModuleUpdateRequest::isNotNull)
+                .collect(Collectors.toList());
+    }
+
+    public void validateModule(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
         validationDuplicationExposureOrderNumber(modules, bindingResult);
         validationEmptyExposureOrderNumber(modules, bindingResult);
         validationEmptyModuleName(modules, bindingResult);
-
-        return modules;
+        validationExtraDataSwipeItem(modules, bindingResult);
+        validationExtraDataKeyVisual(modules, bindingResult);
+        validationExtraDataMonthlyFreeItem(modules, bindingResult);
     }
 
-    private List<ModuleUpdateRequest> removeEmpty(List<ModuleUpdateRequest> moduleList) {
-        return moduleList.stream()
-                .filter(ModuleUpdateRequest::isNotEmpty)
-                .collect(Collectors.toList());
+    private void validationExtraDataMonthlyFreeItem(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+        boolean isNotNull = modules.stream()
+                .filter(module -> ModuleType.MONTHLY_FREE_ITEM.equals(module.getModuleName()))
+                .map(ModuleUpdateRequest::getExtraData)
+                .anyMatch(StringUtils::hasText);
+
+        if (isNotNull) {
+            bindingResult.reject("checkedExtraDataMonthlyFreeItem");
+        }
+    }
+
+    private void validationExtraDataKeyVisual(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+        boolean isNotNull = modules.stream()
+                .filter(module -> ModuleType.KEY_VISUAL.equals(module.getModuleName()))
+                .map(ModuleUpdateRequest::getExtraData)
+                .anyMatch(StringUtils::hasText);
+
+        if (isNotNull) {
+            bindingResult.reject("checkedExtraDataKeyVisual");
+        }
+    }
+
+    private void validationExtraDataSwipeItem(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+        try {
+            List<ItemResponse> items = modules.stream()
+                    .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
+                    .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
+                    .collect(Collectors.toList());
+
+            boolean isNull = items.stream()
+                    .map(ItemResponse::getIntroduce)
+                    .anyMatch(Predicate.not(StringUtils::hasText));
+
+            if (isNull) {
+                bindingResult.reject("checkedExtraDataSwipeItemIntroduce");
+            }
+
+            List<Long> detailImageUrlsCount = items.stream()
+                    .map(item -> (long) item.getDetailImageUrls().size())
+                    .collect(Collectors.toList());
+
+            if (detailImageUrlsCount.stream().anyMatch(count -> count == 0)) {
+                bindingResult.reject("checkedExtraDataSwipeItemDetailImageUrl");
+            }
+        } catch (IllegalArgumentException e) {
+            bindingResult.reject("checkedExtraDataSwipeItem");
+        }
     }
 
     private void validationDuplicationExposureOrderNumber(

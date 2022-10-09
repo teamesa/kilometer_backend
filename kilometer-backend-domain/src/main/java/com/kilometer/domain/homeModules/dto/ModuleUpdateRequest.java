@@ -28,6 +28,12 @@ public class ModuleUpdateRequest {
                 || StringUtils.hasText(extraData);
     }
 
+    public boolean isNotNull() {
+        return id != null || exposureOrderNumber != null || moduleName != null
+                || StringUtils.hasText(upperModuleTitle) || StringUtils.hasText(lowerModuleTitle)
+                || StringUtils.hasText(extraData);
+    }
+
     public boolean isNotDelete() {
         return id == null || exposureOrderNumber != null || moduleName != null
                 || StringUtils.hasText(upperModuleTitle) || StringUtils.hasText(lowerModuleTitle)
