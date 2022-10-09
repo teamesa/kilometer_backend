@@ -17,9 +17,11 @@ import com.kilometer.domain.linkInfo.LinkInfo;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
 import com.kilometer.domain.util.FrontUrlUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -163,7 +165,7 @@ public class ArchiveAggregateConverter {
 
         return List.of(
             LinkInfo.of("수정", FrontUrlUtils.getFrontModifyArchiveWithId(archiveId)),
-            LinkInfo.of("삭제", ApiUrlUtils.getArchiveDetailUrl(archiveId)));
+            LinkInfo.of("삭제", ApiUrlUtils.getArchiveUrl(archiveId)));
 
     }
 }
