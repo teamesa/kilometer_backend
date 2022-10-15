@@ -1,8 +1,11 @@
-package com.kilometer.domain.homeModules;
+package com.kilometer.domain.homeModules.modules;
 
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
+import com.kilometer.domain.homeModules.enums.ModuleType;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -21,11 +24,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "module")
 public class Module {
-    @Id @GeneratedValue
+
+    @Id
+    @GeneratedValue
     private Long id;
 
     private int exposureOrderNumber;
-    private String moduleName;
+    @Enumerated(value = EnumType.STRING)
+    private ModuleType moduleName;
     private String upperModuleTitle;
     private String lowerModuleTitle;
     private String extraData;

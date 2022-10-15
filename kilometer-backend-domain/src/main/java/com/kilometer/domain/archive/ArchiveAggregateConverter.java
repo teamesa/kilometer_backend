@@ -17,9 +17,11 @@ import com.kilometer.domain.linkInfo.LinkInfo;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
 import com.kilometer.domain.util.FrontUrlUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -114,7 +116,7 @@ public class ArchiveAggregateConverter {
             .typeBadge(itemBadge)
             .updatedAt(myArchiveDto.getUpdatedAt())
             .existArchiveImages(existImages)
-            .api(ApiUrlUtils.getArchiveUrl(myArchiveDto.getId()))
+            .api(ApiUrlUtils.getArchiveDetailUrl(myArchiveDto.getId()))
             .build();
     }
 

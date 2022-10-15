@@ -1,10 +1,17 @@
 package com.kilometer.domain.item;
 
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
+
 import com.kilometer.domain.archive.QArchive;
+import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlace;
+import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.itemDetail.QItemDetail;
+import com.kilometer.domain.item.itemDetailImage.QItemDetailImage;
 import com.kilometer.domain.pick.QPick;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
@@ -32,6 +39,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
+    private final static QItemDetail itemDetail = QItemDetail.itemDetail;
+    private final static QItemDetailImage itemDetailImage = QItemDetailImage.itemDetailImage;
+    private final static QUserVisitPlace visitPlace = QUserVisitPlace.userVisitPlace;
     private final static QPick pick = QPick.pick;
     private final static QArchive archive = QArchive.archive;
 
@@ -141,6 +151,30 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .on(pick.pickedItem.eq(itemEntity), eqUserId(userId))
             .where(itemEntity.id.eq(itemId))
             .fetchOne());
+    }
+
+    @Override
+    public SwipeItemDto findSwipeItemByItemId(Long itemId) {
+        List<String> photos = queryFactory.select(itemDetailImage.imageUrl).from(itemDetailImage)
+            .where(itemDetailImage.item.id.eq(itemId)).fetch();
+
+        SwipeItemDto dto = queryFactory.select(Projections.fields(SwipeItemDto.class,
+                itemEntity.title,
+                itemDetail.introduce.as("content"),
+                itemEntity.exhibitionType,
+                itemEntity.placeName,
+                itemEntity.thumbnailImageUrl
+            ))
+            .from(itemEntity)
+            .leftJoin(itemDetail)
+            .on(itemDetail.item.eq(itemEntity))
+            .where(itemEntity.id.eq(itemId))
+            .fetchOne();
+
+        dto.setPhotoUrls(photos);
+        return dto;
+
+
     }
 
     private BooleanExpression eqExhibitionType(FilterOptions filterOptions) {
