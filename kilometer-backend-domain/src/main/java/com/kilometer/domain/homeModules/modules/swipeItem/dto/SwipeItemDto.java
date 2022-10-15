@@ -13,6 +13,7 @@ public class SwipeItemDto {
     private String content;
     private String placeName;
     private ExhibitionType exhibitionType;
+    private String thumbnailImageUrl;
     private List<String> photos;
 
     public SwipeItemDto setPhotoUrls(List<String> photos) {
