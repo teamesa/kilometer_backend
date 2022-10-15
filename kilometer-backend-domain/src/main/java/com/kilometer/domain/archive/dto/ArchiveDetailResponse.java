@@ -23,4 +23,5 @@ public class ArchiveDetailResponse {
     private String cafe;
     private List<String> photoUrls;
     private List<LinkInfo> archiveAdditionalInfos;
+    private boolean visibleAtItem;
 }

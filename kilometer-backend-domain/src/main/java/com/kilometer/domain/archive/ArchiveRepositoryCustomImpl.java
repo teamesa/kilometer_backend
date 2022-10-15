@@ -35,41 +35,41 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     @Override
     public Page<ItemArchiveDto> findAllByItemIdAndUserId(Pageable pageable,
-                                                         ArchiveQueryRequest queryRequest) {
+        ArchiveQueryRequest queryRequest) {
         List<ItemArchiveDto> archives = queryFactory
-                .select(Projections.fields(ItemArchiveDto.class,
-                                archive.id,
-                                user.name,
-                                user.imageUrl,
-                                archive.updatedAt,
-                                archive.starRating,
-                                archive.likeCount,
-                                archive.comment,
-                                like.isLiked
-                        )
+            .select(Projections.fields(ItemArchiveDto.class,
+                    archive.id,
+                    user.name,
+                    user.imageUrl,
+                    archive.updatedAt,
+                    archive.starRating,
+                    archive.likeCount,
+                    archive.comment,
+                    like.isLiked
                 )
-                .from(archive)
-                .leftJoin(user)
-                .on(user.id.eq(archive.user.id))
-                .leftJoin(like)
-                .on(like.likedArchive.eq(archive), eqUserId(queryRequest.getUserId()))
-                .where(
-                        archive.item.id.eq(queryRequest.getItemId()),
-                        eqIsVisible(queryRequest.isVisible())
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(getOrderSpecifier(queryRequest.getArchiveSortType()))
-                .fetch();
+            )
+            .from(archive)
+            .leftJoin(user)
+            .on(user.id.eq(archive.user.id))
+            .leftJoin(like)
+            .on(like.likedArchive.eq(archive), eqUserId(queryRequest.getUserId()))
+            .where(
+                archive.item.id.eq(queryRequest.getItemId()),
+                eqIsVisible(queryRequest.isVisible())
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .orderBy(getOrderSpecifier(queryRequest.getArchiveSortType()))
+            .fetch();
 
         int count = queryFactory
-                .select(archive.id)
-                .from(archive)
-                .where(
-                        archive.item.id.eq(queryRequest.getItemId()),
-                        eqIsVisible(queryRequest.isVisible())
-                )
-                .fetch().size();
+            .select(archive.id)
+            .from(archive)
+            .where(
+                archive.item.id.eq(queryRequest.getItemId()),
+                eqIsVisible(queryRequest.isVisible())
+            )
+            .fetch().size();
 
         return new PageImpl<>(archives, pageable, count);
     }
@@ -78,71 +78,72 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     public Page<MyArchiveDto> findAllByUserId(Pageable pageable, ArchiveQueryRequest queryRequest) {
 
         List<MyArchiveDto> archives = queryFactory
-                .select(Projections.fields(MyArchiveDto.class,
-                        archive.id,
-                        itemEntity.title,
-                        itemEntity.exhibitionType,
-                        itemEntity.listImageUrl,
-                        archive.comment,
-                        archive.updatedAt
-                ))
-                .from(archive)
-                .leftJoin(itemEntity)
-                .on(itemEntity.id.eq(archive.item.id))
-                .where(
-                        archive.user.id.eq(queryRequest.getUserId())
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(getOrderSpecifier(queryRequest.getArchiveSortType()))
-                .fetch();
+            .select(Projections.fields(MyArchiveDto.class,
+                archive.id,
+                itemEntity.title,
+                itemEntity.exhibitionType,
+                itemEntity.listImageUrl,
+                archive.comment,
+                archive.updatedAt
+            ))
+            .from(archive)
+            .leftJoin(itemEntity)
+            .on(itemEntity.id.eq(archive.item.id))
+            .where(
+                archive.user.id.eq(queryRequest.getUserId())
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .orderBy(getOrderSpecifier(queryRequest.getArchiveSortType()))
+            .fetch();
 
         int count = queryFactory
-                .select(archive.id)
-                .from(archive)
-                .where(
-                        archive.user.id.eq(queryRequest.getUserId())
-                )
-                .fetch().size();
+            .select(archive.id)
+            .from(archive)
+            .where(
+                archive.user.id.eq(queryRequest.getUserId())
+            )
+            .fetch().size();
 
         return new PageImpl<>(archives, pageable, count);
     }
 
     @Override
-    public Optional<ArchiveDetailDto> findByArchiveIdAndUserId(long archiveId, long userId, boolean isVisible) {
+    public Optional<ArchiveDetailDto> findByArchiveIdAndUserId(long archiveId, long userId,
+        boolean isVisible) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(ArchiveDetailDto.class,
-                        archive.id,
-                        itemEntity.exhibitionType,
-                        archive.updatedAt,
-                        itemEntity.title,
-                        archive.comment,
-                        archive.starRating,
-                        user.id.eq(userId).as("isWrited")
-                ))
-                .from(archive)
-                .leftJoin(itemEntity)
-                .on(itemEntity.id.eq(archive.item.id))
-                .leftJoin(user)
-                .on(user.id.eq(archive.user.id))
-                .where(
-                        archive.id.eq(archiveId),
-                        eqIsVisible(isVisible)
-                )
-                .fetchOne());
+                archive.id,
+                itemEntity.exhibitionType,
+                archive.updatedAt,
+                itemEntity.title,
+                archive.comment,
+                archive.starRating,
+                user.id.eq(userId).as("isWrited")
+            ))
+            .from(archive)
+            .leftJoin(itemEntity)
+            .on(itemEntity.id.eq(archive.item.id))
+            .leftJoin(user)
+            .on(user.id.eq(archive.user.id))
+            .where(
+                archive.id.eq(archiveId),
+                eqIsVisible(isVisible)
+            )
+            .fetchOne());
     }
 
     @Override
     public Double avgStarRatingByItemId(long itemId) {
         return queryFactory
-                .select(
-                        archive.starRating.avg()
-                )
-                .from(archive)
-                .where(
-                        archive.item.id.eq(itemId),
-                        archive.isVisibleAtItem.eq(true)
-                )
-                .fetchOne();
+            .select(
+                archive.starRating.avg()
+            )
+            .from(archive)
+            .where(
+                archive.item.id.eq(itemId),
+                archive.isVisibleAtItem.eq(true)
+            )
+            .fetchOne();
     }
 
     @SuppressWarnings("rawtypes")
