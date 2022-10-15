@@ -18,20 +18,21 @@ public class HomeRenderingService {
     private final ModuleHandlerAdapter adapter;
     private final ModuleRepository moduleRepository;
 
-    public ModuleResponseDto<Object> getKeyVisual() {
+    public ModuleResponseDto<Object> getKeyVisual(Long userId) {
         ModuleType type = ModuleType.KEY_VISUAL;
-        return ModuleResponseDto.of(type, 0, adapter.getHandlerAdapter(type).generator(null));
+        ModuleParamDto paramDto = ModuleParamGenerator.from(userId, null);
+        return ModuleResponseDto.of(type, 0, adapter.getHandlerAdapter(type).generator(paramDto));
     }
 
-    public HomeApiResponse getHomeModules() {
+    public HomeApiResponse getHomeModules(Long userId) {
         List<Module> modules = moduleRepository.findAll();
         List<ModuleResponseDto<Object>> result = new ArrayList<>();
         for (int i = 0; i < modules.size(); i++) {
             Module module = modules.get(i);
+            ModuleParamDto paramDto = ModuleParamGenerator.from(userId, module.getExtraData());
             result.add(
                 ModuleResponseDto.of(module.getModuleName(), i,
-                    adapter.getHandlerAdapter(module.getModuleName())
-                        .generator(module.getExtraData())
+                    adapter.getHandlerAdapter(module.getModuleName()).generator(paramDto)
                 ));
         }
         return HomeApiResponse.from(result);
