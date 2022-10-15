@@ -10,12 +10,12 @@ import org.springframework.data.domain.Pageable;
 
 public interface ArchiveRepositoryCustom {
 
-    Page<ItemArchiveDto> findAllByItemIdAndUserId(Pageable pageable,
+    Page<ItemArchiveDto> findAllItemArchiveByArchiveQueryRequest(Pageable pageable,
         ArchiveQueryRequest queryRequest);
 
-    Page<MyArchiveDto> findAllByUserId(Pageable pageable, ArchiveQueryRequest queryRequest);
+    Page<MyArchiveDto> findAllMyArchiveByArchiveQueryRequest(Pageable pageable, ArchiveQueryRequest queryRequest);
 
-    Optional<ArchiveDetailDto> findByArchiveIdAndUserId(long archiveId, long userId, boolean isVisible);
+    Optional<ArchiveDetailDto> findByArchiveIdAndUserIdAndIsVisible(long archiveId, long userId, boolean isVisible);
 
     Double avgStarRatingByItemId(long itemId);
 }

@@ -88,7 +88,7 @@ public class ArchiveService {
         Preconditions.notNull(sortType, "sort type value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<ItemArchiveDto> items = archiveRepository.findAllByItemIdAndUserId(pageable,
+        Page<ItemArchiveDto> items = archiveRepository.findAllItemArchiveByArchiveQueryRequest(pageable,
             ArchiveQueryRequest.builder()
                 .archiveSortType(sortType)
                 .itemId(itemId)
@@ -109,7 +109,7 @@ public class ArchiveService {
         Preconditions.notNull(requestPagingStatus, "page value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<MyArchiveDto> archives = archiveRepository.findAllByUserId(pageable,
+        Page<MyArchiveDto> archives = archiveRepository.findAllMyArchiveByArchiveQueryRequest(pageable,
             ArchiveQueryRequest.builder()
                 .archiveSortType(sortType)
                 .userId(userId)
@@ -158,7 +158,7 @@ public class ArchiveService {
         Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
         Preconditions.notNull(userId, "User id must not be null : " + userId);
 
-        ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserId(archiveId,
+        ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserIdAndIsVisible(archiveId,
                 userId, false)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exist"));
 

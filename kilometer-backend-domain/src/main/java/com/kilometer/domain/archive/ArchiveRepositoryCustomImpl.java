@@ -34,7 +34,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<ItemArchiveDto> findAllByItemIdAndUserId(Pageable pageable,
+    public Page<ItemArchiveDto> findAllItemArchiveByArchiveQueryRequest(Pageable pageable,
         ArchiveQueryRequest queryRequest) {
         List<ItemArchiveDto> archives = queryFactory
             .select(Projections.fields(ItemArchiveDto.class,
@@ -75,7 +75,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<MyArchiveDto> findAllByUserId(Pageable pageable, ArchiveQueryRequest queryRequest) {
+    public Page<MyArchiveDto> findAllMyArchiveByArchiveQueryRequest(Pageable pageable, ArchiveQueryRequest queryRequest) {
 
         List<MyArchiveDto> archives = queryFactory
             .select(Projections.fields(MyArchiveDto.class,
@@ -109,7 +109,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Optional<ArchiveDetailDto> findByArchiveIdAndUserId(long archiveId, long userId,
+    public Optional<ArchiveDetailDto> findByArchiveIdAndUserIdAndIsVisible(long archiveId, long userId,
         boolean isVisible) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(ArchiveDetailDto.class,
                 archive.id,
@@ -163,7 +163,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     private BooleanExpression eqIsVisible(boolean isVisible) {
-        if (isVisible == false) {
+        if (!isVisible) {
             return null;
         }
         return archive.isVisibleAtItem.eq(true);
