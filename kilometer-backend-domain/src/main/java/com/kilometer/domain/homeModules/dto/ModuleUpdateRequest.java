@@ -34,12 +34,6 @@ public class ModuleUpdateRequest {
                 || StringUtils.hasText(extraData);
     }
 
-    public boolean isNotDelete() {
-        return id == null || exposureOrderNumber != null || moduleName != null
-                || StringUtils.hasText(upperModuleTitle) || StringUtils.hasText(lowerModuleTitle)
-                || StringUtils.hasText(extraData);
-    }
-
     public Module makeModule(BackOfficeAccount account) {
         return Module.builder()
                 .id(this.id)

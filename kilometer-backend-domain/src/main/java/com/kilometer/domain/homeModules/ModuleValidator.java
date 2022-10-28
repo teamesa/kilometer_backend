@@ -88,7 +88,6 @@ public class ModuleValidator {
     private void validationDuplicationExposureOrderNumber(
             List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
         List<Integer> exposureOrderNumberList = modules.stream()
-                .filter(ModuleUpdateRequest::isNotDelete)
                 .map(ModuleUpdateRequest::getExposureOrderNumber)
                 .collect(Collectors.toList());
 
@@ -99,7 +98,6 @@ public class ModuleValidator {
 
     private void validationEmptyExposureOrderNumber(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
         boolean isNull = modules.stream()
-                .filter(ModuleUpdateRequest::isNotDelete)
                 .map(ModuleUpdateRequest::getExposureOrderNumber)
                 .anyMatch(Objects::isNull);
 
@@ -110,7 +108,6 @@ public class ModuleValidator {
 
     private void validationEmptyModuleName(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
         boolean isNull = modules.stream()
-                .filter(ModuleUpdateRequest::isNotDelete)
                 .map(ModuleUpdateRequest::getModuleName)
                 .anyMatch(ModuleType.EMPTY::equals);
 

@@ -1,8 +1,10 @@
 package com.kilometer.backend.controller;
 
 import com.kilometer.domain.homeModules.HomeService;
+import com.kilometer.domain.homeModules.dto.ModuleDeleteResponseList;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
 import com.kilometer.domain.homeModules.dto.ModuleResponseList;
+import com.kilometer.domain.homeModules.dto.ModuleTypeDto;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequestList;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
@@ -17,6 +19,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 import java.util.List;
@@ -61,6 +65,18 @@ public class homeController {
         return "home/modules";
     }
 
+    @ResponseBody
+    @GetMapping(BoUrlUtils.HOME_MODULES_LIST)
+    public List<ModuleResponse> getModules() {
+        return homeService.findAllByModule();
+    }
+
+    @ResponseBody
+    @GetMapping(BoUrlUtils.HOME_MODULES_TYPE)
+    public List<ModuleTypeDto> getModulesType() {
+        return homeService.makeModuleType();
+    }
+
     @GetMapping(BoUrlUtils.HOME_MODULES_EDIT)
     public String getModules(Model model) {
         ModuleResponseList moduleList = homeService.findAllByUpdateModule();
@@ -84,5 +100,11 @@ public class homeController {
         homeService.updateModule(modules, principal.getName());
 
         return "redirect:/home/modules";
+    }
+
+    @ResponseBody
+    @PostMapping(BoUrlUtils.HOME_MODULES_DELETE)
+    public void deleteModule(@RequestBody ModuleDeleteResponseList moduleDeleteResponseList) {
+        homeService.deleteModule(moduleDeleteResponseList.getDeleteModuleList());
     }
 }
