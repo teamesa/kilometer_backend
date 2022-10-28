@@ -3,15 +3,14 @@ package com.kilometer.domain.homeModules;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.item.ItemService;
-import com.kilometer.domain.item.dto.ItemResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
@@ -60,28 +59,27 @@ public class ModuleValidator {
 
     private void validationExtraDataSwipeItem(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
         try {
-            List<ItemResponse> items = modules.stream()
+            modules.stream()
                     .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
                     .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
-                    .collect(Collectors.toList());
+                    .forEach(item -> {
+                        if (!StringUtils.hasText(item.getIntroduce())) {
+                            bindingResult.reject("checkedExtraDataSwipeItemIntroduce",
+                                    new Object[]{item.getId()}, null);
+                        }
+                    });
 
-            boolean isNull = items.stream()
-                    .map(ItemResponse::getIntroduce)
-                    .anyMatch(Predicate.not(StringUtils::hasText));
-
-            if (isNull) {
-                bindingResult.reject("checkedExtraDataSwipeItemIntroduce");
-            }
-
-            List<Long> detailImageUrlsCount = items.stream()
-                    .map(item -> (long) item.getDetailImageUrls().size())
-                    .collect(Collectors.toList());
-
-            if (detailImageUrlsCount.stream().anyMatch(count -> count == 0)) {
-                bindingResult.reject("checkedExtraDataSwipeItemDetailImageUrl");
-            }
+            modules.stream()
+                    .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
+                    .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
+                    .forEach(item -> {
+                        if (item.getDetailImageUrls().isEmpty()) {
+                            bindingResult.reject("checkedExtraDataSwipeItemDetailImageUrl",
+                                    new Object[]{item.getId()}, null);
+                        }
+                    });
         } catch (IllegalArgumentException e) {
-            bindingResult.reject("checkedExtraDataSwipeItem");
+            bindingResult.reject("checkedExtraDataSwipeItem", new Object[] {e.getMessage()}, null);
         }
     }
 
@@ -91,8 +89,17 @@ public class ModuleValidator {
                 .map(ModuleUpdateRequest::getExposureOrderNumber)
                 .collect(Collectors.toList());
 
-        if (exposureOrderNumberList.size() != exposureOrderNumberList.stream().distinct().count()) {
-            bindingResult.reject("checkedSequenceDistinct");
+        HashSet<Integer> set = new HashSet<>();
+        exposureOrderNumberList
+                .forEach(exposureOrderNumber -> {
+                    if (exposureOrderNumberList.indexOf(exposureOrderNumber)
+                            != exposureOrderNumberList.lastIndexOf(exposureOrderNumber)) {
+                        set.add(exposureOrderNumber);
+                    }
+                });
+
+        if (!set.isEmpty()) {
+            bindingResult.reject("checkedSequenceDistinct", new Object[] {set}, null);
         }
     }
 

@@ -87,7 +87,7 @@ public class ItemService {
         Preconditions.notNull(itemId, "id must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
+            .orElseThrow(() -> new IllegalArgumentException("해당 Item이 없습니다. id=" + itemId));
         return itemEntity.makeResponse();
     }
 
@@ -95,7 +95,7 @@ public class ItemService {
         Preconditions.notNull(itemId, "id must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
+            .orElseThrow(() -> new IllegalArgumentException("해당 Item이 없습니다. id=" + itemId));
         return itemEntity.makeUpdateResponse();
     }
 
