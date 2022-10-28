@@ -6,8 +6,8 @@ import com.kilometer.domain.item.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -26,46 +26,49 @@ public class ModuleValidator {
                 .collect(Collectors.toList());
     }
 
-    public void validateModule(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
-        validationDuplicationExposureOrderNumber(modules, bindingResult);
-        validationEmptyExposureOrderNumber(modules, bindingResult);
-        validationEmptyModuleName(modules, bindingResult);
-        validationExtraDataSwipeItem(modules, bindingResult);
-        validationExtraDataKeyVisual(modules, bindingResult);
-        validationExtraDataMonthlyFreeItem(modules, bindingResult);
+    public List<String> validateModule(List<ModuleUpdateRequest> modules) {
+        List<String> errors = new ArrayList<>();
+
+        validationDuplicationExposureOrderNumber(modules, errors);
+        validationEmptyExposureOrderNumber(modules, errors);
+        validationEmptyModuleName(modules, errors);
+        validationExtraDataSwipeItem(modules, errors);
+        validationExtraDataKeyVisual(modules, errors);
+        validationExtraDataMonthlyFreeItem(modules, errors);
+
+        return errors;
     }
 
-    private void validationExtraDataMonthlyFreeItem(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+    private void validationExtraDataMonthlyFreeItem(List<ModuleUpdateRequest> modules, List<String> errors) {
         boolean isNotNull = modules.stream()
                 .filter(module -> ModuleType.MONTHLY_FREE_ITEM.equals(module.getModuleName()))
                 .map(ModuleUpdateRequest::getExtraData)
                 .anyMatch(StringUtils::hasText);
 
         if (isNotNull) {
-            bindingResult.reject("checkedExtraDataMonthlyFreeItem");
+            errors.add("프리 티켓의 Extra Data는 비어있어야 합니다.");
         }
     }
 
-    private void validationExtraDataKeyVisual(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+    private void validationExtraDataKeyVisual(List<ModuleUpdateRequest> modules, List<String> errors) {
         boolean isNotNull = modules.stream()
                 .filter(module -> ModuleType.KEY_VISUAL.equals(module.getModuleName()))
                 .map(ModuleUpdateRequest::getExtraData)
                 .anyMatch(StringUtils::hasText);
 
         if (isNotNull) {
-            bindingResult.reject("checkedExtraDataKeyVisual");
+            errors.add("키비주얼의 Extra Data는 비어있어야 합니다.");
         }
     }
 
-    private void validationExtraDataSwipeItem(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+    private void validationExtraDataSwipeItem(List<ModuleUpdateRequest> modules, List<String> errors) {
         try {
             modules.stream()
                     .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
                     .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
                     .forEach(item -> {
                         if (!StringUtils.hasText(item.getIntroduce())) {
-                            bindingResult.reject("checkedExtraDataSwipeItemIntroduce",
-                                    new Object[]{item.getId()}, null);
+                            errors.add("ITEM " + item.getId() + "의 소개글이 없습니다.");
                         }
                     });
 
@@ -74,17 +77,16 @@ public class ModuleValidator {
                     .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
                     .forEach(item -> {
                         if (item.getDetailImageUrls().isEmpty()) {
-                            bindingResult.reject("checkedExtraDataSwipeItemDetailImageUrl",
-                                    new Object[]{item.getId()}, null);
+                            errors.add("ITEM " + item.getId() + "의 소개 이미지가 없습니다.");
                         }
                     });
         } catch (IllegalArgumentException e) {
-            bindingResult.reject("checkedExtraDataSwipeItem", new Object[] {e.getMessage()}, null);
+            errors.add(e.getMessage());
         }
     }
 
     private void validationDuplicationExposureOrderNumber(
-            List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+            List<ModuleUpdateRequest> modules, List<String> errors) {
         List<Integer> exposureOrderNumberList = modules.stream()
                 .map(ModuleUpdateRequest::getExposureOrderNumber)
                 .collect(Collectors.toList());
@@ -99,27 +101,27 @@ public class ModuleValidator {
                 });
 
         if (!set.isEmpty()) {
-            bindingResult.reject("checkedSequenceDistinct", new Object[] {set}, null);
+            errors.add("해당 순서가 중복됩니다. : " + set);
         }
     }
 
-    private void validationEmptyExposureOrderNumber(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+    private void validationEmptyExposureOrderNumber(List<ModuleUpdateRequest> modules, List<String> errors) {
         boolean isNull = modules.stream()
                 .map(ModuleUpdateRequest::getExposureOrderNumber)
                 .anyMatch(Objects::isNull);
 
         if (isNull) {
-            bindingResult.reject("checkedSequenceEmpty");
+            errors.add("순서가 비어있습니다.");
         }
     }
 
-    private void validationEmptyModuleName(List<ModuleUpdateRequest> modules, BindingResult bindingResult) {
+    private void validationEmptyModuleName(List<ModuleUpdateRequest> modules, List<String> errors) {
         boolean isNull = modules.stream()
                 .map(ModuleUpdateRequest::getModuleName)
                 .anyMatch(ModuleType.EMPTY::equals);
 
         if (isNull) {
-            bindingResult.reject("checkedModuleNameEmpty");
+            errors.add("모듈이름을 선택해주세요.");
         }
     }
 }

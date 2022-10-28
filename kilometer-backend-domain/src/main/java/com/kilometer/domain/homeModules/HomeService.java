@@ -63,16 +63,27 @@ public class HomeService {
                 .build();
     }
 
-    public List<ModuleUpdateRequest> moduleFilter(List<ModuleUpdateRequest> moduleList) {
+    public List<String> updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
+        List<ModuleUpdateRequest> modules = moduleFilter(moduleList);
+        List<String> errors = validateModule(modules);
+
+        if (errors.isEmpty()) {
+            update(modules, createdAccount);
+        }
+
+        return errors;
+    }
+
+    private List<ModuleUpdateRequest> moduleFilter(List<ModuleUpdateRequest> moduleList) {
         return moduleValidator.filterByEmptyAndNull(moduleList);
     }
 
-    public void validateModule(List<ModuleUpdateRequest> moduleList, BindingResult bindingResult) {
-        moduleValidator.validateModule(moduleList, bindingResult);
+    private List<String> validateModule(List<ModuleUpdateRequest> moduleList) {
+        return moduleValidator.validateModule(moduleList);
     }
 
     @Transactional
-    public void updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
+    public void update(List<ModuleUpdateRequest> moduleList, String createdAccount) {
         BackOfficeAccount account = backOfficeAccountService.findByUsername(createdAccount);
 
         List<Module> saveAndUpdateModules = moduleList.stream()

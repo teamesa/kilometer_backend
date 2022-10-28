@@ -4,6 +4,7 @@ var appVue = new Vue({
         modules: [],
         moduleType: [],
         deleteModulesId: [],
+        errors: [],
     },
 
     mounted: function () {
@@ -85,8 +86,46 @@ var appVue = new Vue({
             }
         },
 
-        deleteModules: function () {
+        save: function () {
             let $this = this;
+            let moduleList = {
+                moduleList: $this.modules
+            }
+            let data = JSON.stringify(moduleList);
+
+            axios.post('/home/modules/edit', data, {
+                headers: {
+                    'Content-Type': 'application/json'}
+            })
+                .then(function (response) {
+                    $this.errors = response.data;
+                    console.log(response.data);
+                    console.log($this.errors);
+                    $this.checkErrors();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+
+        checkErrors: function () {
+            let $this = this;
+            let errors = $this.errors;
+
+            if (errors.length !== 0) {
+                let printError = '';
+                errors.forEach((error) => {
+                    printError += error + '\n';
+                })
+                alert(printError);
+            } else {
+                $this.deleteModule();
+            }
+        },
+
+        deleteModule: function () {
+            let $this = this;
+
             let data = JSON.stringify({
                 deleteModuleList: $this.deleteModulesId
             })
@@ -96,10 +135,16 @@ var appVue = new Vue({
                 }
             })
                 .then(function (response) {
+                    console.log(response);
+                    $this.goList();
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+
+        goList: function () {
+            location.href = '/home/modules';
         }
     }
 })

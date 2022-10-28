@@ -14,103 +14,89 @@
 
 <!-- wrap : s -->
 <div id="wrap">
-    <form action="" th:action method="post" th:object="${moduleList}">
-        <div id="error" th:if="${#fields.hasGlobalErrors()}" style="display: none">
-            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+    <table class="tg" id="moduleTable">
+        <colgroup>
+            <col width="18%">
+            <col width="18%">
+            <col width="19%">
+            <col width="19%">
+            <col width="18%">
+            <col width="8%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th class="mainTitle mainTitleForm" colspan="5">
+                <h2>모듈 관리</h2>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="subTitle">모듈 순서</td>
+            <td class="subTitle">모듈 이름</td>
+            <td class="subTitle">타이틀1</td>
+            <td class="subTitle">타이틀2</td>
+            <td class="subTitle">추가 데이터</td>
+            <td class="subTitle">삭제 버튼</td>
+        </tr>
+        <tr v-for="(module, index) in modules">
+            <input type="hidden"
+                   :name="'moduleList[' +  index  + '].id'"
+                   v-model="module.id">
+            <td>
+                <input type="text"
+                       :name="'moduleList[' +  index  + '].exposureOrderNumber'"
+                       v-model="module.exposureOrderNumber">
+            </td>
+            <td>
+                <select
+                        :name="'moduleList[' +  index  + '].moduleName'"
+                        v-model="module.moduleName"
+                        @change="change(index)">
+                    <option v-for="type in moduleType" :value="type.key">{{ type.description }}</option>
+                </select>
+            </td>
+            <td>
+                <input type="text"
+                       :name="'moduleList[' +  index  + '].upperModuleTitle'"
+                       v-model="module.upperModuleTitle"
+                       :disabled="module.titleDisabled">
+            </td>
+            <td>
+                <input type="text"
+                       :name="'moduleList[' +  index  + '].lowerModuleTitle'"
+                       v-model="module.lowerModuleTitle"
+                       :disabled="module.titleDisabled">
+            </td>
+            <td>
+                <input type="text"
+                       :name="'moduleList[' +  index  + '].extraData'"
+                       v-model="module.extraData"
+                       :disabled="module.extraDataDisabled">
+            </td>
+            <td>
+                <div>
+                    <button type="button" class="button" @click="removeRow(index)">삭제</button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <div class="mainTitle centerDiv1">
+        <div class="leftDiv">
+            <button type="button" class="button" @click="addRow">추가</button>
         </div>
-        <table class="tg" id="moduleTable">
-            <colgroup>
-                <col width="18%">
-                <col width="18%">
-                <col width="19%">
-                <col width="19%">
-                <col width="18%">
-                <col width="8%">
-            </colgroup>
-            <thead>
-            <tr>
-                <th class="mainTitle mainTitleForm" colspan="5">
-                    <h2>모듈 관리</h2>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td class="subTitle">모듈 순서</td>
-                <td class="subTitle">모듈 이름</td>
-                <td class="subTitle">타이틀1</td>
-                <td class="subTitle">타이틀2</td>
-                <td class="subTitle">추가 데이터</td>
-                <td class="subTitle">삭제 버튼</td>
-            </tr>
-            <tr v-for="(module, index) in modules">
-                <input type="hidden"
-                       :name="'moduleList[' +  index  + '].id'"
-                       v-model="module.id">
-                <td>
-                    <input type="text"
-                           :name="'moduleList[' +  index  + '].exposureOrderNumber'"
-                           v-model="module.exposureOrderNumber">
-                </td>
-                <td>
-                    <select
-                            :name="'moduleList[' +  index  + '].moduleName'"
-                            v-model="module.moduleName"
-                            @change="change(index)">
-                        <option v-for="type in moduleType" :value="type.key">{{ type.description }}</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text"
-                           :name="'moduleList[' +  index  + '].upperModuleTitle'"
-                           v-model="module.upperModuleTitle"
-                           :disabled="module.titleDisabled">
-                </td>
-                <td>
-                    <input type="text"
-                           :name="'moduleList[' +  index  + '].lowerModuleTitle'"
-                           v-model="module.lowerModuleTitle"
-                           :disabled="module.titleDisabled">
-                </td>
-                <td>
-                    <input type="text"
-                           :name="'moduleList[' +  index  + '].extraData'"
-                           v-model="module.extraData"
-                           :disabled="module.extraDataDisabled">
-                </td>
-                <td>
-                    <div>
-                        <button type="button" class="button" @click="removeRow(index)">삭제</button>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <br>
-        <div class="mainTitle centerDiv1">
-            <div class="leftDiv">
-                <button type="button" class="button" @click="addRow">추가</button>
-            </div>
-            <div class="rightDiv">
-                <button type="button" onclick="location.href='modules.html'"
-                        th:onclick="|location.href='@{/home/modules}'|" class="button">취소
-                </button>
-            </div>
-            <div class="rightDiv">
-                <button type="submit" class="button" @click="deleteModules">저장</button>
-            </div>
+        <div class="rightDiv">
+            <button type="button" onclick="location.href='modules.html'"
+                    th:onclick="|location.href='@{/home/modules}'|" class="button">취소
+            </button>
         </div>
-    </form>
+        <div class="rightDiv">
+            <button type="button" class="button" @click="save">저장</button>
+        </div>
+    </div>
 </div>
-
-<script>
-    (function () {
-        const error = document.getElementById('error');
-        if (error !== null && error.innerText) {
-            alert(error.innerText);
-        }
-    })();
-</script>
 
 <script src="../../static/js/module.js" th:src="@{/js/module.js}"></script>
 

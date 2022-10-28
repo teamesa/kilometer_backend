@@ -30,9 +30,6 @@ spring:
     baseline-on-migrate: true
     baseline-version: 0
 
-  messages:
-    basename: errors
-
 cloud:
   aws:
     s3:

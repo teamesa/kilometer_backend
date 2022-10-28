@@ -5,9 +5,7 @@ import com.kilometer.domain.homeModules.dto.ModuleDeleteResponseList;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
 import com.kilometer.domain.homeModules.dto.ModuleResponseList;
 import com.kilometer.domain.homeModules.dto.ModuleTypeDto;
-import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequestList;
-import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualResponse;
 import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualUpdateResponseList;
 import com.kilometer.domain.util.BoUrlUtils;
@@ -15,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,11 +28,6 @@ import java.util.List;
 public class homeController {
 
     private final HomeService homeService;
-
-    @ModelAttribute("moduleTypes")
-    public ModuleType[] moduleTypes() {
-        return ModuleType.values();
-    }
 
     @GetMapping(BoUrlUtils.KEY_VISUAL)
     public String keyVisual(Model model) {
@@ -84,22 +76,11 @@ public class homeController {
         return "home/updateModules";
     }
 
+    @ResponseBody
     @PostMapping(BoUrlUtils.HOME_MODULES_EDIT)
-    public String updateModules(@ModelAttribute("moduleList") ModuleUpdateRequestList moduleUpdateRequestList,
-                                BindingResult bindingResult,
-                                Principal principal) {
-        List<ModuleUpdateRequest> modules = homeService.moduleFilter(moduleUpdateRequestList.getModuleList());
-
-        homeService.validateModule(modules, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
-            return "home/updateModules";
-        }
-
-        homeService.updateModule(modules, principal.getName());
-
-        return "redirect:/home/modules";
+    public List<String> updateModules(
+            @RequestBody ModuleUpdateRequestList moduleUpdateRequestList, Principal principal) {
+        return homeService.updateModule(moduleUpdateRequestList.getModuleList(), principal.getName());
     }
 
     @ResponseBody
