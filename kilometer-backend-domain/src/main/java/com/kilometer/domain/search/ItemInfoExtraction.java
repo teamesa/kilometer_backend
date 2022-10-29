@@ -23,4 +23,6 @@ public interface ItemInfoExtraction {
     boolean isHearted();
 
     String getApiType();
+
+    String getPresentationImage();
 }
