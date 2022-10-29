@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class HomeService {
 
     private final KeyVisualRepository keyVisualRepository;

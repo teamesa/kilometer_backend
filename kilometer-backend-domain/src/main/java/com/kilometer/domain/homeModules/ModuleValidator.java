@@ -62,27 +62,31 @@ public class ModuleValidator {
     }
 
     private void validationExtraDataSwipeItem(List<ModuleUpdateRequest> modules, List<String> errors) {
-        try {
-            modules.stream()
-                    .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
-                    .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
-                    .forEach(item -> {
-                        if (!StringUtils.hasText(item.getIntroduce())) {
-                            errors.add("ITEM " + item.getId() + "의 소개글이 없습니다.");
-                        }
-                    });
+        modules.stream()
+                .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
+                .forEach(module -> {
+                    if (itemService.findOne(Long.valueOf(module.getExtraData())).isEmpty()) {
+                        errors.add("유효한 id가 아닙니다. id = " + module.getExtraData());
+                    }
+                });
 
-            modules.stream()
-                    .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
-                    .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
-                    .forEach(item -> {
-                        if (item.getDetailImageUrls().isEmpty()) {
-                            errors.add("ITEM " + item.getId() + "의 소개 이미지가 없습니다.");
-                        }
-                    });
-        } catch (IllegalArgumentException e) {
-            errors.add(e.getMessage());
-        }
+        modules.stream()
+                .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
+                .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
+                .forEach(optional -> optional.ifPresent(item -> {
+                    if (!StringUtils.hasText(item.getIntroduce())) {
+                        errors.add("ITEM " + item.getId() + "의 소개글이 없습니다.");
+                    }
+                }));
+
+        modules.stream()
+                .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
+                .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
+                .forEach(optional -> optional.ifPresent(item -> {
+                    if (item.getDetailImageUrls().isEmpty()) {
+                        errors.add("ITEM " + item.getId() + "의 소개 이미지가 없습니다.");
+                    }
+                }));
     }
 
     private void validationDuplicationExposureOrderNumber(
