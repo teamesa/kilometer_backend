@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>KeyVisual</title>
+    <title>Module</title>
     <link rel="stylesheet" href="../../static/css/table.css" th:href="@{/css/table.css}">
     <link rel="stylesheet" href="../../static/css/form.css" th:href="@{/css/form.css}">
     <link rel="stylesheet" href="../../static/css/buttons.css" th:href="@{/css/buttons.css}">
@@ -14,175 +14,87 @@
 
 <!-- wrap : s -->
 <div id="wrap">
-    <form action="" th:action method="post" th:object="${moduleList}" enctype="multipart/form-data">
-
-        <div th:if="${#fields.hasGlobalErrors()}">
-            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+    <table class="tg" id="moduleTable">
+        <colgroup>
+            <col width="3%">
+            <col width="10%">
+            <col width="18%">
+            <col width="25%">
+            <col width="25%">
+            <col width="*%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th class="mainTitle mainTitleForm" colspan="5">
+                <h2>모듈 관리</h2>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="subTitle"></td>
+            <td class="subTitle">모듈 순서</td>
+            <td class="subTitle">모듈 이름</td>
+            <td class="subTitle">타이틀1</td>
+            <td class="subTitle">타이틀2</td>
+            <td class="subTitle">추가 데이터</td>
+        </tr>
+        <tr v-for="(module, index) in modules">
+            <input type="hidden"
+                   v-model="module.id">
+            <td>
+                <input type="checkbox"
+                       v-model="module.checkbox">
+            </td>
+            <td>
+                <input type="text"
+                       v-model="module.exposureOrderNumber">
+            </td>
+            <td>
+                <select
+                        v-model="module.moduleName"
+                        @change="change(index)">
+                    <option v-for="type in moduleType" :value="type.key">{{ type.description }}</option>
+                </select>
+            </td>
+            <td>
+                <input type="text"
+                       v-model="module.upperModuleTitle"
+                       :disabled="module.titleDisabled">
+            </td>
+            <td>
+                <input type="text"
+                       v-model="module.lowerModuleTitle"
+                       :disabled="module.titleDisabled">
+            </td>
+            <td>
+                <input type="text"
+                       v-model="module.extraData"
+                       :disabled="module.extraDataDisabled">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <div class="mainTitle centerDiv1">
+        <div class="leftDiv">
+            <button type="button" class="button" @click="addRow">추가</button>
         </div>
-
-        <table class="tg" id="moduleTable">
-            <colgroup>
-                <col width="18%">
-                <col width="18%">
-                <col width="19%">
-                <col width="19%">
-                <col width="18%">
-                <col width="8%">
-            </colgroup>
-            <thead>
-            <tr>
-                <th class="mainTitle mainTitleForm" colspan="5">
-                    <h2>모듈 관리</h2>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td class="subTitle">모듈 순서</td>
-                <td class="subTitle">모듈 이름</td>
-                <td class="subTitle">타이틀1</td>
-                <td class="subTitle">타이틀2</td>
-                <td class="subTitle">추가 데이터</td>
-                <td class="subTitle">삭제 버튼</td>
-            </tr>
-            <tr th:each="moduleData, moduleStat : ${moduleList.getModuleList()}">
-                <input type="hidden"
-                       th:name="moduleList[__${moduleStat.index}__].id"
-                       th:value="${moduleData.id}">
-                <td>
-                    <input type="text"
-                           th:name="moduleList[__${moduleStat.index}__].exposureOrderNumber"
-                           th:value="${moduleStat.count}">
-                </td>
-                <td>
-                    <select th:field="*{moduleList[__${moduleStat.index}__].moduleName}"
-                            th:name="moduleList[__${moduleStat.index}__].moduleName">
-                        <option th:each="moduleType : ${moduleTypes}"
-                                th:value="${moduleType.name()}"
-                                th:text="${moduleType.description}">
-                        </option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text"
-                           th:name="moduleList[__${moduleStat.index}__].upperModuleTitle"
-                           th:value="${moduleData.upperModuleTitle}">
-                </td>
-                <td>
-                    <input type="text"
-                           th:name="moduleList[__${moduleStat.index}__].lowerModuleTitle"
-                           th:value="${moduleData.lowerModuleTitle}">
-                </td>
-                <td>
-                    <input type="text"
-                           th:name="moduleList[__${moduleStat.index}__].extraData"
-                           th:value="${moduleData.extraData}">
-                </td>
-                <td>
-                    <div>
-                        <button type="button" class="button"
-                                th:id="moduleList[__${moduleStat.index}__]"
-                                onclick="removeRow(this)">삭제</button>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <br>
-        <div class="mainTitle centerDiv1">
-            <div class="leftDiv">
-                <button type="button" class="button" th:onclick="addRow()">추가</button>
-            </div>
-            <div class="rightDiv">
-                <button type="button" onclick="location.href='modules.html'"
-                        th:onclick="|location.href='@{/home/modules}'|" class="button">취소
-                </button>
-            </div>
-            <div class="rightDiv">
-                <button type="submit" class="button">저장</button>
-            </div>
+        <div class="leftDiv">
+            <button type="button" class="button" @click="removeRow">삭제</button>
         </div>
-    </form>
+        <div class="rightDiv">
+            <button type="button" onclick="location.href='modules.html'"
+                    th:onclick="|location.href='@{/home/modules}'|" class="button">취소
+            </button>
+        </div>
+        <div class="rightDiv">
+            <button type="button" class="button" @click="save">저장</button>
+        </div>
+    </div>
 </div>
 
-<script th:inline="javascript">
-    let index = [[${moduleList.getModuleList().size()}]];
-    let modulesValue = [[${moduleTypes}]];
-    let modulesText = [];
-
-    /*[# th:each="moduleType : ${moduleTypes}"]*/
-    modulesText.push([[${moduleType.description}]]);
-    /*[/]*/
-
-    function addRow() {
-        let newRow = $('#moduleTable')[0].insertRow();
-
-        let newCell1 = newRow.insertCell(0);
-        let element1 = document.createElement('input');
-        element1.type = "text";
-        element1.name = "moduleList[" + index + "].exposureOrderNumber";
-        newCell1.appendChild(element1);
-
-        let newCell2 = newRow.insertCell(1);
-        let element2 = document.createElement('select');
-        element2.name = "moduleList[" + index + "].moduleName";
-        newCell2.appendChild(element2);
-        for (let i = 0; i < modulesValue.length; i++) {
-            let option = document.createElement('option');
-            option.value = modulesValue[i];
-            option.text = modulesText[i];
-            element2.appendChild(option);
-        }
-
-        let newCell3 = newRow.insertCell(2);
-        let element3 = document.createElement('input');
-        element3.type = "text";
-        element3.name = "moduleList[" + index + "].upperModuleTitle";
-        newCell3.appendChild(element3);
-
-        let newCell4 = newRow.insertCell(3);
-        let element4 = document.createElement('input');
-        element4.type = "text";
-        element4.name = "moduleList[" + index + "].lowerModuleTitle";
-        newCell4.appendChild(element4);
-
-        let newCell5 = newRow.insertCell(4);
-        let element5 = document.createElement('input');
-        element5.type = "text";
-        element5.name = "moduleList[" + index + "].extraData";
-        newCell5.appendChild(element5);
-
-        let newCell6 = newRow.insertCell(5);
-        let element6 = document.createElement('div');
-        element6.innerHTML = `<button type="button" class="button" id="moduleList[${index}]" onclick="removeRow(this)">삭제</button>`;
-        newCell6.appendChild(element6);
-
-        index++;
-    }
-
-    function removeRow(elem) {
-        if(confirm("정말 삭제하시겠습니까?") === false) {
-            return;
-        }
-
-        let currentRow = $(elem).parent().parent().parent().index();
-        $('#moduleTable')[0].deleteRow(currentRow + 1);
-        appendHiddenInput(elem);
-    }
-
-    function appendHiddenInput(elem) {
-        let currentIndex = Number($(elem).attr("id").substring(11, 12));
-        let tagName = $(elem).parent().parent().parent().children().first().prop('tagName');
-        if (tagName === 'INPUT') {
-            let moduleId = $(elem).parent().parent().parent().children().first().val();
-            let input = document.createElement('input');
-            input.type = "hidden";
-            input.name = "moduleList[" + currentIndex + "].id";
-            input.value = moduleId;
-            $('#moduleTable').append(input);
-        }
-    }
-</script>
+<script src="../../static/js/module.js" th:src="@{/js/module.js}"></script>
 
 </body>
 </html>

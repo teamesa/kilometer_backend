@@ -2,10 +2,11 @@ package com.kilometer.domain.homeModules;
 
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccountService;
-import com.kilometer.domain.homeModules.ModuleValidator;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
 import com.kilometer.domain.homeModules.dto.ModuleResponseList;
+import com.kilometer.domain.homeModules.dto.ModuleTypeDto;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.Module;
 import com.kilometer.domain.homeModules.modules.ModuleRepository;
 import com.kilometer.domain.homeModules.modules.keyVisual.KeyVisual;
@@ -16,14 +17,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class HomeService {
 
@@ -63,43 +62,44 @@ public class HomeService {
                 .build();
     }
 
-    public List<ModuleUpdateRequest> moduleFilter(List<ModuleUpdateRequest> moduleList) {
+    public List<String> updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
+        List<ModuleUpdateRequest> modules = moduleFilter(moduleList);
+        List<String> errors = validateModule(modules);
+
+        if (errors.isEmpty()) {
+            update(modules, createdAccount);
+        }
+
+        return errors;
+    }
+
+    private List<ModuleUpdateRequest> moduleFilter(List<ModuleUpdateRequest> moduleList) {
         return moduleValidator.filterByEmptyAndNull(moduleList);
     }
 
-    public void validateModule(List<ModuleUpdateRequest> moduleList, BindingResult bindingResult) {
-        moduleValidator.validateModule(moduleList, bindingResult);
+    private List<String> validateModule(List<ModuleUpdateRequest> moduleList) {
+        return moduleValidator.validateModule(moduleList);
     }
 
     @Transactional
-    public void updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
+    public void update(List<ModuleUpdateRequest> moduleList, String createdAccount) {
         BackOfficeAccount account = backOfficeAccountService.findByUsername(createdAccount);
 
-        List<Module> saveAndUpdateModules = filterBySaveAndUpdateModules(moduleList, account);
+        List<Module> saveAndUpdateModules = moduleList.stream()
+                .map(module -> module.makeModule(account))
+                .collect(Collectors.toList());
 
         moduleRepository.saveAll(saveAndUpdateModules);
     }
 
-    private List<Module> filterBySaveAndUpdateModules(List<ModuleUpdateRequest> checkedModules, BackOfficeAccount account) {
-        return checkedModules.stream()
-                .filter(this::isNotDeleteModule)
-                .map(moduleUpdateRequest -> moduleUpdateRequest.makeModule(account))
+    @Transactional
+    public void deleteModule(List<Long> moduleIdList) {
+        moduleIdList.forEach(moduleRepository::deleteById);
+    }
+
+    public List<ModuleTypeDto> makeModuleType() {
+        return Stream.of(ModuleType.values())
+                .map(value -> ModuleTypeDto.of(value, value.getDescription(), value.getFrontName()))
                 .collect(Collectors.toList());
-    }
-
-    private boolean isNotDeleteModule(ModuleUpdateRequest moduleUpdateRequest) {
-        boolean isNotDelete = moduleUpdateRequest.getExposureOrderNumber() != null
-                || moduleUpdateRequest.getModuleName() != null
-                || StringUtils.hasText(moduleUpdateRequest.getUpperModuleTitle())
-                || StringUtils.hasText(moduleUpdateRequest.getLowerModuleTitle())
-                || StringUtils.hasText(moduleUpdateRequest.getExtraData());
-        deleteModule(moduleUpdateRequest, isNotDelete);
-        return isNotDelete;
-    }
-
-    private void deleteModule(ModuleUpdateRequest moduleUpdateRequest, boolean isNotDelete) {
-        if (!isNotDelete) {
-            moduleRepository.deleteById(moduleUpdateRequest.getId());
-        }
     }
 }

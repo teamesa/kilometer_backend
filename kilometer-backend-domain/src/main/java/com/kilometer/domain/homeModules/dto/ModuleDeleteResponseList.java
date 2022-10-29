@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModuleUpdateRequestList {
+public class ModuleDeleteResponseList {
 
-    private List<ModuleUpdateRequest> moduleList;
+    private List<Long> deleteModuleList;
 }

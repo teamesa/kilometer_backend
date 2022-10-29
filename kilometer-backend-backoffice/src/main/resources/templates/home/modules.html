@@ -29,7 +29,7 @@
         </span>
         , 최종수정일시 :
         <span th:if="${moduleList.size() != 0}"
-              th:text="${moduleList[0].createdAt}">
+              th:text="${#temporals.format(moduleList[0].createdAt, 'yyyy-MM-dd HH:mm:ss')}">
         </span>
     </div>
 
