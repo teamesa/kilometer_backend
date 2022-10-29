@@ -12,8 +12,8 @@ public class SwipeItemKeywordGenerator {
         );
     }
 
-    private static String template(String name){
-        return "#"+name;
+    private static String template(String name) {
+        return "#" + name;
     }
 
 }

@@ -31,7 +31,9 @@ import java.util.Optional;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "module")
 public class Module {
-    @Id @GeneratedValue
+
+    @Id
+    @GeneratedValue
     private Long id;
 
     private int exposureOrderNumber;

@@ -32,8 +32,8 @@ public class SwipeItemHandler implements ModuleHandler {
             FrontUrlUtils.getFrontDetailUrlPattern(itemId),
             itemEntity.getTitle(),
             itemEntity.getContent(),
-            SwipeItemImageGenerator.getThumbnailImage(itemEntity.getPhotos()),
-            SwipeItemImageGenerator.getImagesExcludeThumbnail(itemEntity.getPhotos()),
+            itemEntity.getThumbnailImageUrl(),
+            itemEntity.getPhotos(),
             SwipeItemKeywordGenerator.generator(itemEntity.getExhibitionType(),
                 itemEntity.getPlaceName()));
     }
