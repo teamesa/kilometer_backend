@@ -18,6 +18,10 @@ var appVue = new Vue({
             axios.get('/home/modules/list')
                 .then(function (response) {
                     $this.modules = response.data;
+                    // for (const module of $this.modules) {
+                    //     module.checkbox = false;
+                    //     $this.checkReadOnly(module);
+                    // }
                     $this.modules.forEach((module) => {
                         $this.checkReadOnly(module);
                     });
@@ -60,15 +64,19 @@ var appVue = new Vue({
             });
         },
 
-        removeRow: function (index) {
+        removeRow: function () {
             let $this = this;
 
             if (confirm("삭제하시겠습니까?") === false) {
                 return;
             }
 
-            $this.deleteModulesId.push($this.modules[index].id);
-            $this.modules.splice(index, 1);
+            for (let i = $this.modules.length - 1; i >= 0; i--) {
+                if ($this.modules[i].checkbox === true) {
+                    $this.deleteModulesId.push($this.modules[i].id);
+                    $this.modules.splice(i, 1);
+                }
+            }
         },
 
         change: function (index) {
