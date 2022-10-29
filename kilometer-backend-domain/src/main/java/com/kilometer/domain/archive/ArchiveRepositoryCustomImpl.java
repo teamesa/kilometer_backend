@@ -12,9 +12,11 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +34,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<ItemArchiveDto> findAllByItemIdAndUserId(Pageable pageable,
+    public Page<ItemArchiveDto> findAllItemArchiveByArchiveQueryRequest(Pageable pageable,
         ArchiveQueryRequest queryRequest) {
         List<ItemArchiveDto> archives = queryFactory
             .select(Projections.fields(ItemArchiveDto.class,
@@ -53,7 +55,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .on(like.likedArchive.eq(archive), eqUserId(queryRequest.getUserId()))
             .where(
                 archive.item.id.eq(queryRequest.getItemId()),
-                archive.isVisibleAtItem.eq(true)
+                eqIsVisible(queryRequest.isVisible())
             )
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
@@ -65,7 +67,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .from(archive)
             .where(
                 archive.item.id.eq(queryRequest.getItemId()),
-                archive.isVisibleAtItem.eq(true)
+                eqIsVisible(queryRequest.isVisible())
             )
             .fetch().size();
 
@@ -73,7 +75,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<MyArchiveDto> findAllByUserId(Pageable pageable, ArchiveQueryRequest queryRequest) {
+    public Page<MyArchiveDto> findAllMyArchiveByArchiveQueryRequest(Pageable pageable, ArchiveQueryRequest queryRequest) {
 
         List<MyArchiveDto> archives = queryFactory
             .select(Projections.fields(MyArchiveDto.class,
@@ -107,7 +109,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Optional<ArchiveDetailDto> findByArchiveIdAndUserId(long archiveId, long userId) {
+    public Optional<ArchiveDetailDto> findByArchiveIdAndUserIdAndIsVisible(long archiveId, long userId,
+        boolean isVisible) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(ArchiveDetailDto.class,
                 archive.id,
                 itemEntity.exhibitionType,
@@ -115,8 +118,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 itemEntity.title,
                 archive.comment,
                 archive.starRating,
-                user.id.eq(userId).as("isWrited"),
-                archive.isVisibleAtItem
+                user.id.eq(userId).as("isWrited")
             ))
             .from(archive)
             .leftJoin(itemEntity)
@@ -125,7 +127,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .on(user.id.eq(archive.user.id))
             .where(
                 archive.id.eq(archiveId),
-                archive.isVisibleAtItem.eq(true)
+                eqIsVisible(isVisible)
             )
             .fetchOne());
     }
@@ -158,5 +160,12 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
         } else {
             return like.likedUser.id.eq(userId);
         }
+    }
+
+    private BooleanExpression eqIsVisible(boolean isVisible) {
+        if (!isVisible) {
+            return null;
+        }
+        return archive.isVisibleAtItem.eq(true);
     }
 }
