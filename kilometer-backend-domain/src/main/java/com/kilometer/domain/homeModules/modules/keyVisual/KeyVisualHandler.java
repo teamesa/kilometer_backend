@@ -1,5 +1,6 @@
 package com.kilometer.domain.homeModules.modules.keyVisual;
 
+import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enums.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualDataDto;
@@ -22,7 +23,7 @@ public class KeyVisualHandler implements ModuleHandler {
     }
 
     @Override
-    public Object generator(String data) {
+    public Object generator(ModuleParamDto paramDto) {
         List<KeyVisual> keyVisuals = keyVisualRepository.findAllOrderByIdAtAsc();
         return keyVisuals.stream()
             .map(KeyVisualDataDto::from)
