@@ -138,6 +138,7 @@ public class ArchiveAggregateConverter {
             .photoUrls(
                 archiveImages.stream().map(ArchiveImage::getImageUrl).collect(Collectors.toList()))
             .archiveAdditionalInfos(linkInfos)
+            .visibleAtItem(archiveDetailDto.isVisibleAtItem())
             .build();
     }
 
