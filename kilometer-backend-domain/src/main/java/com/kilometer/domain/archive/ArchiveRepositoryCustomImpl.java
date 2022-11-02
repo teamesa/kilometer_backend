@@ -118,6 +118,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 itemEntity.title,
                 archive.comment,
                 archive.starRating,
+                archive.isVisibleAtItem,
                 user.id.eq(userId).as("isWrited")
             ))
             .from(archive)
