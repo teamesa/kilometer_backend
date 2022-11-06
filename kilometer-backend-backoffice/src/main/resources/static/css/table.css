@@ -35,3 +35,12 @@ table {
 .subTitle small {
     color: gray;
 }
+
+#moduleTable {
+    width: 100%;
+    background-color: white;
+    color: black;
+    font-size: 13px;
+    border-collapse: collapse;
+    text-decoration: none;
+}

@@ -1,14 +1,15 @@
 package com.kilometer.domain.homeModules;
 
-import com.kilometer.domain.homeModules.enums.ModuleType;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.Module;
 import com.kilometer.domain.homeModules.modules.ModuleHandlerAdapter;
 import com.kilometer.domain.homeModules.modules.ModuleRepository;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)

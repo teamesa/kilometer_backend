@@ -1,11 +1,10 @@
 package com.kilometer.domain.homeModules.modules;
 
-import com.kilometer.domain.homeModules.enums.ModuleType;
-import java.util.List;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.pool.TypePool.Resolution.Illegal;
-import org.flywaydb.core.internal.license.FlywayTeamsUpgradeMessage;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
