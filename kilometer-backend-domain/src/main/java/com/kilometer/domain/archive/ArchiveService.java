@@ -2,6 +2,7 @@ package com.kilometer.domain.archive;
 
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
+import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
 import com.kilometer.domain.archive.dto.ArchiveDetailDto;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
@@ -125,7 +126,7 @@ public class ArchiveService {
     }
 
     @Transactional
-    public void delete(Long archiveId, Long userId) throws IllegalAccessException {
+    public ArchiveDeleteResponse delete(Long archiveId, Long userId) throws IllegalAccessException {
         Preconditions.notNull(archiveId, "id must not be null");
 
         Archive archive = archiveRepository.findById(archiveId)
@@ -141,6 +142,8 @@ public class ArchiveService {
         userVisitPlaceService.deleteAll(archive.getUserVisitPlaces());
 
         archiveRepository.delete(archive);
+
+        return ArchiveDeleteResponse.from(archiveId);
     }
 
     @Transactional
