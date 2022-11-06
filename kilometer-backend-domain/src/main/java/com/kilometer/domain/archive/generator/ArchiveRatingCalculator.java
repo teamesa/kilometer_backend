@@ -1,7 +1,7 @@
 package com.kilometer.domain.archive.generator;
 
 
-public class ArchiveRatingConverter {
+public class ArchiveRatingCalculator {
 
     private final static double ROUND_DECIMAL_PLACE = 10.0;
 

@@ -1,6 +1,6 @@
 package com.kilometer.domain.search.additionalinfo;
 
-import com.kilometer.domain.archive.generator.ArchiveRatingConverter;
+import com.kilometer.domain.archive.generator.ArchiveRatingCalculator;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class ListItemAdditionalInfoGenerator {
 
     public ListItemAdditionalInfo generateListItemAdditionalInfo(SearchItemResponse response) {
-        double archiveStarRating = ArchiveRatingConverter.convertArchiveRatingAverage(
+        double archiveStarRating = ArchiveRatingCalculator.convertArchiveRatingAverage(
             response.getAvgStarRating());
         return ListItemAdditionalInfo.builder()
             .heartCount(response.getPickCount())

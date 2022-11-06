@@ -12,7 +12,7 @@ import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
-import com.kilometer.domain.archive.generator.ArchiveRatingConverter;
+import com.kilometer.domain.archive.generator.ArchiveRatingCalculator;
 import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
@@ -227,7 +227,7 @@ public class ArchiveService {
 
     private Double getStarRatingAvgByItemId(Long itemId) {
         Double result = archiveRepository.avgStarRatingByItemId(itemId);
-        return ArchiveRatingConverter.convertArchiveRatingAverage(result);
+        return ArchiveRatingCalculator.convertArchiveRatingAverage(result);
     }
 
     private List<ArchiveInfo> convertArchiveInfos(Page<ItemArchiveDto> items) {
