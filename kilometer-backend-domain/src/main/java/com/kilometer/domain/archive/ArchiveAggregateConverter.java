@@ -57,11 +57,17 @@ public class ArchiveAggregateConverter {
             .build();
     }
 
-    public ArchiveInfo convertArchiveInfo(Archive archive) {
+    public ArchiveInfo convertArchiveInfo(Archive archive,
+                                          List<ArchiveImage> archiveImages,
+                                          List<UserVisitPlace> userVisitPlaces) {
 
-        Map<PlaceType, String> placeTypes = convertFoodAndCafe(archive.getUserVisitPlaces());
+        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archive.getId());
+
+        List<String> photoUrls = archiveImages.stream()
+            .map(ArchiveImage::getImageUrl)
+            .collect(Collectors.toList());
 
         return ArchiveInfo.builder()
             .id(archive.getId())
@@ -74,18 +80,19 @@ public class ArchiveAggregateConverter {
             .comment(archive.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
-            .photoUrls(archive.getArchiveImages().stream()
-                .map(ArchiveImage::getImageUrl)
-                .collect(Collectors.toList()))
+            .photoUrls(photoUrls)
             .build();
     }
 
-    public ArchiveInfo convertArchiveInfo(Archive archive, UserResponse userResponse) {
+    public ArchiveInfo convertArchiveInfo(Archive archive, UserResponse userResponse, List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
 
-        Map<PlaceType, String> placeTypes = convertFoodAndCafe(archive.getUserVisitPlaces());
+        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archive.getId());
 
+        List<String> photoUrls = archiveImages.stream()
+                                                .map(ArchiveImage::getImageUrl)
+                                                .collect(Collectors.toList());
         return ArchiveInfo.builder()
             .id(archive.getId())
             .userProfileUrl(userResponse.getImageUrl())
@@ -97,9 +104,7 @@ public class ArchiveAggregateConverter {
             .comment(archive.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
-            .photoUrls(archive.getArchiveImages().stream()
-                .map(ArchiveImage::getImageUrl)
-                .collect(Collectors.toList()))
+            .photoUrls(photoUrls)
             .build();
     }
 
