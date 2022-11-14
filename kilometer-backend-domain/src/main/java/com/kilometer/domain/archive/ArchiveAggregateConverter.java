@@ -135,6 +135,7 @@ public class ArchiveAggregateConverter {
             .starRating(archiveDetailDto.getStarRating())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
+            .itemId(archiveDetailDto.getItemId())
             .photoUrls(
                 archiveImages.stream().map(ArchiveImage::getImageUrl).collect(Collectors.toList()))
             .archiveAdditionalInfos(linkInfos)

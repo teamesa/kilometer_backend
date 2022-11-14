@@ -21,6 +21,7 @@ public class ArchiveDetailResponse {
     private int starRating;
     private String food;
     private String cafe;
+    private Long itemId;
     private List<String> photoUrls;
     private List<LinkInfo> archiveAdditionalInfos;
     private boolean visibleAtItem;
