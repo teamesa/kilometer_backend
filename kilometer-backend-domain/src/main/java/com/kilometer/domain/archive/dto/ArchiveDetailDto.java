@@ -15,4 +15,5 @@ public class ArchiveDetailDto {
     private String comment;
     private int starRating;
     private boolean isWrited;
+    private boolean isVisibleAtItem;
 }

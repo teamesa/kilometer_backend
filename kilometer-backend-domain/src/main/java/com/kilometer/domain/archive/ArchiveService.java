@@ -12,7 +12,6 @@ import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
-import com.kilometer.domain.archive.like.Like;
 import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
@@ -27,9 +26,11 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.data.domain.Page;
@@ -87,11 +88,12 @@ public class ArchiveService {
         Preconditions.notNull(sortType, "sort type value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<ItemArchiveDto> items = archiveRepository.findAllByItemIdAndUserId(pageable,
+        Page<ItemArchiveDto> items = archiveRepository.findAllItemArchiveByArchiveQueryRequest(pageable,
             ArchiveQueryRequest.builder()
                 .archiveSortType(sortType)
                 .itemId(itemId)
                 .userId(userId)
+                .isVisible(true)
                 .build());
 
         List<ArchiveInfo> archiveInfos = convertArchiveInfos(items);
@@ -107,10 +109,11 @@ public class ArchiveService {
         Preconditions.notNull(requestPagingStatus, "page value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
-        Page<MyArchiveDto> archives = archiveRepository.findAllByUserId(pageable,
+        Page<MyArchiveDto> archives = archiveRepository.findAllMyArchiveByArchiveQueryRequest(pageable,
             ArchiveQueryRequest.builder()
                 .archiveSortType(sortType)
                 .userId(userId)
+                .isVisible(false)
                 .build());
 
         List<MyArchiveInfo> myArchiveInfos = convertMyArchiveInfos(archives);
@@ -155,8 +158,8 @@ public class ArchiveService {
         Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
         Preconditions.notNull(userId, "User id must not be null : " + userId);
 
-        ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserId(archiveId,
-                userId)
+        ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserIdAndIsVisible(archiveId,
+                userId, false)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exist"));
 
         List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(

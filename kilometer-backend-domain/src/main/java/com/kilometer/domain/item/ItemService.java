@@ -16,6 +16,7 @@ import com.kilometer.domain.item.itemDetailImage.ItemDetailImageRepository;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -83,19 +84,17 @@ public class ItemService {
             .collect(Collectors.toList());
     }
 
-    public ItemResponse findOne(Long itemId) {
+    public Optional<ItemResponse> findOne(Long itemId) {
         Preconditions.notNull(itemId, "id must not be null");
 
-        ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
-        return itemEntity.makeResponse();
+        return itemRepository.findById(itemId).map(ItemEntity::makeResponse);
     }
 
     public ItemUpdateResponse findUpdateOne(Long itemId) {
         Preconditions.notNull(itemId, "id must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + itemId));
+            .orElseThrow(() -> new IllegalArgumentException("해당 Item이 없습니다. id=" + itemId));
         return itemEntity.makeUpdateResponse();
     }
 

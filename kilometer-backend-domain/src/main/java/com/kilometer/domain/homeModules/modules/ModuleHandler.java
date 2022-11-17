@@ -1,0 +1,10 @@
+package com.kilometer.domain.homeModules.modules;
+
+import com.kilometer.domain.homeModules.enumType.ModuleType;
+
+public interface ModuleHandler {
+
+    boolean supports(ModuleType moduleType);
+
+    Object generator(String data);
+}

@@ -1,5 +1,6 @@
 package com.kilometer.domain.item;
 
+import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
@@ -14,4 +15,6 @@ public interface ItemRepositoryCustom {
     Page<AutoCompleteItem> findTop10ByQuery(String query);
 
     Optional<ItemInfoDto> findInfoByItemIdAndUserId(Long itemId, Long userId);
+
+    SwipeItemDto findSwipeItemByItemId(Long itemId);
 }
