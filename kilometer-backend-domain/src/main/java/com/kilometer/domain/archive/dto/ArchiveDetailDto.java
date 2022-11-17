@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ArchiveDetailDto {
     private Long id;
+    private Long itemId;
     private ExhibitionType exhibitionType;
     private LocalDateTime updatedAt;
     private String title;
