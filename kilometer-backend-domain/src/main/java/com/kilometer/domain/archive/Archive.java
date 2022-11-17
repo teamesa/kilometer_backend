@@ -71,14 +71,6 @@ public class Archive {
     @JoinColumn(name = "item")
     private ItemEntity item;
 
-    @OneToMany(mappedBy = "archive")
-    @Builder.Default
-    private List<UserVisitPlace> userVisitPlaces = new ArrayList<>();
-
-    @OneToMany(mappedBy = "archive")
-    @Builder.Default
-    private List<ArchiveImage> archiveImages = new ArrayList<>();
-
     public void setUser(User user) {
         this.user = user;
     }
