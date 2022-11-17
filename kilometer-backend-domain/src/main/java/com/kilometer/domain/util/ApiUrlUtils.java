@@ -15,8 +15,9 @@ public class ApiUrlUtils {
     public static final String ARCHIVE_MY = "/my";
     public static final String ARCHIVE_DETAIL = "/detail" + ARCHIVE_ID;
     public static final String ARCHIVE_MODIFY = ARCHIVE_ROOT;
-    public static final String ARCHIVE_LIKE_ROOT = ARCHIVE_ROOT + "/like";
-    public static final String ARCHIVE_LIKE_BY_ID = ARCHIVE_LIKE_ROOT + ARCHIVE_ID;
+    public static final String ARCHIVE_LIKE = "/like";
+    public static final String ARCHIVE_LIKE_ROOT = ARCHIVE_ROOT + ARCHIVE_LIKE;
+    public static final String ARCHIVE_LIKE_BY_ID = ARCHIVE_LIKE + ARCHIVE_ID;
     public static final String LIKE_ITEM_PATTERN = ARCHIVE_LIKE_ROOT + "/%s";
     public static final String ARCHIVE_PATTERN = ARCHIVE_ROOT + "/%s";
 
