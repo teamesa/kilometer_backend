@@ -3,6 +3,7 @@ package com.kilometer.backend.controller;
 import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
 
 import com.kilometer.domain.archive.ArchiveService;
+import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
@@ -73,11 +74,11 @@ public class ArchiveController {
     }
 
     @DeleteMapping(ApiUrlUtils.ARCHIVE_ID)
-    public void deleteArchive(
+    public ArchiveDeleteResponse deleteArchive(
         @ApiParam(value = "삭제할 아카이브 아이디", required = true) @PathVariable Long archiveId)
         throws IllegalAccessException {
         Long userId = getLoginUserId();
-        archiveService.delete(archiveId, userId);
+        return archiveService.delete(archiveId, userId);
     }
 
 

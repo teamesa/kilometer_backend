@@ -113,6 +113,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
         boolean isVisible) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(ArchiveDetailDto.class,
                 archive.id,
+                itemEntity.id.as("itemId"),
                 itemEntity.exhibitionType,
                 archive.updatedAt,
                 itemEntity.title,
