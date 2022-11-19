@@ -1,11 +1,12 @@
 package com.kilometer.domain.homeModules;
 
 import com.kilometer.domain.homeModules.enumType.ModuleType;
-import com.kilometer.domain.homeModules.modules.Module;
 import com.kilometer.domain.homeModules.modules.ModuleHandlerAdapter;
 import com.kilometer.domain.homeModules.modules.ModuleRepository;
+import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,23 +21,33 @@ public class HomeRenderingService {
     private final ModuleHandlerAdapter adapter;
     private final ModuleRepository moduleRepository;
 
-    public ModuleResponseDto<Object> getKeyVisual() {
+    public ModuleResponseDto<Object> getKeyVisual(Long userId) {
         ModuleType type = ModuleType.KEY_VISUAL;
-        return ModuleResponseDto.of(type, 0, adapter.getHandlerAdapter(type).generator(null));
+        ModuleParamDto paramDto = ModuleParamGenerator.from(userId, null);
+        try {
+            return ModuleResponseDto.of(type, 0, adapter.getHandlerAdapter(type).generator(paramDto));
+        } catch (Exception e) {
+            // TODO KeyVisual Exception handling
+            throw new RuntimeException(e);
+        }
     }
 
-    public HomeApiResponse getHomeModules() {
-        List<Module> modules = moduleRepository.findAll();
+    public HomeApiResponse getHomeModules(Long userId) {
+        List<ModuleParamDto> modules = moduleRepository.findAll().stream()
+            .map(module -> ModuleParamGenerator.from(userId, ModuleDto.from(module)))
+            .collect(Collectors.toList());
+
         List<ModuleResponseDto<Object>> result = new ArrayList<>();
         int indexCount = 0;
-        for (Module module : modules) {
+        for (ModuleParamDto moduleParamDto : modules) {
             try {
+                ModuleDto moduleDto = moduleParamDto.getModuleDto();
                 result.add(
                     ModuleResponseDto.of(
-                        module.getModuleName(),
+                        moduleDto.getModuleName(),
                         indexCount,
-                        adapter.getHandlerAdapter(module.getModuleName())
-                            .generator(module.getExtraData())
+                        adapter.getHandlerAdapter(moduleDto.getModuleName())
+                            .generator(moduleParamDto)
                     )
                 );
                 indexCount++;

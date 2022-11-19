@@ -12,7 +12,7 @@ public class ModuleParamDto {
 
     private final LocalDateTime time;
     private final Long userId;
-    private final ModuleDto data;
+    private final ModuleDto moduleDto;
 
     public static ModuleParamDto of(LocalDateTime time, Long userId, ModuleDto moduleDto) {
         return new ModuleParamDto(time,userId,moduleDto);

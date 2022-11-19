@@ -3,7 +3,7 @@ package com.kilometer.domain.homeModules.modules.monthlyFreeTicket;
 import com.kilometer.domain.converter.listItem.ListItemAggregateConverter;
 import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.homeModules.ModuleParamDto;
-import com.kilometer.domain.homeModules.enums.ModuleType;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketResponse;
@@ -31,11 +31,11 @@ public class MonthlyFreeItemHandler implements ModuleHandler {
     }
 
     @Override
-    public Object generator(ModuleParamDto paramDto) {
+    public Object generator(ModuleParamDto paramDto) throws RuntimeException {
         Preconditions.notNull(paramDto, "paramDto must not be null");
         Long userId = paramDto.getUserId();
         LocalDateTime requestTime = paramDto.getTime();
-        ModuleDto data = paramDto.getData();
+        ModuleDto data = paramDto.getModuleDto();
         log.info("[Monthly-free-ticket] requester : {}, at : {}", userId, requestTime);
         List<ListItem> contents = monthlyFreeItemRepository.findRand5ByUserIdAndRequestTime(userId,
                 requestTime).stream()

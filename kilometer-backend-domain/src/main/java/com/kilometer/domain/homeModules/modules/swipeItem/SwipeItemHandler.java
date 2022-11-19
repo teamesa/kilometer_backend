@@ -27,10 +27,10 @@ public class SwipeItemHandler implements ModuleHandler {
 
     @Override
     public Object generator(ModuleParamDto paramDto) {
-        Preconditions.notNull(paramDto.getData(), "Extra_data must not be null");
-        ModuleDto moduleDto = paramDto.getData();
+        Preconditions.notNull(paramDto.getModuleDto(), "module must not be null");
+        ModuleDto moduleDto = paramDto.getModuleDto();
         Preconditions.notNull(moduleDto.getExtraData(), "Extra_data must not be null");
-        long itemId = Long.parseLong(paramDto.getData().getExtraData());
+        long itemId = Long.parseLong(moduleDto.getExtraData());
         SwipeItemDto itemEntity = itemRepository.findSwipeItemByItemId(itemId);
         return SwipeItemDataDto.of(
             FrontUrlUtils.getFrontDetailUrlPattern(itemId),

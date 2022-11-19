@@ -23,6 +23,6 @@ public class MonthlyFreeItemRepositoryImpl implements MonthlyFreeItemRepository 
     public List<MonthlyFreeTicketEntityDto> findRand5ByUserIdAndRequestTime(Long userId,
         LocalDateTime requestTime) {
         // TODO JDBC TEMPLATE
-        return null;
+        return List.of();
     }
 }

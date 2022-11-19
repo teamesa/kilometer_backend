@@ -7,5 +7,5 @@ public interface ModuleHandler {
 
     boolean supports(ModuleType moduleType);
 
-    Object generator(ModuleParamDto paramDto);
+    Object generator(ModuleParamDto paramDto) throws RuntimeException;
 }
