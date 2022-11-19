@@ -21,6 +21,7 @@ public class PickItemResponse implements ItemInfoExtraction {
 
     private Long id;
     private String listImageUrl;
+    private String thumbnailImageUrl;
     private String title;
     private ExhibitionType exhibitionType;
     private FeeType feeType;
@@ -33,6 +34,7 @@ public class PickItemResponse implements ItemInfoExtraction {
         return PickItemResponse.builder()
                 .id(pick.getPickedItem().getId())
                 .listImageUrl(pick.getPickedItem().getListImageUrl())
+                .thumbnailImageUrl(pick.getPickedItem().getThumbnailImageUrl())
                 .title(pick.getPickedItem().getTitle())
                 .exhibitionType(pick.getPickedItem().getExhibitionType())
                 .feeType(pick.getPickedItem().getFeeType())
@@ -41,5 +43,10 @@ public class PickItemResponse implements ItemInfoExtraction {
                 .isHearted(pick.isHearted())
                 .apiType(API_TYPE)
                 .build();
+    }
+
+    @Override
+    public String getPresentationImage() {
+        return this.thumbnailImageUrl;
     }
 }

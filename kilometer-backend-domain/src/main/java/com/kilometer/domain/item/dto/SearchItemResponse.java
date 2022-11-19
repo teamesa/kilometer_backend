@@ -26,4 +26,9 @@ public class SearchItemResponse implements ItemInfoExtraction {
     private long archiveCount;
     private double avgStarRating;
     private String apiType = API_TYPE;
+
+    @Override
+    public String getPresentationImage() {
+        return this.listImageUrl;
+    }
 }

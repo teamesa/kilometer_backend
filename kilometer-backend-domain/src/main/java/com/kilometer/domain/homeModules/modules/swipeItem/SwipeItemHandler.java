@@ -1,12 +1,11 @@
 package com.kilometer.domain.homeModules.modules.swipeItem;
 
 import com.kilometer.domain.homeModules.ModuleParamDto;
-import com.kilometer.domain.homeModules.enums.ModuleType;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDataDto;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
-import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.util.FrontUrlUtils;
 import lombok.RequiredArgsConstructor;

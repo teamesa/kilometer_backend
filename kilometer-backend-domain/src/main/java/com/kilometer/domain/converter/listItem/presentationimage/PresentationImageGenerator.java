@@ -19,11 +19,11 @@ public class PresentationImageGenerator {
         LocalDate now = LocalDate.now();
 
         if (now.isBefore(item.getStartDate())) {
-            return makeUpcomingImage(item.getId(), item.getListImageUrl(), item.getStartDate());
+            return makeUpcomingImage(item.getId(), item.getPresentationImage(), item.getStartDate());
         } else if (now.isAfter(item.getEndDate())) {
-            return makeEndImage(item.getId(), item.getListImageUrl());
+            return makeEndImage(item.getId(), item.getPresentationImage());
         } else {
-            return makeOngoingImage(item.getId(), item.getListImageUrl());
+            return makeOngoingImage(item.getId(), item.getPresentationImage());
         }
     }
 

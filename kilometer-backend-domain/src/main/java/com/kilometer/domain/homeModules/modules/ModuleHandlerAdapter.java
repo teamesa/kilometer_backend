@@ -1,11 +1,11 @@
 package com.kilometer.domain.homeModules.modules;
 
-import com.kilometer.domain.homeModules.enums.ModuleType;
-import java.util.List;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.pool.TypePool.Resolution.Illegal;
-import org.flywaydb.core.internal.license.FlywayTeamsUpgradeMessage;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -14,8 +14,10 @@ public class ModuleHandlerAdapter {
     private final List<ModuleHandler> handlers;
 
     public ModuleHandler getHandlerAdapter(ModuleType moduleType) {
-        return handlers.stream().filter(handler -> handler.supports(moduleType))
-            .findFirst().orElseThrow(() -> new IllegalArgumentException("Handler not exists"));
-
+        return handlers.stream()
+            .filter(moduleHandler -> moduleHandler.supports(moduleType))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(moduleType + " Not supported"));
     }
+
 }

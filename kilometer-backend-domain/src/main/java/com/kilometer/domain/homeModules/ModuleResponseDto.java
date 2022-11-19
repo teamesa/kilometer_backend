@@ -1,6 +1,6 @@
 package com.kilometer.domain.homeModules;
 
-import com.kilometer.domain.homeModules.enums.ModuleType;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

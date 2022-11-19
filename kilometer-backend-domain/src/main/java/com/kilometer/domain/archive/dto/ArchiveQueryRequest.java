@@ -10,4 +10,5 @@ public class ArchiveQueryRequest {
     private ArchiveSortType archiveSortType;
     private Long userId;
     private Long itemId;
+    private boolean isVisible;
 }
