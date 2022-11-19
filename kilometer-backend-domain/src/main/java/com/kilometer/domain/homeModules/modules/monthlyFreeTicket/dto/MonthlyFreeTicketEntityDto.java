@@ -6,10 +6,12 @@ import com.kilometer.domain.converter.listItem.ItemInfoExtraction;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MonthlyFreeTicketEntityDto implements ItemInfoExtraction {
@@ -26,6 +28,7 @@ public class MonthlyFreeTicketEntityDto implements ItemInfoExtraction {
     private int pickCount;
     private long archiveCount;
     private double avgStarRating;
+    @Builder.Default
     private String apiType = API_TYPE;
 
     @Override
