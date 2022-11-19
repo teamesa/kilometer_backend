@@ -1,6 +1,6 @@
-package com.kilometer.domain.search.presentationimage;
+package com.kilometer.domain.converter.listItem.presentationimage;
 
-import com.kilometer.domain.search.ItemInfoExtraction;
+import com.kilometer.domain.converter.listItem.ItemInfoExtraction;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

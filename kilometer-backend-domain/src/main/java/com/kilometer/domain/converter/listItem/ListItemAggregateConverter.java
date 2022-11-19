@@ -1,17 +1,18 @@
-package com.kilometer.domain.search;
+package com.kilometer.domain.converter.listItem;
 
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
+import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketEntityDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.heart.ItemHeart;
 import com.kilometer.domain.item.heart.ItemHeartGenerator;
-import com.kilometer.domain.search.additionalinfo.ListItemAdditionalInfo;
-import com.kilometer.domain.search.additionalinfo.ListItemAdditionalInfoGenerator;
-import com.kilometer.domain.search.dto.ListItem;
-import com.kilometer.domain.search.presentationimage.PresentationImage;
-import com.kilometer.domain.search.presentationimage.PresentationImageGenerator;
-import com.kilometer.domain.search.title.ListItemTitle;
-import com.kilometer.domain.search.title.ListItemTitleGenerator;
+import com.kilometer.domain.converter.listItem.additionalinfo.ListItemAdditionalInfo;
+import com.kilometer.domain.converter.listItem.additionalinfo.ListItemAdditionalInfoGenerator;
+import com.kilometer.domain.converter.listItem.dto.ListItem;
+import com.kilometer.domain.converter.listItem.presentationimage.PresentationImage;
+import com.kilometer.domain.converter.listItem.presentationimage.PresentationImageGenerator;
+import com.kilometer.domain.converter.listItem.title.ListItemTitle;
+import com.kilometer.domain.converter.listItem.title.ListItemTitleGenerator;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.stereotype.Component;
@@ -53,7 +54,9 @@ public class ListItemAggregateConverter {
         ListItemAdditionalInfo listItemAdditionalInfo;
         if ("search".equals(item.getApiType())) {
             listItemAdditionalInfo = additionalInfoGenerator.generateListItemAdditionalInfo((SearchItemResponse) item);
-        } else {
+        } else if ("monthlyFreeTicket".equals(item.getApiType())) {
+            listItemAdditionalInfo = additionalInfoGenerator.generateListItemAdditionalInfo((MonthlyFreeTicketEntityDto) item);
+        }else {
             listItemAdditionalInfo = null;
         }
         return listItemAdditionalInfo;

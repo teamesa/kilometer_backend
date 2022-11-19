@@ -1,18 +1,19 @@
-package com.kilometer.domain.item.dto;
+package com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto;
 
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;
-import java.time.LocalDate;
-
 import com.kilometer.domain.converter.listItem.ItemInfoExtraction;
-import lombok.Data;
+import java.time.LocalDate;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-public class SearchItemResponse implements ItemInfoExtraction {
-
-    private static final String API_TYPE = "search";
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class MonthlyFreeTicketEntityDto implements ItemInfoExtraction {
+    private static final String API_TYPE = "monthlyFreeTicket";
 
     private Long id;
     private String listImageUrl;

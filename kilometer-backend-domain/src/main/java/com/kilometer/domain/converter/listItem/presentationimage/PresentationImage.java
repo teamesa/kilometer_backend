@@ -1,4 +1,4 @@
-package com.kilometer.domain.search.presentationimage;
+package com.kilometer.domain.converter.listItem.presentationimage;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

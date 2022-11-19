@@ -1,4 +1,4 @@
-package com.kilometer.domain.search;
+package com.kilometer.domain.converter.listItem;
 
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;

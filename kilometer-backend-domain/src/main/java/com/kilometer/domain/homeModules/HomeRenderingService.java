@@ -4,6 +4,7 @@ import com.kilometer.domain.homeModules.enums.ModuleType;
 import com.kilometer.domain.homeModules.modules.Module;
 import com.kilometer.domain.homeModules.modules.ModuleHandlerAdapter;
 import com.kilometer.domain.homeModules.modules.ModuleRepository;
+import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,8 @@ public class HomeRenderingService {
         List<ModuleResponseDto<Object>> result = new ArrayList<>();
         for (int i = 0; i < modules.size(); i++) {
             Module module = modules.get(i);
-            ModuleParamDto paramDto = ModuleParamGenerator.from(userId, module.getExtraData());
+            ModuleDto moduleDto = ModuleDto.from(module);
+            ModuleParamDto paramDto = ModuleParamGenerator.from(userId, moduleDto);
             result.add(
                 ModuleResponseDto.of(module.getModuleName(), i,
                     adapter.getHandlerAdapter(module.getModuleName()).generator(paramDto)

@@ -1,5 +1,6 @@
 package com.kilometer.domain.homeModules;
 
+import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,10 +12,9 @@ public class ModuleParamDto {
 
     private final LocalDateTime time;
     private final Long userId;
-    private final Object data;
+    private final ModuleDto data;
 
-    public static ModuleParamDto of(LocalDateTime time, Long userId, Object data) {
-        return new ModuleParamDto(time,userId,data);
+    public static ModuleParamDto of(LocalDateTime time, Long userId, ModuleDto moduleDto) {
+        return new ModuleParamDto(time,userId,moduleDto);
     }
-
 }
