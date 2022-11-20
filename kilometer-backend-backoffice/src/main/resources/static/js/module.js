@@ -73,7 +73,9 @@ var appVue = new Vue({
 
             for (let i = $this.modules.length - 1; i >= 0; i--) {
                 if ($this.modules[i].checkbox === true) {
-                    $this.deleteModulesId.push($this.modules[i].id);
+                    if ($this.modules[i].id !== '') {
+                        $this.deleteModulesId.push($this.modules[i].id);
+                    }
                     $this.modules.splice(i, 1);
                 }
             }
