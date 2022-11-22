@@ -63,6 +63,7 @@ public class HomeService {
                 .build();
     }
 
+    @Transactional
     public List<String> updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
         List<ModuleUpdateRequest> modules = moduleFilter(moduleList);
         List<String> errors = validateModule(modules);
@@ -82,7 +83,6 @@ public class HomeService {
         return moduleValidator.validateModule(moduleList);
     }
 
-    @Transactional
     public void update(List<ModuleUpdateRequest> moduleList, String createdAccount) {
         BackOfficeAccount account = backOfficeAccountService.findByUsername(createdAccount);
 
