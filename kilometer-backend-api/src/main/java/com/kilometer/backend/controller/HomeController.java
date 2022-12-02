@@ -1,5 +1,7 @@
 package com.kilometer.backend.controller;
 
+import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
+
 import com.kilometer.domain.homeModules.HomeApiResponse;
 import com.kilometer.domain.homeModules.HomeRenderingService;
 import com.kilometer.domain.homeModules.ModuleResponseDto;
@@ -18,11 +20,13 @@ public class HomeController {
 
     @GetMapping(ApiUrlUtils.KEY_VISUAL)
     public ModuleResponseDto getKeyVisual() {
-        return moduleService.getKeyVisual();
+        Long userId = getLoginUserId();
+        return moduleService.getKeyVisual(userId);
     }
 
     @GetMapping
     public HomeApiResponse homeApi() {
-        return moduleService.getHomeModules();
+        Long userId = getLoginUserId();
+        return moduleService.getHomeModules(userId);
     }
 }

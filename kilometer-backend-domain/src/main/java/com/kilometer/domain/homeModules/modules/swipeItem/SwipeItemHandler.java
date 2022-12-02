@@ -1,7 +1,9 @@
 package com.kilometer.domain.homeModules.modules.swipeItem;
 
+import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
+import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDataDto;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.ItemRepository;
@@ -24,9 +26,11 @@ public class SwipeItemHandler implements ModuleHandler {
     }
 
     @Override
-    public Object generator(String data) {
-        Preconditions.notNull(data, "Extra_data must not be null");
-        Long itemId = Long.parseLong(data);
+    public Object generator(ModuleParamDto paramDto) {
+        Preconditions.notNull(paramDto.getModuleDto(), "module must not be null");
+        ModuleDto moduleDto = paramDto.getModuleDto();
+        Preconditions.notNull(moduleDto.getExtraData(), "Extra_data must not be null");
+        long itemId = Long.parseLong(moduleDto.getExtraData());
         SwipeItemDto itemEntity = itemRepository.findSwipeItemByItemId(itemId);
         return SwipeItemDataDto.of(
             FrontUrlUtils.getFrontDetailUrlPattern(itemId),

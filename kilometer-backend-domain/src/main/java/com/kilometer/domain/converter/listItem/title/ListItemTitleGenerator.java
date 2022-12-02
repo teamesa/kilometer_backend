@@ -1,6 +1,6 @@
-package com.kilometer.domain.search.title;
+package com.kilometer.domain.converter.listItem.title;
 
-import com.kilometer.domain.search.ItemInfoExtraction;
+import com.kilometer.domain.converter.listItem.ItemInfoExtraction;
 import com.kilometer.domain.util.FrontUrlUtils;
 import org.springframework.stereotype.Component;
 
