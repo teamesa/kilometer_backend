@@ -1,5 +1,7 @@
 package com.kilometer.domain.search;
 
+import com.kilometer.domain.converter.listItem.ListItemAggregateConverter;
+import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.item.ItemService;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.paging.PagingStatusService;

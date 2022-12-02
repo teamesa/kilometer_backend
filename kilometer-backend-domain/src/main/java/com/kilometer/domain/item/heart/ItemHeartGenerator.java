@@ -1,6 +1,6 @@
 package com.kilometer.domain.item.heart;
 
-import com.kilometer.domain.search.ItemInfoExtraction;
+import com.kilometer.domain.converter.listItem.ItemInfoExtraction;
 import com.kilometer.domain.util.ApiUrlUtils;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.kilometer.domain.search.additionalinfo;
+package com.kilometer.domain.converter.listItem.additionalinfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
