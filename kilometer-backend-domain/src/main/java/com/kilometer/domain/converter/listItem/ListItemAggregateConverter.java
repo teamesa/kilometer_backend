@@ -2,7 +2,7 @@ package com.kilometer.domain.converter.listItem;
 
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
-import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketEntityDto;
+import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.heart.ItemHeart;
 import com.kilometer.domain.item.heart.ItemHeartGenerator;
@@ -55,7 +55,7 @@ public class ListItemAggregateConverter {
         if ("search".equals(item.getApiType())) {
             listItemAdditionalInfo = additionalInfoGenerator.generateListItemAdditionalInfo((SearchItemResponse) item);
         } else if ("monthlyFreeTicket".equals(item.getApiType())) {
-            listItemAdditionalInfo = additionalInfoGenerator.generateListItemAdditionalInfo((MonthlyFreeTicketEntityDto) item);
+            listItemAdditionalInfo = additionalInfoGenerator.generateListItemAdditionalInfo((MonthlyFreeTicketDto) item);
         }else {
             listItemAdditionalInfo = null;
         }

@@ -6,6 +6,7 @@ import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
+import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketDto;
 import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketResponse;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,11 +37,11 @@ public class MonthlyFreeItemHandler implements ModuleHandler {
         Long userId = paramDto.getUserId();
         LocalDateTime requestTime = paramDto.getTime();
         ModuleDto data = paramDto.getModuleDto();
-        log.info("[Monthly-free-ticket] requester : {}, at : {}", userId, requestTime);
-        List<ListItem> contents = monthlyFreeItemRepository.findRand5ByUserIdAndRequestTime(userId,
-                requestTime).stream()
-            .map(listItemAggregateConverter::convert)
-            .collect(Collectors.toList());
+        List<ListItem> contents =
+            monthlyFreeItemRepository.findRand5ByUserIdAndRequestTime(userId, requestTime).stream()
+                .map(MonthlyFreeTicketDto::from)
+                .map(listItemAggregateConverter::convert)
+                .collect(Collectors.toList());
 
         return MonthlyFreeTicketResponse.of(
             data.getUpperModuleTitle(), data.getLowerModuleTitle(), contents

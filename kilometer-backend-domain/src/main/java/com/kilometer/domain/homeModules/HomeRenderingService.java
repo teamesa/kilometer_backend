@@ -20,10 +20,11 @@ public class HomeRenderingService {
 
     private final ModuleHandlerAdapter adapter;
     private final ModuleRepository moduleRepository;
+    private final ModuleParamGenerator moduleParamGenerator;
 
     public ModuleResponseDto<Object> getKeyVisual(Long userId) {
         ModuleType type = ModuleType.KEY_VISUAL;
-        ModuleParamDto paramDto = ModuleParamGenerator.from(userId, null);
+        ModuleParamDto paramDto = moduleParamGenerator.from(userId, null);
         try {
             return ModuleResponseDto.of(type, 0, adapter.getHandlerAdapter(type).generator(paramDto));
         } catch (Exception e) {
@@ -34,7 +35,7 @@ public class HomeRenderingService {
 
     public HomeApiResponse getHomeModules(Long userId) {
         List<ModuleParamDto> modules = moduleRepository.findAll().stream()
-            .map(module -> ModuleParamGenerator.from(userId, ModuleDto.from(module)))
+            .map(module -> moduleParamGenerator.from(userId, ModuleDto.from(module)))
             .collect(Collectors.toList());
 
         List<ModuleResponseDto<Object>> result = new ArrayList<>();

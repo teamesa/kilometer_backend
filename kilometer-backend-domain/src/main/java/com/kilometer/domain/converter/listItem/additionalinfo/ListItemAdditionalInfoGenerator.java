@@ -1,7 +1,7 @@
 package com.kilometer.domain.converter.listItem.additionalinfo;
 
 import com.kilometer.domain.archive.generator.ArchiveRatingCalculator;
-import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketEntityDto;
+import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class ListItemAdditionalInfoGenerator {
     }
 
     public ListItemAdditionalInfo generateListItemAdditionalInfo(
-        MonthlyFreeTicketEntityDto response) {
+        MonthlyFreeTicketDto response) {
         return ListItemAdditionalInfo.builder()
             .heartCount(response.getPickCount())
             .grade(response.getAvgStarRating())
