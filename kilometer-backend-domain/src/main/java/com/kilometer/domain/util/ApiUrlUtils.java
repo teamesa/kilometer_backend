@@ -33,6 +33,8 @@ public class ApiUrlUtils {
     public static final String HOME_ROOT = ROOT + "/home";
     public static final String KEY_VISUAL = "key-visual";
 
+    public static final String AUTHENTICATION_ROOT = ROOT + "/authentication";
+
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
     }
