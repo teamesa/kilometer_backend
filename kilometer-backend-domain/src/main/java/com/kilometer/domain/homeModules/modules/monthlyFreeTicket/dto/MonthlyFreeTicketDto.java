@@ -48,7 +48,7 @@ public class MonthlyFreeTicketDto implements ItemInfoExtraction {
             .feeType(monthlyFreeTicket.getFeeType())
             .startDate(monthlyFreeTicket.getStartDate())
             .endDate(monthlyFreeTicket.getEndDate())
-            .isHearted(isHearted != null)
+            .isHearted(isHearted != null && isHearted)
             .pickCount(monthlyFreeTicket.getPickCount())
             .archiveCount(monthlyFreeTicket.getArchiveCount())
             .avgStarRating(avgStarRating == null ? 0.0 : avgStarRating)
