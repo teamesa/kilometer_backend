@@ -1,14 +1,16 @@
-package com.kilometer.backend.security.security.token;
+package com.kilometer.domain.authentication.token;
 
-import com.kilometer.backend.configuration.AppProperties;
-import com.kilometer.backend.security.security.UserPrincipal;
-import io.jsonwebtoken.*;
+import com.kilometer.domain.authentication.configuration.AppProperties;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Slf4j
 @Service
@@ -17,16 +19,15 @@ public class TokenProvider {
 
     private final AppProperties appProperties;
 
-    public String createToken(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+    public String createToken(Long userId) {
 
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + appProperties.getTokenExpirationMsec());
+        Date expiredDate = new Date(now.getTime() + appProperties.getTokenExpirationMsec());
 
         return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
+                .setSubject(Long.toString(userId))
                 .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
+                .setExpiration(expiredDate)
                 .signWith(SignatureAlgorithm.HS512, appProperties.getTokenSecret())
                 .compact();
     }
@@ -44,8 +45,6 @@ public class TokenProvider {
         try {
             Jwts.parser().setSigningKey(appProperties.getTokenSecret()).parseClaimsJws(authToken);
             return true;
-        } catch (SignatureException ex) {
-            log.error("유효하지 않은 JWT 서명");
         } catch (MalformedJwtException ex) {
             log.error("유효하지 않은 JWT 토큰");
         } catch (ExpiredJwtException ex) {

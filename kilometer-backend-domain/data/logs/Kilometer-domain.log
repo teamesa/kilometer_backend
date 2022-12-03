@@ -1,0 +1,4 @@
+[2022/12/03 02:16:50:0115] [32mINFO [m boot.test.autoconfigure.orm.jpa.DataJpaTestContextBootstrapper [33m[Test worker][m- Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.kilometer.domain.authentication.AuthenticationServiceTest], using SpringBootContextLoader
+ -[2022/12/03 02:16:50:0123] [32mINFO [m test.context.support.AbstractContextLoader [33m[Test worker][m- Could not detect default resource locations for test class [com.kilometer.domain.authentication.AuthenticationServiceTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+ -[2022/12/03 02:16:50:0124] [32mINFO [m test.context.support.AnnotationConfigContextLoaderUtils [33m[Test worker][m- Could not detect default configuration classes for test class [com.kilometer.domain.authentication.AuthenticationServiceTest]: AuthenticationServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+ -
