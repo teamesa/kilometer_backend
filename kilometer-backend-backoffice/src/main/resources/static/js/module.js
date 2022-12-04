@@ -18,10 +18,6 @@ var appVue = new Vue({
             axios.get('/home/modules/list')
                 .then(function (response) {
                     $this.modules = response.data;
-                    // for (const module of $this.modules) {
-                    //     module.checkbox = false;
-                    //     $this.checkReadOnly(module);
-                    // }
                     $this.modules.forEach((module) => {
                         $this.checkReadOnly(module);
                     });

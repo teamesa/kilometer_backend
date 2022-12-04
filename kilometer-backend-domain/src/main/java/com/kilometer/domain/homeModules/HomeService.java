@@ -57,12 +57,6 @@ public class HomeService {
                 .collect(Collectors.toList());
     }
 
-    public ModuleResponseList findAllByUpdateModule() {
-        return ModuleResponseList.builder()
-                .moduleList(findAllByModule())
-                .build();
-    }
-
     @Transactional
     public List<String> updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
         List<ModuleUpdateRequest> modules = moduleFilter(moduleList);
