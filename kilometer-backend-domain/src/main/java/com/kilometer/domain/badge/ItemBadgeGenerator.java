@@ -2,7 +2,7 @@ package com.kilometer.domain.badge;
 
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;
-import com.kilometer.domain.search.ItemInfoExtraction;
+import com.kilometer.domain.converter.listItem.ItemInfoExtraction;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

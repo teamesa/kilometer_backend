@@ -16,21 +16,19 @@ public class UserVisitPlaceService {
     private final UserVisitPlaceRepository userVisitPlaceRepository;
 
     @Transactional
-    public void saveAll(ArchiveRequest archiveRequest, Archive archive) {
-        if (archiveRequest.getPlaceInfos().isEmpty()) {
-            return;
+    public List<UserVisitPlace> saveAll(List<UserVisitPlace> userVisitPlaces, Long archiveId) {
+        if (!userVisitPlaces.isEmpty()) {
+            Archive archive = Archive.builder().id(archiveId).build();
+            userVisitPlaces.forEach(userVisitPlace -> userVisitPlace.setArchive(archive));
+            userVisitPlaceRepository.saveAll(userVisitPlaces);
         }
-        List<UserVisitPlace> userVisitPlaces = archiveRequest.makeVisitedPlace();
-        userVisitPlaces.forEach(userVisitPlace -> userVisitPlace.setArchive(archive));
-        userVisitPlaceRepository.saveAll(userVisitPlaces);
+        return userVisitPlaces;
     }
 
     @Transactional
-    public void deleteAll(List<UserVisitPlace> userVisitPlaces) {
-        if (userVisitPlaces.isEmpty()) {
-            return;
-        }
-        userVisitPlaceRepository.deleteAll(userVisitPlaces);
+    public void deleteAllByArchiveId(Long archiveId) {
+        Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
+        userVisitPlaceRepository.deleteAllByArchiveId(archiveId);
     }
 
     public List<UserVisitPlace> findAllByArchiveId(Long archiveId) {

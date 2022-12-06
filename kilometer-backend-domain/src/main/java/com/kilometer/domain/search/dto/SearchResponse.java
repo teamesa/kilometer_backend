@@ -1,5 +1,6 @@
 package com.kilometer.domain.search.dto;
 
+import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.paging.ResponsePagingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

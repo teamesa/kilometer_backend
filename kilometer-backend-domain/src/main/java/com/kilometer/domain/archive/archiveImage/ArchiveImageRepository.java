@@ -8,4 +8,6 @@ public interface ArchiveImageRepository extends JpaRepository<ArchiveImage, Long
     List<ArchiveImage> findAllByArchiveId(Long archiveId);
 
     boolean existsArchiveImagesByArchiveId(Long archiveId);
+
+    void deleteAllByArchiveId(Long archiveId);
 }

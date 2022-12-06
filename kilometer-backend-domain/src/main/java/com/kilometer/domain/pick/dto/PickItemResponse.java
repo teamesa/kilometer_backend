@@ -4,7 +4,7 @@ import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.pick.Pick;
-import com.kilometer.domain.search.ItemInfoExtraction;
+import com.kilometer.domain.converter.listItem.ItemInfoExtraction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

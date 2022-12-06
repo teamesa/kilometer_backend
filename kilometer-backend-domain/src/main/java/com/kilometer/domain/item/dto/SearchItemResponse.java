@@ -4,7 +4,7 @@ import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
 
-import com.kilometer.domain.search.ItemInfoExtraction;
+import com.kilometer.domain.converter.listItem.ItemInfoExtraction;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
