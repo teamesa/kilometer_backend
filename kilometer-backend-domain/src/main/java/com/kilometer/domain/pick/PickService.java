@@ -1,6 +1,7 @@
 package com.kilometer.domain.pick;
 
 import com.kilometer.domain.item.ItemEntity;
+import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.item.ItemService;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.pick.dto.MostPickItem;
@@ -30,6 +31,7 @@ public class PickService {
 
     private final PickRepository pickRepository;
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
     private final ListItemAggregateConverter listItemAggregateConverter;
     private final PagingStatusService pagingStatusService;
 
@@ -82,6 +84,12 @@ public class PickService {
                 LocalDateTime
                 .of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0)
                 .withDayOfMonth(1));
+
+        List<Long> idList = mostPickTop4.stream()
+                .map(MostPickItem::getPickedItem)
+                .collect(Collectors.toList());
+
+        List<ItemEntity> byIds = itemRepository.findByIdIn(idList);
 
         return convertToMostPick(mostPickTop4);
     }
