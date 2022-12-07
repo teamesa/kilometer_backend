@@ -1,8 +1,8 @@
 package com.kilometer.backend.controller;
 
-import com.kilometer.domain.authentication.AuthenticationService;
-import com.kilometer.domain.authentication.dto.AuthRequest;
-import com.kilometer.domain.authentication.dto.AuthResponse;
+import com.kilometer.backend.service.authentication.AuthenticationService;
+import com.kilometer.domain.user.dto.AuthRequest;
+import com.kilometer.domain.user.dto.AuthResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

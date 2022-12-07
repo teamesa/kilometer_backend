@@ -1,8 +1,7 @@
 package com.kilometer.backend.security.security.token;
 
 import com.kilometer.backend.configuration.AppProperties;
-import com.kilometer.domain.authentication.token.TokenProvider;
-import com.kilometer.domain.user.User;
+import com.kilometer.domain.user.dto.UserResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -22,7 +21,7 @@ public class JwtProvider implements TokenProvider {
     private final AppProperties appProperties;
 
     @Override
-    public String createToken(User user) {
+    public String createToken(UserResponse user) {
 
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + appProperties.getTokenExpirationMsec());

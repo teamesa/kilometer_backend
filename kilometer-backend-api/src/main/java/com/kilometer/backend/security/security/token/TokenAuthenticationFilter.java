@@ -1,7 +1,6 @@
 package com.kilometer.backend.security.security.token;
 
 import com.kilometer.backend.security.security.CustomUserDetailsService;
-import com.kilometer.domain.authentication.token.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
