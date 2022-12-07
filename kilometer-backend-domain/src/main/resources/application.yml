@@ -28,8 +28,3 @@ spring:
 
 logging:
   config: classpath:log4j2.xml
-
-app:
-  auth:
-    tokenSecret: ${token.secret}
-    tokenExpirationMsec: ${token.expiration.mesc}

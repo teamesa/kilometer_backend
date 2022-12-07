@@ -1,4 +1,4 @@
-package com.kilometer.domain.authentication.configuration;
+package com.kilometer.backend.configuration;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

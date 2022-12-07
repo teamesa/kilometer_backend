@@ -28,10 +28,10 @@ public class AuthenticationService {
         Optional<User> user = userRepository.findByProviderAndProviderId(authUserDto.getProvider(),
                 authUserDto.getProviderId());
         if (user.isPresent()) {
-            return new AuthResponse(tokenProvider.createToken(user.get().getId()), false);
+            return new AuthResponse(tokenProvider.createToken(user.get()), false);
         }
         User newUser = userRepository.save(creatNewUser(authUserDto));
-        return new AuthResponse(tokenProvider.createToken(newUser.getId()), true);
+        return new AuthResponse(tokenProvider.createToken(newUser), true);
     }
 
     private User creatNewUser(final AuthUserDto authUserDto) {
