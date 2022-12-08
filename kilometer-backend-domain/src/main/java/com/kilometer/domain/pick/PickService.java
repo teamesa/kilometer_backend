@@ -1,8 +1,10 @@
 package com.kilometer.domain.pick;
 
+import com.kilometer.domain.converter.listItem.ListItemAggregateConverter;
+import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.item.ItemEntity;
-import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.item.ItemService;
+import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.pick.dto.MostPickItem;
 import com.kilometer.domain.pick.dto.MostPickResponse;
@@ -10,8 +12,6 @@ import com.kilometer.domain.pick.dto.MyPickResponse;
 import com.kilometer.domain.pick.dto.PickItemResponse;
 import com.kilometer.domain.pick.dto.PickRequest;
 import com.kilometer.domain.pick.dto.PickResponse;
-import com.kilometer.domain.converter.listItem.ListItemAggregateConverter;
-import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +30,6 @@ public class PickService {
 
     private final PickRepository pickRepository;
     private final ItemService itemService;
-    private final ItemRepository itemRepository;
     private final ListItemAggregateConverter listItemAggregateConverter;
     private final PagingStatusService pagingStatusService;
 
@@ -79,6 +77,7 @@ public class PickService {
         return convertToMyPick(pageablePicks, pickCount);
     }
 
+    @Transactional
     public MostPickResponse getMostPicks() {
         List<MostPickItem> mostPickTop4 = pickRepository.findByMostPickTop4(
                 LocalDateTime
@@ -89,21 +88,17 @@ public class PickService {
                 .map(MostPickItem::getPickedItem)
                 .collect(Collectors.toList());
 
-        List<ItemEntity> byIds = itemRepository.findByIdIn(idList);
-
-        return convertToMostPick(mostPickTop4);
+        return convertToMostPick(itemService.findByIdIn(idList));
     }
 
-    private MostPickResponse convertToMostPick(List<MostPickItem> mostPickTop4) {
-        List<ListItem> items = mostPickTop4.stream()
-                .map(pick -> itemService.findOne(pick.getPickedItem()))
-                .filter(Optional::isPresent)
-                .map(item -> PickItemResponse.makePickItemResponse(item.get()))
+    private MostPickResponse convertToMostPick(List<ItemResponse> items) {
+        List<ListItem> itemList = items.stream()
+                .map(PickItemResponse::makePickItemResponse)
                 .map(listItemAggregateConverter::convert)
                 .collect(Collectors.toList());
 
         return MostPickResponse.builder()
-                .contents(items)
+                .contents(itemList)
                 .build();
     }
 
