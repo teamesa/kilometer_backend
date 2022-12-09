@@ -1,5 +1,6 @@
 package com.kilometer.domain.pick.dto;
 
+import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.pick.Pick;
@@ -41,6 +42,21 @@ public class PickItemResponse implements ItemInfoExtraction {
                 .startDate(pick.getPickedItem().getStartDate())
                 .endDate(pick.getPickedItem().getEndDate())
                 .isHearted(pick.isHearted())
+                .apiType(API_TYPE)
+                .build();
+    }
+
+    public static PickItemResponse makePickItemResponse(ItemResponse itemResponse) {
+        return PickItemResponse.builder()
+                .id(itemResponse.getId())
+                .listImageUrl(itemResponse.getListImageUrl())
+                .thumbnailImageUrl(itemResponse.getThumbnailImageUrl())
+                .title(itemResponse.getTitle())
+                .exhibitionType(itemResponse.getExhibitionType())
+                .feeType(itemResponse.getFeeType())
+                .startDate(itemResponse.getStartDate())
+                .endDate(itemResponse.getEndDate())
+                .isHearted(true)
                 .apiType(API_TYPE)
                 .build();
     }
