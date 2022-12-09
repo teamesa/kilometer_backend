@@ -21,7 +21,7 @@ public interface MonthlyFreeTicket {
 
     LocalDate getEndDate();
 
-    Integer getIsHearted();
+    Boolean getIsHearted();
 
     long getArchiveCount();
 
