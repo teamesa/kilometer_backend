@@ -1,6 +1,7 @@
-package com.kilometer.domain.authentication.token;
+package com.kilometer.backend.security.security.token;
 
-import com.kilometer.domain.authentication.configuration.AppProperties;
+import com.kilometer.backend.configuration.AppProperties;
+import com.kilometer.domain.user.dto.UserResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,23 +16,25 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TokenProvider {
+public class JwtProvider implements TokenProvider {
 
     private final AppProperties appProperties;
 
-    public String createToken(Long userId) {
+    @Override
+    public String createToken(UserResponse user) {
 
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + appProperties.getTokenExpirationMsec());
 
         return Jwts.builder()
-                .setSubject(Long.toString(userId))
+                .setSubject(Long.toString(user.getId()))
                 .setIssuedAt(new Date())
                 .setExpiration(expiredDate)
                 .signWith(SignatureAlgorithm.HS512, appProperties.getTokenSecret())
                 .compact();
     }
 
+    @Override
     public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(appProperties.getTokenSecret())
@@ -41,6 +44,7 @@ public class TokenProvider {
         return Long.parseLong(claims.getSubject());
     }
 
+    @Override
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(appProperties.getTokenSecret()).parseClaimsJws(authToken);

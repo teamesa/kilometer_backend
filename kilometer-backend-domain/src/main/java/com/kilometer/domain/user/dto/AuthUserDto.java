@@ -1,4 +1,4 @@
-package com.kilometer.domain.authentication.dto;
+package com.kilometer.domain.user.dto;
 
 import com.kilometer.domain.user.AuthProvider;
 import com.kilometer.domain.user.Gender;

@@ -1,4 +1,4 @@
-package com.kilometer.domain.authentication.dto;
+package com.kilometer.domain.user.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;

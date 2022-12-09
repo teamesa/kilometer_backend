@@ -11,11 +11,10 @@ class UserServiceTest extends Specification {
 
     UserFormValidator userFormValidator = Mock(UserFormValidator.class)
     UserRepository userRepository = Mock(UserRepository.class)
-    NameGenerator nameGenerator = Mock(NameGenerator.class)
     ImageService imageService = Mock(ImageService.class)
 
     def setup() {
-        sut = new UserService(userFormValidator, userRepository, nameGenerator, imageService)
+        sut = new UserService(userFormValidator, userRepository, imageService)
     }
 
     def 'updateUserProfile works well'() {
