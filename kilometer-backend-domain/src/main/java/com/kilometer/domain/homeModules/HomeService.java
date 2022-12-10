@@ -31,6 +31,7 @@ public class HomeService {
     private final ModuleRepository moduleRepository;
     private final BackOfficeAccountService backOfficeAccountService;
     private final ModuleValidator moduleValidator;
+    private final KeyVisualValidator keyVisualValidator;
 
     public List<KeyVisualResponse> findAllByKeyVisual() {
         return keyVisualRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
@@ -39,6 +40,20 @@ public class HomeService {
     }
 
     @Transactional
+    public List<String> updateAfterValidateKeyVisual(List<KeyVisualUpdateResponse> keyVisualList, String createdAccount) {
+        List<String> errors = validateKeyVisual(keyVisualList);
+
+        if (errors.isEmpty()) {
+            updateKeyVisual(keyVisualList, createdAccount);
+        }
+
+        return errors;
+    }
+
+    private List<String> validateKeyVisual(List<KeyVisualUpdateResponse> keyVisualList) {
+        return keyVisualValidator.validateKeyVisual(keyVisualList);
+    }
+
     public void updateKeyVisual(List<KeyVisualUpdateResponse> keyVisualList, String createdAccount) {
         List<KeyVisual> keyVisuals = keyVisualList.stream()
                 .map(keyVisualUpdateResponse -> {

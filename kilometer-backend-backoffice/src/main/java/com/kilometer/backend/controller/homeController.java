@@ -37,17 +37,23 @@ public class homeController {
     }
 
     @GetMapping(BoUrlUtils.KEY_VISUAL_EDIT)
-    public String getKeyVisual(Model model) {
-        List<KeyVisualResponse> keyVisualList = homeService.findAllByKeyVisual();
-        model.addAttribute("keyVisualList", keyVisualList);
+    public String getUpdateKeyVisual() {
         return "home/key_visual/updateKeyVisual";
     }
 
+    @ResponseBody
+    @GetMapping(BoUrlUtils.KEY_VISUAL_LIST)
+    public List<KeyVisualResponse> getKeyVisual() {
+        return homeService.findAllByKeyVisual();
+    }
+
+    @ResponseBody
     @PostMapping(BoUrlUtils.KEY_VISUAL_EDIT)
-    public String updateKeyVisual(@ModelAttribute KeyVisualUpdateResponseList keyVisualUpdateResponseList,
+    public List<String> updateKeyVisual(@RequestBody KeyVisualUpdateResponseList keyVisualUpdateResponseList,
                                   Principal principal) {
-        homeService.updateKeyVisual(keyVisualUpdateResponseList.getKeyVisualList(), principal.getName());
-        return "redirect:/home/key_visual";
+        return homeService.updateAfterValidateKeyVisual(
+                keyVisualUpdateResponseList.getKeyVisualList(), principal.getName());
+//        return "redirect:/home/key_visual";
     }
 
     @GetMapping(BoUrlUtils.HOME_MODULES)
