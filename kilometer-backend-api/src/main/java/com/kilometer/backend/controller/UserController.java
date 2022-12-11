@@ -1,18 +1,22 @@
 package com.kilometer.backend.controller;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.backend.security.exception.ResourceNotFoundException;
-import com.kilometer.domain.image.ImageService;
+import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserProfileUpdate;
 import com.kilometer.domain.user.dto.UserResponse;
-import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserUpdateRequest;
 import com.kilometer.domain.util.ApiUrlUtils;
-import com.kilometer.domain.util.FileUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -45,7 +49,7 @@ public class UserController {
     @PutMapping(ApiUrlUtils.USER_PROFILE)
     @ApiOperation(value = "유저 이미지 변경 API")
     public UserResponse upload(MultipartFile file) throws IOException {
-        Preconditions.notNull(file, String.format("File must not be null, userId: %s", getLoginUserId()));
+        Preconditions.checkNotNull(file, String.format("File must not be null, userId: %s", getLoginUserId()));
         UserProfileUpdate request = UserProfileUpdate.builder()
                 .fileName(file.getOriginalFilename())
                 .userId(getLoginUserId())

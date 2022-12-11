@@ -1,11 +1,12 @@
 package com.kilometer.domain.image;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.util.FileUtils;
 import com.kilometer.domain.util.S3Uploader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -17,13 +18,13 @@ public class ImageService {
 
     public String upload(byte[] file, String fileName, String folderName, long maxFileSize)
         throws IOException {
-        Preconditions.condition((file.length > 0 && file.length <= maxFileSize),
+        Preconditions.checkArgument((file.length > 0 && file.length <= maxFileSize),
             "The file size out of range.");
-        Preconditions.condition(StringUtils.hasText(fileName),
+        Preconditions.checkArgument(StringUtils.hasText(fileName),
             "The file name must not be empty or null.");
-        Preconditions.condition((fileName.length() > 0 && fileName.length() <= 256),
+        Preconditions.checkArgument((fileName.length() > 0 && fileName.length() <= 256),
             "The file name must be between 1 and 256 characters in length");
-        Preconditions.condition(checkPhotoFileExtension(fileName),
+        Preconditions.checkArgument(checkPhotoFileExtension(fileName),
             "The file extension must be specified extension.");
         return s3Uploader.upload(file, fileName, folderName);
     }

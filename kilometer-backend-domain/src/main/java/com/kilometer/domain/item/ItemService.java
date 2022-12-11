@@ -1,5 +1,6 @@
 package com.kilometer.domain.item;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.archive.ArchiveService;
 import com.kilometer.domain.item.dto.DetailResponse;
 import com.kilometer.domain.item.dto.ItemInfoDto;
@@ -16,7 +17,8 @@ import com.kilometer.domain.item.itemDetailImage.ItemDetailImageRepository;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -86,13 +88,13 @@ public class ItemService {
     }
 
     public Optional<ItemResponse> findOne(Long itemId) {
-        Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.checkNotNull(itemId, "id must not be null");
 
         return itemRepository.findById(itemId).map(ItemEntity::makeResponse);
     }
 
     public ItemUpdateResponse findUpdateOne(Long itemId) {
-        Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.checkNotNull(itemId, "id must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("해당 Item이 없습니다. id=" + itemId));
@@ -100,7 +102,7 @@ public class ItemService {
     }
 
     public ItemInfoResponse getItemInfo(Long itemId, Long userId) {
-        Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.checkNotNull(itemId, "id must not be null");
 
         ItemInfoDto itemInfoDto = itemRepository.findInfoByItemIdAndUserId(itemId, userId)
             .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id = " + itemId));
@@ -111,7 +113,7 @@ public class ItemService {
     }
 
     public DetailResponse getItemDetail(Long itemId) {
-        Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.checkNotNull(itemId, "id must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + itemId));
@@ -122,8 +124,8 @@ public class ItemService {
 
     @Transactional
     public void updateEditItem(Long itemId, ItemUpdateRequest request, String udtAccount) {
-        Preconditions.notNull(itemId, "id must not be null");
-        Preconditions.notNull(request, "item must not be null");
+        Preconditions.checkNotNull(itemId, "id must not be null");
+        Preconditions.checkNotNull(request, "item must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id=" + itemId));
@@ -163,28 +165,18 @@ public class ItemService {
 
     @Transactional
     public void deleteItem(Long itemId) {
-        Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.checkNotNull(itemId, "id must not be null");
         itemRepository.deleteById(itemId);
     }
 
-    public DetailResponse findToDetailResponseById(Long itemId) {
-        Preconditions.notNull(itemId, "id must not be null");
-
-        ItemEntity itemEntity = itemRepository.findById(itemId)
-            .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + itemId));
-
-        return DetailResponse.makeResponse(itemEntity.getItemDetail(),
-            itemEntity.getItemDetailImages());
-    }
-
     public void plusItemPickCount(Long itemId) {
-        Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.checkNotNull(itemId, "id must not be null");
 
         updateAndDoFunction(ItemEntity::plusPickCount, itemId);
     }
 
     public void minusItemPickCount(Long itemId) {
-        Preconditions.notNull(itemId, "id must not be null");
+        Preconditions.checkNotNull(itemId, "id must not be null");
 
         updateAndDoFunction(ItemEntity::minusPickCount, itemId);
     }
