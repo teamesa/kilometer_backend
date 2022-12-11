@@ -38,7 +38,7 @@ public class MonthlyFreeTicketDto implements ItemInfoExtraction {
     }
 
     public static MonthlyFreeTicketDto from(MonthlyFreeTicket monthlyFreeTicket) {
-        Integer isHearted = monthlyFreeTicket.getIsHearted();
+        Boolean isHearted = monthlyFreeTicket.getIsHearted();
         Double avgStarRating = monthlyFreeTicket.getGrade();
         return MonthlyFreeTicketDto.builder()
             .id(monthlyFreeTicket.getId())
@@ -48,7 +48,7 @@ public class MonthlyFreeTicketDto implements ItemInfoExtraction {
             .feeType(monthlyFreeTicket.getFeeType())
             .startDate(monthlyFreeTicket.getStartDate())
             .endDate(monthlyFreeTicket.getEndDate())
-            .isHearted(isHearted != null && isHearted == 1)
+            .isHearted(isHearted != null && isHearted)
             .pickCount(monthlyFreeTicket.getPickCount())
             .archiveCount(monthlyFreeTicket.getArchiveCount())
             .avgStarRating(avgStarRating == null ? 0.0 : avgStarRating)

@@ -76,9 +76,7 @@ public class homeController {
     }
 
     @GetMapping(BoUrlUtils.HOME_MODULES_EDIT)
-    public String getModules(Model model) {
-        ModuleResponseList moduleList = homeService.findAllByUpdateModule();
-        model.addAttribute("moduleList", moduleList);
+    public String getUpdateModules() {
         return "home/updateModules";
     }
 

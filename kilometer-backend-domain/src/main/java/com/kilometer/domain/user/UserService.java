@@ -1,14 +1,14 @@
 package com.kilometer.domain.user;
 
 import com.kilometer.domain.image.ImageService;
-import com.kilometer.domain.user.dto.OAuth2UserInfo;
+import com.kilometer.domain.user.dto.AuthRequest;
+import com.kilometer.domain.user.dto.AuthUserDto;
 import com.kilometer.domain.user.dto.UserProfileUpdate;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -18,9 +18,9 @@ import java.util.Optional;
 public class UserService {
     private static final String NAVER_DEFAULT_PROFILE_IMAGE = "https://ssl.pstatic.net/static/pwe/address/img_profile.png";
 
+    private final NameGenerator nameGenerator;
     private final UserFormValidator userFormValidator;
     private final UserRepository userRepository;
-    private final NameGenerator nameGenerator;
     private final ImageService imageService;
 
     public Optional<UserResponse> findByEmail(String email) {
@@ -41,22 +41,6 @@ public class UserService {
                 .map(User::toResponse);
     }
 
-    // DB에 존재하지 않을 경우 새로 등록
-    public UserResponse registerNewUser(AuthProvider provider, OAuth2UserInfo oAuth2UserInfo) {
-        User newUser = User.builder()
-                .name(nameGenerator.makeRandomName())
-                .email(oAuth2UserInfo.getEmail())
-                .imageUrl(profileImageToNull(oAuth2UserInfo.getImageUrl()))
-                .gender(oAuth2UserInfo.getGender())
-                .phoneNumber(oAuth2UserInfo.getPhoneNumber())
-                .birthdate(oAuth2UserInfo.getBirthDate())
-                .role(Role.USER)
-                .provider(provider)
-                .providerId(oAuth2UserInfo.getId())
-                .build();
-        return userRepository.save(newUser).toResponse(true);
-    }
-
     public Optional<UserResponse> updateUserProfile(UserProfileUpdate profileUpdate) throws IOException {
         String profileUrl = imageService.upload(profileUpdate.getFile(),
                 profileUpdate.getFileName(),
@@ -70,10 +54,29 @@ public class UserService {
                 .map(User::toResponse);
     }
 
-    private String profileImageToNull(String profileImage) {
-        if (StringUtils.hasText(profileImage) && NAVER_DEFAULT_PROFILE_IMAGE.equals(profileImage)) {
-            return null;
-        }
-        return profileImage;
+    public Optional<UserResponse> findUserByProviderAndProviderId(AuthRequest authRequest) {
+        AuthUserDto authUserDto = AuthUserDto.from(authRequest);
+        return userRepository.findByProviderAndProviderId(authUserDto.getProvider(), authUserDto.getProviderId())
+                .map(User::toResponse);
+    }
+
+    public UserResponse saveUser(AuthRequest authRequest) {
+        AuthUserDto authUserDto = AuthUserDto.from(authRequest);
+        return userRepository.save(creatNewUser(authUserDto))
+                .toResponse();
+    }
+
+    private User creatNewUser(final AuthUserDto authUserDto) {
+        return User.builder()
+                .name(nameGenerator.makeRandomName())
+                .email(authUserDto.getEmail())
+                .imageUrl(authUserDto.getProfileImage())
+                .role(Role.USER)
+                .phoneNumber(authUserDto.getPhoneNumber())
+                .birthdate(authUserDto.getBirthdate())
+                .gender(authUserDto.getGender())
+                .provider(authUserDto.getProvider())
+                .providerId(authUserDto.getProviderId())
+                .build();
     }
 }

@@ -15,10 +15,6 @@ import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
 import com.kilometer.domain.item.itemDetailImage.ItemDetailImageRepository;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.junit.platform.commons.util.Preconditions;
 import org.springframework.data.domain.Page;
@@ -26,6 +22,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -196,5 +197,11 @@ public class ItemService {
             .map(ItemEntity::makeResponse)
             .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + it));
         generated.apply(itemId);
+    }
+
+    public List<ItemResponse> findByIdIn(List<Long> idList) {
+        return itemRepository.findByIdIn(idList).stream()
+                .map(ItemEntity::makeResponse)
+                .collect(Collectors.toList());
     }
 }

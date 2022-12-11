@@ -31,6 +31,11 @@ spring:
     baseline-on-migrate: true
     baseline-version: 0
 
+app:
+  auth:
+    tokenSecret: ${token.secret}
+    tokenExpirationMsec: ${token.expiration.mesc}
+
 cloud:
   aws:
     s3:
