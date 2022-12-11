@@ -1,6 +1,7 @@
 package com.kilometer.backend.controller;
 
 import com.kilometer.domain.pick.PickService;
+import com.kilometer.domain.pick.dto.MostPickResponse;
 import com.kilometer.domain.pick.dto.MyPickResponse;
 import com.kilometer.domain.pick.dto.PickRequest;
 import com.kilometer.domain.pick.dto.PickResponse;
@@ -34,5 +35,11 @@ public class PickController {
     @ApiOperation(value = "Pick 정보 API")
     public MyPickResponse getMyPicks(@RequestBody PickRequest pickRequest) {
         return pickService.getMyPicks(pickRequest, getLoginUserId());
+    }
+
+    @PostMapping(ApiUrlUtils.PICK_MOST)
+    @ApiOperation(value = "많이 PICK한 문화생활 정보 API")
+    public MostPickResponse getMostPicks() {
+        return pickService.getMostPicks();
     }
 }

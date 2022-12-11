@@ -6,6 +6,7 @@ public class ApiUrlUtils {
     public static final String SEARCH_ROOT = ROOT + "/search";
     public static final String SEARCH_AUTO_COMPLETE = "/auto-complete";
     public static final String PICK_ROOT = ROOT + "/pick";
+    public static final String PICK_MOST = "/most";
     public static final String USER_ROOT = ROOT + "/user";
     public static final String PICK_ITEM = "/{itemId}";
     public static final String PICK_ITEM_PATTERN = PICK_ROOT + "/%s";
@@ -32,6 +33,8 @@ public class ApiUrlUtils {
     public static final String USER_PROFILE = "/profile";
     public static final String HOME_ROOT = ROOT + "/home";
     public static final String KEY_VISUAL = "key-visual";
+
+    public static final String AUTHENTICATION_ROOT = ROOT + "/authentication";
 
     public static String getPickItemUrl(long itemId) {
         return String.format(PICK_ITEM_PATTERN + "?status=", itemId);
