@@ -46,18 +46,12 @@
                     <input type="hidden"
                            v-model="keyVisual.imageUrl">
                     <input type="file"
-                           th:id="keyVisualIndex__${keyVisualStat.index}__"
-                           @change="keyVisualImageS3Upload">
-                    <div th:id="keyVisualImage[__${keyVisualStat.index}__]">
-                        <img style="width: 100px; height: 100px;"
-                             th:src="*{keyVisual.imageUrl}"
-                             th:if="${not #strings.isEmpty(keyVisual.imageUrl)}">
-                    </div>
-                    <button type="button"
-                            th:id="keyVisualDeleteIndex__${keyVisualStat.index}__"
-                            @click="keyVisualImageDelete">
-                        삭제
-                    </button>
+                           :id="'fileName' + index"
+                           @change="keyVisualImageS3Upload(index, $event)">
+                    <div v-if="keyVisual.imageUrl != ''" v-html="keyVisual.imageTag"></div>
+                    <input type="button"
+                           value="삭제"
+                           @click="keyVisualImageDelete(index)">
                 </td>
                 <td>
                     <input type="text"

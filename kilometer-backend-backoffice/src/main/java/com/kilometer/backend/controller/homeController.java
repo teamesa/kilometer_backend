@@ -3,7 +3,6 @@ package com.kilometer.backend.controller;
 import com.kilometer.domain.homeModules.HomeService;
 import com.kilometer.domain.homeModules.dto.ModuleDeleteResponseList;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
-import com.kilometer.domain.homeModules.dto.ModuleResponseList;
 import com.kilometer.domain.homeModules.dto.ModuleTypeDto;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequestList;
 import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualResponse;
@@ -14,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,7 +49,7 @@ public class homeController {
     @PostMapping(BoUrlUtils.KEY_VISUAL_EDIT)
     public List<String> updateKeyVisual(@RequestBody KeyVisualUpdateResponseList keyVisualUpdateResponseList,
                                   Principal principal) {
-        return homeService.updateAfterValidateKeyVisual(
+        return homeService.updateKeyVisualAfterValidate(
                 keyVisualUpdateResponseList.getKeyVisualList(), principal.getName());
 //        return "redirect:/home/key_visual";
     }
@@ -84,7 +82,7 @@ public class homeController {
     @PostMapping(BoUrlUtils.HOME_MODULES_EDIT)
     public List<String> updateModules(
             @RequestBody ModuleUpdateRequestList moduleUpdateRequestList, Principal principal) {
-        return homeService.updateModule(moduleUpdateRequestList.getModuleList(), principal.getName());
+        return homeService.updateModuleAfterValidate(moduleUpdateRequestList.getModuleList(), principal.getName());
     }
 
     @ResponseBody
