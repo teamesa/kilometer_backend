@@ -1,5 +1,6 @@
 package com.kilometer.domain.homeModules.modules.monthlyFreeTicket;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.converter.listItem.ListItemAggregateConverter;
 import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.homeModules.ModuleParamDto;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,7 @@ public class MonthlyFreeItemHandler implements ModuleHandler {
 
     @Override
     public Object generator(ModuleParamDto paramDto) throws RuntimeException {
-        Preconditions.notNull(paramDto, "paramDto must not be null");
+        Preconditions.checkNotNull(paramDto, "paramDto must not be null");
         Long userId = paramDto.getUserId();
         LocalDateTime requestTime = paramDto.getTime();
         ModuleDto data = paramDto.getModuleDto();
