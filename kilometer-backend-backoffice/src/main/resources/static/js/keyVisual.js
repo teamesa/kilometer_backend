@@ -24,6 +24,47 @@ var appVue = new Vue({
                 });
         },
 
+        save: function () {
+            let $this = this;
+            let keyVisualList = {
+                keyVisualList: $this.keyVisuals
+            }
+            let data = JSON.stringify(keyVisualList);
+
+            axios.post('/home/key_visual/edit', data, {
+                headers: {
+                    'Content-Type': 'application/json'}
+            })
+                .then(function (response) {
+                    $this.errors = response.data;
+                    console.log(response.data);
+                    console.log($this.errors);
+                    $this.checkErrors();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+
+        checkErrors: function () {
+            let $this = this;
+            let errors = $this.errors;
+
+            if (errors.length !== 0) {
+                let printError = '';
+                errors.forEach((error) => {
+                    printError += error + '\n';
+                })
+                alert(printError);
+            } else {
+                $this.goList();
+            }
+        },
+
+        goList: function () {
+            location.href = '/home/key_visual';
+        },
+
         keyVisualImageS3Upload: function (index, event) {
             let $this = this;
 

@@ -51,7 +51,6 @@ public class homeController {
                                   Principal principal) {
         return homeService.updateKeyVisualAfterValidate(
                 keyVisualUpdateResponseList.getKeyVisualList(), principal.getName());
-//        return "redirect:/home/key_visual";
     }
 
     @GetMapping(BoUrlUtils.HOME_MODULES)

@@ -26,7 +26,7 @@ public class KeyVisualValidator {
                 .filter(KeyVisualUpdateResponse::isNotNull)
                 .count();
 
-        if (count <= KEY_VISUAL_MIN_COUNT) {
+        if (count < KEY_VISUAL_MIN_COUNT) {
             errors.add("3개 이상 입력해주세요.");
         }
     }
