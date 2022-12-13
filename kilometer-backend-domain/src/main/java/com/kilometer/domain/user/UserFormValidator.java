@@ -1,11 +1,15 @@
 package com.kilometer.domain.user;
 
+
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.exception.UserValidationException;
 import com.kilometer.domain.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
+
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,16 +48,16 @@ class UserFormValidator {
 
     private void validateName(UserUpdateRequest userUpdateRequest, List<UserValidationException> exceptions) {
         try {
-            Preconditions.condition(
-                    Objects.isNull(userRepository.findByNameAndIdNot(userUpdateRequest.getName(), userUpdateRequest.getId())),
-                    "사용중인 닉네임입니다."
+            Preconditions.checkArgument(
+                Objects.isNull(userRepository.findByNameAndIdNot(userUpdateRequest.getName(), userUpdateRequest.getId())),
+                "사용중인 닉네임입니다."
             );
         } catch (PreconditionViolationException e) {
             exceptions.add(new UserValidationException(e, UserForm.name));
         }
 
         try {
-            Preconditions.notBlank(userUpdateRequest.getName(), "닉네임을 올바르게 입력해주세요");
+            Preconditions.checkArgument(StringUtils.hasText(userUpdateRequest.getName()), "닉네임을 올바르게 입력해주세요");
         } catch (PreconditionViolationException e) {
             exceptions.add(new UserValidationException(e, UserForm.name));
         }
@@ -62,14 +66,14 @@ class UserFormValidator {
     private void validatePhoneNumber(UserUpdateRequest userUpdateRequest, List<UserValidationException> exceptions) {
         int phoneNumberLength = userUpdateRequest.getPhoneNumber().length();
         try {
-            Preconditions.condition(userUpdateRequest.getPhoneNumber().indexOf("01") == 0
+            Preconditions.checkArgument(userUpdateRequest.getPhoneNumber().indexOf("01") == 0
                     , "핸드폰 번호를 올바르게 입력해주세요");
         } catch (PreconditionViolationException e) {
             exceptions.add(new UserValidationException(e, UserForm.phoneNumber));
         }
 
         try {
-            Preconditions.condition(phoneNumberLength == 10 || phoneNumberLength == 11, "핸드폰 번호를 올바르게 입력해주세요.");
+            Preconditions.checkArgument(phoneNumberLength == 10 || phoneNumberLength == 11, "핸드폰 번호를 올바르게 입력해주세요.");
         } catch (PreconditionViolationException e) {
             exceptions.add(new UserValidationException(e, UserForm.phoneNumber));
         }
@@ -77,16 +81,15 @@ class UserFormValidator {
 
     private void validateGender(UserUpdateRequest userUpdateRequest, List<UserValidationException> exceptions) {
         try {
-            Preconditions.notBlank(userUpdateRequest.getGender(), "성별을 올바르게 선택해주세요");
+            Preconditions.checkArgument(StringUtils.hasText(userUpdateRequest.getGender()), "성별을 올바르게 선택해주세요");
         } catch (PreconditionViolationException e) {
             exceptions.add(new UserValidationException(e, UserForm.gender));
         }
 
         try {
-            Preconditions.notEmpty(
-                    Arrays.stream(Gender.values())
-                            .filter(gender -> gender.name().equals(userUpdateRequest.getGender()))
-                            .collect(Collectors.toList()),
+            Preconditions.checkArgument(
+                Arrays.stream(Gender.values())
+                    .filter(gender -> gender.name().equals(userUpdateRequest.getGender())).count() != 0,
                     "성별을 올바르게 선택해주세요"
             );
         } catch (PreconditionViolationException e) {
@@ -96,13 +99,13 @@ class UserFormValidator {
 
     private void validationEmail(UserUpdateRequest userUpdateRequest, List<UserValidationException> exceptions) {
         try {
-            Preconditions.notBlank(userUpdateRequest.getEmail(), "이메일을 올바르게 입력해주세요.");
+            Preconditions.checkArgument(StringUtils.hasText(userUpdateRequest.getEmail()), "이메일을 올바르게 입력해주세요.");
         } catch (PreconditionViolationException e) {
             exceptions.add(new UserValidationException(e, UserForm.email));
         }
 
         try {
-            Preconditions.condition(
+            Preconditions.checkArgument(
                     Pattern.compile(EMAIL_REGEX).matcher(userUpdateRequest.getEmail()).find(),
                     "이메일을 올바르게 입력해주세요."
             );

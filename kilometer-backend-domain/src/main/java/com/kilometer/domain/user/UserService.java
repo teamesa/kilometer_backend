@@ -1,5 +1,6 @@
 package com.kilometer.domain.user;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.image.ImageService;
 import com.kilometer.domain.user.dto.AuthRequest;
 import com.kilometer.domain.user.dto.AuthUserDto;
@@ -7,8 +8,9 @@ import com.kilometer.domain.user.dto.UserProfileUpdate;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -24,12 +26,12 @@ public class UserService {
     private final ImageService imageService;
 
     public Optional<UserResponse> findByEmail(String email) {
-        Preconditions.notBlank(email, "eamil cannot be blank");
+        Preconditions.checkArgument(StringUtils.hasText(email) , "eamil cannot be blank");
         return userRepository.findByEmail(email).map(User::toResponse);
     }
 
     public Optional<UserResponse> findById(Long id) {
-        Preconditions.notNull(id, "id cannot be blank");
+        Preconditions.checkNotNull(id, "id cannot be blank");
         return userRepository.findById(id).map(User::toResponse);
     }
 

@@ -1,5 +1,6 @@
 package com.kilometer.domain.archive;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
@@ -34,7 +35,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -74,8 +75,8 @@ public class ArchiveService {
 
     @Transactional
     public ArchiveInfo update(Long userId, ArchiveRequest request) {
-        Preconditions.notNull(userId, "id must not be null");
-        Preconditions.notNull(request.getItemId(), "Item id must not be null");
+        Preconditions.checkNotNull(userId, "id must not be null");
+        Preconditions.checkNotNull(request.getItemId(), "Item id must not be null");
 
         Archive archive = archiveRepository.findByItemIdAndUserId(request.getItemId(), userId)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exist."));
@@ -95,10 +96,10 @@ public class ArchiveService {
 
     public ArchiveResponse findAllByItemIdAndUserId(Long itemId, Long userId,
         RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
-        Preconditions.notNull(itemId, "id must not be null");
-        Preconditions.notNull(userId, "id must not be null");
-        Preconditions.notNull(requestPagingStatus, "page value must not be null");
-        Preconditions.notNull(sortType, "sort type value must not be null");
+        Preconditions.checkNotNull(itemId, "id must not be null");
+        Preconditions.checkNotNull(userId, "id must not be null");
+        Preconditions.checkNotNull(requestPagingStatus, "page value must not be null");
+        Preconditions.checkNotNull(sortType, "sort type value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
         Page<ItemArchiveDto> items = archiveRepository.findAllItemArchiveByArchiveQueryRequest(
@@ -119,8 +120,8 @@ public class ArchiveService {
 
     public MyArchiveResponse findAllByUserId(Long userId, RequestPagingStatus requestPagingStatus,
         ArchiveSortType sortType) {
-        Preconditions.notNull(userId, "id must not be null");
-        Preconditions.notNull(requestPagingStatus, "page value must not be null");
+        Preconditions.checkNotNull(userId, "id must not be null");
+        Preconditions.checkNotNull(requestPagingStatus, "page value must not be null");
 
         Pageable pageable = pagingStatusService.makePageable(requestPagingStatus, sortType);
         Page<MyArchiveDto> archives = archiveRepository.findAllMyArchiveByArchiveQueryRequest(
@@ -141,7 +142,7 @@ public class ArchiveService {
 
     @Transactional
     public ArchiveDeleteResponse delete(Long archiveId, Long userId) throws IllegalAccessException {
-        Preconditions.notNull(archiveId, "id must not be null");
+        Preconditions.checkNotNull(archiveId, "id must not be null");
 
         Archive archive = archiveRepository.findById(archiveId)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exists."));
@@ -170,8 +171,8 @@ public class ArchiveService {
     }
 
     public ArchiveDetailResponse findByArchiveIdAndUserId(Long archiveId, Long userId) {
-        Preconditions.notNull(archiveId, "Archive id must not be null : " + archiveId);
-        Preconditions.notNull(userId, "User id must not be null : " + userId);
+        Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
+        Preconditions.checkNotNull(userId, "User id must not be null : " + userId);
 
         ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserIdAndIsVisible(
                 archiveId,
@@ -188,8 +189,8 @@ public class ArchiveService {
     }
 
     public Long findArchiveIdByItemIdAndUserId(Long itemId, Long userId) {
-        Preconditions.notNull(itemId, "Archive id must not be null : " + itemId);
-        Preconditions.notNull(userId, "User id must not be null : " + userId);
+        Preconditions.checkNotNull(itemId, "Archive id must not be null : " + itemId);
+        Preconditions.checkNotNull(userId, "User id must not be null : " + userId);
 
         return archiveRepository.findByItemIdAndUserId(itemId, userId)
             .map(Archive::getId)
@@ -198,17 +199,17 @@ public class ArchiveService {
 
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
-        Preconditions.notNull(archiveRequest.getComment(),
+        Preconditions.checkNotNull(archiveRequest.getComment(),
             "Comment must not be null");
-        Preconditions.condition(
+        Preconditions.checkArgument(
             (archiveRequest.getStarRating() > 0 && archiveRequest.getStarRating() <= 5),
             "별점은 1이상 5이하의 숫자여야 합니다. now : " + archiveRequest.getStarRating());
-        Preconditions.notNull(archiveRequest.getPhotoUrls(),
+        Preconditions.checkNotNull(archiveRequest.getPhotoUrls(),
             "Photo urls must not be null");
-        Preconditions.notNull(archiveRequest.getPlaceInfos(),
+        Preconditions.checkNotNull(archiveRequest.getPlaceInfos(),
             "Place infos must not be null");
 
-        Preconditions.condition(
+        Preconditions.checkArgument(
             !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
             String.format("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d",
                 archiveRequest.getItemId(), userId));

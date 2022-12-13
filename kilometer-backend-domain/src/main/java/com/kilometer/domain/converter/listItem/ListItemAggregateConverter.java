@@ -1,5 +1,6 @@
 package com.kilometer.domain.converter.listItem;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
 import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketDto;
@@ -14,7 +15,7 @@ import com.kilometer.domain.converter.listItem.presentationimage.PresentationIma
 import com.kilometer.domain.converter.listItem.title.ListItemTitle;
 import com.kilometer.domain.converter.listItem.title.ListItemTitleGenerator;
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class ListItemAggregateConverter {
     private final ItemHeartGenerator heartGenerator;
 
     public ListItem convert(ItemInfoExtraction item) {
-        Preconditions.notNull(item, String.format(
+        Preconditions.checkNotNull(item, String.format(
                 "converting can not be run will null item response, please check this, %s", item));
         PresentationImage image = presentationImageGenerator.generatePresentationImage(item);
         ItemBadge typeBadge = badgeGenerator.generateTypeItemBadge(item);

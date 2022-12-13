@@ -1,5 +1,6 @@
 package com.kilometer.domain.pick;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.converter.listItem.ListItemAggregateConverter;
 import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.item.ItemEntity;
@@ -14,7 +15,7 @@ import com.kilometer.domain.pick.dto.PickRequest;
 import com.kilometer.domain.pick.dto.PickResponse;
 import com.kilometer.domain.user.User;
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -65,8 +66,8 @@ public class PickService {
     }
 
     public MyPickResponse getMyPicks(PickRequest pickRequest, long userId) {
-        Preconditions.notNull(pickRequest, "pick object must not be null");
-        Preconditions.notNull(pickRequest.getRequestPagingStatus(), "page value must not be null");
+        Preconditions.checkNotNull(pickRequest, "pick object must not be null");
+        Preconditions.checkNotNull(pickRequest.getRequestPagingStatus(), "page value must not be null");
 
         User pickedUser = User.builder().id(userId).build();
         Pageable pageable = pagingStatusService.makePageable(pickRequest.getRequestPagingStatus());
