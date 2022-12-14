@@ -17,6 +17,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ModuleValidator {
 
+    private static final String FREE_TICKET_EXTRA_DATA_IS_EMPTY = "프리 티켓의 Extra Data는 비어있어야 합니다.";
+    private static final String KEY_VISUAL_EXTRA_DATA_IS_EMPTY = "키비주얼의 Extra Data는 비어있어야 합니다.";
+    private static final String ITEM_ID_ERROR = "유효한 ITEM id가 아닙니다. id : ";
+    private static final String ITEM_INTRODUCE_ERROR = "해당 ITEM id의 소개글이 없습니다. id : ";
+    private static final String ITEM_DETAIL_IMAGE_URLS_ERROR = "해당 ITEM id의 소개 이미지가 없습니다. id : ";
+    private static final String EXPOSURE_ORDER_NUMBER_DUPLICATION = "해당 순서가 중복됩니다. : ";
+    private static final String EXPOSURE_ORDER_NUMBER_IS_EMPTY = "순서가 비어있습니다.";
+    private static final String MODULE_NAME_IS_EMPTY = "모듈이름을 선택해주세요.";
+
     private final ItemService itemService;
 
     public List<ModuleUpdateRequest> filterByEmptyAndNull(List<ModuleUpdateRequest> modules) {
@@ -34,19 +43,19 @@ public class ModuleValidator {
         validationEmptyModuleName(modules, errors);
         validationExtraDataSwipeItem(modules, errors);
         validationExtraDataKeyVisual(modules, errors);
-        validationExtraDataMonthlyFreeItem(modules, errors);
+        validationExtraDataMonthlyFreeTicket(modules, errors);
 
         return errors;
     }
 
-    private void validationExtraDataMonthlyFreeItem(List<ModuleUpdateRequest> modules, List<String> errors) {
+    private void validationExtraDataMonthlyFreeTicket(List<ModuleUpdateRequest> modules, List<String> errors) {
         boolean isNotNull = modules.stream()
                 .filter(module -> ModuleType.MONTHLY_FREE_ITEM.equals(module.getModuleName()))
                 .map(ModuleUpdateRequest::getExtraData)
                 .anyMatch(StringUtils::hasText);
 
         if (isNotNull) {
-            errors.add("프리 티켓의 Extra Data는 비어있어야 합니다.");
+            errors.add(FREE_TICKET_EXTRA_DATA_IS_EMPTY);
         }
     }
 
@@ -57,7 +66,7 @@ public class ModuleValidator {
                 .anyMatch(StringUtils::hasText);
 
         if (isNotNull) {
-            errors.add("키비주얼의 Extra Data는 비어있어야 합니다.");
+            errors.add(KEY_VISUAL_EXTRA_DATA_IS_EMPTY);
         }
     }
 
@@ -66,7 +75,7 @@ public class ModuleValidator {
                 .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
                 .forEach(module -> {
                     if (itemService.findOne(Long.valueOf(module.getExtraData())).isEmpty()) {
-                        errors.add("유효한 id가 아닙니다. id = " + module.getExtraData());
+                        errors.add(ITEM_ID_ERROR + module.getExtraData());
                     }
                 });
 
@@ -75,7 +84,7 @@ public class ModuleValidator {
                 .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
                 .forEach(optional -> optional.ifPresent(item -> {
                     if (!StringUtils.hasText(item.getIntroduce())) {
-                        errors.add("ITEM " + item.getId() + "의 소개글이 없습니다.");
+                        errors.add(ITEM_INTRODUCE_ERROR + item.getId());
                     }
                 }));
 
@@ -84,7 +93,7 @@ public class ModuleValidator {
                 .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
                 .forEach(optional -> optional.ifPresent(item -> {
                     if (item.getDetailImageUrls().isEmpty()) {
-                        errors.add("ITEM " + item.getId() + "의 소개 이미지가 없습니다.");
+                        errors.add(ITEM_DETAIL_IMAGE_URLS_ERROR + item.getId());
                     }
                 }));
     }
@@ -105,7 +114,7 @@ public class ModuleValidator {
                 });
 
         if (!set.isEmpty()) {
-            errors.add("해당 순서가 중복됩니다. : " + set);
+            errors.add(EXPOSURE_ORDER_NUMBER_DUPLICATION + set);
         }
     }
 
@@ -115,7 +124,7 @@ public class ModuleValidator {
                 .anyMatch(Objects::isNull);
 
         if (isNull) {
-            errors.add("순서가 비어있습니다.");
+            errors.add(EXPOSURE_ORDER_NUMBER_IS_EMPTY);
         }
     }
 
@@ -125,7 +134,7 @@ public class ModuleValidator {
                 .anyMatch(ModuleType.EMPTY::equals);
 
         if (isNull) {
-            errors.add("모듈이름을 선택해주세요.");
+            errors.add(MODULE_NAME_IS_EMPTY);
         }
     }
 }
