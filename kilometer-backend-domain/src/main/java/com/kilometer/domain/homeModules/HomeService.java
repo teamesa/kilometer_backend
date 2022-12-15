@@ -3,7 +3,6 @@ package com.kilometer.domain.homeModules;
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccount;
 import com.kilometer.domain.backOfficeAccount.BackOfficeAccountService;
 import com.kilometer.domain.homeModules.dto.ModuleResponse;
-import com.kilometer.domain.homeModules.dto.ModuleResponseList;
 import com.kilometer.domain.homeModules.dto.ModuleTypeDto;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
@@ -31,6 +30,7 @@ public class HomeService {
     private final ModuleRepository moduleRepository;
     private final BackOfficeAccountService backOfficeAccountService;
     private final ModuleValidator moduleValidator;
+    private final KeyVisualValidator keyVisualValidator;
 
     public List<KeyVisualResponse> findAllByKeyVisual() {
         return keyVisualRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
@@ -39,6 +39,20 @@ public class HomeService {
     }
 
     @Transactional
+    public List<String> updateKeyVisualAfterValidate(List<KeyVisualUpdateResponse> keyVisualList, String createdAccount) {
+        List<String> errors = validateKeyVisual(keyVisualList);
+
+        if (errors.isEmpty()) {
+            updateKeyVisual(keyVisualList, createdAccount);
+        }
+
+        return errors;
+    }
+
+    private List<String> validateKeyVisual(List<KeyVisualUpdateResponse> keyVisualList) {
+        return keyVisualValidator.validateKeyVisual(keyVisualList);
+    }
+
     public void updateKeyVisual(List<KeyVisualUpdateResponse> keyVisualList, String createdAccount) {
         List<KeyVisual> keyVisuals = keyVisualList.stream()
                 .map(keyVisualUpdateResponse -> {
@@ -58,12 +72,12 @@ public class HomeService {
     }
 
     @Transactional
-    public List<String> updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
+    public List<String> updateModuleAfterValidate(List<ModuleUpdateRequest> moduleList, String createdAccount) {
         List<ModuleUpdateRequest> modules = moduleFilter(moduleList);
         List<String> errors = validateModule(modules);
 
         if (errors.isEmpty()) {
-            update(modules, createdAccount);
+            updateModule(modules, createdAccount);
         }
 
         return errors;
@@ -77,7 +91,7 @@ public class HomeService {
         return moduleValidator.validateModule(moduleList);
     }
 
-    public void update(List<ModuleUpdateRequest> moduleList, String createdAccount) {
+    private void updateModule(List<ModuleUpdateRequest> moduleList, String createdAccount) {
         BackOfficeAccount account = backOfficeAccountService.findByUsername(createdAccount);
 
         List<Module> saveAndUpdateModules = moduleList.stream()

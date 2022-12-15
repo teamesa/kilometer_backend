@@ -95,29 +95,5 @@ var appVue = new Vue({
             console.log(index);
             $(document).on('change', '#inputDetailImage\\[' + index + '\\]', this.detailImageS3Upload);
         },
-
-        keyVisualImageS3Upload: function (event) {
-            let formData = new FormData();
-            let file = event.target.files[0];
-            let index = Number(event.target.id.substring(14));
-            formData.append("file", file);
-            axios.post('/form/image/default', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(function (response) {
-                this.keyVisualImageUrl = response.data;
-                $('#keyVisualImage\\[' + index + '\\]').html("<img style=\"width: 100px; height: 100px;\" src=" + this.keyVisualImageUrl + ">");
-                $('#keyVisual' + index).val(this.keyVisualImageUrl);
-            })
-        },
-
-        keyVisualImageDelete: function (event) {
-            let index = Number(event.target.id.substring(20));
-            let $input = $("#keyVisualIndex\\[" + index + "\\]");
-            let $preview = $('#keyVisualImage\\[' + index + '\\]');
-            let $listImageUrl = $("#keyVisual" + index);
-            this.resetInputFile($input, $preview, $listImageUrl);
-        },
     }
 })

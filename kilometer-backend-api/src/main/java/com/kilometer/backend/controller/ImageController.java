@@ -1,12 +1,13 @@
 package com.kilometer.backend.controller;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.image.ImageService;
 import com.kilometer.domain.util.ApiUrlUtils;
 import com.kilometer.domain.util.FileUtils;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,7 @@ public class ImageController {
     @PostMapping
     @ApiOperation(value = "이미지 등록 API")
     public String upload(MultipartFile file) throws IOException {
-        Preconditions.notNull(file, "File must not be null");
+        Preconditions.checkNotNull(file, "File must not be null");
         return imageService.upload(file.getBytes(), file.getOriginalFilename(), S3FolderName,
             FileUtils.DEFAULT_IMAGE_SIZE);
     }

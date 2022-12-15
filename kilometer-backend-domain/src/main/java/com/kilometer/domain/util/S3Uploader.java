@@ -7,9 +7,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
+
+import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +25,7 @@ public class S3Uploader {
     private String bucket;
 
     public String upload(byte[] bytes, String fileName, String folderName) throws IOException {
-        Preconditions.notNull(bytes, "File must be not null.");
+        Preconditions.checkNotNull(bytes, "File must be not null.");
         File uploadFile = convert(bytes, fileName)
             .orElseThrow(() -> new IllegalArgumentException("File로 전환이 실패했습니다."));
 

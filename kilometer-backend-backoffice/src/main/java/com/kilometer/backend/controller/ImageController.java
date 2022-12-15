@@ -5,7 +5,7 @@ import com.kilometer.domain.util.BoUrlUtils;
 import com.kilometer.domain.util.FileUtils;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,14 +24,12 @@ public class ImageController {
 
     @PostMapping(BoUrlUtils.IMAGE_DEFAULT)
     public String upload(MultipartFile file) throws IOException {
-        Preconditions.notNull(file, "File must not be null");
         return imageService.upload(file.getBytes(), file.getOriginalFilename(), S3FolderName,
             FileUtils.DEFAULT_IMAGE_SIZE);
     }
 
     @PostMapping(BoUrlUtils.IMAGE_LIST)
     public String uploadListImage(MultipartFile file) throws IOException {
-        Preconditions.notNull(file, "File must not be null");
         return imageService.upload(file.getBytes(), file.getOriginalFilename(), S3FolderName,
             FileUtils.LIST_IMAGE_SIZE);
     }

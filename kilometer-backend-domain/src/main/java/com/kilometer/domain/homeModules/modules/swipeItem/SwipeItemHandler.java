@@ -1,5 +1,6 @@
 package com.kilometer.domain.homeModules.modules.swipeItem;
 
+import com.google.common.base.Preconditions;
 import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
@@ -9,7 +10,7 @@ import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.util.FrontUrlUtils;
 import lombok.RequiredArgsConstructor;
-import org.junit.platform.commons.util.Preconditions;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +28,9 @@ public class SwipeItemHandler implements ModuleHandler {
 
     @Override
     public Object generator(ModuleParamDto paramDto) {
-        Preconditions.notNull(paramDto.getModuleDto(), "module must not be null");
+        Preconditions.checkNotNull(paramDto.getModuleDto(), "module must not be null");
         ModuleDto moduleDto = paramDto.getModuleDto();
-        Preconditions.notNull(moduleDto.getExtraData(), "Extra_data must not be null");
+        Preconditions.checkNotNull(moduleDto.getExtraData(), "Extra_data must not be null");
         long itemId = Long.parseLong(moduleDto.getExtraData());
         SwipeItemDto itemEntity = itemRepository.findSwipeItemByItemId(itemId);
         return SwipeItemDataDto.of(
