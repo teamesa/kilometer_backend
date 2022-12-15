@@ -26,7 +26,7 @@ public class UserService {
     private final ImageService imageService;
 
     public Optional<UserResponse> findByEmail(String email) {
-        Preconditions.checkArgument(StringUtils.hasText(email) , "eamil cannot be blank");
+        Preconditions.checkArgument(StringUtils.hasText(email), "email cannot be blank");
         return userRepository.findByEmail(email).map(User::toResponse);
     }
 

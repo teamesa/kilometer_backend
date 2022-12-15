@@ -18,6 +18,7 @@ public class BoUrlUtils {
 
     public static final String KEY_VISUAL = HOME_ROOT + "/key_visual";
     public static final String KEY_VISUAL_EDIT = KEY_VISUAL + "/edit";
+    public static final String KEY_VISUAL_LIST = KEY_VISUAL + "/list";
 
     public static final String HOME_MODULES = HOME_ROOT + "/modules";
     public static final String HOME_MODULES_LIST = HOME_MODULES + "/list";
