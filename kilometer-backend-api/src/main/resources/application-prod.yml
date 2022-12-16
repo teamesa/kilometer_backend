@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:mariadb://database-1.c57d2zirnw4n.ap-northeast-2.rds.amazonaws.com/winter
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mysql://ls-80a31ed8e39fcc2579db65f4f2c9dc2ce150c573.c9ioyzhqhcag.ap-northeast-2.rds.amazonaws.com/summer?allowPublicKeyRetrieval=true&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
     username: ${my.database.username}
     password: ${my.database.password}
   jpa:
@@ -13,6 +13,7 @@ spring:
       naming:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
     properties:
       hibernate:
         type:
@@ -27,7 +28,7 @@ spring:
       max-request-size: 10MB
 
   flyway:
-    enabled: true
+    enabled: false
     baseline-on-migrate: true
     baseline-version: 0
   security:

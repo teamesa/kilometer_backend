@@ -10,6 +10,7 @@ dependencies {
     )
     implementation "org.flywaydb:flyway-mysql:8.5.10"
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    runtimeOnly 'mysql:mysql-connector-java'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
