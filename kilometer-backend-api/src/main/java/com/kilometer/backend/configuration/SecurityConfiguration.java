@@ -89,6 +89,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/test", "/api/authentication").permitAll()
                 .antMatchers("/hello-example").permitAll()
+                .antMatchers(HttpMethod.GET, ApiUrlUtils.PICK_ROOT + ApiUrlUtils.PICK_MOST).permitAll()
                 .antMatchers(HttpMethod.POST, ApiUrlUtils.SEARCH_ROOT).permitAll()
                 .antMatchers(ApiUrlUtils.ITEM_ROOT + "/**").permitAll()
                 .antMatchers(HttpMethod.GET, ApiUrlUtils.ARCHIVE_ROOT + ApiUrlUtils.ITEM_ID).permitAll()
