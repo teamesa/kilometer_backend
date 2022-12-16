@@ -14,6 +14,7 @@ import com.kilometer.domain.pick.dto.PickRequest;
 import com.kilometer.domain.pick.dto.PickResponse;
 import com.kilometer.domain.user.User;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,17 +39,17 @@ public class PickService {
         User pickedUser = User.builder().id(userId).build();
 
         Pick pick = pickRepository.getPickByPickedUserAndPickedItem(pickedUser, pickedItem)
-            .orElse(
-                Pick.builder()
-                    .isHearted(false)
-                    .pickedItem(pickedItem)
-                    .pickedUser(pickedUser)
-                    .build());
+                .orElse(
+                        Pick.builder()
+                                .isHearted(false)
+                                .pickedItem(pickedItem)
+                                .pickedUser(pickedUser)
+                                .build());
 
-        if(isAlreadyPicked(pick, nextPickedStatus)) {
+        if (isAlreadyPicked(pick, nextPickedStatus)) {
             return PickResponse.builder()
-                .content(pick.isHearted())
-                .build();
+                    .content(pick.isHearted())
+                    .build();
         }
 
         pick.changeIsHearted(nextPickedStatus);
@@ -59,8 +60,8 @@ public class PickService {
         }
 
         return PickResponse.builder()
-            .content(pickRepository.save(pick).isHearted())
-            .build();
+                .content(pickRepository.save(pick).isHearted())
+                .build();
     }
 
     public MyPickResponse getMyPicks(PickRequest pickRequest, long userId) {
@@ -98,15 +99,15 @@ public class PickService {
 
     private MyPickResponse convertToMyPick(Page<Pick> pageablePicks, long pickCount) {
         List<ListItem> items = pageablePicks.stream()
-            .map(PickItemResponse::makePickItemResponse)
-            .map(listItemAggregateConverter::convert)
-            .collect(Collectors.toList());
+                .map(PickItemResponse::makePickItemResponse)
+                .map(listItemAggregateConverter::convert)
+                .collect(Collectors.toList());
 
         return MyPickResponse.builder()
-            .count(pickCount)
-            .contents(items)
-            .responsePagingStatus(pagingStatusService.convert(pageablePicks))
-            .build();
+                .count(pickCount)
+                .contents(items)
+                .responsePagingStatus(pagingStatusService.convert(pageablePicks))
+                .build();
     }
 
     private boolean isAlreadyPicked(Pick pick, boolean nextPickedStatus) {
