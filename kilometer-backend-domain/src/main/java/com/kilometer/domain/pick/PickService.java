@@ -5,9 +5,8 @@ import com.kilometer.domain.converter.listItem.ListItemAggregateConverter;
 import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemService;
-import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.paging.PagingStatusService;
-import com.kilometer.domain.pick.dto.MostPickItem;
+import com.kilometer.domain.pick.dto.MostPickItemDto;
 import com.kilometer.domain.pick.dto.MostPickResponse;
 import com.kilometer.domain.pick.dto.MyPickResponse;
 import com.kilometer.domain.pick.dto.PickItemResponse;
@@ -40,17 +39,17 @@ public class PickService {
         User pickedUser = User.builder().id(userId).build();
 
         Pick pick = pickRepository.getPickByPickedUserAndPickedItem(pickedUser, pickedItem)
-            .orElse(
-                Pick.builder()
-                    .isHearted(false)
-                    .pickedItem(pickedItem)
-                    .pickedUser(pickedUser)
-                    .build());
+                .orElse(
+                        Pick.builder()
+                                .isHearted(false)
+                                .pickedItem(pickedItem)
+                                .pickedUser(pickedUser)
+                                .build());
 
-        if(isAlreadyPicked(pick, nextPickedStatus)) {
+        if (isAlreadyPicked(pick, nextPickedStatus)) {
             return PickResponse.builder()
-                .content(pick.isHearted())
-                .build();
+                    .content(pick.isHearted())
+                    .build();
         }
 
         pick.changeIsHearted(nextPickedStatus);
@@ -61,8 +60,8 @@ public class PickService {
         }
 
         return PickResponse.builder()
-            .content(pickRepository.save(pick).isHearted())
-            .build();
+                .content(pickRepository.save(pick).isHearted())
+                .build();
     }
 
     public MyPickResponse getMyPicks(PickRequest pickRequest, long userId) {
@@ -80,21 +79,16 @@ public class PickService {
 
     @Transactional
     public MostPickResponse getMostPicks() {
-        List<MostPickItem> mostPickTop4 = pickRepository.findByMostPickTop4(
-                LocalDateTime
-                .of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0)
-                .withDayOfMonth(1));
+        List<MostPickItemDto> mostPickTop4 = pickRepository.findMostPickTop4(
+                LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(),
+                                LocalDateTime.now().getDayOfMonth(), 0, 0, 0)
+                        .withDayOfMonth(1));
 
-        List<Long> idList = mostPickTop4.stream()
-                .map(MostPickItem::getPickedItem)
-                .collect(Collectors.toList());
-
-        return convertToMostPick(itemService.findByIdIn(idList));
+        return convertToMostPick(mostPickTop4);
     }
 
-    private MostPickResponse convertToMostPick(List<ItemResponse> items) {
+    private MostPickResponse convertToMostPick(List<MostPickItemDto> items) {
         List<ListItem> itemList = items.stream()
-                .map(PickItemResponse::makePickItemResponse)
                 .map(listItemAggregateConverter::convert)
                 .collect(Collectors.toList());
 
@@ -105,15 +99,15 @@ public class PickService {
 
     private MyPickResponse convertToMyPick(Page<Pick> pageablePicks, long pickCount) {
         List<ListItem> items = pageablePicks.stream()
-            .map(PickItemResponse::makePickItemResponse)
-            .map(listItemAggregateConverter::convert)
-            .collect(Collectors.toList());
+                .map(PickItemResponse::makePickItemResponse)
+                .map(listItemAggregateConverter::convert)
+                .collect(Collectors.toList());
 
         return MyPickResponse.builder()
-            .count(pickCount)
-            .contents(items)
-            .responsePagingStatus(pagingStatusService.convert(pageablePicks))
-            .build();
+                .count(pickCount)
+                .contents(items)
+                .responsePagingStatus(pagingStatusService.convert(pageablePicks))
+                .build();
     }
 
     private boolean isAlreadyPicked(Pick pick, boolean nextPickedStatus) {
