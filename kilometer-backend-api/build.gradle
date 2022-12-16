@@ -3,6 +3,7 @@
 
 plugins {
     id 'java'
+    id 'groovy'
 }
 
 dependencies {
@@ -16,6 +17,7 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
 }
 configurations {
     compileOnly {
