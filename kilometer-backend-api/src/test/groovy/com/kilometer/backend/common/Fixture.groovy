@@ -4,7 +4,8 @@ import com.kilometer.domain.user.AuthProvider;
 import com.kilometer.domain.user.Gender;
 import com.kilometer.domain.user.Role
 import com.kilometer.domain.user.User
-import com.kilometer.domain.user.dto.AuthRequest;
+import com.kilometer.domain.user.dto.AuthRequest
+import com.kilometer.domain.user.dto.AuthResponse;
 import com.kilometer.domain.user.dto.UserResponse
 import org.springframework.security.core.AuthenticatedPrincipal
 import spock.lang.Shared;
@@ -37,5 +38,11 @@ class Fixture {
                 .birthday("03-28")
                 .birthYear("1999")
                 .phoneNumber("01012345678")
+                .build()
+
+        @Shared
+        static final AuthResponse AUTHE_RESPONSE = AuthResponse.builder()
+                .accessToken("toekn")
+                .isFirstJoined(true)
                 .build()
 }

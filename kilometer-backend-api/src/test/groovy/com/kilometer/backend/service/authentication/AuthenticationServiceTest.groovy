@@ -1,7 +1,6 @@
 package com.kilometer.backend.service.authentication
 
 import com.kilometer.backend.common.Fixture
-import com.kilometer.backend.security.security.token.JwtProvider
 import com.kilometer.backend.security.security.token.TokenProvider
 import com.kilometer.domain.user.UserService
 import com.kilometer.domain.user.dto.AuthRequest
