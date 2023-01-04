@@ -34,7 +34,7 @@ public class HomeRenderingService {
     }
 
     public HomeApiResponse getHomeModules(Long userId) {
-        List<ModuleParamDto> modules = moduleRepository.findAll().stream()
+        List<ModuleParamDto> modules = moduleRepository.findAllByOrderByExposureOrderNumber().stream()
             .map(module -> moduleParamGenerator.from(userId, ModuleDto.from(module)))
             .collect(Collectors.toList());
 
