@@ -19,6 +19,7 @@ public class ModuleValidator {
 
     private static final String FREE_TICKET_EXTRA_DATA_IS_EMPTY = "프리 티켓의 Extra Data는 비어있어야 합니다.";
     private static final String KEY_VISUAL_EXTRA_DATA_IS_EMPTY = "키비주얼의 Extra Data는 비어있어야 합니다.";
+    private static final String ITEM_ID_EMPTY = "전시글 모듈의 ITEM id를 입력해주세요.";
     private static final String ITEM_ID_ERROR = "유효한 ITEM id가 아닙니다. id : ";
     private static final String ITEM_INTRODUCE_ERROR = "해당 ITEM id의 소개글이 없습니다. id : ";
     private static final String ITEM_DETAIL_IMAGE_URLS_ERROR = "해당 ITEM id의 소개 이미지가 없습니다. id : ";
@@ -71,6 +72,16 @@ public class ModuleValidator {
     }
 
     private void validationExtraDataSwipeItem(List<ModuleUpdateRequest> modules, List<String> errors) {
+        boolean isNotNull = modules.stream()
+                .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
+                .map(ModuleUpdateRequest::getExtraData)
+                .anyMatch(String::isEmpty);
+
+        if (isNotNull) {
+            errors.add(ITEM_ID_EMPTY);
+            return;
+        }
+
         modules.stream()
                 .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
                 .forEach(module -> {
