@@ -75,7 +75,7 @@ public class ModuleValidator {
         boolean isNotNull = modules.stream()
                 .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
                 .map(ModuleUpdateRequest::getExtraData)
-                .anyMatch(String::isEmpty);
+                .anyMatch(String::isBlank);
 
         if (isNotNull) {
             errors.add(ITEM_ID_EMPTY);
