@@ -1,6 +1,7 @@
 package com.kilometer.domain.pick;
 
 import com.kilometer.domain.item.QItemEntity;
+import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.pick.dto.MostPickItemDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -43,7 +44,11 @@ public class PickRepositoryCustomImpl implements PickRepositoryCustom {
                 .from(itemEntity)
                 .leftJoin(pick)
                 .on(pick.pickedItem.eq(itemEntity))
-                .where(pick.isHearted.eq(true).and(pick.updatedAt.goe(firstDate)))
+                .where(
+                        pick.isHearted.eq(true),
+                        pick.updatedAt.goe(firstDate),
+                        itemEntity.exposureType.eq(ExposureType.valueOf("ON"))
+                )
                 .groupBy(pick.pickedItem)
                 .orderBy(pickCount.desc())
                 .limit(4)
