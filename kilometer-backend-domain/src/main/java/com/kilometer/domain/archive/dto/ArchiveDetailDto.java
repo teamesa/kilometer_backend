@@ -10,9 +10,11 @@ import lombok.NoArgsConstructor;
 public class ArchiveDetailDto {
     private Long id;
     private Long itemId;
-    private ExhibitionType exhibitionType;
+    private String itemListImageUrl;
+    private ExhibitionType itemExhibitionType;
+    private String itemTitle;
     private LocalDateTime updatedAt;
-    private String title;
+
     private String comment;
     private int starRating;
     private boolean isWrited;
