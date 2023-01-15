@@ -10,6 +10,7 @@ import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
+import com.kilometer.domain.item.dto.ItemSummary;
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.archive.like.dto.ArchiveLike;
 import com.kilometer.domain.archive.like.dto.ArchiveLikeGenerator;
@@ -58,8 +59,8 @@ public class ArchiveAggregateConverter {
     }
 
     public ArchiveInfo convertArchiveInfo(Archive archive,
-                                          List<ArchiveImage> archiveImages,
-                                          List<UserVisitPlace> userVisitPlaces) {
+        List<ArchiveImage> archiveImages,
+        List<UserVisitPlace> userVisitPlaces) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
 
@@ -84,15 +85,16 @@ public class ArchiveAggregateConverter {
             .build();
     }
 
-    public ArchiveInfo convertArchiveInfo(Archive archive, UserResponse userResponse, List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
+    public ArchiveInfo convertArchiveInfo(Archive archive, UserResponse userResponse,
+        List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archive.getId());
 
         List<String> photoUrls = archiveImages.stream()
-                                                .map(ArchiveImage::getImageUrl)
-                                                .collect(Collectors.toList());
+            .map(ArchiveImage::getImageUrl)
+            .collect(Collectors.toList());
         return ArchiveInfo.builder()
             .id(archive.getId())
             .userProfileUrl(userResponse.getImageUrl())
@@ -128,22 +130,26 @@ public class ArchiveAggregateConverter {
     public ArchiveDetailResponse convertArchiveDetail(ArchiveDetailDto archiveDetailDto,
         List<UserVisitPlace> visitPlaces, List<ArchiveImage> archiveImages) {
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(
-            archiveDetailDto.getExhibitionType());
+            archiveDetailDto.getItemExhibitionType());
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(visitPlaces);
         List<LinkInfo> linkInfos = makeArchiveControlLink(archiveDetailDto.getId(),
             archiveDetailDto.isWrited());
+        ItemSummary itemSummary = ItemSummary.of(
+            archiveDetailDto.getId(),
+            archiveDetailDto.getItemTitle(),
+            archiveDetailDto.getItemListImageUrl(),
+            itemBadge
+        );
         return ArchiveDetailResponse.builder()
-            .typeBadge(itemBadge)
             .updatedAt(archiveDetailDto.getUpdatedAt())
-            .title(archiveDetailDto.getTitle())
+            .item(itemSummary)
             .comment(archiveDetailDto.getComment())
             .starRating(archiveDetailDto.getStarRating())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
-            .itemId(archiveDetailDto.getItemId())
             .photoUrls(
                 archiveImages.stream().map(ArchiveImage::getImageUrl).collect(Collectors.toList()))
-            .archiveAdditionalInfos(linkInfos)
+            .archiveActionButton(linkInfos)
             .visibleAtItem(archiveDetailDto.isVisibleAtItem())
             .build();
     }
