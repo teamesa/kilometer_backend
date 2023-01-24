@@ -1,27 +1,22 @@
-// This can be report project tree
-// apply plugin: 'project-report'
-
-plugins {
-    id 'java'
-}
-
 dependencies {
     implementation project(':kilometer-backend-domain')
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // API SPEC을 위한 의존성
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+    // Security를 위한 의존성
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
-}
-test {
-    useJUnitPlatform()
 }

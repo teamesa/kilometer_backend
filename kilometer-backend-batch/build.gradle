@@ -1,18 +1,8 @@
-// This can be report project tree
-// apply plugin: 'project-report'
-
-plugins {
-    id 'java'
-}
-
 dependencies {
     implementation project(':kilometer-backend-domain')
+
+    // Batch를 위한 의존성
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     testImplementation 'org.springframework.batch:spring-batch-test'
-    implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'com.h2database:h2'
-}
-
-test {
-    useJUnitPlatform()
 }

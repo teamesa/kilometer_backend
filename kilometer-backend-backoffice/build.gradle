@@ -1,10 +1,3 @@
-// This can be report project tree
-// apply plugin: 'project-report'
-
-plugins {
-    id 'java'
-}
-
 dependencies {
     implementation project(':kilometer-backend-domain')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -12,8 +5,4 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-}
-
-test {
-    useJUnitPlatform()
 }
