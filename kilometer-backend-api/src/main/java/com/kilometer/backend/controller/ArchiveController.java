@@ -51,7 +51,7 @@ public class ArchiveController {
             .build();
     }
 
-    @GetMapping(ApiUrlUtils.ARCHIVE_DETAIL)
+    @GetMapping(ApiUrlUtils.ARCHIVE_ID)
     @ApiOperation(value = "상세 아카이브 조회")
     public ArchiveDetailResponse archive(
         @ApiParam(value = "조회할 아카이브 ID", required = true) @PathVariable Long archiveId) {
@@ -90,7 +90,7 @@ public class ArchiveController {
             ArchiveSortType.MODIFY_DESC);
     }
 
-    @PutMapping(ApiUrlUtils.ARCHIVE_LIKE_BY_ID)
+    @PutMapping(ApiUrlUtils.ARCHIVE_LIKE)
     public LikeResponse makeLikeResponse(@PathVariable Long archiveId,
         @RequestParam boolean status) {
         Long userId = getLoginUserId();
