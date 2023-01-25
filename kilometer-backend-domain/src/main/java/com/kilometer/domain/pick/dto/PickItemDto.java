@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PickItemResponse implements ItemInfoExtraction {
+public class PickItemDto implements ItemInfoExtraction {
 
     private static final String API_TYPE = "pick";
 
@@ -31,23 +31,12 @@ public class PickItemResponse implements ItemInfoExtraction {
     private boolean isHearted;
     private String apiType;
 
-    public static PickItemResponse makePickItemResponse(Pick pick) {
-        return PickItemResponse.builder()
-                .id(pick.getPickedItem().getId())
-                .listImageUrl(pick.getPickedItem().getListImageUrl())
-                .thumbnailImageUrl(pick.getPickedItem().getThumbnailImageUrl())
-                .title(pick.getPickedItem().getTitle())
-                .exhibitionType(pick.getPickedItem().getExhibitionType())
-                .feeType(pick.getPickedItem().getFeeType())
-                .startDate(pick.getPickedItem().getStartDate())
-                .endDate(pick.getPickedItem().getEndDate())
-                .isHearted(pick.isHearted())
-                .apiType(API_TYPE)
-                .build();
+    public void updateApiTypeToPick() {
+        this.apiType = API_TYPE;
     }
 
-    public static PickItemResponse makePickItemResponse(ItemResponse itemResponse) {
-        return PickItemResponse.builder()
+    public static PickItemDto makePickItemResponse(ItemResponse itemResponse) {
+        return PickItemDto.builder()
                 .id(itemResponse.getId())
                 .listImageUrl(itemResponse.getListImageUrl())
                 .thumbnailImageUrl(itemResponse.getThumbnailImageUrl())
