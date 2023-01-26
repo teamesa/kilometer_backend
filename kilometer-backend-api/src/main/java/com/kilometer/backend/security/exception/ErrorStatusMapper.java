@@ -17,6 +17,7 @@ public class ErrorStatusMapper {
 
     private ErrorStatusMapper() {
         MAPPER.put(ARCHIVE_NOT_FOUND,HttpStatus.NOT_FOUND);
+        MAPPER.put(ARCHIVE_VALIDATION_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
 
     public HttpStatus getStatus(KilometerErrorCode code) {
