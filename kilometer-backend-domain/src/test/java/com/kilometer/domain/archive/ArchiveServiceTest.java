@@ -163,4 +163,56 @@ public class ArchiveServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("별점은 1이상 5이하의 숫자여야 합니다. now : " + 6);
     }
+
+    @Test
+    @DisplayName("아카이브 정보를 등록할 때, 사용자가 존재하지 않으면 예외가 발생한다.")
+    void saveArchive_notExistUser() {
+        // given
+        Long dummyUserId = 1L;
+        ArchiveRequest request = new ArchiveRequest(1L, "comment", 6, true, List.of(), List.of());
+
+        // when & then
+        assertThatThrownBy(() -> archiveService.save(dummyUserId, request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("잘못된 사용자 정보 입니다.");
+    }
+
+    @Test
+    @DisplayName("아카이브 정보를 수정할 때, 사용자 id가 null이면 예외가 발생한다.")
+    void updateArchive_nullUserId() {
+        // given
+        Long dummyUserId = null;
+        ArchiveRequest request = new ArchiveRequest(1L, "comment", 6, true, List.of(), List.of());
+
+        // when & then
+        assertThatThrownBy(() -> archiveService.update(dummyUserId, request))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("id must not be null");
+    }
+
+    @Test
+    @DisplayName("아카이브 정보를 수정할 때, itemId가 null이면 예외가 발생한다.")
+    void updateArchive_nullItemId() {
+        // given
+        Long dummyUserId = 1L;
+        ArchiveRequest request = new ArchiveRequest(null, "comment", 6, true, List.of(), List.of());
+
+        // when & then
+        assertThatThrownBy(() -> archiveService.update(dummyUserId, request))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Item id must not be null");
+    }
+
+    @Test
+    @DisplayName("아카이브 정보를 수정할 때, userId와 itemId에 해당하는 저장된 Archive가 없으면 발생한다.")
+    void updateArchive_notExistsArchive() {
+        // given
+        Long dummyUserId = 1L;
+        ArchiveRequest request = new ArchiveRequest(1L, "comment", 6, true, List.of(), List.of());
+
+        // when & then
+        assertThatThrownBy(() -> archiveService.update(dummyUserId, request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Archive does not exist.");
+    }
 }
