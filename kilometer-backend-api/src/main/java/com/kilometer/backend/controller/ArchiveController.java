@@ -58,6 +58,7 @@ public class ArchiveController {
     }
 
     @PostMapping(ApiUrlUtils.ARCHIVE_ROOT)
+    @ApiOperation(value = "신규 아카이브 등록")
     public ArchiveInfo saveArchive(
         @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();
@@ -65,6 +66,7 @@ public class ArchiveController {
     }
 
     @PutMapping(ApiUrlUtils.ARCHIVE_ROOT)
+    @ApiOperation(value = "아카이브 수정")
     public ArchiveInfo updateArchive(
         @ApiParam(value = "수정할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();
@@ -72,6 +74,7 @@ public class ArchiveController {
     }
 
     @DeleteMapping(ApiUrlUtils.ARCHIVE_ID)
+    @ApiOperation(value = "아카이브 삭제")
     public ArchiveDeleteResponse deleteArchive(
         @ApiParam(value = "삭제할 아카이브 아이디", required = true) @PathVariable Long archiveId)
         throws IllegalAccessException {
@@ -81,6 +84,7 @@ public class ArchiveController {
 
 
     @PostMapping(ApiUrlUtils.ARCHIVE_MY)
+    @ApiOperation(value = "나의 아카이브 조회")
     public MyArchiveResponse myArchives(
         @ApiParam(value = "아카이브 페이지 정보", required = true) @RequestBody RequestPagingStatus requestPagingStatus) {
         Long userId = getLoginUserId();
@@ -89,6 +93,7 @@ public class ArchiveController {
     }
 
     @PutMapping(ApiUrlUtils.ARCHIVE_LIKE)
+    @ApiOperation(value = "아카이브 좋아요")
     public LikeResponse makeLikeResponse(@PathVariable Long archiveId,
         @RequestParam boolean status) {
         Long userId = getLoginUserId();
