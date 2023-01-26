@@ -12,11 +12,10 @@ import static com.kilometer.backend.security.security.SecurityUtils.getLoginUser
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(ApiUrlUtils.SEARCH_ROOT)
 public class SearchController {
     final SearchService searchService;
 
-    @PostMapping
+    @PostMapping(ApiUrlUtils.SEARCH_ROOT)
     public SearchResponse search(@RequestBody SearchRequest searchRequest) {
         long userId = getLoginUserId();
         return searchService.search(searchRequest, userId);

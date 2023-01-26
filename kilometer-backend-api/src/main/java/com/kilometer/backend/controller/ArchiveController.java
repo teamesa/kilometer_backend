@@ -1,7 +1,5 @@
 package com.kilometer.backend.controller;
 
-import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
-
 import com.kilometer.domain.archive.ArchiveService;
 import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
@@ -23,19 +21,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(ApiUrlUtils.ARCHIVE_ROOT)
 public class ArchiveController {
 
     private final static String ARCHIVE_TITLE = "아카이브";
     private final ArchiveService archiveService;
 
-    @GetMapping(ApiUrlUtils.ITEM_ID)
+    @GetMapping(ApiUrlUtils.ITEM_ARCHIVES)
     @ApiOperation(value = "전시글에서 아카이브 조회")
     public GeneralResponse<ArchiveResponse> archives(
         @ApiParam(value = "조회할 전시글 ID", required = true) @PathVariable Long itemId,
@@ -59,14 +57,14 @@ public class ArchiveController {
         return archiveService.findByArchiveIdAndUserId(archiveId, userId);
     }
 
-    @PostMapping
+    @PostMapping(ApiUrlUtils.ARCHIVE_ROOT)
     public ArchiveInfo saveArchive(
         @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();
         return archiveService.save(userId, request);
     }
 
-    @PutMapping
+    @PutMapping(ApiUrlUtils.ARCHIVE_ROOT)
     public ArchiveInfo updateArchive(
         @ApiParam(value = "수정할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();

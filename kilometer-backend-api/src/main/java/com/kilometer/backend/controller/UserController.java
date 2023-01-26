@@ -9,13 +9,11 @@ import com.kilometer.domain.user.dto.UserUpdateRequest;
 import com.kilometer.domain.util.ApiUrlUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +23,6 @@ import static com.kilometer.backend.security.security.SecurityUtils.getLoginUser
 
 @RequiredArgsConstructor
 @RestController()
-@RequestMapping(ApiUrlUtils.USER_ROOT)
 public class UserController {
     private final UserService userService;
 
@@ -39,7 +36,7 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", getLoginUserId()));
     }
 
-    @PostMapping
+    @PostMapping(ApiUrlUtils.USER_ROOT)
     @ApiOperation(value = "유저 정보 변경 API")
     public UserResponse get(@RequestBody UserUpdateRequest userUpdateRequest) {
         return userService.updateUser(userUpdateRequest)
