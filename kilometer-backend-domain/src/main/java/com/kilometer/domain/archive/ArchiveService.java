@@ -29,13 +29,10 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

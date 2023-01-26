@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.kilometer.domain.archive.dto.ArchiveInfo;
+import com.kilometer.domain.archive.dto.ArchiveResponse;
+import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.item.ItemEntity;
@@ -13,6 +15,7 @@ import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.item.enumType.RegionType;
+import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
 import java.time.LocalDate;
@@ -247,7 +250,8 @@ public class ArchiveServiceTest {
 
         List<String> photoUrlsForUpdate = List.of("updatedPhotoUrls");
         List<PlaceInfo> placeInfosForUpdate = List.of(new PlaceInfo("FOOD", "수정된 맛집", "address", "roadAddress"));
-        ArchiveRequest requestForUpdate = new ArchiveRequest(savedItem.getId(), "updatedComment", 3, true, photoUrlsForUpdate, placeInfosForUpdate);
+        ArchiveRequest requestForUpdate = new ArchiveRequest(savedItem.getId(), "updatedComment", 3, true,
+                photoUrlsForUpdate, placeInfosForUpdate);
 
         // when
         ArchiveInfo actual = archiveService.update(savedUser.getId(), requestForUpdate);
@@ -298,5 +302,85 @@ public class ArchiveServiceTest {
         assertThatThrownBy(() -> archiveService.update(dummyUserId, request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Archive does not exist.");
+    }
+
+    @Test
+    @DisplayName("회원의 id와 아이템 id에 해당하는 아카이브 정보를 조회한다.")
+    void findArchiveByItemIdAndUserId() {
+        // given
+        User user = User.builder()
+                .name("user")
+                .email("user@email.com")
+                .build();
+        User savedUser = userRepository.save(user);
+
+        ItemEntity item = ItemEntity.builder()
+                .exposureType(ExposureType.ON)
+                .exhibitionType(ExhibitionType.EXHIBITION)
+                .regionType(RegionType.CHUNGCHEONG)
+                .feeType(FeeType.FREE)
+                .listImageUrl("listImageUrl")
+                .thumbnailImageUrl("thumbnailImageUrl")
+                .title("title")
+                .placeName("placeName")
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
+                .build();
+        ItemEntity savedItem = itemRepository.save(item);
+
+        List<String> photoUrls = List.of("photoUrls");
+        List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
+        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+
+        archiveService.save(savedUser.getId(), request);
+
+        RequestPagingStatus pagingRequest = new RequestPagingStatus(0, 2, 0);
+
+        // when
+        ArchiveResponse actual = archiveService.findAllByItemIdAndUserId(savedItem.getId(),
+                savedUser.getId(), pagingRequest, ArchiveSortType.LIKE_DESC);
+
+        // then
+        assertThat(actual.getArchives()).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("회원의 id와 아이템 id에 해당하는 아카이브 정보를 조회할때, 아카이브 정보가 없으면 빈 리스트를 반환한다.")
+    void findArchiveByItemIdAndUserId_emptyList() {
+        // given
+        User user = User.builder()
+                .name("user")
+                .email("user@email.com")
+                .build();
+        User savedUser = userRepository.save(user);
+
+        ItemEntity item = ItemEntity.builder()
+                .exposureType(ExposureType.ON)
+                .exhibitionType(ExhibitionType.EXHIBITION)
+                .regionType(RegionType.CHUNGCHEONG)
+                .feeType(FeeType.FREE)
+                .listImageUrl("listImageUrl")
+                .thumbnailImageUrl("thumbnailImageUrl")
+                .title("title")
+                .placeName("placeName")
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
+                .build();
+        ItemEntity savedItem = itemRepository.save(item);
+
+        List<String> photoUrls = List.of("photoUrls");
+        List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
+        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+
+        archiveService.save(savedUser.getId(), request);
+
+        RequestPagingStatus pagingRequest = new RequestPagingStatus(1, 1, 0);
+
+        // when
+        ArchiveResponse actual = archiveService.findAllByItemIdAndUserId(savedItem.getId(),
+                savedUser.getId(), pagingRequest, ArchiveSortType.LIKE_DESC);
+
+        // then
+        assertThat(actual.getArchives()).hasSize(0);
     }
 }

@@ -14,6 +14,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
     // Test를 위한 의존성 설정
+    implementation "com.querydsl:querydsl-core:${queryDslVersion}"
     runtimeOnly 'com.h2database:h2'
 }
 
