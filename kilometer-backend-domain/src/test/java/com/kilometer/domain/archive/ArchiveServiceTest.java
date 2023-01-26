@@ -216,6 +216,52 @@ public class ArchiveServiceTest {
     }
 
     @Test
+    @DisplayName("아카이브 정보를 수정한다.")
+    void updateArchive() {
+        // given
+        User user = User.builder()
+                .name("user")
+                .email("user@email.com")
+                .build();
+        User savedUser = userRepository.save(user);
+
+        ItemEntity item = ItemEntity.builder()
+                .exposureType(ExposureType.ON)
+                .exhibitionType(ExhibitionType.EXHIBITION)
+                .regionType(RegionType.CHUNGCHEONG)
+                .feeType(FeeType.FREE)
+                .listImageUrl("listImageUrl")
+                .thumbnailImageUrl("thumbnailImageUrl")
+                .title("title")
+                .placeName("placeName")
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
+                .build();
+        ItemEntity savedItem = itemRepository.save(item);
+
+        List<String> photoUrls = List.of("photoUrls");
+        List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
+        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+
+        archiveService.save(savedUser.getId(), request);
+
+        List<String> photoUrlsForUpdate = List.of("updatedPhotoUrls");
+        List<PlaceInfo> placeInfosForUpdate = List.of(new PlaceInfo("FOOD", "수정된 맛집", "address", "roadAddress"));
+        ArchiveRequest requestForUpdate = new ArchiveRequest(savedItem.getId(), "updatedComment", 3, true, photoUrlsForUpdate, placeInfosForUpdate);
+
+        // when
+        ArchiveInfo actual = archiveService.update(savedUser.getId(), requestForUpdate);
+
+        // then
+        assertAll(
+                () -> assertThat(actual.getId()).isNotNull(),
+                () -> assertThat(actual.getComment()).isEqualTo("updatedComment"),
+                () -> assertThat(actual.getPhotoUrls()).contains("updatedPhotoUrls"),
+                () -> assertThat(actual.getFood()).contains("수정된 맛집")
+        );
+    }
+
+    @Test
     @DisplayName("아카이브 정보를 수정할 때, 사용자 id가 null이면 예외가 발생한다.")
     void updateArchive_nullUserId() {
         // given
