@@ -14,6 +14,7 @@ import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
+import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.archive.generator.ArchiveRatingCalculator;
 import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
@@ -76,7 +77,7 @@ public class ArchiveService {
         Preconditions.checkNotNull(request.getItemId(), "Item id must not be null");
 
         Archive archive = archiveRepository.findByItemIdAndUserId(request.getItemId(), userId)
-            .orElseThrow(() -> new IllegalArgumentException("Archive does not exist."));
+            .orElseThrow(ArchiveNotFoundException::new);
 
         Long archiveId = archive.getId();
         List<ArchiveImage> archiveImages = request.makeArchiveImages();
@@ -174,7 +175,7 @@ public class ArchiveService {
         ArchiveDetailDto archiveDetailDto = archiveRepository.findByArchiveIdAndUserIdAndIsVisible(
                 archiveId,
                 userId, false)
-            .orElseThrow(() -> new IllegalArgumentException("Archive does not exist"));
+            .orElseThrow(ArchiveNotFoundException::new);
 
         List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
             archiveDetailDto.getId());
