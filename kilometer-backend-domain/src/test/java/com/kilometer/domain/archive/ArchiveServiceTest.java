@@ -2,20 +2,25 @@ package com.kilometer.domain.archive;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.kilometer.domain.archive.dto.ArchiveInfo;
+import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
+import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.enumType.FeeType;
+import com.kilometer.domain.item.enumType.RegionType;
 import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -31,47 +36,80 @@ public class ArchiveServiceTest {
     @Autowired
     private ItemRepository itemRepository;
 
-    @MockBean
-    private ArchiveRepository archiveRepository;
-
     @Test
-    @DisplayName("아카이브 정보를 등록한다.")
+    @DisplayName("아카이브와 관련한 정보를 등록한다.")
     void saveArchive() {
         // given
         User user = User.builder()
                 .name("user")
                 .email("user@email.com")
                 .build();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        ArchiveRequest request = new ArchiveRequest(1L, "comment", 1, true, List.of(), List.of());
-
-        Archive dummyArchive = Archive.builder()
-                .id(1L)
-                .comment("comment")
+        ItemEntity item = ItemEntity.builder()
+                .exposureType(ExposureType.ON)
+                .exhibitionType(ExhibitionType.EXHIBITION)
+                .regionType(RegionType.CHUNGCHEONG)
+                .feeType(FeeType.FREE)
+                .listImageUrl("listImageUrl")
+                .thumbnailImageUrl("thumbnailImageUrl")
+                .title("title")
+                .placeName("placeName")
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
-        given(archiveRepository.save(any())).willReturn(dummyArchive);
+        ItemEntity savedItem = itemRepository.save(item);
+
+        List<String> photoUrls = List.of("photoUrls");
+        List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
+        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
 
         // when
-        ArchiveInfo actual = archiveService.save(user.getId(), request);
+        ArchiveInfo actual = archiveService.save(savedUser.getId(), request);
 
         // then
-        assertThat(actual.getId()).isEqualTo(1L);
-        assertThat(actual.getComment()).isEqualTo("comment");
+        assertAll(
+                () -> assertThat(actual.getId()).isNotNull(),
+                () -> assertThat(actual.getComment()).isEqualTo("comment"),
+                () -> assertThat(actual.getPhotoUrls()).contains("photoUrls"),
+                () -> assertThat(actual.getFood()).contains("맛집")
+        );
     }
 
     @Test
-    @DisplayName("아카이브 정보를 등록할 때, 이미 등록한 아카이브면 예외가 발생한다.")
-    void saveArchive_duplicateArchive() {
+    @DisplayName("아카이브 정보를 등록할때, 이미 등록한 Archive를 다시 등록하려 하면 예외가 발생한다..")
+    void saveArchive_duplicate() {
         // given
-        given(archiveRepository.existsByItemIdAndUserId(any(), any())).willReturn(false);
+        User user = User.builder()
+                .name("user")
+                .email("user@email.com")
+                .build();
+        User savedUser = userRepository.save(user);
 
-        Long dummyUserId = 1L;
-        ArchiveRequest request = new ArchiveRequest(1L, "comment", 1, true, List.of(), List.of());
+        ItemEntity item = ItemEntity.builder()
+                .exposureType(ExposureType.ON)
+                .exhibitionType(ExhibitionType.EXHIBITION)
+                .regionType(RegionType.CHUNGCHEONG)
+                .feeType(FeeType.FREE)
+                .listImageUrl("listImageUrl")
+                .thumbnailImageUrl("thumbnailImageUrl")
+                .title("title")
+                .placeName("placeName")
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
+                .build();
+        ItemEntity savedItem = itemRepository.save(item);
+
+        List<String> photoUrls = List.of("photoUrls");
+        List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
+        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+
+        archiveService.save(savedUser.getId(), request);
 
         // when & then
-        assertThatThrownBy(() -> archiveService.save(dummyUserId, request))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> archiveService.save(savedUser.getId(), request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d", savedItem.getId(), savedUser.getId());
     }
 
     @Test
@@ -169,7 +207,7 @@ public class ArchiveServiceTest {
     void saveArchive_notExistUser() {
         // given
         Long dummyUserId = 1L;
-        ArchiveRequest request = new ArchiveRequest(1L, "comment", 6, true, List.of(), List.of());
+        ArchiveRequest request = new ArchiveRequest(1L, "comment", 3, true, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(dummyUserId, request))

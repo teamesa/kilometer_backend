@@ -1,15 +1,9 @@
 package com.kilometer.domain.archive;
 
-import com.kilometer.domain.archive.archiveImage.ArchiveImage;
-import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.request.ArchiveRequest;
-import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.user.User;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,7 +23,7 @@ import org.hibernate.annotations.Where;
 @Getter
 @Entity
 @Builder
-@Where(clause = "isDeleted=false")
+@Where(clause = "is_deleted=false")
 @SQLDelete(sql = "UPDATE archive SET isDeleted=true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
