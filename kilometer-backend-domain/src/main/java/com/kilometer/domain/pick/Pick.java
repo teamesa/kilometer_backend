@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "pick")
 public class Pick {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private boolean isHearted;

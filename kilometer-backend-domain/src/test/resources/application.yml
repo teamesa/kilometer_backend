@@ -1,0 +1,47 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        show_sql: true
+        format_sql: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:kilometer-test;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+
+  flyway:
+    enabled: false
+
+app:
+  auth:
+    tokenSecret: tokenSecreteForTest
+    tokenExpirationMsec: 10000
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:8080/oauth2/redirect
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+  config: classpath:log4j2.xml
+
+cloud:
+  aws:
+    s3:
+      bucket: fake-bycket
+      folderName: api
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: sdafevawegjo
+      secretKey: dafevaojisvpae
