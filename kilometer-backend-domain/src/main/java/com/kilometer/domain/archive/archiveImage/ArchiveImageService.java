@@ -1,7 +1,7 @@
 package com.kilometer.domain.archive.archiveImage;
 
 import com.google.common.base.Preconditions;
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -22,8 +22,8 @@ public class ArchiveImageService {
         if(archiveImages.isEmpty()) {
             return List.of();
         }
-        Archive archive = Archive.builder().id(archiveId).build();
-        archiveImages.forEach(archiveImage -> archiveImage.setArchive(archive));
+        ArchiveEntity archiveEntity = ArchiveEntity.builder().id(archiveId).build();
+        archiveImages.forEach(archiveImage -> archiveImage.setArchiveEntity(archiveEntity));
         return  archiveImageRepository.saveAll(archiveImages);
     }
     @Transactional

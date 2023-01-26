@@ -28,7 +28,7 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "archive")
-public class Archive {
+public class ArchiveEntity {
 
     @Id
     @GeneratedValue
@@ -78,12 +78,12 @@ public class Archive {
         this.starRating = request.getStarRating();
     }
 
-    public Archive plusLikeCount() {
+    public ArchiveEntity plusLikeCount() {
         this.likeCount++;
         return this;
     }
 
-    public Archive minusLikeCount() {
+    public ArchiveEntity minusLikeCount() {
         this.likeCount = Math.max(this.likeCount - 1, 0);
         return this;
     }

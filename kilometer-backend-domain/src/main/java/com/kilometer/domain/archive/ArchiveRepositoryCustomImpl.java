@@ -24,7 +24,7 @@ import org.springframework.data.domain.Pageable;
 public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final static QArchive archive = QArchive.archive;
+    private final static QArchiveEntity archive = QArchiveEntity.archiveEntity;
     private final static QUser user = QUser.user;
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
     private final static QLike like = QLike.like;
@@ -52,7 +52,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .leftJoin(user)
             .on(user.id.eq(archive.user.id))
             .leftJoin(like)
-            .on(like.likedArchive.eq(archive), eqUserId(queryRequest.getUserId()))
+            .on(like.likedArchiveEntity.eq(archive), eqUserId(queryRequest.getUserId()))
             .where(
                 archive.item.id.eq(queryRequest.getItemId()),
                 eqIsVisible(queryRequest.isVisible())

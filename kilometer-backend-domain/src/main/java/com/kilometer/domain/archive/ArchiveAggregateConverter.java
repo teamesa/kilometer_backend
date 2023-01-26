@@ -58,52 +58,52 @@ public class ArchiveAggregateConverter {
             .build();
     }
 
-    public ArchiveInfo convertArchiveInfo(Archive archive,
-        List<ArchiveImage> archiveImages,
-        List<UserVisitPlace> userVisitPlaces) {
+    public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity,
+                                          List<ArchiveImage> archiveImages,
+                                          List<UserVisitPlace> userVisitPlaces) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
 
-        ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archive.getId());
+        ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archiveEntity.getId());
 
         List<String> photoUrls = archiveImages.stream()
             .map(ArchiveImage::getImageUrl)
             .collect(Collectors.toList());
 
         return ArchiveInfo.builder()
-            .id(archive.getId())
-            .userProfileUrl(archive.getUser().getImageUrl())
-            .userName(archive.getUser().getName())
-            .updatedAt(archive.getUpdatedAt())
-            .starRating(archive.getStarRating())
-            .likeCount(archive.getLikeCount())
+            .id(archiveEntity.getId())
+            .userProfileUrl(archiveEntity.getUser().getImageUrl())
+            .userName(archiveEntity.getUser().getName())
+            .updatedAt(archiveEntity.getUpdatedAt())
+            .starRating(archiveEntity.getStarRating())
+            .likeCount(archiveEntity.getLikeCount())
             .heart(archiveLike)
-            .comment(archive.getComment())
+            .comment(archiveEntity.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
             .photoUrls(photoUrls)
             .build();
     }
 
-    public ArchiveInfo convertArchiveInfo(Archive archive, UserResponse userResponse,
-        List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
+    public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity, UserResponse userResponse,
+                                          List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
 
-        ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archive.getId());
+        ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archiveEntity.getId());
 
         List<String> photoUrls = archiveImages.stream()
             .map(ArchiveImage::getImageUrl)
             .collect(Collectors.toList());
         return ArchiveInfo.builder()
-            .id(archive.getId())
+            .id(archiveEntity.getId())
             .userProfileUrl(userResponse.getImageUrl())
             .userName(userResponse.getName())
-            .updatedAt(archive.getUpdatedAt())
-            .starRating(archive.getStarRating())
-            .likeCount(archive.getLikeCount())
+            .updatedAt(archiveEntity.getUpdatedAt())
+            .starRating(archiveEntity.getStarRating())
+            .likeCount(archiveEntity.getLikeCount())
             .heart(archiveLike)
-            .comment(archive.getComment())
+            .comment(archiveEntity.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
             .photoUrls(photoUrls)

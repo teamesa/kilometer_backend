@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive.like;
 
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.user.User;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
@@ -49,7 +49,7 @@ public class Like {
 
     @ManyToOne
     @JoinColumn(name = "likedArchive")
-    private Archive likedArchive;
+    private ArchiveEntity likedArchiveEntity;
 
     public Like changeIsLiked(boolean status) {
         this.isLiked = status;

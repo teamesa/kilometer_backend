@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive.archiveImage;
 
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,9 +44,9 @@ public class ArchiveImage {
 
     @ManyToOne
     @JoinColumn(name = "archive")
-    private Archive archive;
+    private ArchiveEntity archiveEntity;
 
-    public void setArchive(Archive archive) {
-        this.archive = archive;
+    public void setArchiveEntity(ArchiveEntity archiveEntity) {
+        this.archiveEntity = archiveEntity;
     }
 }
