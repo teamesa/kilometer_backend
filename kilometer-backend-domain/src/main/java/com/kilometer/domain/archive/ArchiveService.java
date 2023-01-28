@@ -54,19 +54,19 @@ public class ArchiveService {
     private final LikeService likeService;
 
     @Transactional
-    public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
-        validateArchiveRequest(archiveRequest, userId);
-        Archive archive = Archive.createArchive(archiveRequest.getComment(), archiveRequest.getStarRating(),
-                archiveRequest.isVisibleAtItem());
+    public ArchiveInfo save(Long userId, ArchiveRequest request) {
+        validateArchiveRequest(request, userId);
+        Archive archive = Archive.createArchive(request.getComment(), request.getStarRating(),
+                request.isVisibleAtItem());
 
         UserResponse userResponse = userService.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
 
-        ArchiveEntity archiveEntity = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
+        ArchiveEntity archiveEntity = saveArchive(request, userId, request.getItemId());
 
         Long archiveId = archiveEntity.getId();
-        List<ArchiveImage> archiveImages = archiveRequest.makeArchiveImages();
-        List<UserVisitPlace> userVisitPlaces = archiveRequest.makeVisitedPlace();
+        List<ArchiveImage> archiveImages = request.makeArchiveImages();
+        List<UserVisitPlace> userVisitPlaces = request.makeVisitedPlace();
         archiveImageService.saveAll(archiveImages, archiveId);
         userVisitPlaceService.saveAll(userVisitPlaces, archiveId);
 

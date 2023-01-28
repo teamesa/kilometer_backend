@@ -8,6 +8,7 @@ import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.PlaceInfo;
+import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
@@ -129,7 +130,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
-                .isInstanceOf(NullPointerException.class)
+                .isInstanceOf(ArchiveValidationException.class)
                 .hasMessage("Comment must not be null");
     }
 
@@ -183,7 +184,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ArchiveValidationException.class)
                 .hasMessage("별점은 1이상 5이하의 숫자여야 합니다. now : " + 0);
     }
 
@@ -201,7 +202,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ArchiveValidationException.class)
                 .hasMessage("별점은 1이상 5이하의 숫자여야 합니다. now : " + 6);
     }
 
@@ -300,7 +301,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.update(dummyUserId, request))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ArchiveValidationException.class)
                 .hasMessage("Archive does not exist.");
     }
 
