@@ -34,7 +34,7 @@ public class UserVisitPlace {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "archive")
+    @JoinColumn(name = "archiveEntity")
     private ArchiveEntity archiveEntity;
 
     @Enumerated(value = EnumType.STRING)

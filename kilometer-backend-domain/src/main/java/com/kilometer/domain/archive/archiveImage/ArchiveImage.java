@@ -43,7 +43,7 @@ public class ArchiveImage {
     private boolean isDeleted = false;
 
     @ManyToOne
-    @JoinColumn(name = "archive")
+    @JoinColumn(name = "archiveEntity")
     private ArchiveEntity archiveEntity;
 
     public void setArchiveEntity(ArchiveEntity archiveEntity) {

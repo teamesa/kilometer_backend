@@ -48,7 +48,7 @@ public class Like {
     private User likedUser;
 
     @ManyToOne
-    @JoinColumn(name = "likedArchive")
+    @JoinColumn(name = "likedArchiveEntity")
     private ArchiveEntity likedArchiveEntity;
 
     public Like changeIsLiked(boolean status) {

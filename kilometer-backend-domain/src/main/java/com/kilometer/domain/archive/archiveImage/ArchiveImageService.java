@@ -29,16 +29,16 @@ public class ArchiveImageService {
     @Transactional
     public void deleteAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        archiveImageRepository.deleteAllByArchiveId(archiveId);
+        archiveImageRepository.deleteAllByArchiveEntityId(archiveId);
     }
 
     public List<ArchiveImage> findAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        return archiveImageRepository.findAllByArchiveId(archiveId);
+        return archiveImageRepository.findAllByArchiveEntityId(archiveId);
     }
 
     public boolean existArchiveImagesByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        return archiveImageRepository.existsArchiveImagesByArchiveId(archiveId);
+        return archiveImageRepository.existsArchiveImagesByArchiveEntityId(archiveId);
     }
 }

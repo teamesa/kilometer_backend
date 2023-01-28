@@ -4,6 +4,7 @@ import com.kilometer.domain.archive.exception.ArchiveValidationException;
 
 public class Archive {
 
+    private static final int DEFAULT_LIKE_COUNT = 0;
     private static final int MAX_STAR_RATING = 5;
     private static final int MIN_STAR_RATING = 1;
     private static final int MIN_LIKE_COUNT = 0;
@@ -14,25 +15,22 @@ public class Archive {
     private int likeCount;
     private boolean isVisibleAtItem;
 
-    public Archive(final Long id, final String comment, final int starRating, final int likeCount,
-                   final boolean isVisibleAtItem) {
+    private Archive(final Long id, final String comment, final int starRating, final int likeCount,
+                    final boolean isVisibleAtItem) {
         validate(comment, starRating, likeCount);
-        this.id = id;
         this.comment = comment;
         this.starRating = starRating;
         this.likeCount = likeCount;
         this.isVisibleAtItem = isVisibleAtItem;
     }
 
-    public Archive(final String comment, final int starRating, final int likeCount,
-                   final boolean isVisibleAtItem) {
-        this(null, comment, starRating, likeCount, isVisibleAtItem);
+    public static Archive createArchive(final String comment, final int starRating, final boolean isVisibleAtItem) {
+        return new Archive(null, comment, starRating, DEFAULT_LIKE_COUNT, isVisibleAtItem);
     }
 
     private void validate(final String comment, final int starRating, final int likeCount) {
         validateCommentField(comment);
         validateStarRatingField(starRating);
-        validateLikeCount(likeCount);
     }
 
     private void validateCommentField(final String comment) {
@@ -43,12 +41,6 @@ public class Archive {
 
     private void validateStarRatingField(final int starRating) {
         if (starRating < MIN_STAR_RATING || starRating > MAX_STAR_RATING) {
-            throw new ArchiveValidationException();
-        }
-    }
-
-    private void validateLikeCount(final int likeCount) {
-        if (likeCount < MIN_LIKE_COUNT) {
             throw new ArchiveValidationException();
         }
     }

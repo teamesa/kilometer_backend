@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserVisitPlaceRepository extends JpaRepository<UserVisitPlace, Long> {
 
-    List<UserVisitPlace> findAllByArchiveId(Long archiveId);
+    List<UserVisitPlace> findAllByArchiveEntityId(Long archiveEntityId);
 
-    void deleteAllByArchiveId(Long archiveId);
+    void deleteAllByArchiveEntityId(Long archiveEntityId);
 }

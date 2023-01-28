@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArchiveImageRepository extends JpaRepository<ArchiveImage, Long> {
 
-    List<ArchiveImage> findAllByArchiveId(Long archiveId);
+    List<ArchiveImage> findAllByArchiveEntityId(Long archiveEntityId);
 
-    boolean existsArchiveImagesByArchiveId(Long archiveId);
+    boolean existsArchiveImagesByArchiveEntityId(Long archiveEntityId);
 
-    void deleteAllByArchiveId(Long archiveId);
+    void deleteAllByArchiveEntityId(Long archiveEntityId);
 }

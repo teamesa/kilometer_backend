@@ -28,11 +28,11 @@ public class UserVisitPlaceService {
     @Transactional
     public void deleteAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        userVisitPlaceRepository.deleteAllByArchiveId(archiveId);
+        userVisitPlaceRepository.deleteAllByArchiveEntityId(archiveId);
     }
 
     public List<UserVisitPlace> findAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        return userVisitPlaceRepository.findAllByArchiveId(archiveId);
+        return userVisitPlaceRepository.findAllByArchiveEntityId(archiveId);
     }
 }
