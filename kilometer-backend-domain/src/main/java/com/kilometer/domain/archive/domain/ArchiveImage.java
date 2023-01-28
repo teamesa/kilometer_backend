@@ -8,17 +8,13 @@ public class ArchiveImage {
     private String imageUrl;
 
     private ArchiveImage(final Long id, final String imageUrl) {
-        validate(imageUrl);
+        validateImageUrlField(imageUrl);
         this.id = id;
         this.imageUrl = imageUrl;
     }
 
     public static ArchiveImage createArchiveImage(final String imageUrl) {
         return new ArchiveImage(null, imageUrl);
-    }
-
-    private void validate(final String imageUrl) {
-        validateImageUrlField(imageUrl);
     }
 
     private void validateImageUrlField(final String imageUrl) {

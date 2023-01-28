@@ -57,7 +57,7 @@ public class ArchiveService {
     public ArchiveInfo save(Long userId, ArchiveRequest request) {
         validateArchiveRequest(request, userId);
         Archive archive = Archive.createArchive(request.getComment(), request.getStarRating(),
-                request.isVisibleAtItem());
+                request.isVisibleAtItem(), request.getPhotoUrls());
 
         UserResponse userResponse = userService.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
@@ -200,8 +200,6 @@ public class ArchiveService {
 
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
-        Preconditions.checkNotNull(archiveRequest.getPhotoUrls(),
-                "Photo urls must not be null");
         Preconditions.checkNotNull(archiveRequest.getPlaceInfos(),
                 "Place infos must not be null");
 

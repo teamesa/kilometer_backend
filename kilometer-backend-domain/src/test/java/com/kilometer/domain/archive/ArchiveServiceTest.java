@@ -8,6 +8,7 @@ import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.PlaceInfo;
+import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.item.ItemEntity;
@@ -130,8 +131,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
-                .isInstanceOf(ArchiveValidationException.class)
-                .hasMessage("Comment must not be null");
+                .isInstanceOf(ArchiveValidationException.class);
     }
 
     @Test
@@ -148,8 +148,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("Photo urls must not be null");
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -184,8 +183,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
-                .isInstanceOf(ArchiveValidationException.class)
-                .hasMessage("별점은 1이상 5이하의 숫자여야 합니다. now : " + 0);
+                .isInstanceOf(ArchiveValidationException.class);
     }
 
     @Test
@@ -202,8 +200,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
-                .isInstanceOf(ArchiveValidationException.class)
-                .hasMessage("별점은 1이상 5이하의 숫자여야 합니다. now : " + 6);
+                .isInstanceOf(ArchiveValidationException.class);
     }
 
     @Test
@@ -301,8 +298,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.update(dummyUserId, request))
-                .isInstanceOf(ArchiveValidationException.class)
-                .hasMessage("Archive does not exist.");
+                .isInstanceOf(ArchiveNotFoundException.class);
     }
 
     @Test

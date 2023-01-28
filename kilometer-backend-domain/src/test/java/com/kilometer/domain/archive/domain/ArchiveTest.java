@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ public class ArchiveTest {
     @DisplayName("Archive를 생성한다.")
     void createArchive() {
         // given & when
-        Archive archive = Archive.createArchive("comment", 1, true);
+        Archive archive = Archive.createArchive("comment", 1, true, List.of());
 
         // then
         assertThat(archive).isNotNull();
@@ -26,7 +27,7 @@ public class ArchiveTest {
         String invalidComment = null;
 
         // when & then
-        assertThatThrownBy(() -> Archive.createArchive(invalidComment, 1, true))
+        assertThatThrownBy(() -> Archive.createArchive(invalidComment, 1, true, List.of()))
                 .isInstanceOf(ArchiveValidationException.class);
     }
 
@@ -37,7 +38,7 @@ public class ArchiveTest {
         int invalidStarRating = -1;
 
         // when & then
-        assertThatThrownBy(() -> Archive.createArchive("김철수책상철책상", invalidStarRating, true))
+        assertThatThrownBy(() -> Archive.createArchive("김철수책상철책상", invalidStarRating, true, List.of()))
                 .isInstanceOf(ArchiveValidationException.class);
     }
 
@@ -48,7 +49,7 @@ public class ArchiveTest {
         int invalidStarRating = 6;
 
         // when & then
-        assertThatThrownBy(() -> Archive.createArchive("김철수책상철책상", invalidStarRating, true))
+        assertThatThrownBy(() -> Archive.createArchive("김철수책상철책상", invalidStarRating, true, List.of()))
                 .isInstanceOf(ArchiveValidationException.class);
     }
 }
