@@ -21,6 +21,7 @@ import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.service.ArchiveEntityMapper;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
@@ -52,12 +53,14 @@ public class ArchiveService {
     private final PagingStatusService pagingStatusService;
     private final ArchiveAggregateConverter archiveAggregateConverter;
     private final LikeService likeService;
+    private final ArchiveEntityMapper archiveEntityMapper;
 
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest request) {
-        validateArchiveRequest(request, userId);
         Archive archive = Archive.createArchive(request.getComment(), request.getStarRating(),
-                request.isVisibleAtItem(), request.getPhotoUrls());
+                request.isVisibleAtItem(), request.getPhotoUrls(), request.getPlaceInfos());
+
+        archiveEntityMapper.createArchiveEntity(archive, request.getItemId(), userId);
 
         UserResponse userResponse = userService.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
@@ -196,17 +199,6 @@ public class ArchiveService {
         return archiveRepository.findByItemIdAndUserId(itemId, userId)
                 .map(ArchiveEntity::getId)
                 .orElse(null);
-    }
-
-
-    private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
-        Preconditions.checkNotNull(archiveRequest.getPlaceInfos(),
-                "Place infos must not be null");
-
-        Preconditions.checkArgument(
-                !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
-                String.format("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d",
-                        archiveRequest.getItemId(), userId));
     }
 
     private ArchiveEntity saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {

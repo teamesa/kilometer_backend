@@ -8,6 +8,7 @@ import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.PlaceInfo;
+import com.kilometer.domain.archive.exception.ArchiveDuplicateException;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import com.kilometer.domain.archive.request.ArchiveRequest;
@@ -113,7 +114,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(savedUser.getId(), request))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ArchiveDuplicateException.class)
                 .hasMessage("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d", savedItem.getId(), savedUser.getId());
     }
 
@@ -165,8 +166,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("Place infos must not be null");
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test

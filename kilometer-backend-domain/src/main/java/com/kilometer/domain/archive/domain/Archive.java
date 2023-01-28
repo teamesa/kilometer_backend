@@ -1,5 +1,6 @@
 package com.kilometer.domain.archive.domain;
 
+import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,9 +17,10 @@ public class Archive {
     private int likeCount;
     private boolean isVisibleAtItem;
     private List<ArchiveImage> archiveImages;
+    private List<UserVisitPlace> userVisitPlaces;
 
     private Archive(final Long id, final String comment, final int starRating, final int likeCount,
-                    final boolean isVisibleAtItem, final List<String> photoUrls) {
+                    final boolean isVisibleAtItem, final List<String> photoUrls, final List<PlaceInfo> placeInfos) {
         validate(comment, starRating, likeCount);
         this.comment = comment;
         this.starRating = starRating;
@@ -27,11 +29,14 @@ public class Archive {
         this.archiveImages = photoUrls.stream()
                 .map(ArchiveImage::createArchiveImage)
                 .collect(Collectors.toList());
+        this.userVisitPlaces = placeInfos.stream()
+                .map(UserVisitPlace::createUserVisitPlace)
+                .collect(Collectors.toList());
     }
 
     public static Archive createArchive(final String comment, final int starRating, final boolean isVisibleAtItem,
-                                        final List<String> photoUrls) {
-        return new Archive(null, comment, starRating, DEFAULT_LIKE_COUNT, isVisibleAtItem, photoUrls);
+                                        final List<String> photoUrls, final List<PlaceInfo> placeInfos) {
+        return new Archive(null, comment, starRating, DEFAULT_LIKE_COUNT, isVisibleAtItem, photoUrls, placeInfos);
     }
 
     private void validate(final String comment, final int starRating, final int likeCount) {

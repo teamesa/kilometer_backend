@@ -1,7 +1,7 @@
 package com.kilometer.domain.item;
 
 import com.kilometer.domain.archive.QArchiveEntity;
-import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlaceEntity;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
@@ -38,7 +38,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
     private final static QItemDetail itemDetail = QItemDetail.itemDetail;
     private final static QItemDetailImage itemDetailImage = QItemDetailImage.itemDetailImage;
-    private final static QUserVisitPlace visitPlace = QUserVisitPlace.userVisitPlace;
+    private final static QUserVisitPlaceEntity visitPlace = QUserVisitPlaceEntity.userVisitPlaceEntity;
     private final static QPick pick = QPick.pick;
     private final static QArchiveEntity archive = QArchiveEntity.archiveEntity;
 
@@ -49,52 +49,52 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     @Override
     public Page<SearchItemResponse> findAllBySortOption(ListQueryRequest queryRequest) {
         List<SearchItemResponse> items = queryFactory
-            .select(Projections.fields(SearchItemResponse.class,
-                    itemEntity.id,
-                    itemEntity.listImageUrl,
-                    itemEntity.title,
-                    itemEntity.exhibitionType,
-                    itemEntity.feeType,
-                    itemEntity.startDate,
-                    itemEntity.endDate,
-                    itemEntity.pickCount,
-                    pick.isHearted,
-                    archive.starRating.avg().as("avgStarRating"),
-                    archive.item.id.count().as("archiveCount")
+                .select(Projections.fields(SearchItemResponse.class,
+                                itemEntity.id,
+                                itemEntity.listImageUrl,
+                                itemEntity.title,
+                                itemEntity.exhibitionType,
+                                itemEntity.feeType,
+                                itemEntity.startDate,
+                                itemEntity.endDate,
+                                itemEntity.pickCount,
+                                pick.isHearted,
+                                archive.starRating.avg().as("avgStarRating"),
+                                archive.item.id.count().as("archiveCount")
+                        )
                 )
-            )
-            .from(itemEntity)
-            .leftJoin(pick)
-            .on(pick.pickedItem.eq(itemEntity), eqUserId(queryRequest.getUserId()))
-            .leftJoin(archive)
-            .on(archive.item.eq(itemEntity).and(archive.isVisibleAtItem.eq(true)))
-            .where(
-                itemEntity.exposureType.eq(ExposureType.ON),
-                eqTitle(queryRequest.getQueryString()),
-                eqExhibitionType(queryRequest.getFilterOptions()),
-                eqFeeType(queryRequest.getFilterOptions()),
-                eqRegionType(queryRequest.getFilterOptions()),
-                eqProgressType(queryRequest.getFilterOptions()),
-                filterByOrderOption(queryRequest.getSearchSortType())
-            )
-            .offset(queryRequest.getPageable().getOffset())
-            .limit(queryRequest.getPageable().getPageSize())
-            .groupBy(itemEntity.id)
-            .orderBy(getOrderSpecifier(queryRequest.getSearchSortType()))
-            .fetch();
+                .from(itemEntity)
+                .leftJoin(pick)
+                .on(pick.pickedItem.eq(itemEntity), eqUserId(queryRequest.getUserId()))
+                .leftJoin(archive)
+                .on(archive.item.eq(itemEntity).and(archive.isVisibleAtItem.eq(true)))
+                .where(
+                        itemEntity.exposureType.eq(ExposureType.ON),
+                        eqTitle(queryRequest.getQueryString()),
+                        eqExhibitionType(queryRequest.getFilterOptions()),
+                        eqFeeType(queryRequest.getFilterOptions()),
+                        eqRegionType(queryRequest.getFilterOptions()),
+                        eqProgressType(queryRequest.getFilterOptions()),
+                        filterByOrderOption(queryRequest.getSearchSortType())
+                )
+                .offset(queryRequest.getPageable().getOffset())
+                .limit(queryRequest.getPageable().getPageSize())
+                .groupBy(itemEntity.id)
+                .orderBy(getOrderSpecifier(queryRequest.getSearchSortType()))
+                .fetch();
 
         int count = queryFactory
-            .select(itemEntity.id)
-            .from(itemEntity)
-            .where(
-                itemEntity.exposureType.eq(ExposureType.ON),
-                eqTitle(queryRequest.getQueryString()),
-                eqExhibitionType(queryRequest.getFilterOptions()),
-                eqFeeType(queryRequest.getFilterOptions()),
-                eqRegionType(queryRequest.getFilterOptions()),
-                eqProgressType(queryRequest.getFilterOptions())
-            )
-            .fetch().size();
+                .select(itemEntity.id)
+                .from(itemEntity)
+                .where(
+                        itemEntity.exposureType.eq(ExposureType.ON),
+                        eqTitle(queryRequest.getQueryString()),
+                        eqExhibitionType(queryRequest.getFilterOptions()),
+                        eqFeeType(queryRequest.getFilterOptions()),
+                        eqRegionType(queryRequest.getFilterOptions()),
+                        eqProgressType(queryRequest.getFilterOptions())
+                )
+                .fetch().size();
 
         return new PageImpl<>(items, queryRequest.getPageable(), count);
     }
@@ -102,20 +102,20 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     @Override
     public Page<AutoCompleteItem> findTop10ByQuery(String query) {
         List<AutoCompleteItem> items = queryFactory.select(
-                Projections.fields(AutoCompleteItem.class,
-                    itemEntity.id,
-                    itemEntity.title,
-                    itemEntity.title.indexOf(query).as("searchedTextLocationStart"),
-                    itemEntity.title.indexOf(query).add(query.length()).as("searchedTextLocationEnd"),
-                    Expressions.asString(FrontUrlUtils.getFrontDetailPrefix())
-                        .append(itemEntity.id.stringValue()).as("link")
+                        Projections.fields(AutoCompleteItem.class,
+                                itemEntity.id,
+                                itemEntity.title,
+                                itemEntity.title.indexOf(query).as("searchedTextLocationStart"),
+                                itemEntity.title.indexOf(query).add(query.length()).as("searchedTextLocationEnd"),
+                                Expressions.asString(FrontUrlUtils.getFrontDetailPrefix())
+                                        .append(itemEntity.id.stringValue()).as("link")
+                        )
                 )
-            )
-            .where(itemEntity.title.containsIgnoreCase(query))
-            .from(itemEntity)
-            .orderBy(itemEntity.id.desc())
-            .limit(10)
-            .fetch();
+                .where(itemEntity.title.containsIgnoreCase(query))
+                .from(itemEntity)
+                .orderBy(itemEntity.id.desc())
+                .limit(10)
+                .fetch();
 
         return new PageImpl<>(items);
     }
@@ -123,50 +123,50 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     @Override
     public Optional<ItemInfoDto> findInfoByItemIdAndUserId(Long itemId, Long userId) {
         return Optional.ofNullable(queryFactory.select(
-                Projections.fields(ItemInfoDto.class,
-                    itemEntity.id,
-                    itemEntity.exhibitionType,
-                    itemEntity.feeType,
-                    itemEntity.title,
-                    itemEntity.thumbnailImageUrl,
-                    itemEntity.listImageUrl,
-                    itemEntity.startDate,
-                    itemEntity.endDate,
-                    itemEntity.placeName,
-                    itemEntity.latitude,
-                    itemEntity.longitude,
-                    itemEntity.price,
-                    itemEntity.ticketUrl,
-                    itemEntity.operatingTime,
-                    itemEntity.homepageUrl,
-                    itemEntity.pickCount,
-                    pick.isHearted
+                        Projections.fields(ItemInfoDto.class,
+                                itemEntity.id,
+                                itemEntity.exhibitionType,
+                                itemEntity.feeType,
+                                itemEntity.title,
+                                itemEntity.thumbnailImageUrl,
+                                itemEntity.listImageUrl,
+                                itemEntity.startDate,
+                                itemEntity.endDate,
+                                itemEntity.placeName,
+                                itemEntity.latitude,
+                                itemEntity.longitude,
+                                itemEntity.price,
+                                itemEntity.ticketUrl,
+                                itemEntity.operatingTime,
+                                itemEntity.homepageUrl,
+                                itemEntity.pickCount,
+                                pick.isHearted
+                        )
                 )
-            )
-            .from(itemEntity)
-            .leftJoin(pick)
-            .on(pick.pickedItem.eq(itemEntity), eqUserId(userId))
-            .where(itemEntity.id.eq(itemId))
-            .fetchOne());
+                .from(itemEntity)
+                .leftJoin(pick)
+                .on(pick.pickedItem.eq(itemEntity), eqUserId(userId))
+                .where(itemEntity.id.eq(itemId))
+                .fetchOne());
     }
 
     @Override
     public SwipeItemDto findSwipeItemByItemId(Long itemId) {
         List<String> photos = queryFactory.select(itemDetailImage.imageUrl).from(itemDetailImage)
-            .where(itemDetailImage.item.id.eq(itemId)).fetch();
+                .where(itemDetailImage.item.id.eq(itemId)).fetch();
 
         SwipeItemDto dto = queryFactory.select(Projections.fields(SwipeItemDto.class,
-                itemEntity.title,
-                itemDetail.introduce.as("content"),
-                itemEntity.exhibitionType,
-                itemEntity.placeName,
-                itemEntity.thumbnailImageUrl
-            ))
-            .from(itemEntity)
-            .leftJoin(itemDetail)
-            .on(itemDetail.item.eq(itemEntity))
-            .where(itemEntity.id.eq(itemId))
-            .fetchOne();
+                        itemEntity.title,
+                        itemDetail.introduce.as("content"),
+                        itemEntity.exhibitionType,
+                        itemEntity.placeName,
+                        itemEntity.thumbnailImageUrl
+                ))
+                .from(itemEntity)
+                .leftJoin(itemDetail)
+                .on(itemDetail.item.eq(itemEntity))
+                .where(itemEntity.id.eq(itemId))
+                .fetchOne();
 
         dto.setPhotoUrls(photos);
         return dto;
@@ -176,37 +176,37 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     private BooleanExpression eqExhibitionType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-            .map(FilterOptions::getExhibitionType)
-            .filter(exhibitionType -> exhibitionType != ExhibitionType.ALL)
-            .map(itemEntity.exhibitionType::eq)
-            .orElse(null);
+                .map(FilterOptions::getExhibitionType)
+                .filter(exhibitionType -> exhibitionType != ExhibitionType.ALL)
+                .map(itemEntity.exhibitionType::eq)
+                .orElse(null);
     }
 
     private BooleanExpression eqFeeType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-            .map(FilterOptions::getFeeTypes)
-            .map(Collection::stream)
-            .map(it -> it.map(itemEntity.feeType::eq))
-            .flatMap(it -> it.reduce(BooleanExpression::or))
-            .orElse(null);
+                .map(FilterOptions::getFeeTypes)
+                .map(Collection::stream)
+                .map(it -> it.map(itemEntity.feeType::eq))
+                .flatMap(it -> it.reduce(BooleanExpression::or))
+                .orElse(null);
     }
 
     private BooleanExpression eqRegionType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-            .map(FilterOptions::getRegionTypes)
-            .map(Collection::stream)
-            .map(it -> it.map(itemEntity.regionType::eq))
-            .flatMap(it -> it.reduce(BooleanExpression::or))
-            .orElse(null);
+                .map(FilterOptions::getRegionTypes)
+                .map(Collection::stream)
+                .map(it -> it.map(itemEntity.regionType::eq))
+                .flatMap(it -> it.reduce(BooleanExpression::or))
+                .orElse(null);
     }
 
     private BooleanExpression eqProgressType(FilterOptions filterOptions) {
         return Optional.ofNullable(filterOptions)
-            .map(FilterOptions::getProgressTypes)
-            .map(Collection::stream)
-            .map(it -> it.map(this::getExpressionByProgressDateType))
-            .flatMap(it -> it.reduce(BooleanExpression::or))
-            .orElse(null);
+                .map(FilterOptions::getProgressTypes)
+                .map(Collection::stream)
+                .map(it -> it.map(this::getExpressionByProgressDateType))
+                .flatMap(it -> it.reduce(BooleanExpression::or))
+                .orElse(null);
     }
 
     private BooleanExpression getExpressionByProgressDateType(ProgressDateType type) {
@@ -234,9 +234,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     private BooleanExpression eqTitle(String query) {
         return Optional.ofNullable(query)
-            .filter(StringUtils::isNotBlank)
-            .map(it -> itemEntity.title.containsIgnoreCase(query))
-            .orElse(null);
+                .filter(StringUtils::isNotBlank)
+                .map(it -> itemEntity.title.containsIgnoreCase(query))
+                .orElse(null);
     }
 
     private OrderSpecifier getOrderSpecifier(SearchSortType searchSortType) {
