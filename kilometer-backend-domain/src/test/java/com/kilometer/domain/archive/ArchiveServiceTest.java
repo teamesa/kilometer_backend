@@ -11,6 +11,7 @@ import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.exception.ArchiveDuplicateException;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
@@ -68,7 +69,7 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
 
         // when
         ArchiveInfo actual = archiveService.save(savedUser.getId(), request);
@@ -108,7 +109,7 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
 
         archiveService.save(savedUser.getId(), request);
 
@@ -127,7 +128,7 @@ public class ArchiveServiceTest {
                 .build();
         userRepository.save(user);
 
-        ArchiveRequest request = new ArchiveRequest(1L, null, 1, true, List.of(), List.of());
+        ArchiveCreateRequest request = new ArchiveCreateRequest(1L, null, 1, true, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
@@ -144,7 +145,7 @@ public class ArchiveServiceTest {
                 .build();
         userRepository.save(user);
 
-        ArchiveRequest request = new ArchiveRequest(1L, "comment", 1, true, null, List.of());
+        ArchiveCreateRequest request = new ArchiveCreateRequest(1L, "comment", 1, true, null, List.of());
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
@@ -161,7 +162,7 @@ public class ArchiveServiceTest {
                 .build();
         userRepository.save(user);
 
-        ArchiveRequest request = new ArchiveRequest(1L, "comment", 1, true, List.of(), null);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(1L, "comment", 1, true, List.of(), null);
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
@@ -178,7 +179,7 @@ public class ArchiveServiceTest {
                 .build();
         userRepository.save(user);
 
-        ArchiveRequest request = new ArchiveRequest(1L, "comment", 0, true, List.of(), List.of());
+        ArchiveCreateRequest request = new ArchiveCreateRequest(1L, "comment", 0, true, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
@@ -195,7 +196,7 @@ public class ArchiveServiceTest {
                 .build();
         userRepository.save(user);
 
-        ArchiveRequest request = new ArchiveRequest(1L, "comment", 6, true, List.of(), List.of());
+        ArchiveCreateRequest request = new ArchiveCreateRequest(1L, "comment", 6, true, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
@@ -207,7 +208,7 @@ public class ArchiveServiceTest {
     void saveArchive_notExistUser() {
         // given
         Long dummyUserId = 1L;
-        ArchiveRequest request = new ArchiveRequest(1L, "comment", 3, true, List.of(), List.of());
+        ArchiveCreateRequest request = new ArchiveCreateRequest(dummyUserId, "comment", 1, true, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(dummyUserId, request))
@@ -241,7 +242,7 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
 
         archiveService.save(savedUser.getId(), request);
 
@@ -326,7 +327,7 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
 
         archiveService.save(savedUser.getId(), request);
 
@@ -366,7 +367,7 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveRequest request = new ArchiveRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
 
         archiveService.save(savedUser.getId(), request);
 

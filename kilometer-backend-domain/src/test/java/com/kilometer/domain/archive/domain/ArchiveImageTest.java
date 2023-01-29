@@ -3,6 +3,7 @@ package com.kilometer.domain.archive.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.domain.archiveImages.ArchiveImage;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import org.junit.jupiter.api.DisplayName;
@@ -29,5 +30,18 @@ class ArchiveImageTest {
         // when & then
         assertThatThrownBy(() -> ArchiveImage.createArchiveImage(invalidImageUrl))
                 .isInstanceOf(ArchiveValidationException.class);
+    }
+
+    @Test
+    @DisplayName("ArchiveImage를 Entity 객체로 변환한다.")
+    void convertToEntity() {
+        // given
+        ArchiveImage archiveImage = ArchiveImage.createArchiveImage("dummy");
+
+        // when
+        ArchiveImageEntity actual = archiveImage.toEntity();
+
+        // then
+        assertThat(actual.getImageUrl()).isEqualTo("dummy");
     }
 }

@@ -29,7 +29,8 @@ public class ArchiveTest {
 
         // when & then
         assertThatThrownBy(() -> new Archive(1L, invalidComment, 1, true, List.of(), List.of()))
-                .isInstanceOf(ArchiveValidationException.class);
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("입력된 comment가 없습니다.");
     }
 
     @Test
@@ -40,7 +41,8 @@ public class ArchiveTest {
 
         // when & then
         assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", invalidStarRating, true, List.of(), List.of()))
-                .isInstanceOf(ArchiveValidationException.class);
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("별점은 0~5 사이의 양수이어야 합니다.");
     }
 
     @Test
@@ -51,28 +53,29 @@ public class ArchiveTest {
 
         // when & then
         assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", invalidStarRating, true, List.of(), List.of()))
-                .isInstanceOf(ArchiveValidationException.class);
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("별점은 0~5 사이의 양수이어야 합니다.");
     }
 
     @Test
-    @DisplayName("Archive의 ArchiveImageUrl이 null이면 예외가 발생한다.")
+    @DisplayName("Archive의 ArchiveImages가 null이면 예외가 발생한다.")
     void archiveImageUrlIsNotNull() {
         // given
         List<String> invalidImageUrls = null;
 
         // when & then
         assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", 1, true, invalidImageUrls, List.of()))
-                .isInstanceOf(ArchiveValidationException.class);
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    @DisplayName("Archive의 UserVisitPlace가 null이면 예외가 발생한다.")
+    @DisplayName("Archive의 UserVisitPlaces가 null이면 예외가 발생한다.")
     void userVisitPlaceIsNotNull() {
         // given
         List<UserVisitPlace> invalidUserVisitPlaces = null;
 
         // when & then
         assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", 1, true, List.of(), invalidUserVisitPlaces))
-                .isInstanceOf(ArchiveValidationException.class);
+                .isInstanceOf(NullPointerException.class);
     }
 }

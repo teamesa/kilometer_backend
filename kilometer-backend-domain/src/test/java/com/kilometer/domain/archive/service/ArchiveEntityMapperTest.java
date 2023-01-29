@@ -57,7 +57,7 @@ public class ArchiveEntityMapperTest {
         ItemEntity savedItem = itemRepository.save(item);
 
         Long invalidUserId = 1L;
-        Archive archive = Archive.create("comment", 1, true, List.of(), List.of());
+        Archive archive = new Archive(1L, "comment", 1, true, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(() -> archiveEntityMapper.createArchiveEntity(archive, savedItem.getId(), invalidUserId))
@@ -98,7 +98,7 @@ public class ArchiveEntityMapperTest {
                 .build();
         archiveRepository.save(archiveEntity);
 
-        Archive archive = Archive.create("comment", 1, true, List.of(), List.of());
+        Archive archive = new Archive(1L, "comment", 1, true, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(() -> archiveEntityMapper.createArchiveEntity(archive, savedItem.getId(), savedUser.getId()))

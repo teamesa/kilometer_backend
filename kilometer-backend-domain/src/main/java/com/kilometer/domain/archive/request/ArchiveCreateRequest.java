@@ -5,11 +5,13 @@ import com.kilometer.domain.archive.domain.userVisitPlaces.UserVisitPlace;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ArchiveCreateRequest {
 
     private Long itemId;

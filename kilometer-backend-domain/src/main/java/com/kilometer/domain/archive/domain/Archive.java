@@ -41,13 +41,13 @@ public class Archive {
 
     private void validateCommentField(final String comment) {
         if (comment == null) {
-            throw new ArchiveValidationException();
+            throw new ArchiveValidationException("입력된 comment가 없습니다.");
         }
     }
 
     private void validateStarRatingField(final int starRating) {
         if (starRating < MIN_STAR_RATING || starRating > MAX_STAR_RATING) {
-            throw new ArchiveValidationException();
+            throw new ArchiveValidationException("별점은 0~5 사이의 양수이어야 합니다.");
         }
     }
 
