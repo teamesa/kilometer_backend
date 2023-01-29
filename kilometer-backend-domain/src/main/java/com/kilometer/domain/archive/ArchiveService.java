@@ -55,16 +55,12 @@ public class ArchiveService {
 
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest request) {
-        Archive archive = Archive.createArchive(request.getComment(), request.getStarRating(),
-                request.isVisibleAtItem(), request.getPhotoUrls(), request.getPlaceInfos());
-
+        Archive archive = request.toDomain();
+        ArchiveEntity archiveEntity = archiveEntityMapper.createArchiveEntity(archive, request.getItemId(), userId);
+        ArchiveEntity savedArchiveEntity = archiveRepository.save(archiveEntity);
         // 레거시
         UserResponse userResponse = userService.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
-
-        ArchiveEntity archiveEntity = archiveEntityMapper.createArchiveEntity(archive, request.getItemId(), userId);
-        ArchiveEntity savedArchiveEntity = archiveRepository.save(archiveEntity);
-
         return archiveAggregateConverter.convertArchiveInfo(savedArchiveEntity, userResponse,
                 savedArchiveEntity.getArchiveImages(), savedArchiveEntity.getUserVisitPlaces());
     }

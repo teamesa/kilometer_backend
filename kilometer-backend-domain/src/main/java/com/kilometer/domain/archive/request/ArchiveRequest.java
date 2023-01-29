@@ -1,8 +1,8 @@
 package com.kilometer.domain.archive.request;
 
-import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
+import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import java.util.ArrayList;
@@ -25,14 +25,10 @@ public class ArchiveRequest {
     private List<String> photoUrls;
     private List<PlaceInfo> placeInfos;
 
-    public ArchiveEntity makeArchive() {
-        return ArchiveEntity.builder()
-            .comment(this.getComment())
-            .starRating(this.getStarRating())
-            .isVisibleAtItem(this.isVisibleAtItem())
-            .build();
+    public Archive toDomain() {
+        return Archive.createArchive(this.comment, this.starRating, this.isVisibleAtItem, this.photoUrls,
+                this.placeInfos);
     }
-
 
     public List<ArchiveImageEntity> makeArchiveImages() {
         List<ArchiveImageEntity> images = new ArrayList<>();
@@ -47,11 +43,11 @@ public class ArchiveRequest {
         List<UserVisitPlaceEntity> places = new ArrayList<>();
         for (PlaceInfo info : this.getPlaceInfos()) {
             UserVisitPlaceEntity visitPlace = UserVisitPlaceEntity.builder()
-                .placeType(PlaceType.valueOf(info.getPlaceType()))
-                .placeName(info.getName())
-                .address(info.getAddress())
-                .roadAddress(info.getRoadAddress())
-                .build();
+                    .placeType(PlaceType.valueOf(info.getPlaceType()))
+                    .placeName(info.getName())
+                    .address(info.getAddress())
+                    .roadAddress(info.getRoadAddress())
+                    .build();
             places.add(visitPlace);
         }
         return places;
