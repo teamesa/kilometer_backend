@@ -74,12 +74,12 @@ public class ArchiveEntity {
     @OneToMany(mappedBy = "archiveEntity")
     private List<UserVisitPlaceEntity> userVisitPlaces;
 
-    public void addArchiveImages(final List<ArchiveImageEntity> archiveImages) {
+    public void addArchiveImageEntities(final List<ArchiveImageEntity> archiveImages) {
         this.archiveImages = archiveImages;
         archiveImages.forEach(archiveImage -> archiveImage.setArchiveEntity(this));
     }
 
-    public void addUserVisitPlaces(final List<UserVisitPlaceEntity> userVisitPlaces) {
+    public void addUserVisitPlaceEntities(final List<UserVisitPlaceEntity> userVisitPlaces) {
         this.userVisitPlaces = userVisitPlaces;
         userVisitPlaces.forEach(userVisitPlace -> userVisitPlace.setArchiveEntity(this));
     }

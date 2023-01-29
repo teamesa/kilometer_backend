@@ -29,7 +29,6 @@ import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
 import com.kilometer.domain.user.UserService;
-import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.util.List;
 import java.util.function.Function;
@@ -59,11 +58,7 @@ public class ArchiveService {
         Archive archive = request.toDomain();
         ArchiveEntity archiveEntity = archiveEntityMapper.createArchiveEntity(archive, request.getItemId(), userId);
         ArchiveEntity savedArchiveEntity = archiveRepository.save(archiveEntity);
-        // 레거시
-        UserResponse userResponse = userService.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
-        return archiveAggregateConverter.convertArchiveInfo(savedArchiveEntity, userResponse,
-                savedArchiveEntity.getArchiveImages(), savedArchiveEntity.getUserVisitPlaces());
+        return archiveAggregateConverter.convertArchiveInfo(savedArchiveEntity);
     }
 
     @Transactional

@@ -61,11 +61,11 @@ public class Archive {
                 .build();
     }
 
-    public List<ArchiveImageEntity> createArchiveImageEntities() {
+    public List<ArchiveImageEntity> createImageEntities() {
         return archiveImages.toEntity();
     }
 
-    public List<UserVisitPlaceEntity> createUserVisitPlaceEntities() {
+    public List<UserVisitPlaceEntity> createVisitPlaceEntities() {
         return userVisitPlaces.toEntity();
     }
 

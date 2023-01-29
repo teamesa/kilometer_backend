@@ -33,9 +33,15 @@ public class ArchiveEntityMapper {
         ItemEntity item = findItemBy(itemId);
 
         ArchiveEntity archiveEntity = archive.toEntity(user, item);
-        archiveEntity.addArchiveImages(archive.createArchiveImageEntities());
-        archiveEntity.addUserVisitPlaces(archive.createUserVisitPlaceEntities());
+        archiveEntity.addArchiveImageEntities(archive.createImageEntities());
+        archiveEntity.addUserVisitPlaceEntities(archive.createVisitPlaceEntities());
         return archiveEntity;
+    }
+
+    private void validateNotDuplicate(final Long itemId, final Long userId) {
+        if (archiveRepository.existsByItemIdAndUserId(itemId, userId)) {
+            throw new ArchiveDuplicateException("기존에 등록한 Archive가 있습니다. sItemId : " + itemId + " UserId : " + userId);
+        }
     }
 
     private User findUserBy(final Long userId) {
@@ -46,11 +52,5 @@ public class ArchiveEntityMapper {
     private ItemEntity findItemBy(final Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템 입니다."));
-    }
-
-    private void validateNotDuplicate(final Long itemId, final Long userId) {
-        if (archiveRepository.existsByItemIdAndUserId(itemId, userId)) {
-            throw new ArchiveDuplicateException("기존에 등록한 Archive가 있습니다. sItemId : " + itemId + " UserId : " + userId);
-        }
     }
 }
