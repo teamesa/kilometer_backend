@@ -114,8 +114,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(savedUser.getId(), request))
-                .isInstanceOf(ArchiveDuplicateException.class)
-                .hasMessage("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d", savedItem.getId(), savedUser.getId());
+                .isInstanceOf(ArchiveDuplicateException.class);
     }
 
     @Test

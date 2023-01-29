@@ -21,14 +21,20 @@ public class ArchiveEntityMapper {
     }
 
     public ArchiveEntity createArchiveEntity(final Archive archive, final Long itemId, final Long userId) {
-        validateNotDuplicate(archive, itemId, userId);
+        validateNotDuplicate(itemId, userId);
+        validateExistUser(userId);
+
         return null;
     }
 
-    private void validateNotDuplicate(final Archive archive, final Long itemId, final Long userId) {
+    private void validateExistUser(final Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
+    }
+
+    private void validateNotDuplicate(final Long itemId, final Long userId) {
         if (archiveRepository.existsByItemIdAndUserId(itemId, userId)) {
-            throw new ArchiveDuplicateException(
-                    String.format("기존에 등록한 Archive가 있습니다. sItemId : %d / UserId : %d", itemId, userId));
+            throw new ArchiveDuplicateException("기존에 등록한 Archive가 있습니다. sItemId : " + itemId + " UserId : " + userId);
         }
     }
 }

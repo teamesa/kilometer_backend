@@ -9,7 +9,7 @@ public class ArchiveDuplicateException extends KilometerException {
         super("");
     }
 
-    public ArchiveDuplicateException(String message) {
+    public ArchiveDuplicateException(final String message) {
         super(message);
     }
 
