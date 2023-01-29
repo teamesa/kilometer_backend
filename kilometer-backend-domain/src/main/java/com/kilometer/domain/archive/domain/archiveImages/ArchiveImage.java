@@ -2,7 +2,9 @@ package com.kilometer.domain.archive.domain.archiveImages;
 
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import lombok.Getter;
 
+@Getter
 public class ArchiveImage {
 
     private Long id;
@@ -29,13 +31,5 @@ public class ArchiveImage {
                 .builder()
                 .imageUrl(this.imageUrl)
                 .build();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
     }
 }

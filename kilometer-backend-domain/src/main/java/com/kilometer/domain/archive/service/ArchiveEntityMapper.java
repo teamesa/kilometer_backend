@@ -29,19 +29,23 @@ public class ArchiveEntityMapper {
 
     public ArchiveEntity createArchiveEntity(final Archive archive, final Long itemId, final Long userId) {
         validateNotDuplicate(itemId, userId);
-        User user = findUserBy(userId);
-        ItemEntity item = findItemBy(itemId);
-
-        ArchiveEntity archiveEntity = archive.toEntity(user, item);
-        archiveEntity.addArchiveImageEntities(archive.createImageEntities());
-        archiveEntity.addUserVisitPlaceEntities(archive.createVisitPlaceEntities());
+        ArchiveEntity archiveEntity = create(archive, itemId, userId);
+        archiveEntity.addArchiveImageEntities(archive.mapToImageEntities());
+        archiveEntity.addUserVisitPlaceEntities(archive.mapToVisitPlaceEntities());
         return archiveEntity;
     }
 
     private void validateNotDuplicate(final Long itemId, final Long userId) {
         if (archiveRepository.existsByItemIdAndUserId(itemId, userId)) {
-            throw new ArchiveDuplicateException("기존에 등록한 Archive가 있습니다. sItemId : " + itemId + " UserId : " + userId);
+            throw new ArchiveDuplicateException(
+                    String.format("이미 등록한 Archive가 있습니다. itemId : %d, userId : %d", itemId, userId));
         }
+    }
+
+    private ArchiveEntity create(final Archive archive, final Long itemId, final Long userId) {
+        User user = findUserBy(userId);
+        ItemEntity item = findItemBy(itemId);
+        return archive.toEntity(user, item);
     }
 
     private User findUserBy(final Long userId) {

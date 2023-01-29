@@ -10,7 +10,9 @@ import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.user.User;
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public class Archive {
 
     private static final int MAX_STAR_RATING = 5;
@@ -61,27 +63,11 @@ public class Archive {
                 .build();
     }
 
-    public List<ArchiveImageEntity> createImageEntities() {
+    public List<ArchiveImageEntity> mapToImageEntities() {
         return archiveImages.toEntity();
     }
 
-    public List<UserVisitPlaceEntity> createVisitPlaceEntities() {
+    public List<UserVisitPlaceEntity> mapToVisitPlaceEntities() {
         return userVisitPlaces.toEntity();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public int getStarRating() {
-        return starRating;
-    }
-
-    public boolean getIsVisibleAtItem() {
-        return isVisibleAtItem;
     }
 }

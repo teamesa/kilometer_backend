@@ -69,7 +69,8 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls,
+                placeInfos);
 
         // when
         ArchiveInfo actual = archiveService.save(savedUser.getId(), request);
@@ -109,7 +110,8 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls,
+                placeInfos);
 
         archiveService.save(savedUser.getId(), request);
 
@@ -149,7 +151,8 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(user.getId(), request))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("입력된 전시회 사진 URL이 없습니다.");
     }
 
     @Test
@@ -213,7 +216,7 @@ public class ArchiveServiceTest {
         // when & then
         assertThatThrownBy(() -> archiveService.save(dummyUserId, request))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("잘못된 사용자 정보 입니다.");
+                .hasMessage("존재하지 않는 사용자 입니다.");
     }
 
     @Test
@@ -242,7 +245,8 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls,
+                placeInfos);
 
         archiveService.save(savedUser.getId(), request);
 
@@ -327,7 +331,8 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls,
+                placeInfos);
 
         archiveService.save(savedUser.getId(), request);
 
@@ -367,7 +372,8 @@ public class ArchiveServiceTest {
 
         List<String> photoUrls = List.of("photoUrls");
         List<PlaceInfo> placeInfos = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
-        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls, placeInfos);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(savedItem.getId(), "comment", 1, true, photoUrls,
+                placeInfos);
 
         archiveService.save(savedUser.getId(), request);
 
