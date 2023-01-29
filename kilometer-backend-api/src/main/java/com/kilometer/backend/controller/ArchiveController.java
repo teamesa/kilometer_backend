@@ -1,7 +1,5 @@
 package com.kilometer.backend.controller;
 
-import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
-
 import com.kilometer.domain.archive.ArchiveService;
 import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
@@ -23,19 +21,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.kilometer.backend.security.security.SecurityUtils.getLoginUserId;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(ApiUrlUtils.ARCHIVE_ROOT)
 public class ArchiveController {
 
     private final static String ARCHIVE_TITLE = "아카이브";
     private final ArchiveService archiveService;
 
-    @GetMapping(ApiUrlUtils.ITEM_ID)
+    @GetMapping(ApiUrlUtils.ITEM_ARCHIVES)
     @ApiOperation(value = "전시글에서 아카이브 조회")
     public GeneralResponse<ArchiveResponse> archives(
         @ApiParam(value = "조회할 전시글 ID", required = true) @PathVariable Long itemId,
@@ -51,7 +49,7 @@ public class ArchiveController {
             .build();
     }
 
-    @GetMapping(ApiUrlUtils.ARCHIVE_DETAIL)
+    @GetMapping(ApiUrlUtils.ARCHIVE_ID)
     @ApiOperation(value = "상세 아카이브 조회")
     public ArchiveDetailResponse archive(
         @ApiParam(value = "조회할 아카이브 ID", required = true) @PathVariable Long archiveId) {
@@ -59,14 +57,16 @@ public class ArchiveController {
         return archiveService.findByArchiveIdAndUserId(archiveId, userId);
     }
 
-    @PostMapping
+    @PostMapping(ApiUrlUtils.ARCHIVE_ROOT)
+    @ApiOperation(value = "신규 아카이브 등록")
     public ArchiveInfo saveArchive(
         @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();
         return archiveService.save(userId, request);
     }
 
-    @PutMapping
+    @PutMapping(ApiUrlUtils.ARCHIVE_ROOT)
+    @ApiOperation(value = "아카이브 수정")
     public ArchiveInfo updateArchive(
         @ApiParam(value = "수정할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();
@@ -74,6 +74,7 @@ public class ArchiveController {
     }
 
     @DeleteMapping(ApiUrlUtils.ARCHIVE_ID)
+    @ApiOperation(value = "아카이브 삭제")
     public ArchiveDeleteResponse deleteArchive(
         @ApiParam(value = "삭제할 아카이브 아이디", required = true) @PathVariable Long archiveId)
         throws IllegalAccessException {
@@ -83,6 +84,7 @@ public class ArchiveController {
 
 
     @PostMapping(ApiUrlUtils.ARCHIVE_MY)
+    @ApiOperation(value = "나의 아카이브 조회")
     public MyArchiveResponse myArchives(
         @ApiParam(value = "아카이브 페이지 정보", required = true) @RequestBody RequestPagingStatus requestPagingStatus) {
         Long userId = getLoginUserId();
@@ -90,7 +92,8 @@ public class ArchiveController {
             ArchiveSortType.MODIFY_DESC);
     }
 
-    @PutMapping(ApiUrlUtils.ARCHIVE_LIKE_BY_ID)
+    @PutMapping(ApiUrlUtils.ARCHIVE_LIKE)
+    @ApiOperation(value = "아카이브 좋아요")
     public LikeResponse makeLikeResponse(@PathVariable Long archiveId,
         @RequestParam boolean status) {
         Long userId = getLoginUserId();

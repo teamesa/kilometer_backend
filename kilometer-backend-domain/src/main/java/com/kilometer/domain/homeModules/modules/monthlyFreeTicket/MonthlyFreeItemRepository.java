@@ -28,7 +28,8 @@ interface MonthlyFreeItemRepository extends JpaRepository<ItemEntity, Long> {
             + "WHERE 1 = 1 "
             + " AND i.feeType = 'FREE'"
             + " AND i.exposureType = 'ON'"
-            + " AND DATE_FORMAT(i.startDate, '%Y-%m') = DATE_FORMAT(:requestTime, '%Y-%m') "
+            + " AND i.startDate <= :requestTime"
+            + " AND i.endDate > :requestTime "
             + "GROUP BY i.id "
             + "ORDER BY RAND() "
             + "LIMIT 5", nativeQuery = true)
