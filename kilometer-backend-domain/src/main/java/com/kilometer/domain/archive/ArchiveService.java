@@ -24,11 +24,9 @@ import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.service.ArchiveEntityMapper;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
-import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
-import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
@@ -60,21 +58,15 @@ public class ArchiveService {
         Archive archive = Archive.createArchive(request.getComment(), request.getStarRating(),
                 request.isVisibleAtItem(), request.getPhotoUrls(), request.getPlaceInfos());
 
-        archiveEntityMapper.createArchiveEntity(archive, request.getItemId(), userId);
-
+        // 레거시
         UserResponse userResponse = userService.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
 
-        ArchiveEntity archiveEntity = saveArchive(request, userId, request.getItemId());
+        ArchiveEntity archiveEntity = archiveEntityMapper.createArchiveEntity(archive, request.getItemId(), userId);
+        ArchiveEntity savedArchiveEntity = archiveRepository.save(archiveEntity);
 
-        Long archiveId = archiveEntity.getId();
-        List<ArchiveImageEntity> archiveImageEntities = request.makeArchiveImages();
-        List<UserVisitPlaceEntity> userVisitPlaceEntities = request.makeVisitedPlace();
-        archiveImageService.saveAll(archiveImageEntities, archiveId);
-        userVisitPlaceService.saveAll(userVisitPlaceEntities, archiveId);
-
-        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, userResponse, archiveImageEntities,
-                userVisitPlaceEntities);
+        return archiveAggregateConverter.convertArchiveInfo(savedArchiveEntity, userResponse,
+                savedArchiveEntity.getArchiveImages(), savedArchiveEntity.getUserVisitPlaces());
     }
 
     @Transactional
@@ -199,14 +191,6 @@ public class ArchiveService {
         return archiveRepository.findByItemIdAndUserId(itemId, userId)
                 .map(ArchiveEntity::getId)
                 .orElse(null);
-    }
-
-    private ArchiveEntity saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {
-        ArchiveEntity archiveEntity = archiveRequest.makeArchive();
-        archiveEntity.setUser(User.builder().id(userId).build());
-        archiveEntity.setItem(ItemEntity.builder().id(itemId).build());
-        archiveRepository.save(archiveEntity);
-        return archiveEntity;
     }
 
     private List<ArchiveImageEntity> updateArchiveImages(List<ArchiveImageEntity> newArchiveImageEntities,

@@ -1,7 +1,12 @@
 package com.kilometer.domain.archive.domain;
 
+import com.kilometer.domain.archive.ArchiveEntity;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
+import com.kilometer.domain.item.ItemEntity;
+import com.kilometer.domain.user.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +59,28 @@ public class Archive {
         if (starRating < MIN_STAR_RATING || starRating > MAX_STAR_RATING) {
             throw new ArchiveValidationException();
         }
+    }
+
+    public ArchiveEntity createArchiveEntity(final User user, final ItemEntity item) {
+        return ArchiveEntity.builder()
+                .comment(this.comment)
+                .starRating(this.starRating)
+                .isVisibleAtItem(this.isVisibleAtItem)
+                .user(user)
+                .item(item)
+                .build();
+    }
+
+    public List<ArchiveImageEntity> createArchiveImageEntities() {
+        return archiveImages.stream()
+                .map(ArchiveImage::createEntity)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserVisitPlaceEntity> createUserVisitPlaceEntities() {
+        return userVisitPlaces.stream()
+                .map(UserVisitPlace::createEntity)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {

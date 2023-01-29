@@ -4,6 +4,9 @@ import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.exception.ArchiveDuplicateException;
+import com.kilometer.domain.item.ItemEntity;
+import com.kilometer.domain.item.ItemRepository;
+import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,22 +17,35 @@ public class ArchiveEntityMapper {
 
     private final ArchiveRepository archiveRepository;
     private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
 
-    public ArchiveEntityMapper(final ArchiveRepository archiveRepository, final UserRepository userRepository) {
+    public ArchiveEntityMapper(final ArchiveRepository archiveRepository,
+                               final UserRepository userRepository,
+                               final ItemRepository itemRepository) {
         this.archiveRepository = archiveRepository;
         this.userRepository = userRepository;
+        this.itemRepository = itemRepository;
     }
 
     public ArchiveEntity createArchiveEntity(final Archive archive, final Long itemId, final Long userId) {
         validateNotDuplicate(itemId, userId);
-        validateExistUser(userId);
+        User user = findUserBy(userId);
+        ItemEntity item = findItemBy(itemId);
 
-        return null;
+        ArchiveEntity archiveEntity = archive.createArchiveEntity(user, item);
+        archiveEntity.addArchiveImages(archive.createArchiveImageEntities());
+        archiveEntity.addUserVisitPlaces(archive.createUserVisitPlaceEntities());
+        return archiveEntity;
     }
 
-    private void validateExistUser(final Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
+    private User findUserBy(final Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+    }
+
+    private ItemEntity findItemBy(final Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템 입니다."));
     }
 
     private void validateNotDuplicate(final Long itemId, final Long userId) {

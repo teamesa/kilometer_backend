@@ -62,7 +62,7 @@ public class ArchiveEntityMapperTest {
         // when & then
         assertThatThrownBy(() -> archiveEntityMapper.createArchiveEntity(archive, savedItem.getId(), invalidUserId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("잘못된 사용자 정보 입니다.");
+                .hasMessage("존재하지 않는 사용자 입니다.");
     }
 
     @Test

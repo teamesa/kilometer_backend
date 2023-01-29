@@ -1,5 +1,6 @@
 package com.kilometer.domain.archive.domain;
 
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 
 public class ArchiveImage {
@@ -21,5 +22,20 @@ public class ArchiveImage {
         if (imageUrl == null) {
             throw new ArchiveValidationException("이미지 링크가 없습니다.");
         }
+    }
+
+    public ArchiveImageEntity createEntity() {
+        return ArchiveImageEntity
+                .builder()
+                .imageUrl(this.imageUrl)
+                .build();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
