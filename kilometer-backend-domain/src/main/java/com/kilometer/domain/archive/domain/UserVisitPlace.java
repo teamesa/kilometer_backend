@@ -26,7 +26,7 @@ public class UserVisitPlace {
                 placeInfo.getRoadAddress());
     }
 
-    public UserVisitPlaceEntity createEntity() {
+    public UserVisitPlaceEntity toEntity() {
         return UserVisitPlaceEntity.builder()
                 .placeType(this.placeType)
                 .placeName(this.placeName)

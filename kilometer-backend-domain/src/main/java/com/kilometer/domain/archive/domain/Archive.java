@@ -2,6 +2,7 @@ package com.kilometer.domain.archive.domain;
 
 import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
+import com.kilometer.domain.archive.domain.archiveimages.ArchiveImages;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
@@ -12,46 +13,36 @@ import java.util.stream.Collectors;
 
 public class Archive {
 
-    private static final int DEFAULT_LIKE_COUNT = 0;
     private static final int MAX_STAR_RATING = 5;
     private static final int MIN_STAR_RATING = 1;
 
     private Long id;
     private String comment;
     private int starRating;
-    private int likeCount;
     private boolean isVisibleAtItem;
-    private List<ArchiveImage> archiveImages;
+    private ArchiveImages archiveImages;
     private List<UserVisitPlace> userVisitPlaces;
 
-    private Archive(final Long id, final String comment, final int starRating, final int likeCount,
-                    final boolean isVisibleAtItem, final List<String> photoUrls, final List<PlaceInfo> placeInfos) {
-        validate(comment, starRating, likeCount);
+    private Archive(final Long id, final String comment, final int starRating, final boolean isVisibleAtItem,
+                    final List<String> photoUrls, final List<PlaceInfo> placeInfos) {
+        validate(comment, starRating);
         this.comment = comment;
         this.starRating = starRating;
-        this.likeCount = likeCount;
         this.isVisibleAtItem = isVisibleAtItem;
-        this.archiveImages = photoUrls.stream()
-                .map(ArchiveImage::createArchiveImage)
-                .collect(Collectors.toList());
+        this.archiveImages = new ArchiveImages(photoUrls);
         this.userVisitPlaces = placeInfos.stream()
                 .map(UserVisitPlace::createUserVisitPlace)
                 .collect(Collectors.toList());
     }
 
-    public static Archive createArchive(final String comment, final int starRating, final boolean isVisibleAtItem,
-                                        final List<String> photoUrls, final List<PlaceInfo> placeInfos) {
-        return new Archive(null, comment, starRating, DEFAULT_LIKE_COUNT, isVisibleAtItem, photoUrls, placeInfos);
-    }
-
-    private void validate(final String comment, final int starRating, final int likeCount) {
+    private void validate(final String comment, final int starRating) {
         validateCommentField(comment);
         validateStarRatingField(starRating);
     }
 
     private void validateCommentField(final String comment) {
         if (comment == null) {
-            throw new ArchiveValidationException("코멘트");
+            throw new ArchiveValidationException();
         }
     }
 
@@ -61,7 +52,12 @@ public class Archive {
         }
     }
 
-    public ArchiveEntity createArchiveEntity(final User user, final ItemEntity item) {
+    public static Archive createArchive(final String comment, final int starRating, final boolean isVisibleAtItem,
+                                        final List<String> photoUrls, final List<PlaceInfo> placeInfos) {
+        return new Archive(null, comment, starRating, isVisibleAtItem, photoUrls, placeInfos);
+    }
+
+    public ArchiveEntity toArchiveEntity(final User user, final ItemEntity item) {
         return ArchiveEntity.builder()
                 .comment(this.comment)
                 .starRating(this.starRating)
@@ -72,14 +68,12 @@ public class Archive {
     }
 
     public List<ArchiveImageEntity> createArchiveImageEntities() {
-        return archiveImages.stream()
-                .map(ArchiveImage::createEntity)
-                .collect(Collectors.toList());
+        return archiveImages.toEntity();
     }
 
     public List<UserVisitPlaceEntity> createUserVisitPlaceEntities() {
         return userVisitPlaces.stream()
-                .map(UserVisitPlace::createEntity)
+                .map(UserVisitPlace::toEntity)
                 .collect(Collectors.toList());
     }
 
@@ -93,10 +87,6 @@ public class Archive {
 
     public int getStarRating() {
         return starRating;
-    }
-
-    public int getLikeCount() {
-        return likeCount;
     }
 
     public boolean getIsVisibleAtItem() {

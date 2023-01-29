@@ -32,7 +32,7 @@ public class ArchiveEntityMapper {
         User user = findUserBy(userId);
         ItemEntity item = findItemBy(itemId);
 
-        ArchiveEntity archiveEntity = archive.createArchiveEntity(user, item);
+        ArchiveEntity archiveEntity = archive.toArchiveEntity(user, item);
         archiveEntity.addArchiveImages(archive.createArchiveImageEntities());
         archiveEntity.addUserVisitPlaces(archive.createUserVisitPlaceEntities());
         return archiveEntity;

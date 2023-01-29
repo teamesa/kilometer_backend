@@ -1,4 +1,4 @@
-package com.kilometer.domain.archive.domain;
+package com.kilometer.domain.archive.domain.archiveimages;
 
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
@@ -24,7 +24,7 @@ public class ArchiveImage {
         }
     }
 
-    public ArchiveImageEntity createEntity() {
+    public ArchiveImageEntity toEntity() {
         return ArchiveImageEntity
                 .builder()
                 .imageUrl(this.imageUrl)
