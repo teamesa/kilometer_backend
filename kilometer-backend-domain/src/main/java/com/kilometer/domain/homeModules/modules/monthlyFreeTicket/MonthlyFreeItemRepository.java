@@ -12,7 +12,7 @@ interface MonthlyFreeItemRepository extends JpaRepository<ItemEntity, Long> {
 
     @Query(value =
         "select i.id,"
-            + " i.listImageUrl,"
+            + " i.thumbnailImageUrl,"
             + " i.title,"
             + " i.exhibitionType,"
             + " i.feeType,"
