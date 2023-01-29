@@ -2,37 +2,36 @@ package com.kilometer.domain.archive.domain;
 
 import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
-import com.kilometer.domain.archive.domain.archiveimages.ArchiveImages;
-import com.kilometer.domain.archive.dto.PlaceInfo;
+import com.kilometer.domain.archive.domain.archiveImages.ArchiveImages;
+import com.kilometer.domain.archive.domain.userVisitPlaces.UserVisitPlace;
+import com.kilometer.domain.archive.domain.userVisitPlaces.UserVisitPlaces;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.user.User;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Archive {
 
     private static final int MAX_STAR_RATING = 5;
     private static final int MIN_STAR_RATING = 1;
 
-    private Long id;
-    private String comment;
-    private int starRating;
-    private boolean isVisibleAtItem;
-    private ArchiveImages archiveImages;
-    private List<UserVisitPlace> userVisitPlaces;
+    private final Long id;
+    private final String comment;
+    private final int starRating;
+    private final boolean isVisibleAtItem;
+    private final ArchiveImages archiveImages;
+    private final UserVisitPlaces userVisitPlaces;
 
     private Archive(final Long id, final String comment, final int starRating, final boolean isVisibleAtItem,
-                    final List<String> photoUrls, final List<PlaceInfo> placeInfos) {
+                    final List<String> photoUrls, final List<UserVisitPlace> userVisitPlaces) {
         validate(comment, starRating);
+        this.id = id;
         this.comment = comment;
         this.starRating = starRating;
         this.isVisibleAtItem = isVisibleAtItem;
         this.archiveImages = new ArchiveImages(photoUrls);
-        this.userVisitPlaces = placeInfos.stream()
-                .map(UserVisitPlace::createUserVisitPlace)
-                .collect(Collectors.toList());
+        this.userVisitPlaces = new UserVisitPlaces(userVisitPlaces);
     }
 
     private void validate(final String comment, final int starRating) {
@@ -52,12 +51,7 @@ public class Archive {
         }
     }
 
-    public static Archive createArchive(final String comment, final int starRating, final boolean isVisibleAtItem,
-                                        final List<String> photoUrls, final List<PlaceInfo> placeInfos) {
-        return new Archive(null, comment, starRating, isVisibleAtItem, photoUrls, placeInfos);
-    }
-
-    public ArchiveEntity toArchiveEntity(final User user, final ItemEntity item) {
+    public ArchiveEntity toEntity(final User user, final ItemEntity item) {
         return ArchiveEntity.builder()
                 .comment(this.comment)
                 .starRating(this.starRating)
@@ -72,9 +66,7 @@ public class Archive {
     }
 
     public List<UserVisitPlaceEntity> createUserVisitPlaceEntities() {
-        return userVisitPlaces.stream()
-                .map(UserVisitPlace::toEntity)
-                .collect(Collectors.toList());
+        return userVisitPlaces.toEntity();
     }
 
     public Long getId() {

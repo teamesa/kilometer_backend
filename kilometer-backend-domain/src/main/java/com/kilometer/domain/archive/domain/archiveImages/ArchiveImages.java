@@ -1,4 +1,4 @@
-package com.kilometer.domain.archive.domain.archiveimages;
+package com.kilometer.domain.archive.domain.archiveImages;
 
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import java.util.List;

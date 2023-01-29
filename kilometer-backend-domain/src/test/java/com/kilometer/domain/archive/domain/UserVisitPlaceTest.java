@@ -2,6 +2,7 @@ package com.kilometer.domain.archive.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.kilometer.domain.archive.domain.userVisitPlaces.UserVisitPlace;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

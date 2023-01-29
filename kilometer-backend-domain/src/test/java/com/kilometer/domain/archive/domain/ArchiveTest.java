@@ -15,7 +15,7 @@ public class ArchiveTest {
     @DisplayName("Archive를 생성한다.")
     void createArchive() {
         // given & when
-        Archive archive = Archive.createArchive("comment", 1, true, List.of(), List.of());
+        Archive archive = Archive.create("comment", 1, true, List.of(), List.of());
 
         // then
         assertThat(archive).isNotNull();
@@ -28,7 +28,7 @@ public class ArchiveTest {
         String invalidComment = null;
 
         // when & then
-        assertThatThrownBy(() -> Archive.createArchive(invalidComment, 1, true, List.of(), List.of()))
+        assertThatThrownBy(() -> Archive.create(invalidComment, 1, true, List.of(), List.of()))
                 .isInstanceOf(ArchiveValidationException.class);
     }
 
@@ -39,7 +39,7 @@ public class ArchiveTest {
         int invalidStarRating = -1;
 
         // when & then
-        assertThatThrownBy(() -> Archive.createArchive("김철수책상철책상", invalidStarRating, true, List.of(), List.of()))
+        assertThatThrownBy(() -> Archive.create("김철수책상철책상", invalidStarRating, true, List.of(), List.of()))
                 .isInstanceOf(ArchiveValidationException.class);
     }
 
@@ -50,7 +50,7 @@ public class ArchiveTest {
         int invalidStarRating = 6;
 
         // when & then
-        assertThatThrownBy(() -> Archive.createArchive("김철수책상철책상", invalidStarRating, true, List.of(), List.of()))
+        assertThatThrownBy(() -> Archive.create("김철수책상철책상", invalidStarRating, true, List.of(), List.of()))
                 .isInstanceOf(ArchiveValidationException.class);
     }
 
@@ -61,7 +61,7 @@ public class ArchiveTest {
         List<String> invalidImageUrls = null;
 
         // when & then
-        assertThatThrownBy(() -> Archive.createArchive("김철수책상철책상", 1, true, invalidImageUrls, List.of()))
+        assertThatThrownBy(() -> Archive.create("김철수책상철책상", 1, true, invalidImageUrls, List.of()))
                 .isInstanceOf(ArchiveValidationException.class);
     }
 
@@ -72,7 +72,7 @@ public class ArchiveTest {
         List<PlaceInfo> invalidPlaceInfos = null;
 
         // when & then
-        assertThatThrownBy(() -> Archive.createArchive("김철수책상철책상", 1, true, List.of(), invalidPlaceInfos))
+        assertThatThrownBy(() -> Archive.create("김철수책상철책상", 1, true, List.of(), invalidPlaceInfos))
                 .isInstanceOf(ArchiveValidationException.class);
     }
 }

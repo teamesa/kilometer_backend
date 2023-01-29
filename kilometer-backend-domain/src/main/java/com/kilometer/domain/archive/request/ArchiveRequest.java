@@ -3,10 +3,12 @@ package com.kilometer.domain.archive.request;
 import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.domain.Archive;
+import com.kilometer.domain.archive.domain.userVisitPlaces.UserVisitPlace;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +28,8 @@ public class ArchiveRequest {
     private List<PlaceInfo> placeInfos;
 
     public Archive toDomain() {
-        return Archive.createArchive(this.comment, this.starRating, this.isVisibleAtItem, this.photoUrls,
-                this.placeInfos);
+        return Archive.create(this.comment, this.starRating, this.isVisibleAtItem, this.photoUrls,
+                toUserVisitPlace());
     }
 
     public List<ArchiveImageEntity> makeArchiveImages() {
@@ -37,6 +39,12 @@ public class ArchiveRequest {
             images.add(photo);
         });
         return images;
+    }
+
+    private List<UserVisitPlace> toUserVisitPlace() {
+        return placeInfos.stream()
+                .map(placeInfo -> placeInfo.toDomain())
+                .collect(Collectors.toList());
     }
 
     public List<UserVisitPlaceEntity> makeVisitedPlace() {
