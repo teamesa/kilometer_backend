@@ -65,7 +65,8 @@ public class ArchiveTest {
 
         // when & then
         assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", 1, true, invalidImageUrls, List.of()))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("입력된 전시회 사진 URL이 없습니다.");
     }
 
     @Test
@@ -76,6 +77,7 @@ public class ArchiveTest {
 
         // when & then
         assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", 1, true, List.of(), invalidUserVisitPlaces))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("입력된 방문 장소가 없습니다.");
     }
 }

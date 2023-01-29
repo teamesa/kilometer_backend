@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
+import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,8 @@ class ArchiveImagesTest {
 
         // when & then
         assertThatThrownBy(() -> new ArchiveImages(invalidImageUrls))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("입력된 전시회 사진 URL이 없습니다.");
     }
 
     @Test

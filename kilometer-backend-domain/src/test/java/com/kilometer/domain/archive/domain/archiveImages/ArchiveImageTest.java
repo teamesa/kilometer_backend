@@ -1,4 +1,4 @@
-package com.kilometer.domain.archive.domain;
+package com.kilometer.domain.archive.domain.archiveImages;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

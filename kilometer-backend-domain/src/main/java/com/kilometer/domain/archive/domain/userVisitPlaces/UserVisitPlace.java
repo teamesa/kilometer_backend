@@ -1,7 +1,6 @@
 package com.kilometer.domain.archive.domain.userVisitPlaces;
 
 import com.kilometer.domain.archive.PlaceType;
-import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 
 public class UserVisitPlace {
@@ -19,11 +18,6 @@ public class UserVisitPlace {
         this.placeName = placeName;
         this.address = address;
         this.roadAddress = roadAddress;
-    }
-
-    public static UserVisitPlace createUserVisitPlace(final PlaceInfo placeInfo) {
-        return new UserVisitPlace(null, placeInfo.getPlaceType(), placeInfo.getName(), placeInfo.getAddress(),
-                placeInfo.getRoadAddress());
     }
 
     public UserVisitPlaceEntity toEntity() {
