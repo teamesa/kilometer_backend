@@ -10,6 +10,7 @@ import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.dto.GeneralResponse;
 import com.kilometer.domain.paging.RequestPagingStatus;
@@ -61,7 +62,7 @@ public class ArchiveController {
 
     @PostMapping
     public ArchiveInfo saveArchive(
-        @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
+            @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveCreateRequest request) {
         long userId = getLoginUserId();
         return archiveService.save(userId, request);
     }

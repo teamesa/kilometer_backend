@@ -23,8 +23,8 @@ public class Archive {
     private final ArchiveImages archiveImages;
     private final UserVisitPlaces userVisitPlaces;
 
-    private Archive(final Long id, final String comment, final int starRating, final boolean isVisibleAtItem,
-                    final List<String> photoUrls, final List<UserVisitPlace> userVisitPlaces) {
+    public Archive(final Long id, final String comment, final int starRating, final boolean isVisibleAtItem,
+                   final List<String> photoUrls, final List<UserVisitPlace> userVisitPlaces) {
         validate(comment, starRating);
         this.id = id;
         this.comment = comment;
