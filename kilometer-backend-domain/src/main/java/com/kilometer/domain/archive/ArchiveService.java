@@ -3,6 +3,7 @@ package com.kilometer.domain.archive;
 import com.google.common.base.Preconditions;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
+import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
 import com.kilometer.domain.archive.dto.ArchiveDetailDto;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
@@ -30,13 +31,10 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -58,6 +56,8 @@ public class ArchiveService {
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
         validateArchiveRequest(archiveRequest, userId);
+
+        Archive archive = archiveRequest.toDomain();
 
         UserResponse userResponse = userService.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
@@ -96,7 +96,7 @@ public class ArchiveService {
     }
 
     public ArchiveResponse findAllByItemIdAndUserId(Long itemId, Long userId,
-        RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
+                                                    RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
         Preconditions.checkNotNull(itemId, "id must not be null");
         Preconditions.checkNotNull(userId, "id must not be null");
         Preconditions.checkNotNull(requestPagingStatus, "page value must not be null");
@@ -120,7 +120,7 @@ public class ArchiveService {
     }
 
     public MyArchiveResponse findAllByUserId(Long userId, RequestPagingStatus requestPagingStatus,
-        ArchiveSortType sortType) {
+                                             ArchiveSortType sortType) {
         Preconditions.checkNotNull(userId, "id must not be null");
         Preconditions.checkNotNull(requestPagingStatus, "page value must not be null");
 
@@ -200,11 +200,6 @@ public class ArchiveService {
 
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
-        Preconditions.checkNotNull(archiveRequest.getComment(),
-            "Comment must not be null");
-        Preconditions.checkArgument(
-            (archiveRequest.getStarRating() > 0 && archiveRequest.getStarRating() <= 5),
-            "별점은 1이상 5이하의 숫자여야 합니다. now : " + archiveRequest.getStarRating());
         Preconditions.checkNotNull(archiveRequest.getPhotoUrls(),
             "Photo urls must not be null");
         Preconditions.checkNotNull(archiveRequest.getPlaceInfos(),
@@ -225,13 +220,13 @@ public class ArchiveService {
     }
 
     private List<ArchiveImage> updateArchiveImages(List<ArchiveImage> newArchiveImages,
-        Long archiveId) {
+                                                   Long archiveId) {
         archiveImageService.deleteAllByArchiveId(archiveId);
         return archiveImageService.saveAll(newArchiveImages, archiveId);
     }
 
     private List<UserVisitPlace> updateUserVisitPlace(List<UserVisitPlace> newUserVisitPlaces,
-        Long archiveId) {
+                                                      Long archiveId) {
         userVisitPlaceService.deleteAllByArchiveId(archiveId);
         return userVisitPlaceService.saveAll(newUserVisitPlaces, archiveId);
     }
@@ -276,7 +271,7 @@ public class ArchiveService {
     }
 
     private ArchiveResponse convertingItemArchive(ResponsePagingStatus responsePagingStatus,
-        List<ArchiveInfo> archiveInfos, Double avgStarRating) {
+                                                  List<ArchiveInfo> archiveInfos, Double avgStarRating) {
         return ArchiveResponse.builder()
             .responsePagingStatus(responsePagingStatus)
             .avgStarRating(avgStarRating)
@@ -285,7 +280,7 @@ public class ArchiveService {
     }
 
     private MyArchiveResponse convertingMyArchiveResponse(ResponsePagingStatus responsePagingStatus,
-        List<MyArchiveInfo> myArchiveInfos, String convertedTitle) {
+                                                          List<MyArchiveInfo> myArchiveInfos, String convertedTitle) {
         return MyArchiveResponse.builder()
             .title(convertedTitle)
             .contents(myArchiveInfos)

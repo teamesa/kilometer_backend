@@ -12,11 +12,9 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +22,7 @@ import org.springframework.data.domain.Pageable;
 public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final static QArchive archive = QArchive.archive;
+    private final static QArchiveEntity archive = QArchiveEntity.archiveEntity;
     private final static QUser user = QUser.user;
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
     private final static QLike like = QLike.like;
@@ -35,7 +33,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     @Override
     public Page<ItemArchiveDto> findAllItemArchiveByArchiveQueryRequest(Pageable pageable,
-        ArchiveQueryRequest queryRequest) {
+                                                                        ArchiveQueryRequest queryRequest) {
         List<ItemArchiveDto> archives = queryFactory
             .select(Projections.fields(ItemArchiveDto.class,
                     archive.id,
@@ -52,7 +50,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
             .leftJoin(user)
             .on(user.id.eq(archive.user.id))
             .leftJoin(like)
-            .on(like.likedArchive.eq(archive), eqUserId(queryRequest.getUserId()))
+            .on(like.likedArchiveEntity.eq(archive), eqUserId(queryRequest.getUserId()))
             .where(
                 archive.item.id.eq(queryRequest.getItemId()),
                 eqIsVisible(queryRequest.isVisible())
@@ -75,7 +73,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Page<MyArchiveDto> findAllMyArchiveByArchiveQueryRequest(Pageable pageable, ArchiveQueryRequest queryRequest) {
+    public Page<MyArchiveDto> findAllMyArchiveByArchiveQueryRequest(Pageable pageable,
+                                                                    ArchiveQueryRequest queryRequest) {
 
         List<MyArchiveDto> archives = queryFactory
             .select(Projections.fields(MyArchiveDto.class,
@@ -110,7 +109,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     @Override
     public Optional<ArchiveDetailDto> findByArchiveIdAndUserIdAndIsVisible(long archiveId, long userId,
-        boolean isVisible) {
+                                                                           boolean isVisible) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(ArchiveDetailDto.class,
                 archive.id,
                 itemEntity.id.as("itemId"),
