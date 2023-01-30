@@ -62,15 +62,15 @@ public class ArchiveService {
         UserResponse userResponse = userService.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
 
-        Archive archive = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
+        ArchiveEntity archiveEntity = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
 
-        Long archiveId = archive.getId();
+        Long archiveId = archiveEntity.getId();
         List<ArchiveImage> archiveImages = archiveRequest.makeArchiveImages();
         List<UserVisitPlace> userVisitPlaces = archiveRequest.makeVisitedPlace();
         archiveImageService.saveAll(archiveImages, archiveId);
         userVisitPlaceService.saveAll(userVisitPlaces, archiveId);
 
-        return archiveAggregateConverter.convertArchiveInfo(archive, userResponse, archiveImages,
+        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, userResponse, archiveImages,
             userVisitPlaces);
     }
 
@@ -79,19 +79,19 @@ public class ArchiveService {
         Preconditions.checkNotNull(userId, "id must not be null");
         Preconditions.checkNotNull(request.getItemId(), "Item id must not be null");
 
-        Archive archive = archiveRepository.findByItemIdAndUserId(request.getItemId(), userId)
+        ArchiveEntity archiveEntity = archiveRepository.findByItemIdAndUserId(request.getItemId(), userId)
             .orElseThrow(ArchiveNotFoundException::new);
 
-        Long archiveId = archive.getId();
+        Long archiveId = archiveEntity.getId();
         List<ArchiveImage> archiveImages = request.makeArchiveImages();
         List<UserVisitPlace> userVisitPlaces = request.makeVisitedPlace();
 
         updateArchiveImages(archiveImages, archiveId);
         updateUserVisitPlace(userVisitPlaces, archiveId);
 
-        archive.update(request);
+        archiveEntity.update(request);
 
-        return archiveAggregateConverter.convertArchiveInfo(archive, archiveImages,
+        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, archiveImages,
             userVisitPlaces);
     }
 
@@ -145,17 +145,17 @@ public class ArchiveService {
     public ArchiveDeleteResponse delete(Long archiveId, Long userId) throws IllegalAccessException {
         Preconditions.checkNotNull(archiveId, "id must not be null");
 
-        Archive archive = archiveRepository.findById(archiveId)
+        ArchiveEntity archiveEntity = archiveRepository.findById(archiveId)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exists."));
 
-        if (!userId.equals(archive.getUser().getId())) {
+        if (!userId.equals(archiveEntity.getUser().getId())) {
             throw new IllegalAccessException("Archives can only be deleted by the writer.");
         }
 
         likeService.deleteAll(archiveId);
         archiveImageService.deleteAllByArchiveId(archiveId);
         userVisitPlaceService.deleteAllByArchiveId(archiveId);
-        archiveRepository.delete(archive);
+        archiveRepository.delete(archiveEntity);
 
         return ArchiveDeleteResponse.from(archiveId);
     }
@@ -194,7 +194,7 @@ public class ArchiveService {
         Preconditions.checkNotNull(userId, "User id must not be null : " + userId);
 
         return archiveRepository.findByItemIdAndUserId(itemId, userId)
-            .map(Archive::getId)
+            .map(ArchiveEntity::getId)
             .orElse(null);
     }
 
@@ -216,12 +216,12 @@ public class ArchiveService {
                 archiveRequest.getItemId(), userId));
     }
 
-    private Archive saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {
-        Archive archive = archiveRequest.makeArchive();
-        archive.setUser(User.builder().id(userId).build());
-        archive.setItem(ItemEntity.builder().id(itemId).build());
-        archiveRepository.save(archive);
-        return archive;
+    private ArchiveEntity saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {
+        ArchiveEntity archiveEntity = archiveRequest.makeArchive();
+        archiveEntity.setUser(User.builder().id(userId).build());
+        archiveEntity.setItem(ItemEntity.builder().id(itemId).build());
+        archiveRepository.save(archiveEntity);
+        return archiveEntity;
     }
 
     private List<ArchiveImage> updateArchiveImages(List<ArchiveImage> newArchiveImages,
@@ -238,9 +238,9 @@ public class ArchiveService {
 
     private void updateArchiveLikeCount(boolean status, Long archiveId) {
         if (status) {
-            updateArchiveLikeCount(Archive::plusLikeCount, archiveId);
+            updateArchiveLikeCount(ArchiveEntity::plusLikeCount, archiveId);
         } else {
-            updateArchiveLikeCount(Archive::minusLikeCount, archiveId);
+            updateArchiveLikeCount(ArchiveEntity::minusLikeCount, archiveId);
         }
     }
 
@@ -300,8 +300,8 @@ public class ArchiveService {
         return FrontUrlUtils.getFrontMyArchiveTitlePattern(totalContentsCount);
     }
 
-    private void updateArchiveLikeCount(Function<Archive, Archive> mapper, Long archiveId) {
-        Function<Long, Archive> generated = it -> archiveRepository.findById(archiveId)
+    private void updateArchiveLikeCount(Function<ArchiveEntity, ArchiveEntity> mapper, Long archiveId) {
+        Function<Long, ArchiveEntity> generated = it -> archiveRepository.findById(archiveId)
             .map(mapper)
             .map(archiveRepository::save)
             .orElseThrow(() -> new IllegalArgumentException("Archive가 존재하지 않습니다. id = " + it));

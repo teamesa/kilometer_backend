@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive.archiveImage;
 
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.yaml.snakeyaml.events.Event.ID;
 
 @Getter
 @Builder
@@ -46,9 +45,9 @@ public class ArchiveImage {
 
     @ManyToOne
     @JoinColumn(name = "archive")
-    private Archive archive;
+    private ArchiveEntity archiveEntity;
 
-    public void setArchive(Archive archive) {
-        this.archive = archive;
+    public void setArchiveEntity(ArchiveEntity archiveEntity) {
+        this.archiveEntity = archiveEntity;
     }
 }

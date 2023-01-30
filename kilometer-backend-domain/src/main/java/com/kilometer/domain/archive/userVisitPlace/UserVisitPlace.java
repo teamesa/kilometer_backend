@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive.userVisitPlace;
 
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.PlaceType;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
@@ -36,7 +36,7 @@ public class UserVisitPlace {
 
     @ManyToOne
     @JoinColumn(name = "archive")
-    private Archive archive;
+    private ArchiveEntity archiveEntity;
 
     @Enumerated(value = EnumType.STRING)
     private PlaceType placeType;
@@ -57,7 +57,7 @@ public class UserVisitPlace {
     @Builder.Default
     private boolean isDeleted = false;
 
-    public void setArchive(Archive archive) {
-        this.archive = archive;
+    public void setArchiveEntity(ArchiveEntity archiveEntity) {
+        this.archiveEntity = archiveEntity;
     }
 }

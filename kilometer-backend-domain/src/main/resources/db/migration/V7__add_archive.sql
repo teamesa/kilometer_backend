@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS archive
+CREATE TABLE IF NOT EXISTS archiveEntity
 (
     id              BIGINT(20)    NOT NULL AUTO_INCREMENT,
     user            BIGINT(20)    NULL,

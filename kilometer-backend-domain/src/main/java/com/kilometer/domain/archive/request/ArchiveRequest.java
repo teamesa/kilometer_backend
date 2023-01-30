@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive.request;
 
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.dto.PlaceInfo;
@@ -25,8 +25,8 @@ public class ArchiveRequest {
     private List<String> photoUrls;
     private List<PlaceInfo> placeInfos;
 
-    public Archive makeArchive() {
-        return Archive.builder()
+    public ArchiveEntity makeArchive() {
+        return ArchiveEntity.builder()
             .comment(this.getComment())
             .starRating(this.getStarRating())
             .isVisibleAtItem(this.isVisibleAtItem())
