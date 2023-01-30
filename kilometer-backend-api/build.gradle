@@ -18,6 +18,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }
 configurations {
     compileOnly {
