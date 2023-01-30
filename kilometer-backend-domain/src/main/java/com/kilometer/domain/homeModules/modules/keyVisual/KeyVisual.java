@@ -2,6 +2,7 @@ package com.kilometer.domain.homeModules.modules.keyVisual;
 
 import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualResponse;
 import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualUpdateResponse;
+import javax.persistence.GenerationType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
 public class KeyVisual {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String imageUrl;

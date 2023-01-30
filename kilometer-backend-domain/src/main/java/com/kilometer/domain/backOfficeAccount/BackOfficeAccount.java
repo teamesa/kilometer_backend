@@ -1,5 +1,6 @@
 package com.kilometer.domain.backOfficeAccount;
 
+import javax.persistence.GenerationType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 public class BackOfficeAccount {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)

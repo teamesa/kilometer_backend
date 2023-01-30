@@ -4,7 +4,7 @@ import org.junit.platform.commons.util.Preconditions
 import spock.lang.Specification
 import spock.lang.Subject
 
-class HelloServiceTest extends Specification {
+class HelloServiceMockingTest extends Specification {
     @Subject
     HelloService sut
     HelloRepository helloRepository = Mock(HelloRepository.class)

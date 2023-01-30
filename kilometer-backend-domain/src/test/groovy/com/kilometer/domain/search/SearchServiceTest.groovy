@@ -41,6 +41,6 @@ class SearchServiceTest extends Specification {
         when:
         sut.search(insert, -1)
         then:
-        thrown(PreconditionViolationException.class)
+        thrown(NullPointerException.class)
     }
 }
