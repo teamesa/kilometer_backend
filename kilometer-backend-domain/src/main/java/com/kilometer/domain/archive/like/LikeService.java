@@ -23,7 +23,7 @@ public class LikeService {
         ArchiveEntity likedArchiveEntity = ArchiveEntity.builder().id(archiveId).build();
         User likedUser = User.builder().id(userId).build();
 
-        return LikeDto.of(likeRepository.findByLikedArchiveAndLikedUser(likedArchiveEntity, likedUser)
+        return LikeDto.of(likeRepository.findByLikedArchiveEntityAndLikedUser(likedArchiveEntity, likedUser)
             .orElseGet(() -> newLike(likedArchiveEntity, likedUser)));
     }
 
@@ -31,7 +31,7 @@ public class LikeService {
     public void deleteAll(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null");
         ArchiveEntity archiveEntity = ArchiveEntity.builder().id(archiveId).build();
-        likeRepository.deleteAllByLikedArchive(archiveEntity);
+        likeRepository.deleteAllByLikedArchiveEntity(archiveEntity);
     }
 
     private Like newLike(ArchiveEntity archiveEntity, User user) {

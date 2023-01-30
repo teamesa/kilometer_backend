@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeRepository extends JpaRepository<Like,Long> {
 
-    Optional<Like> findByLikedArchiveAndLikedUser(ArchiveEntity archiveEntityId, User userId);
+    Optional<Like> findByLikedArchiveEntityAndLikedUser(ArchiveEntity archiveEntityId, User userId);
 
-    void deleteAllByLikedArchive(ArchiveEntity likedArchiveEntity);
+    void deleteAllByLikedArchiveEntity(ArchiveEntity likedArchiveEntity);
 }

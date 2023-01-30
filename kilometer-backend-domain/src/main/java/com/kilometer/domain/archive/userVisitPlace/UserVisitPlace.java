@@ -23,7 +23,7 @@ import org.hibernate.annotations.Where;
 @Getter
 @Entity
 @Builder
-@Where(clause = "isDeleted=false")
+@Where(clause = "is_deleted=false")
 @SQLDelete(sql = "UPDATE user_visit_place SET isDeleted=true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

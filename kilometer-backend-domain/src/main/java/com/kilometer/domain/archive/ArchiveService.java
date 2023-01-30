@@ -58,6 +58,7 @@ public class ArchiveService {
         validateArchiveRequest(archiveRequest, userId);
 
         Archive archive = archiveRequest.toDomain();
+        archive.validate();
 
         UserResponse userResponse = userService.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
