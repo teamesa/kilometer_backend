@@ -1,5 +1,9 @@
 package com.kilometer.domain.archive.domain;
 
+import static com.kilometer.common.statics.Statics.아카이브_공개_설정;
+import static com.kilometer.common.statics.Statics.아카이브_별정;
+import static com.kilometer.common.statics.Statics.아카이브_코멘트;
+import static com.kilometer.common.statics.Statics.전시회_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -13,7 +17,7 @@ public class ArchiveTest {
     @DisplayName("Archive를 생성한다.")
     void createArchive() {
         // given & when
-        Archive archive = new Archive(1L, "comment", 1, true);
+        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, 아카이브_별정, 아카이브_공개_설정);
 
         // then
         assertThat(archive).isNotNull();
@@ -24,7 +28,8 @@ public class ArchiveTest {
     void commentIsNotNull() {
         // given
         String invalidComment = null;
-        Archive archive = new Archive(1L, invalidComment, 1, true);
+
+        Archive archive = new Archive(전시회_ID, invalidComment, 아카이브_별정, 아카이브_공개_설정);
 
         // when & then
         assertThatThrownBy(archive::validate)
@@ -37,7 +42,7 @@ public class ArchiveTest {
     void archiveStarRatingIsNotNegative() {
         // given
         int invalidStarRating = -1;
-        Archive archive = new Archive(1L, "comment", invalidStarRating, true);
+        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, invalidStarRating, 아카이브_공개_설정);
 
         // when & then
         assertThatThrownBy(archive::validate)
@@ -50,7 +55,7 @@ public class ArchiveTest {
     void archiveStarRatingIsPositiveOutOfRange() {
         // given
         int invalidStarRating = 6;
-        Archive archive = new Archive(1L, "comment", invalidStarRating, true);
+        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, invalidStarRating, 아카이브_공개_설정);
 
         // when & then
         assertThatThrownBy(archive::validate)
