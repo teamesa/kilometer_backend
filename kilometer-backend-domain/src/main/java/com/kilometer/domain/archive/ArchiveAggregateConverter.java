@@ -7,7 +7,7 @@ import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
-import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
 import com.kilometer.domain.item.dto.ItemSummary;
@@ -34,9 +34,9 @@ public class ArchiveAggregateConverter {
     private final ItemBadgeGenerator itemBadgeGenerator;
 
     public ArchiveInfo convertArchiveInfo(ItemArchiveDto itemArchiveDto,
-        List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
+        List<ArchiveImage> archiveImages, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
 
-        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
+        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaceEntities);
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(
             itemArchiveDto);
@@ -60,9 +60,9 @@ public class ArchiveAggregateConverter {
 
     public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity,
                                           List<ArchiveImage> archiveImages,
-                                          List<UserVisitPlace> userVisitPlaces) {
+                                          List<UserVisitPlaceEntity> userVisitPlaceEntities) {
 
-        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
+        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaceEntities);
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archiveEntity.getId());
 
@@ -86,9 +86,9 @@ public class ArchiveAggregateConverter {
     }
 
     public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity, UserResponse userResponse,
-                                          List<ArchiveImage> archiveImages, List<UserVisitPlace> userVisitPlaces) {
+                                          List<ArchiveImage> archiveImages, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
 
-        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaces);
+        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaceEntities);
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archiveEntity.getId());
 
@@ -111,14 +111,14 @@ public class ArchiveAggregateConverter {
     }
 
     public MyArchiveInfo convertMyArchiveInfo(MyArchiveDto myArchiveDto,
-        boolean existImages, List<UserVisitPlace> userVisitPlaces) {
+        boolean existImages, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
 
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(ExhibitionType.EXHIBITION);
 
         return MyArchiveInfo.builder()
             .title(myArchiveDto.getTitle())
             .comment(myArchiveDto.getComment())
-            .places(convertVisitPlaces(userVisitPlaces))
+            .places(convertVisitPlaces(userVisitPlaceEntities))
             .listImageUrl(myArchiveDto.getListImageUrl())
             .typeBadge(itemBadge)
             .updatedAt(myArchiveDto.getUpdatedAt())
@@ -128,7 +128,7 @@ public class ArchiveAggregateConverter {
     }
 
     public ArchiveDetailResponse convertArchiveDetail(ArchiveDetailDto archiveDetailDto,
-        List<UserVisitPlace> visitPlaces, List<ArchiveImage> archiveImages) {
+                                                      List<UserVisitPlaceEntity> visitPlaces, List<ArchiveImage> archiveImages) {
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(
             archiveDetailDto.getItemExhibitionType());
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(visitPlaces);
@@ -154,14 +154,14 @@ public class ArchiveAggregateConverter {
             .build();
     }
 
-    private Map<PlaceType, String> convertFoodAndCafe(List<UserVisitPlace> userVisitPlaces) {
-        return userVisitPlaces.stream()
-            .collect(Collectors.toMap(UserVisitPlace::getPlaceType, UserVisitPlace::getPlaceName));
+    private Map<PlaceType, String> convertFoodAndCafe(List<UserVisitPlaceEntity> userVisitPlaceEntities) {
+        return userVisitPlaceEntities.stream()
+            .collect(Collectors.toMap(UserVisitPlaceEntity::getPlaceType, UserVisitPlaceEntity::getPlaceName));
     }
 
-    private String convertVisitPlaces(List<UserVisitPlace> userVisitPlaces) {
+    private String convertVisitPlaces(List<UserVisitPlaceEntity> userVisitPlaceEntities) {
         StringBuilder places = new StringBuilder();
-        userVisitPlaces.forEach(userVisitPlace -> {
+        userVisitPlaceEntities.forEach(userVisitPlace -> {
             if (places.length() != 0) {
                 places.append(", ");
             }

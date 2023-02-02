@@ -21,7 +21,7 @@ import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
-import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.paging.PagingStatusService;
@@ -67,12 +67,12 @@ public class ArchiveService {
 
         Long archiveId = archiveEntity.getId();
         List<ArchiveImage> archiveImages = archiveRequest.makeArchiveImages();
-        List<UserVisitPlace> userVisitPlaces = archiveRequest.makeVisitedPlace();
+        List<UserVisitPlaceEntity> userVisitPlaceEntities = archiveRequest.makeVisitedPlace();
         archiveImageService.saveAll(archiveImages, archiveId);
-        userVisitPlaceService.saveAll(userVisitPlaces, archiveId);
+        userVisitPlaceService.saveAll(userVisitPlaceEntities, archiveId);
 
         return archiveAggregateConverter.convertArchiveInfo(archiveEntity, userResponse, archiveImages,
-            userVisitPlaces);
+            userVisitPlaceEntities);
     }
 
     @Transactional
@@ -85,15 +85,15 @@ public class ArchiveService {
 
         Long archiveId = archiveEntity.getId();
         List<ArchiveImage> archiveImages = request.makeArchiveImages();
-        List<UserVisitPlace> userVisitPlaces = request.makeVisitedPlace();
+        List<UserVisitPlaceEntity> userVisitPlaceEntities = request.makeVisitedPlace();
 
         updateArchiveImages(archiveImages, archiveId);
-        updateUserVisitPlace(userVisitPlaces, archiveId);
+        updateUserVisitPlace(userVisitPlaceEntities, archiveId);
 
         archiveEntity.update(request);
 
         return archiveAggregateConverter.convertArchiveInfo(archiveEntity, archiveImages,
-            userVisitPlaces);
+            userVisitPlaceEntities);
     }
 
     public ArchiveResponse findAllByItemIdAndUserId(Long itemId, Long userId,
@@ -181,12 +181,12 @@ public class ArchiveService {
                 userId, false)
             .orElseThrow(ArchiveNotFoundException::new);
 
-        List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
+        List<UserVisitPlaceEntity> userVisitPlaceEntities = userVisitPlaceService.findAllByArchiveId(
             archiveDetailDto.getId());
         List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
             archiveDetailDto.getId());
 
-        return archiveAggregateConverter.convertArchiveDetail(archiveDetailDto, userVisitPlaces,
+        return archiveAggregateConverter.convertArchiveDetail(archiveDetailDto, userVisitPlaceEntities,
             archiveImages);
     }
 
@@ -226,10 +226,10 @@ public class ArchiveService {
         return archiveImageService.saveAll(newArchiveImages, archiveId);
     }
 
-    private List<UserVisitPlace> updateUserVisitPlace(List<UserVisitPlace> newUserVisitPlaces,
-                                                      Long archiveId) {
+    private List<UserVisitPlaceEntity> updateUserVisitPlace(List<UserVisitPlaceEntity> newUserVisitPlaceEntities,
+                                                            Long archiveId) {
         userVisitPlaceService.deleteAllByArchiveId(archiveId);
-        return userVisitPlaceService.saveAll(newUserVisitPlaces, archiveId);
+        return userVisitPlaceService.saveAll(newUserVisitPlaceEntities, archiveId);
     }
 
     private void updateArchiveLikeCount(boolean status, Long archiveId) {
@@ -250,10 +250,10 @@ public class ArchiveService {
             .map(itemArchiveDto -> {
                 List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
                     itemArchiveDto.getId());
-                List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
+                List<UserVisitPlaceEntity> userVisitPlaceEntities = userVisitPlaceService.findAllByArchiveId(
                     itemArchiveDto.getId());
                 return archiveAggregateConverter.convertArchiveInfo(itemArchiveDto, archiveImages,
-                    userVisitPlaces);
+                    userVisitPlaceEntities);
             })
             .collect(Collectors.toList());
     }
@@ -263,10 +263,10 @@ public class ArchiveService {
             .map(myArchiveDto -> {
                 boolean existImages = archiveImageService.existArchiveImagesByArchiveId(
                     myArchiveDto.getId());
-                List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
+                List<UserVisitPlaceEntity> userVisitPlaceEntities = userVisitPlaceService.findAllByArchiveId(
                     myArchiveDto.getId());
                 return archiveAggregateConverter.convertMyArchiveInfo(myArchiveDto, existImages,
-                    userVisitPlaces);
+                    userVisitPlaceEntities);
             })
             .collect(Collectors.toList());
     }

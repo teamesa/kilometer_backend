@@ -5,7 +5,7 @@ import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.dto.PlaceInfo;
-import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -44,10 +44,10 @@ public class ArchiveRequest {
         return images;
     }
 
-    public List<UserVisitPlace> makeVisitedPlace() {
-        List<UserVisitPlace> places = new ArrayList<>();
+    public List<UserVisitPlaceEntity> makeVisitedPlace() {
+        List<UserVisitPlaceEntity> places = new ArrayList<>();
         for (PlaceInfo info : this.getPlaceInfos()) {
-            UserVisitPlace visitPlace = UserVisitPlace.builder()
+            UserVisitPlaceEntity visitPlace = UserVisitPlaceEntity.builder()
                 .placeType(PlaceType.valueOf(info.getPlaceType()))
                 .placeName(info.getName())
                 .address(info.getAddress())
