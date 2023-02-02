@@ -201,11 +201,6 @@ public class ArchiveService {
 
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
-        Preconditions.checkNotNull(archiveRequest.getPhotoUrls(),
-            "Photo urls must not be null");
-        Preconditions.checkNotNull(archiveRequest.getPlaceInfos(),
-            "Place infos must not be null");
-
         Preconditions.checkArgument(
             !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
             String.format("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d",

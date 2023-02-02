@@ -33,6 +33,8 @@ public class Archive {
     public void validate() {
         validateCommentField(comment);
         validateStarRatingField(starRating);
+        archiveImages.validate();
+        userVisitPlaces.validate();
     }
 
     private void validateCommentField(final String comment) {

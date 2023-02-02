@@ -29,8 +29,12 @@ class UserVisitPlacesTest {
         // given
         List<UserVisitPlace> invalidUserVisitPlaces = null;
 
+        // when
+        UserVisitPlaces actual = new UserVisitPlaces(invalidUserVisitPlaces);
+
         // when & then
-        assertThatThrownBy(() -> new UserVisitPlaces(invalidUserVisitPlaces))
-            .isInstanceOf(ArchiveValidationException.class);
+        assertThatThrownBy(actual::validate)
+            .isInstanceOf(ArchiveValidationException.class)
+            .hasMessage("입력된 방문 장소가 없습니다.");
     }
 }

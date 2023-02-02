@@ -90,8 +90,7 @@ public class ArchiveServiceTest {
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(회원.getId(), request))
-            .isInstanceOf(NullPointerException.class)
-            .hasMessage("Photo urls must not be null");
+            .isInstanceOf(NullPointerException.class);
     }
 
     @Test

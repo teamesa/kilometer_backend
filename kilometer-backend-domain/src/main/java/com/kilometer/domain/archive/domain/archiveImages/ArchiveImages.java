@@ -12,4 +12,8 @@ public class ArchiveImages {
             .map(ArchiveImage::createArchiveImage)
             .collect(Collectors.toList());
     }
+
+    public void validate() {
+        this.archiveImages.forEach(ArchiveImage::validateImageUrlField);
+    }
 }

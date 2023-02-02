@@ -8,12 +8,11 @@ public class UserVisitPlaces {
     private final List<UserVisitPlace> userVisitPlaces;
 
     public UserVisitPlaces(final List<UserVisitPlace> userVisitPlaces) {
-        validate(userVisitPlaces);
         this.userVisitPlaces = userVisitPlaces;
     }
 
-    private void validate(final List<UserVisitPlace> userVisitPlaces) {
-        if (userVisitPlaces == null) {
+    public void validate() {
+        if (this.userVisitPlaces == null) {
             throw new ArchiveValidationException("입력된 방문 장소가 없습니다.");
         }
     }

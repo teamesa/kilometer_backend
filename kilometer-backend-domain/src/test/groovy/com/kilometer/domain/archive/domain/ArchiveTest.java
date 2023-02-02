@@ -82,8 +82,11 @@ public class ArchiveTest {
         // given
         List<UserVisitPlace> invalidUserVisitPlaces = null;
 
+        // when
+        Archive actual = new Archive(1L, "김철수책상철책상", 1, true, List.of(), invalidUserVisitPlaces);
+
         // when & then
-        assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", 1, true, List.of(), invalidUserVisitPlaces))
+        assertThatThrownBy(actual::validate)
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("입력된 방문 장소가 없습니다.");
     }
