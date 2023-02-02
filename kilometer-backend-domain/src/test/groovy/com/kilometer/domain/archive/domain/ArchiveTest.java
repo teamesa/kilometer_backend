@@ -85,7 +85,7 @@ public class ArchiveTest {
         List<UserVisitPlace> invalidUserVisitPlaces = null;
 
         // when
-        Archive actual = new Archive(1L, "김철수책상철책상", 1, true, 아카이브_이미지들, invalidUserVisitPlaces);
+        Archive actual = new Archive(전시회_ID, 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 아카이브_이미지들, invalidUserVisitPlaces);
 
         // when & then
         assertThatThrownBy(actual::validate)
