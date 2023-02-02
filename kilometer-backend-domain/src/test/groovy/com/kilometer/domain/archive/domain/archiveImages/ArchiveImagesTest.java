@@ -1,5 +1,6 @@
 package com.kilometer.domain.archive.domain.archiveImages;
 
+import static com.kilometer.common.statics.Statics.아카이브_이미지들;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -13,7 +14,7 @@ class ArchiveImagesTest {
     @DisplayName("ArchiveImages를 생성한다.")
     void createArchiveImages() {
         // given
-        List<String> imageUrls = List.of();
+        List<String> imageUrls = 아카이브_이미지들;
 
         // when
         ArchiveImages actual = new ArchiveImages(imageUrls);

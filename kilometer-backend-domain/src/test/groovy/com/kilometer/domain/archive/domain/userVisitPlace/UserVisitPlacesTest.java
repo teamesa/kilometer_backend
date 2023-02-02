@@ -1,5 +1,6 @@
 package com.kilometer.domain.archive.domain.userVisitPlace;
 
+import static com.kilometer.common.statics.Statics.사용자_방문장소들;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,7 +15,7 @@ class UserVisitPlacesTest {
     @DisplayName("UserVisitPlaces를 생성한다.")
     void createUserVisitPlaces() {
         // given
-        List<UserVisitPlace> userVisitPlaces = List.of();
+        List<UserVisitPlace> userVisitPlaces = 사용자_방문장소들;
 
         // when
         UserVisitPlaces actual = new UserVisitPlaces(userVisitPlaces);
