@@ -25,7 +25,7 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "archive_image")
-public class ArchiveImage {
+public class ArchiveImageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

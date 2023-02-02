@@ -1,7 +1,7 @@
 package com.kilometer.domain.archive;
 
 import com.google.common.base.Preconditions;
-import com.kilometer.domain.archive.archiveImage.ArchiveImage;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
@@ -66,12 +66,12 @@ public class ArchiveService {
         ArchiveEntity archiveEntity = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
 
         Long archiveId = archiveEntity.getId();
-        List<ArchiveImage> archiveImages = archiveRequest.makeArchiveImages();
+        List<ArchiveImageEntity> archiveImageEntities = archiveRequest.makeArchiveImages();
         List<UserVisitPlaceEntity> userVisitPlaceEntities = archiveRequest.makeVisitedPlace();
-        archiveImageService.saveAll(archiveImages, archiveId);
+        archiveImageService.saveAll(archiveImageEntities, archiveId);
         userVisitPlaceService.saveAll(userVisitPlaceEntities, archiveId);
 
-        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, userResponse, archiveImages,
+        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, userResponse, archiveImageEntities,
             userVisitPlaceEntities);
     }
 
@@ -84,15 +84,15 @@ public class ArchiveService {
             .orElseThrow(ArchiveNotFoundException::new);
 
         Long archiveId = archiveEntity.getId();
-        List<ArchiveImage> archiveImages = request.makeArchiveImages();
+        List<ArchiveImageEntity> archiveImageEntities = request.makeArchiveImages();
         List<UserVisitPlaceEntity> userVisitPlaceEntities = request.makeVisitedPlace();
 
-        updateArchiveImages(archiveImages, archiveId);
+        updateArchiveImages(archiveImageEntities, archiveId);
         updateUserVisitPlace(userVisitPlaceEntities, archiveId);
 
         archiveEntity.update(request);
 
-        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, archiveImages,
+        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, archiveImageEntities,
             userVisitPlaceEntities);
     }
 
@@ -183,11 +183,11 @@ public class ArchiveService {
 
         List<UserVisitPlaceEntity> userVisitPlaceEntities = userVisitPlaceService.findAllByArchiveId(
             archiveDetailDto.getId());
-        List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
+        List<ArchiveImageEntity> archiveImageEntities = archiveImageService.findAllByArchiveId(
             archiveDetailDto.getId());
 
         return archiveAggregateConverter.convertArchiveDetail(archiveDetailDto, userVisitPlaceEntities,
-            archiveImages);
+            archiveImageEntities);
     }
 
     public Long findArchiveIdByItemIdAndUserId(Long itemId, Long userId) {
@@ -220,10 +220,10 @@ public class ArchiveService {
         return archiveEntity;
     }
 
-    private List<ArchiveImage> updateArchiveImages(List<ArchiveImage> newArchiveImages,
-                                                   Long archiveId) {
+    private List<ArchiveImageEntity> updateArchiveImages(List<ArchiveImageEntity> newArchiveImageEntities,
+                                                         Long archiveId) {
         archiveImageService.deleteAllByArchiveId(archiveId);
-        return archiveImageService.saveAll(newArchiveImages, archiveId);
+        return archiveImageService.saveAll(newArchiveImageEntities, archiveId);
     }
 
     private List<UserVisitPlaceEntity> updateUserVisitPlace(List<UserVisitPlaceEntity> newUserVisitPlaceEntities,
@@ -248,11 +248,11 @@ public class ArchiveService {
     private List<ArchiveInfo> convertArchiveInfos(Page<ItemArchiveDto> items) {
         return items.stream()
             .map(itemArchiveDto -> {
-                List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
+                List<ArchiveImageEntity> archiveImageEntities = archiveImageService.findAllByArchiveId(
                     itemArchiveDto.getId());
                 List<UserVisitPlaceEntity> userVisitPlaceEntities = userVisitPlaceService.findAllByArchiveId(
                     itemArchiveDto.getId());
-                return archiveAggregateConverter.convertArchiveInfo(itemArchiveDto, archiveImages,
+                return archiveAggregateConverter.convertArchiveInfo(itemArchiveDto, archiveImageEntities,
                     userVisitPlaceEntities);
             })
             .collect(Collectors.toList());

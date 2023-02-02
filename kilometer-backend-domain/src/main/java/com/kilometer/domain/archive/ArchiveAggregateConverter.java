@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive;
 
-import com.kilometer.domain.archive.archiveImage.ArchiveImage;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.dto.ArchiveDetailDto;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
@@ -34,7 +34,7 @@ public class ArchiveAggregateConverter {
     private final ItemBadgeGenerator itemBadgeGenerator;
 
     public ArchiveInfo convertArchiveInfo(ItemArchiveDto itemArchiveDto,
-        List<ArchiveImage> archiveImages, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
+                                          List<ArchiveImageEntity> archiveImageEntities, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaceEntities);
 
@@ -52,22 +52,22 @@ public class ArchiveAggregateConverter {
             .comment(itemArchiveDto.getComment())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
-            .photoUrls(archiveImages.stream()
-                .map(ArchiveImage::getImageUrl)
+            .photoUrls(archiveImageEntities.stream()
+                .map(ArchiveImageEntity::getImageUrl)
                 .collect(Collectors.toList()))
             .build();
     }
 
     public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity,
-                                          List<ArchiveImage> archiveImages,
+                                          List<ArchiveImageEntity> archiveImageEntities,
                                           List<UserVisitPlaceEntity> userVisitPlaceEntities) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaceEntities);
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archiveEntity.getId());
 
-        List<String> photoUrls = archiveImages.stream()
-            .map(ArchiveImage::getImageUrl)
+        List<String> photoUrls = archiveImageEntities.stream()
+            .map(ArchiveImageEntity::getImageUrl)
             .collect(Collectors.toList());
 
         return ArchiveInfo.builder()
@@ -86,14 +86,14 @@ public class ArchiveAggregateConverter {
     }
 
     public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity, UserResponse userResponse,
-                                          List<ArchiveImage> archiveImages, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
+                                          List<ArchiveImageEntity> archiveImageEntities, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaceEntities);
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archiveEntity.getId());
 
-        List<String> photoUrls = archiveImages.stream()
-            .map(ArchiveImage::getImageUrl)
+        List<String> photoUrls = archiveImageEntities.stream()
+            .map(ArchiveImageEntity::getImageUrl)
             .collect(Collectors.toList());
         return ArchiveInfo.builder()
             .id(archiveEntity.getId())
@@ -128,7 +128,7 @@ public class ArchiveAggregateConverter {
     }
 
     public ArchiveDetailResponse convertArchiveDetail(ArchiveDetailDto archiveDetailDto,
-                                                      List<UserVisitPlaceEntity> visitPlaces, List<ArchiveImage> archiveImages) {
+                                                      List<UserVisitPlaceEntity> visitPlaces, List<ArchiveImageEntity> archiveImageEntities) {
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(
             archiveDetailDto.getItemExhibitionType());
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(visitPlaces);
@@ -148,7 +148,7 @@ public class ArchiveAggregateConverter {
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
             .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
             .photoUrls(
-                archiveImages.stream().map(ArchiveImage::getImageUrl).collect(Collectors.toList()))
+                archiveImageEntities.stream().map(ArchiveImageEntity::getImageUrl).collect(Collectors.toList()))
             .archiveActionButton(linkInfos)
             .visibleAtItem(archiveDetailDto.isVisibleAtItem())
             .build();

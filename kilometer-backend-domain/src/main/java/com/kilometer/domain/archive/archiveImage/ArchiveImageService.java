@@ -17,14 +17,14 @@ public class ArchiveImageService {
     private final ArchiveImageRepository archiveImageRepository;
 
     @Transactional
-    public List<ArchiveImage> saveAll(List<ArchiveImage> archiveImages, Long archiveId) {
-        Preconditions.checkNotNull(archiveImages, "Archive images must not be null");
-        if(archiveImages.isEmpty()) {
+    public List<ArchiveImageEntity> saveAll(List<ArchiveImageEntity> archiveImageEntities, Long archiveId) {
+        Preconditions.checkNotNull(archiveImageEntities, "Archive images must not be null");
+        if(archiveImageEntities.isEmpty()) {
             return List.of();
         }
         ArchiveEntity archiveEntity = ArchiveEntity.builder().id(archiveId).build();
-        archiveImages.forEach(archiveImage -> archiveImage.setArchiveEntity(archiveEntity));
-        return  archiveImageRepository.saveAll(archiveImages);
+        archiveImageEntities.forEach(archiveImage -> archiveImage.setArchiveEntity(archiveEntity));
+        return  archiveImageRepository.saveAll(archiveImageEntities);
     }
     @Transactional
     public void deleteAllByArchiveId(Long archiveId) {
@@ -32,7 +32,7 @@ public class ArchiveImageService {
         archiveImageRepository.deleteAllByArchiveEntityId(archiveId);
     }
 
-    public List<ArchiveImage> findAllByArchiveId(Long archiveId) {
+    public List<ArchiveImageEntity> findAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
         return archiveImageRepository.findAllByArchiveEntityId(archiveId);
     }

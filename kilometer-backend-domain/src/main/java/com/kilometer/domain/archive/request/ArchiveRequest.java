@@ -2,7 +2,7 @@ package com.kilometer.domain.archive.request;
 
 import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.PlaceType;
-import com.kilometer.domain.archive.archiveImage.ArchiveImage;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
@@ -35,10 +35,10 @@ public class ArchiveRequest {
     }
 
 
-    public List<ArchiveImage> makeArchiveImages() {
-        List<ArchiveImage> images = new ArrayList<>();
+    public List<ArchiveImageEntity> makeArchiveImages() {
+        List<ArchiveImageEntity> images = new ArrayList<>();
         this.getPhotoUrls().forEach(url -> {
-            ArchiveImage photo = ArchiveImage.builder().imageUrl(url).build();
+            ArchiveImageEntity photo = ArchiveImageEntity.builder().imageUrl(url).build();
             images.add(photo);
         });
         return images;
