@@ -4,11 +4,17 @@ import com.kilometer.domain.item.dto.ItemInfoAdditionalInfo;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.ItemInfoResponse;
 import com.kilometer.domain.item.heart.ItemHeartGenerator;
+import com.kilometer.domain.item.itemDetail.ItemDetail;
+import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
 import com.kilometer.domain.linkInfo.LinkInfo;
 import com.kilometer.domain.util.FrontUrlUtils;
-import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -16,7 +22,8 @@ public class ItemAggregateConverter {
 
     private final ItemHeartGenerator itemHeartGenerator;
 
-    public ItemInfoResponse convert(ItemInfoDto itemInfoDto, Long archiveId) {
+    public ItemInfoResponse convert(ItemInfoDto itemInfoDto, ItemDetail itemDetail,
+                                    List<ItemDetailImage> itemDetailImages, Long archiveId) {
 
         LinkInfo archiveLink;
         if (archiveId != null) {
@@ -46,6 +53,14 @@ public class ItemAggregateConverter {
             .homePageUrl(itemInfoDto.getHomepageUrl())
             .detailImageUrl(itemInfoDto.getThumbnailImageUrl())
             .listImageUrl(itemInfoDto.getListImageUrl())
+            .summary(Optional.ofNullable(itemDetail)
+                .map(ItemDetail::getIntroduce)
+                .orElse(null))
+            .photo(Optional.ofNullable(itemDetailImages)
+                .map(images -> images.stream()
+                    .map(ItemDetailImage::getImageUrl)
+                    .collect(Collectors.toList()))
+                .orElse(List.of()))
             .itemInfoAdditionalInfo(
                 ItemInfoAdditionalInfo.builder()
                     .heartCount(itemInfoDto.getPickCount())
@@ -56,5 +71,4 @@ public class ItemAggregateConverter {
             .build();
 
     }
-
 }

@@ -101,17 +101,24 @@ public class ItemService {
         return itemEntity.makeUpdateResponse();
     }
 
-    public ItemInfoResponse getItemInfo(Long itemId, Long userId) {
+    public ItemInfoResponse getItem(Long itemId, Long userId) {
         Preconditions.checkNotNull(itemId, "id must not be null");
 
         ItemInfoDto itemInfoDto = itemRepository.findInfoByItemIdAndUserId(itemId, userId)
             .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id = " + itemId));
 
+        // item detail 도메인 객체 empty 반환하도록 리팩토링 필요
+        ItemDetail itemDetail = itemDetailRepository.findByItemId(itemId)
+            .orElseGet(() -> ItemDetail.builder().introduce("").build());
+
+        List<ItemDetailImage> itemDetailImages = itemDetailImageRepository.findAllByItemId(itemId);
+
         Long archiveId = archiveService.findArchiveIdByItemIdAndUserId(itemId, userId);
 
-        return itemAggregateConverter.convert(itemInfoDto, archiveId);
+        return itemAggregateConverter.convert(itemInfoDto, itemDetail, itemDetailImages, archiveId);
     }
 
+    @Deprecated
     public DetailResponse getItemDetail(Long itemId) {
         Preconditions.checkNotNull(itemId, "id must not be null");
 
@@ -189,11 +196,5 @@ public class ItemService {
             .map(ItemEntity::makeResponse)
             .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + it));
         generated.apply(itemId);
-    }
-
-    public List<ItemResponse> findByIdIn(List<Long> idList) {
-        return itemRepository.findByIdIn(idList).stream()
-                .map(ItemEntity::makeResponse)
-                .collect(Collectors.toList());
     }
 }
