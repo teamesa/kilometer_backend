@@ -7,8 +7,8 @@ public class ArchiveImages {
 
     private final List<ArchiveImage> archiveImages;
 
-    public ArchiveImages(final List<String> photoUrls) {
-        this.archiveImages = photoUrls.stream()
+    public ArchiveImages(final List<String> imageUrls) {
+        this.archiveImages = imageUrls.stream()
             .map(ArchiveImage::createArchiveImage)
             .collect(Collectors.toList());
     }

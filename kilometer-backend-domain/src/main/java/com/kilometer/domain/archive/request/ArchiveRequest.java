@@ -59,6 +59,6 @@ public class ArchiveRequest {
     }
 
     public Archive toDomain() {
-        return new Archive(null, this.comment, this.starRating, this.isVisibleAtItem);
+        return new Archive(null, this.comment, this.starRating, this.isVisibleAtItem, this.photoUrls);
     }
 }

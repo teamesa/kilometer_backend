@@ -1,6 +1,8 @@
 package com.kilometer.domain.archive.domain;
 
+import com.kilometer.domain.archive.domain.archiveImages.ArchiveImages;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import java.util.List;
 import lombok.Getter;
 
 @Getter
@@ -13,12 +15,15 @@ public class Archive {
     private final String comment;
     private final int starRating;
     private final boolean isVisibleAtItem;
+    private final ArchiveImages archiveImages;
 
-    public Archive(final Long id, final String comment, final int starRating, final boolean isVisibleAtItem) {
+    public Archive(final Long id, final String comment, final int starRating, final boolean isVisibleAtItem,
+                   final List<String> imageUrls) {
         this.id = id;
         this.comment = comment;
         this.starRating = starRating;
         this.isVisibleAtItem = isVisibleAtItem;
+        this.archiveImages = new ArchiveImages(imageUrls);
     }
 
     public void validate() {
