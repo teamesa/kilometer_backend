@@ -7,6 +7,7 @@ import static com.kilometer.common.statics.Statics.전시회_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.kilometer.domain.archive.domain.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ public class ArchiveTest {
     @DisplayName("Archive를 생성한다.")
     void createArchive() {
         // given & when
-        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, List.of());
+        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, List.of(), List.of());
 
         // then
         assertThat(archive).isNotNull();
@@ -30,7 +31,7 @@ public class ArchiveTest {
         // given
         String invalidComment = null;
 
-        Archive archive = new Archive(전시회_ID, invalidComment, 아카이브_별점, 아카이브_공개_설정, List.of());
+        Archive archive = new Archive(전시회_ID, invalidComment, 아카이브_별점, 아카이브_공개_설정, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(archive::validate)
@@ -43,7 +44,7 @@ public class ArchiveTest {
     void archiveStarRatingIsNotNegative() {
         // given
         int invalidStarRating = -1;
-        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, List.of());
+        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(archive::validate)
@@ -56,7 +57,7 @@ public class ArchiveTest {
     void archiveStarRatingIsPositiveOutOfRange() {
         // given
         int invalidStarRating = 6;
-        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, List.of());
+        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, List.of(), List.of());
 
         // when & then
         assertThatThrownBy(archive::validate)
@@ -71,7 +72,19 @@ public class ArchiveTest {
         List<String> invalidImageUrls = null;
 
         // when & then
-        assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", 1, true, invalidImageUrls))
+        assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", 1, true, invalidImageUrls, List.of()))
             .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    @DisplayName("Archive의 UserVisitPlaces가 null이면 예외가 발생한다.")
+    void userVisitPlaceIsNotNull() {
+        // given
+        List<UserVisitPlace> invalidUserVisitPlaces = null;
+
+        // when & then
+        assertThatThrownBy(() -> new Archive(1L, "김철수책상철책상", 1, true, List.of(), invalidUserVisitPlaces))
+            .isInstanceOf(ArchiveValidationException.class)
+            .hasMessage("입력된 방문 장소가 없습니다.");
     }
 }
