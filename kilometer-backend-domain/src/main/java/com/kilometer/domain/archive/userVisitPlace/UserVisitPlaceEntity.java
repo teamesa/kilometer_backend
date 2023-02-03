@@ -1,8 +1,11 @@
-package com.kilometer.domain.archive.archiveImage;
+package com.kilometer.domain.archive.userVisitPlace;
 
 import com.kilometer.domain.archive.ArchiveEntity;
+import com.kilometer.domain.archive.PlaceType;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,20 +21,31 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Getter
-@Builder
 @Entity
+@Builder
 @Where(clause = "is_deleted=false")
-@SQLDelete(sql = "UPDATE archive_image SET isDeleted=true where id=?")
+@SQLDelete(sql = "UPDATE user_visit_place SET isDeleted=true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "archive_image")
-public class ArchiveImage {
+@Table(name = "user_visit_place")
+public class UserVisitPlaceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String imageUrl;
+    @ManyToOne
+    @JoinColumn(name = "archive")
+    private ArchiveEntity archiveEntity;
+
+    @Enumerated(value = EnumType.STRING)
+    private PlaceType placeType;
+
+    private String placeName;
+
+    private String address;
+
+    private String roadAddress;
 
 
     @Builder.Default
@@ -42,10 +56,6 @@ public class ArchiveImage {
 
     @Builder.Default
     private boolean isDeleted = false;
-
-    @ManyToOne
-    @JoinColumn(name = "archive")
-    private ArchiveEntity archiveEntity;
 
     public void setArchiveEntity(ArchiveEntity archiveEntity) {
         this.archiveEntity = archiveEntity;

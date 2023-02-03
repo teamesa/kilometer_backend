@@ -15,13 +15,13 @@ public class UserVisitPlaceService {
     private final UserVisitPlaceRepository userVisitPlaceRepository;
 
     @Transactional
-    public List<UserVisitPlace> saveAll(List<UserVisitPlace> userVisitPlaces, Long archiveId) {
-        if (!userVisitPlaces.isEmpty()) {
+    public List<UserVisitPlaceEntity> saveAll(List<UserVisitPlaceEntity> userVisitPlaceEntities, Long archiveId) {
+        if (!userVisitPlaceEntities.isEmpty()) {
             ArchiveEntity archiveEntity = ArchiveEntity.builder().id(archiveId).build();
-            userVisitPlaces.forEach(userVisitPlace -> userVisitPlace.setArchiveEntity(archiveEntity));
-            userVisitPlaceRepository.saveAll(userVisitPlaces);
+            userVisitPlaceEntities.forEach(userVisitPlace -> userVisitPlace.setArchiveEntity(archiveEntity));
+            userVisitPlaceRepository.saveAll(userVisitPlaceEntities);
         }
-        return userVisitPlaces;
+        return userVisitPlaceEntities;
     }
 
     @Transactional
@@ -30,7 +30,7 @@ public class UserVisitPlaceService {
         userVisitPlaceRepository.deleteAllByArchiveEntityId(archiveId);
     }
 
-    public List<UserVisitPlace> findAllByArchiveId(Long archiveId) {
+    public List<UserVisitPlaceEntity> findAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
         return userVisitPlaceRepository.findAllByArchiveEntityId(archiveId);
     }
