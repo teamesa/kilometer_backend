@@ -184,6 +184,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                         .on(like.likedArchive.eq(archive)
                                 .and(like.likedUser.eq(user)))
                         .where(archive.id.eq(archiveId))
+                        .limit(1)
                         .fetchOne()
         );
     }
