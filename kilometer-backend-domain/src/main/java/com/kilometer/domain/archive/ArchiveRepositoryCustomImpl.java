@@ -1,10 +1,14 @@
 package com.kilometer.domain.archive;
 
+import static com.kilometer.domain.archive.archiveImage.QArchiveImage.archiveImage;
+import static com.kilometer.domain.archive.userVisitPlace.QUserVisitPlace.userVisitPlace;
+
 import com.kilometer.domain.archive.dto.ArchiveDetailDto;
 import com.kilometer.domain.archive.dto.ArchiveQueryRequest;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
+import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
 import com.kilometer.domain.archive.like.QLike;
 import com.kilometer.domain.item.QItemEntity;
 import com.kilometer.domain.user.QUser;
@@ -147,6 +151,36 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                 archive.isVisibleAtItem.eq(true)
             )
             .fetchOne();
+    }
+
+    @Override
+    public Optional<RealTimeArchiveDto> findRealTimeArchive(long archiveId) {
+        return Optional.ofNullable(queryFactory.select(
+                                Projections.fields(RealTimeArchiveDto.class,
+                                        archive.likeCount,
+                                        archive.starRating,
+                                        archive.updatedAt,
+                                        archive.comment,
+                                        archiveImage.imageUrl,
+                                        userVisitPlace.placeName,
+                                        itemEntity.title,
+                                        itemEntity.id.as("itemId"),
+                                        user.imageUrl.as("userImageUrl"),
+                                        user.name.as("userName")
+                                )
+                        )
+                        .from(archive)
+                        .leftJoin(userVisitPlace)
+                        .on(userVisitPlace.archive.eq(archive))
+                        .leftJoin(itemEntity)
+                        .on(archive.item.eq(itemEntity))
+                        .leftJoin(archiveImage)
+                        .on(archiveImage.archive.eq(archive))
+                        .leftJoin(user)
+                        .on(archive.user.eq(user))
+                        .where(archive.id.eq(archiveId))
+                        .fetchOne()
+        );
     }
 
     @SuppressWarnings("rawtypes")

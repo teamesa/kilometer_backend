@@ -2,10 +2,11 @@ package com.kilometer.domain.archive.dto;
 
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import java.time.LocalDateTime;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class MyArchiveDto {
     private Long id;
