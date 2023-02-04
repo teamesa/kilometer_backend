@@ -18,4 +18,5 @@ public class RealTimeArchiveDto {
     private Long itemId;
     private String userImageUrl;
     private String userName;
+    private boolean isLiked;
 }

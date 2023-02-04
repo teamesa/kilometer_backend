@@ -166,7 +166,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                                         itemEntity.title,
                                         itemEntity.id.as("itemId"),
                                         user.imageUrl.as("userImageUrl"),
-                                        user.name.as("userName")
+                                        user.name.as("userName"),
+                                        like.isLiked
                                 )
                         )
                         .from(archive)
@@ -178,6 +179,9 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                         .on(archiveImage.archive.eq(archive))
                         .leftJoin(user)
                         .on(archive.user.eq(user))
+                        .leftJoin(like)
+                        .on(like.likedArchive.eq(archive)
+                                .and(like.likedUser.eq(user)))
                         .where(archive.id.eq(archiveId))
                         .fetchOne()
         );

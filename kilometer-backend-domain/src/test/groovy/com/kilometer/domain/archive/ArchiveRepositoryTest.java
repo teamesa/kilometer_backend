@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageRepository;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
+import com.kilometer.domain.archive.like.Like;
+import com.kilometer.domain.archive.like.LikeRepository;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceRepository;
 import com.kilometer.domain.item.ItemEntity;
@@ -51,13 +53,18 @@ class ArchiveRepositoryTest {
     @Autowired
     UserVisitPlaceRepository userVisitPlaceRepository;
 
+    @Autowired
+    LikeRepository likeRepository;
+
     @DisplayName("실시간 아카이브에 필요한 데이터를 조회한다.")
     @Test
     void findReqlTimeArchive() {
-        
-        Archive savedArchive = saveArchive();
+
+        User savedUser = saveUser();
+        Archive savedArchive = saveArchive(savedUser);
         saveUserVisitPlace(savedArchive);
         saveArchiveImage(savedArchive);
+        saveArchiveLike(savedArchive, savedUser);
 
         RealTimeArchiveDto realTimeArchiveDto = archiveRepository.findRealTimeArchive(savedArchive.getId())
                 .get();
@@ -70,11 +77,22 @@ class ArchiveRepositoryTest {
                 () -> assertThat(realTimeArchiveDto.getPlaceName()).isEqualTo(PLACE_NAME),
                 () -> assertThat(realTimeArchiveDto.getTitle()).isEqualTo(TITLE),
                 () -> assertThat(realTimeArchiveDto.getUserImageUrl()).isEqualTo(USER_IMAGE_URL),
-                () -> assertThat(realTimeArchiveDto.getUserName()).isEqualTo(USER_NAME)
+                () -> assertThat(realTimeArchiveDto.getUserName()).isEqualTo(USER_NAME),
+                () -> assertThat(realTimeArchiveDto.isLiked()).isTrue()
         );
     }
 
-    private Archive saveArchive() {
+    private User saveUser() {
+        User user = User.builder()
+                .name(USER_NAME)
+                .email("email@gmail.com")
+                .imageUrl(USER_IMAGE_URL)
+                .role(Role.USER)
+                .build();
+        return userRepository.save(user);
+    }
+
+    private Archive saveArchive(User user) {
         ItemEntity item = ItemEntity.builder()
                 .exhibitionType(ExhibitionType.EXHIBITION)
                 .exposureType(ExposureType.ON)
@@ -96,20 +114,13 @@ class ArchiveRepositoryTest {
                 .build();
         ItemEntity savedItem = itemRepository.save(item);
 
-        User user = User.builder()
-                .name(USER_NAME)
-                .email("email@gmail.com")
-                .imageUrl(USER_IMAGE_URL)
-                .role(Role.USER)
-                .build();
-        User savedUser = userRepository.save(user);
 
         Archive archive = Archive.builder()
                 .starRating(STAR_RATING)
                 .likeCount(LIKE_COUNT)
                 .isVisibleAtItem(true)
                 .comment(COMMENT)
-                .user(savedUser)
+                .user(user)
                 .item(savedItem)
                 .build();
         return archiveRepository.save(archive);
@@ -132,5 +143,14 @@ class ArchiveRepositoryTest {
                 .archive(savedArchive)
                 .build();
         userVisitPlaceRepository.save(userVisitPlace);
+    }
+
+    public void saveArchiveLike(Archive archive, User user) {
+        Like like = Like.builder()
+                .likedUser(user)
+                .likedArchive(archive)
+                .isLiked(true)
+                .build();
+        likeRepository.save(like);
     }
 }
