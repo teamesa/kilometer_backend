@@ -1,4 +1,4 @@
-package com.kilometer.domain.archive;
+package com.kilometer.domain.homeModules.modules.realTimeArchive;
 
 import static com.kilometer.common.Fixture.ARCHIVE_IMAGE_URL;
 import static com.kilometer.common.Fixture.COMMENT;
@@ -9,8 +9,11 @@ import static com.kilometer.common.Fixture.TITLE;
 import static com.kilometer.common.Fixture.USER_IMAGE_URL;
 import static com.kilometer.common.Fixture.USER_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.kilometer.common.annotation.SpringTestWithData;
+import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveRepository;
+import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageRepository;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
@@ -18,6 +21,10 @@ import com.kilometer.domain.archive.like.Like;
 import com.kilometer.domain.archive.like.LikeRepository;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceRepository;
+import com.kilometer.domain.homeModules.ModuleParamDto;
+import com.kilometer.domain.homeModules.enumType.ModuleType;
+import com.kilometer.domain.homeModules.modules.Module;
+import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.item.enumType.ExhibitionType;
@@ -27,14 +34,18 @@ import com.kilometer.domain.item.enumType.RegionType;
 import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@DisplayName("ArchiveRepository 는 ")
-@DataJpaTest
-class ArchiveRepositoryTest {
+@DisplayName("RealTimeArchiveHandler 는 ")
+@SpringTestWithData
+class RealTimeArchiveHandlerTest {
+
+    @Autowired
+    RealTimeArchiveHandler realTimeArchiveHandler;
 
     @Autowired
     ArchiveImageRepository archiveImageRepository;
@@ -54,30 +65,32 @@ class ArchiveRepositoryTest {
     @Autowired
     LikeRepository likeRepository;
 
-    @DisplayName("실시간 아카이브에 필요한 데이터를 조회한다.")
+    @DisplayName("모듈 유형이 실시간 아카이브인지 확인한다.")
     @Test
-    void findReqlTimeArchive() {
+    void isRealTimeArchive() {
+        boolean actual = realTimeArchiveHandler.supports(ModuleType.REAL_TIME_ARCHIVE);
+
+        assertThat(actual).isTrue();
+    }
+
+    @DisplayName("실시간 아키이브에 대한 정보를 가져온다.")
+    @Test
+    void generateRealTimeArchives() {
         User savedUser = saveUser();
         Archive savedArchive = saveArchive(savedUser);
         saveUserVisitPlace(savedArchive);
         saveArchiveImage(savedArchive);
         saveArchiveLike(savedArchive, savedUser);
 
-        RealTimeArchiveDto realTimeArchiveDto = archiveRepository.findRealTimeArchive(savedArchive.getId())
-                .get();
+        Module module = Module.builder()
+                .moduleName(ModuleType.REAL_TIME_ARCHIVE)
+                .upperModuleTitle("upperTitle")
+                .lowerModuleTitle("lowerModuleTitle")
+                .build();
+        ModuleParamDto moduleParamDto = ModuleParamDto.of(LocalDateTime.now(), savedUser.getId()+1, ModuleDto.from(module));
+        List<RealTimeArchiveDto> generator = (List<RealTimeArchiveDto>)realTimeArchiveHandler.generator(moduleParamDto);
 
-        assertAll(
-                () -> assertThat(realTimeArchiveDto.getLikeCount()).isEqualTo(LIKE_COUNT),
-                () -> assertThat(realTimeArchiveDto.getStarRating()).isEqualTo(STAR_RATING),
-                () -> assertThat(realTimeArchiveDto.getComment()).isEqualTo(COMMENT),
-                () -> assertThat(realTimeArchiveDto.getImageUrl()).isEqualTo(ARCHIVE_IMAGE_URL),
-                () -> assertThat(realTimeArchiveDto.getPlaceName()).isEqualTo(PLACE_NAME),
-                () -> assertThat(realTimeArchiveDto.getTitle()).isEqualTo(TITLE),
-                () -> assertThat(realTimeArchiveDto.getUserId()).isEqualTo(savedUser.getId()),
-                () -> assertThat(realTimeArchiveDto.getUserImageUrl()).isEqualTo(USER_IMAGE_URL),
-                () -> assertThat(realTimeArchiveDto.getUserName()).isEqualTo(USER_NAME),
-                () -> assertThat(realTimeArchiveDto.isLiked()).isTrue()
-        );
+        assertThat(generator.size()).isEqualTo(1);
     }
 
     private User saveUser() {
@@ -141,7 +154,7 @@ class ArchiveRepositoryTest {
         userVisitPlaceRepository.save(userVisitPlace);
     }
 
-    private void saveArchiveLike(Archive archive, User user) {
+    public void saveArchiveLike(Archive archive, User user) {
         Like like = Like.builder()
                 .likedUser(user)
                 .likedArchive(archive)
