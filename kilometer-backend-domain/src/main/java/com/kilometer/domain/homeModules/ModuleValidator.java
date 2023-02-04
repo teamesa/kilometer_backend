@@ -3,6 +3,7 @@ package com.kilometer.domain.homeModules;
 import com.kilometer.domain.homeModules.dto.ModuleUpdateRequest;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.item.ItemService;
+import com.kilometer.domain.item.dto.ItemResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,6 +28,7 @@ public class ModuleValidator {
     private static final String EXPOSURE_ORDER_NUMBER_DUPLICATION = "해당 순서가 중복됩니다. : ";
     private static final String EXPOSURE_ORDER_NUMBER_IS_EMPTY = "순서가 비어있습니다.";
     private static final String MODULE_NAME_IS_EMPTY = "모듈이름을 선택해주세요.";
+    private static final String ITEM_NOT_EXHIBIT_ERROR = "해당 ITEM id은 현재 미전시 되있습니다. id : ";
 
     private final ItemService itemService;
 
@@ -84,29 +87,30 @@ public class ModuleValidator {
 
         modules.stream()
                 .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
-                .forEach(module -> {
-                    if (itemService.findOne(Long.valueOf(module.getExtraData())).isEmpty()) {
-                        errors.add(ITEM_ID_ERROR + module.getExtraData());
-                    }
-                });
+                .map(ModuleUpdateRequest::getExtraData)
+                .map(Long::parseLong)
+                .forEach(itemId -> {
+                    Optional<ItemResponse> targetItem = itemService.findOne(itemId);
 
-        modules.stream()
-                .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
-                .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
-                .forEach(optional -> optional.ifPresent(item -> {
+                    if (targetItem.isEmpty()) {
+                        errors.add(ITEM_ID_ERROR + itemId);
+                        return;
+                    }
+
+                    ItemResponse item = targetItem.get();
+
                     if (!StringUtils.hasText(item.getIntroduce())) {
                         errors.add(ITEM_INTRODUCE_ERROR + item.getId());
                     }
-                }));
 
-        modules.stream()
-                .filter(module -> ModuleType.SWIPE_ITEM.equals(module.getModuleName()))
-                .map(module -> itemService.findOne(Long.valueOf(module.getExtraData())))
-                .forEach(optional -> optional.ifPresent(item -> {
                     if (item.getDetailImageUrls().isEmpty()) {
                         errors.add(ITEM_DETAIL_IMAGE_URLS_ERROR + item.getId());
                     }
-                }));
+
+                    if (item.getDetailImageUrls().isEmpty()) {
+                        errors.add(ITEM_NOT_EXHIBIT_ERROR + item.getId());
+                    }
+                });
     }
 
     private void validationDuplicationExposureOrderNumber(
