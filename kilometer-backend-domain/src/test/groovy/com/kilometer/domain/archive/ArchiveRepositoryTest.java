@@ -76,6 +76,7 @@ class ArchiveRepositoryTest {
                 () -> assertThat(realTimeArchiveDto.getImageUrl()).isEqualTo(ARCHIVE_IMAGE_URL),
                 () -> assertThat(realTimeArchiveDto.getPlaceName()).isEqualTo(PLACE_NAME),
                 () -> assertThat(realTimeArchiveDto.getTitle()).isEqualTo(TITLE),
+                () -> assertThat(realTimeArchiveDto.getUserId()).isEqualTo(savedUser.getId()),
                 () -> assertThat(realTimeArchiveDto.getUserImageUrl()).isEqualTo(USER_IMAGE_URL),
                 () -> assertThat(realTimeArchiveDto.getUserName()).isEqualTo(USER_NAME),
                 () -> assertThat(realTimeArchiveDto.isLiked()).isTrue()
@@ -113,7 +114,6 @@ class ArchiveRepositoryTest {
                 .endDate(LocalDate.MAX)
                 .build();
         ItemEntity savedItem = itemRepository.save(item);
-
 
         Archive archive = Archive.builder()
                 .starRating(STAR_RATING)

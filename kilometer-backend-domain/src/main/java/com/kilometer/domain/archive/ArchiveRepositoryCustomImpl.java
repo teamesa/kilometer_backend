@@ -165,6 +165,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                                         userVisitPlace.placeName,
                                         itemEntity.title,
                                         itemEntity.id.as("itemId"),
+                                        user.id.as("userId"),
                                         user.imageUrl.as("userImageUrl"),
                                         user.name.as("userName"),
                                         like.isLiked
