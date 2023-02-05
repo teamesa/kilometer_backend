@@ -44,5 +44,4 @@ public class ItemController {
     public void getSummary(@PathVariable Long itemId) {
 
     }
-
 }
