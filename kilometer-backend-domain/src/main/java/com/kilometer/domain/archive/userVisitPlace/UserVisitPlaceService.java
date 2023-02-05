@@ -1,12 +1,11 @@
 package com.kilometer.domain.archive.userVisitPlace;
 
 import com.google.common.base.Preconditions;
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,23 +15,23 @@ public class UserVisitPlaceService {
     private final UserVisitPlaceRepository userVisitPlaceRepository;
 
     @Transactional
-    public List<UserVisitPlace> saveAll(List<UserVisitPlace> userVisitPlaces, Long archiveId) {
-        if (!userVisitPlaces.isEmpty()) {
-            Archive archive = Archive.builder().id(archiveId).build();
-            userVisitPlaces.forEach(userVisitPlace -> userVisitPlace.setArchive(archive));
-            userVisitPlaceRepository.saveAll(userVisitPlaces);
+    public List<UserVisitPlaceEntity> saveAll(List<UserVisitPlaceEntity> userVisitPlaceEntities, Long archiveId) {
+        if (!userVisitPlaceEntities.isEmpty()) {
+            ArchiveEntity archiveEntity = ArchiveEntity.builder().id(archiveId).build();
+            userVisitPlaceEntities.forEach(userVisitPlace -> userVisitPlace.setArchiveEntity(archiveEntity));
+            userVisitPlaceRepository.saveAll(userVisitPlaceEntities);
         }
-        return userVisitPlaces;
+        return userVisitPlaceEntities;
     }
 
     @Transactional
     public void deleteAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        userVisitPlaceRepository.deleteAllByArchiveId(archiveId);
+        userVisitPlaceRepository.deleteAllByArchiveEntityId(archiveId);
     }
 
-    public List<UserVisitPlace> findAllByArchiveId(Long archiveId) {
+    public List<UserVisitPlaceEntity> findAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        return userVisitPlaceRepository.findAllByArchiveId(archiveId);
+        return userVisitPlaceRepository.findAllByArchiveEntityId(archiveId);
     }
 }

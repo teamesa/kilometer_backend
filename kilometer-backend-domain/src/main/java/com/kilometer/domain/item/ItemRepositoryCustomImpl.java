@@ -1,10 +1,7 @@
 package com.kilometer.domain.item;
 
-import static com.querydsl.core.group.GroupBy.groupBy;
-import static com.querydsl.core.group.GroupBy.list;
-
-import com.kilometer.domain.archive.QArchive;
-import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlace;
+import com.kilometer.domain.archive.QArchiveEntity;
+import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlaceEntity;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
@@ -41,9 +38,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
     private final static QItemDetail itemDetail = QItemDetail.itemDetail;
     private final static QItemDetailImage itemDetailImage = QItemDetailImage.itemDetailImage;
-    private final static QUserVisitPlace visitPlace = QUserVisitPlace.userVisitPlace;
+    private final static QUserVisitPlaceEntity visitPlace = QUserVisitPlaceEntity.userVisitPlaceEntity;
     private final static QPick pick = QPick.pick;
-    private final static QArchive archive = QArchive.archive;
+    private final static QArchiveEntity archive = QArchiveEntity.archiveEntity;
 
     public ItemRepositoryCustomImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);

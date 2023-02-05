@@ -1,13 +1,13 @@
 package com.kilometer.backend.security.exception;
 
-import com.kilometer.exception.KilometerErrorCode;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+import static com.kilometer.exception.KilometerErrorCode.ARCHIVE_NOT_FOUND;
+import static com.kilometer.exception.KilometerErrorCode.ARCHIVE_VALIDATION_EXCEPTION;
 
+import com.kilometer.exception.KilometerErrorCode;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.kilometer.exception.KilometerErrorCode.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ErrorStatusMapper {
@@ -16,7 +16,8 @@ public class ErrorStatusMapper {
 
 
     private ErrorStatusMapper() {
-        MAPPER.put(ARCHIVE_NOT_FOUND,HttpStatus.NOT_FOUND);
+        MAPPER.put(ARCHIVE_NOT_FOUND, HttpStatus.NOT_FOUND);
+        MAPPER.put(ARCHIVE_VALIDATION_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
 
     public HttpStatus getStatus(KilometerErrorCode code) {

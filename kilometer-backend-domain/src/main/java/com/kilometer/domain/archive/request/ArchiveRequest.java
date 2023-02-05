@@ -1,10 +1,11 @@
 package com.kilometer.domain.archive.request;
 
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.PlaceType;
-import com.kilometer.domain.archive.archiveImage.ArchiveImage;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
+import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.dto.PlaceInfo;
-import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -25,8 +26,8 @@ public class ArchiveRequest {
     private List<String> photoUrls;
     private List<PlaceInfo> placeInfos;
 
-    public Archive makeArchive() {
-        return Archive.builder()
+    public ArchiveEntity makeArchive() {
+        return ArchiveEntity.builder()
             .comment(this.getComment())
             .starRating(this.getStarRating())
             .isVisibleAtItem(this.isVisibleAtItem())
@@ -34,19 +35,19 @@ public class ArchiveRequest {
     }
 
 
-    public List<ArchiveImage> makeArchiveImages() {
-        List<ArchiveImage> images = new ArrayList<>();
+    public List<ArchiveImageEntity> makeArchiveImages() {
+        List<ArchiveImageEntity> images = new ArrayList<>();
         this.getPhotoUrls().forEach(url -> {
-            ArchiveImage photo = ArchiveImage.builder().imageUrl(url).build();
+            ArchiveImageEntity photo = ArchiveImageEntity.builder().imageUrl(url).build();
             images.add(photo);
         });
         return images;
     }
 
-    public List<UserVisitPlace> makeVisitedPlace() {
-        List<UserVisitPlace> places = new ArrayList<>();
+    public List<UserVisitPlaceEntity> makeVisitedPlace() {
+        List<UserVisitPlaceEntity> places = new ArrayList<>();
         for (PlaceInfo info : this.getPlaceInfos()) {
-            UserVisitPlace visitPlace = UserVisitPlace.builder()
+            UserVisitPlaceEntity visitPlace = UserVisitPlaceEntity.builder()
                 .placeType(PlaceType.valueOf(info.getPlaceType()))
                 .placeName(info.getName())
                 .address(info.getAddress())
@@ -55,5 +56,9 @@ public class ArchiveRequest {
             places.add(visitPlace);
         }
         return places;
+    }
+
+    public Archive toDomain() {
+        return new Archive(null, this.comment, this.starRating, this.isVisibleAtItem);
     }
 }

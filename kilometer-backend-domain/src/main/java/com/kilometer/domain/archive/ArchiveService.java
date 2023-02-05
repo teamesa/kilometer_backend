@@ -1,8 +1,9 @@
 package com.kilometer.domain.archive;
 
 import com.google.common.base.Preconditions;
-import com.kilometer.domain.archive.archiveImage.ArchiveImage;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
+import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
 import com.kilometer.domain.archive.dto.ArchiveDetailDto;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
@@ -20,7 +21,7 @@ import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
-import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.paging.PagingStatusService;
@@ -30,13 +31,10 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -59,19 +57,22 @@ public class ArchiveService {
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
         validateArchiveRequest(archiveRequest, userId);
 
+        Archive archive = archiveRequest.toDomain();
+        archive.validate();
+
         UserResponse userResponse = userService.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
 
-        Archive archive = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
+        ArchiveEntity archiveEntity = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
 
-        Long archiveId = archive.getId();
-        List<ArchiveImage> archiveImages = archiveRequest.makeArchiveImages();
-        List<UserVisitPlace> userVisitPlaces = archiveRequest.makeVisitedPlace();
-        archiveImageService.saveAll(archiveImages, archiveId);
-        userVisitPlaceService.saveAll(userVisitPlaces, archiveId);
+        Long archiveId = archiveEntity.getId();
+        List<ArchiveImageEntity> archiveImageEntities = archiveRequest.makeArchiveImages();
+        List<UserVisitPlaceEntity> userVisitPlaceEntities = archiveRequest.makeVisitedPlace();
+        archiveImageService.saveAll(archiveImageEntities, archiveId);
+        userVisitPlaceService.saveAll(userVisitPlaceEntities, archiveId);
 
-        return archiveAggregateConverter.convertArchiveInfo(archive, userResponse, archiveImages,
-            userVisitPlaces);
+        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, userResponse, archiveImageEntities,
+            userVisitPlaceEntities);
     }
 
     @Transactional
@@ -79,24 +80,24 @@ public class ArchiveService {
         Preconditions.checkNotNull(userId, "id must not be null");
         Preconditions.checkNotNull(request.getItemId(), "Item id must not be null");
 
-        Archive archive = archiveRepository.findByItemIdAndUserId(request.getItemId(), userId)
+        ArchiveEntity archiveEntity = archiveRepository.findByItemIdAndUserId(request.getItemId(), userId)
             .orElseThrow(ArchiveNotFoundException::new);
 
-        Long archiveId = archive.getId();
-        List<ArchiveImage> archiveImages = request.makeArchiveImages();
-        List<UserVisitPlace> userVisitPlaces = request.makeVisitedPlace();
+        Long archiveId = archiveEntity.getId();
+        List<ArchiveImageEntity> archiveImageEntities = request.makeArchiveImages();
+        List<UserVisitPlaceEntity> userVisitPlaceEntities = request.makeVisitedPlace();
 
-        updateArchiveImages(archiveImages, archiveId);
-        updateUserVisitPlace(userVisitPlaces, archiveId);
+        updateArchiveImages(archiveImageEntities, archiveId);
+        updateUserVisitPlace(userVisitPlaceEntities, archiveId);
 
-        archive.update(request);
+        archiveEntity.update(request);
 
-        return archiveAggregateConverter.convertArchiveInfo(archive, archiveImages,
-            userVisitPlaces);
+        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, archiveImageEntities,
+            userVisitPlaceEntities);
     }
 
     public ArchiveResponse findAllByItemIdAndUserId(Long itemId, Long userId,
-        RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
+                                                    RequestPagingStatus requestPagingStatus, ArchiveSortType sortType) {
         Preconditions.checkNotNull(itemId, "id must not be null");
         Preconditions.checkNotNull(userId, "id must not be null");
         Preconditions.checkNotNull(requestPagingStatus, "page value must not be null");
@@ -120,7 +121,7 @@ public class ArchiveService {
     }
 
     public MyArchiveResponse findAllByUserId(Long userId, RequestPagingStatus requestPagingStatus,
-        ArchiveSortType sortType) {
+                                             ArchiveSortType sortType) {
         Preconditions.checkNotNull(userId, "id must not be null");
         Preconditions.checkNotNull(requestPagingStatus, "page value must not be null");
 
@@ -145,17 +146,17 @@ public class ArchiveService {
     public ArchiveDeleteResponse delete(Long archiveId, Long userId) throws IllegalAccessException {
         Preconditions.checkNotNull(archiveId, "id must not be null");
 
-        Archive archive = archiveRepository.findById(archiveId)
+        ArchiveEntity archiveEntity = archiveRepository.findById(archiveId)
             .orElseThrow(() -> new IllegalArgumentException("Archive does not exists."));
 
-        if (!userId.equals(archive.getUser().getId())) {
+        if (!userId.equals(archiveEntity.getUser().getId())) {
             throw new IllegalAccessException("Archives can only be deleted by the writer.");
         }
 
         likeService.deleteAll(archiveId);
         archiveImageService.deleteAllByArchiveId(archiveId);
         userVisitPlaceService.deleteAllByArchiveId(archiveId);
-        archiveRepository.delete(archive);
+        archiveRepository.delete(archiveEntity);
 
         return ArchiveDeleteResponse.from(archiveId);
     }
@@ -180,13 +181,13 @@ public class ArchiveService {
                 userId, false)
             .orElseThrow(ArchiveNotFoundException::new);
 
-        List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
+        List<UserVisitPlaceEntity> userVisitPlaceEntities = userVisitPlaceService.findAllByArchiveId(
             archiveDetailDto.getId());
-        List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
+        List<ArchiveImageEntity> archiveImageEntities = archiveImageService.findAllByArchiveId(
             archiveDetailDto.getId());
 
-        return archiveAggregateConverter.convertArchiveDetail(archiveDetailDto, userVisitPlaces,
-            archiveImages);
+        return archiveAggregateConverter.convertArchiveDetail(archiveDetailDto, userVisitPlaceEntities,
+            archiveImageEntities);
     }
 
     public Long findArchiveIdByItemIdAndUserId(Long itemId, Long userId) {
@@ -194,17 +195,12 @@ public class ArchiveService {
         Preconditions.checkNotNull(userId, "User id must not be null : " + userId);
 
         return archiveRepository.findByItemIdAndUserId(itemId, userId)
-            .map(Archive::getId)
+            .map(ArchiveEntity::getId)
             .orElse(null);
     }
 
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
-        Preconditions.checkNotNull(archiveRequest.getComment(),
-            "Comment must not be null");
-        Preconditions.checkArgument(
-            (archiveRequest.getStarRating() > 0 && archiveRequest.getStarRating() <= 5),
-            "별점은 1이상 5이하의 숫자여야 합니다. now : " + archiveRequest.getStarRating());
         Preconditions.checkNotNull(archiveRequest.getPhotoUrls(),
             "Photo urls must not be null");
         Preconditions.checkNotNull(archiveRequest.getPlaceInfos(),
@@ -216,31 +212,31 @@ public class ArchiveService {
                 archiveRequest.getItemId(), userId));
     }
 
-    private Archive saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {
-        Archive archive = archiveRequest.makeArchive();
-        archive.setUser(User.builder().id(userId).build());
-        archive.setItem(ItemEntity.builder().id(itemId).build());
-        archiveRepository.save(archive);
-        return archive;
+    private ArchiveEntity saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {
+        ArchiveEntity archiveEntity = archiveRequest.makeArchive();
+        archiveEntity.setUser(User.builder().id(userId).build());
+        archiveEntity.setItem(ItemEntity.builder().id(itemId).build());
+        archiveRepository.save(archiveEntity);
+        return archiveEntity;
     }
 
-    private List<ArchiveImage> updateArchiveImages(List<ArchiveImage> newArchiveImages,
-        Long archiveId) {
+    private List<ArchiveImageEntity> updateArchiveImages(List<ArchiveImageEntity> newArchiveImageEntities,
+                                                         Long archiveId) {
         archiveImageService.deleteAllByArchiveId(archiveId);
-        return archiveImageService.saveAll(newArchiveImages, archiveId);
+        return archiveImageService.saveAll(newArchiveImageEntities, archiveId);
     }
 
-    private List<UserVisitPlace> updateUserVisitPlace(List<UserVisitPlace> newUserVisitPlaces,
-        Long archiveId) {
+    private List<UserVisitPlaceEntity> updateUserVisitPlace(List<UserVisitPlaceEntity> newUserVisitPlaceEntities,
+                                                            Long archiveId) {
         userVisitPlaceService.deleteAllByArchiveId(archiveId);
-        return userVisitPlaceService.saveAll(newUserVisitPlaces, archiveId);
+        return userVisitPlaceService.saveAll(newUserVisitPlaceEntities, archiveId);
     }
 
     private void updateArchiveLikeCount(boolean status, Long archiveId) {
         if (status) {
-            updateArchiveLikeCount(Archive::plusLikeCount, archiveId);
+            updateArchiveLikeCount(ArchiveEntity::plusLikeCount, archiveId);
         } else {
-            updateArchiveLikeCount(Archive::minusLikeCount, archiveId);
+            updateArchiveLikeCount(ArchiveEntity::minusLikeCount, archiveId);
         }
     }
 
@@ -252,12 +248,12 @@ public class ArchiveService {
     private List<ArchiveInfo> convertArchiveInfos(Page<ItemArchiveDto> items) {
         return items.stream()
             .map(itemArchiveDto -> {
-                List<ArchiveImage> archiveImages = archiveImageService.findAllByArchiveId(
+                List<ArchiveImageEntity> archiveImageEntities = archiveImageService.findAllByArchiveId(
                     itemArchiveDto.getId());
-                List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
+                List<UserVisitPlaceEntity> userVisitPlaceEntities = userVisitPlaceService.findAllByArchiveId(
                     itemArchiveDto.getId());
-                return archiveAggregateConverter.convertArchiveInfo(itemArchiveDto, archiveImages,
-                    userVisitPlaces);
+                return archiveAggregateConverter.convertArchiveInfo(itemArchiveDto, archiveImageEntities,
+                    userVisitPlaceEntities);
             })
             .collect(Collectors.toList());
     }
@@ -267,16 +263,16 @@ public class ArchiveService {
             .map(myArchiveDto -> {
                 boolean existImages = archiveImageService.existArchiveImagesByArchiveId(
                     myArchiveDto.getId());
-                List<UserVisitPlace> userVisitPlaces = userVisitPlaceService.findAllByArchiveId(
+                List<UserVisitPlaceEntity> userVisitPlaceEntities = userVisitPlaceService.findAllByArchiveId(
                     myArchiveDto.getId());
                 return archiveAggregateConverter.convertMyArchiveInfo(myArchiveDto, existImages,
-                    userVisitPlaces);
+                    userVisitPlaceEntities);
             })
             .collect(Collectors.toList());
     }
 
     private ArchiveResponse convertingItemArchive(ResponsePagingStatus responsePagingStatus,
-        List<ArchiveInfo> archiveInfos, Double avgStarRating) {
+                                                  List<ArchiveInfo> archiveInfos, Double avgStarRating) {
         return ArchiveResponse.builder()
             .responsePagingStatus(responsePagingStatus)
             .avgStarRating(avgStarRating)
@@ -285,7 +281,7 @@ public class ArchiveService {
     }
 
     private MyArchiveResponse convertingMyArchiveResponse(ResponsePagingStatus responsePagingStatus,
-        List<MyArchiveInfo> myArchiveInfos, String convertedTitle) {
+                                                          List<MyArchiveInfo> myArchiveInfos, String convertedTitle) {
         return MyArchiveResponse.builder()
             .title(convertedTitle)
             .contents(myArchiveInfos)
@@ -300,8 +296,8 @@ public class ArchiveService {
         return FrontUrlUtils.getFrontMyArchiveTitlePattern(totalContentsCount);
     }
 
-    private void updateArchiveLikeCount(Function<Archive, Archive> mapper, Long archiveId) {
-        Function<Long, Archive> generated = it -> archiveRepository.findById(archiveId)
+    private void updateArchiveLikeCount(Function<ArchiveEntity, ArchiveEntity> mapper, Long archiveId) {
+        Function<Long, ArchiveEntity> generated = it -> archiveRepository.findById(archiveId)
             .map(mapper)
             .map(archiveRepository::save)
             .orElseThrow(() -> new IllegalArgumentException("Archive가 존재하지 않습니다. id = " + it));

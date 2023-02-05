@@ -1,7 +1,7 @@
 package com.kilometer.domain.archive.archiveImage;
 
 import com.google.common.base.Preconditions;
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -17,28 +17,28 @@ public class ArchiveImageService {
     private final ArchiveImageRepository archiveImageRepository;
 
     @Transactional
-    public List<ArchiveImage> saveAll(List<ArchiveImage> archiveImages, Long archiveId) {
-        Preconditions.checkNotNull(archiveImages, "Archive images must not be null");
-        if(archiveImages.isEmpty()) {
+    public List<ArchiveImageEntity> saveAll(List<ArchiveImageEntity> archiveImageEntities, Long archiveId) {
+        Preconditions.checkNotNull(archiveImageEntities, "Archive images must not be null");
+        if(archiveImageEntities.isEmpty()) {
             return List.of();
         }
-        Archive archive = Archive.builder().id(archiveId).build();
-        archiveImages.forEach(archiveImage -> archiveImage.setArchive(archive));
-        return  archiveImageRepository.saveAll(archiveImages);
+        ArchiveEntity archiveEntity = ArchiveEntity.builder().id(archiveId).build();
+        archiveImageEntities.forEach(archiveImage -> archiveImage.setArchiveEntity(archiveEntity));
+        return  archiveImageRepository.saveAll(archiveImageEntities);
     }
     @Transactional
     public void deleteAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        archiveImageRepository.deleteAllByArchiveId(archiveId);
+        archiveImageRepository.deleteAllByArchiveEntityId(archiveId);
     }
 
-    public List<ArchiveImage> findAllByArchiveId(Long archiveId) {
+    public List<ArchiveImageEntity> findAllByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        return archiveImageRepository.findAllByArchiveId(archiveId);
+        return archiveImageRepository.findAllByArchiveEntityId(archiveId);
     }
 
     public boolean existArchiveImagesByArchiveId(Long archiveId) {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null : " + archiveId);
-        return archiveImageRepository.existsArchiveImagesByArchiveId(archiveId);
+        return archiveImageRepository.existsArchiveImagesByArchiveEntityId(archiveId);
     }
 }
