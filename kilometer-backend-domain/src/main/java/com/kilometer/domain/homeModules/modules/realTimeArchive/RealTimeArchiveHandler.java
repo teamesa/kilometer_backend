@@ -7,7 +7,10 @@ import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
+import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
+import com.kilometer.domain.homeModules.modules.realTimeArchive.dto.RealTimeArchiveResponse;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -29,7 +32,7 @@ public class RealTimeArchiveHandler implements ModuleHandler {
 
     @Override
     public Object generator(final ModuleParamDto paramDto) throws RuntimeException {
-        return archiveRepository.findAll()
+        List<RealTimeArchiveDto> realTimeArchiveDtos = archiveRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparing(Archive::getUpdatedAt))
                 .map(archive -> archiveRepository.findRealTimeArchive(archive.getId())
@@ -38,6 +41,13 @@ public class RealTimeArchiveHandler implements ModuleHandler {
                 .limit(MAX_ARCHIVES)
                 .map(realTimeArchiveDto -> doesLikeArchive(realTimeArchiveDto, paramDto))
                 .collect(Collectors.toList());
+
+        ModuleDto moduleDto = paramDto.getModuleDto();
+        return RealTimeArchiveResponse.builder()
+                .topTitle(moduleDto.getUpperModuleTitle())
+                .bottomTitle(moduleDto.getLowerModuleTitle())
+                .archives(realTimeArchiveDtos)
+                .build();
     }
 
     private boolean hasArchiveImage(RealTimeArchiveDto realTimeArchiveDto) {

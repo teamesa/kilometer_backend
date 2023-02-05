@@ -9,6 +9,7 @@ import static com.kilometer.common.Fixture.TITLE;
 import static com.kilometer.common.Fixture.USER_IMAGE_URL;
 import static com.kilometer.common.Fixture.USER_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.kilometer.common.annotation.SpringTestWithData;
 import com.kilometer.domain.archive.Archive;
@@ -25,6 +26,7 @@ import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.Module;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
+import com.kilometer.domain.homeModules.modules.realTimeArchive.dto.RealTimeArchiveResponse;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.item.enumType.ExhibitionType;
@@ -88,9 +90,13 @@ class RealTimeArchiveHandlerTest {
                 .lowerModuleTitle("lowerModuleTitle")
                 .build();
         ModuleParamDto moduleParamDto = ModuleParamDto.of(LocalDateTime.now(), savedUser.getId()+1, ModuleDto.from(module));
-        List<RealTimeArchiveDto> generator = (List<RealTimeArchiveDto>)realTimeArchiveHandler.generator(moduleParamDto);
+        RealTimeArchiveResponse realTimeArchiveResponse = (RealTimeArchiveResponse)realTimeArchiveHandler.generator(moduleParamDto);
 
-        assertThat(generator.size()).isEqualTo(1);
+        assertAll(
+                () -> assertThat(realTimeArchiveResponse.getArchives().size()).isEqualTo(1),
+                () -> assertThat(realTimeArchiveResponse.getTopTitle()).isEqualTo("upperTitle"),
+                () -> assertThat(realTimeArchiveResponse.getBottomTitle()).isEqualTo("lowerModuleTitle")
+        );
     }
 
     private User saveUser() {
