@@ -11,13 +11,16 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdditionalInformationDto {
 
-    private UserDto user;
-    private HeartDto heart;
-    private int likeCount;
-    private int starRating;
-    private String updatedAt;
-    private String dimColor;
-    private String opacity;
+    public static final String DIM_COLOR = "#fff";
+    public static final String OPACITY = "0.8";
+
+    private final UserDto user;
+    private final HeartDto heart;
+    private final int likeCount;
+    private final int starRating;
+    private final String updatedAt;
+    private final String dimColor;
+    private final String opacity;
 
     static AdditionalInformationDto from(RealTimeArchiveDto realTimeArchiveDto) {
         return AdditionalInformationDto.builder()
@@ -26,8 +29,8 @@ public class AdditionalInformationDto {
                 .likeCount(realTimeArchiveDto.getLikeCount())
                 .starRating(realTimeArchiveDto.getStarRating())
                 .updatedAt(realTimeArchiveDto.getUpdatedAt().toString())
-                .dimColor("#fff")
-                .opacity("0.8")
+                .dimColor(DIM_COLOR)
+                .opacity(OPACITY)
                 .build();
     }
 

@@ -10,9 +10,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ArchiveDto {
 
-    private PhotoDto photo;
-    private AdditionalInformationDto additionalInformation;
-    private InformationDto information;
+    private final PhotoDto photo;
+    private final AdditionalInformationDto additionalInformation;
+    private final InformationDto information;
 
     public static ArchiveDto from(RealTimeArchiveDto realTimeArchiveDto) {
         return ArchiveDto.builder()

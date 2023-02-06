@@ -1,6 +1,6 @@
 package com.kilometer.backend.controller.dto.module.realtimearchive;
 
-import com.kilometer.backend.util.Convertor;
+import com.kilometer.backend.util.StringConvertor;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,14 +12,14 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class InformationDto {
 
-    private String places;
-    private String comment;
-    private TitleDto title;
+    private final String places;
+    private final String comment;
+    private final TitleDto title;
 
     static InformationDto from(RealTimeArchiveDto realTimeArchiveDto) {
         return InformationDto.builder()
-                .places(Convertor.convertNullToBlank(realTimeArchiveDto.getPlaceName()))
-                .comment(Convertor.convertNullToBlank(realTimeArchiveDto.getComment()))
+                .places(StringConvertor.convertNullToBlank(realTimeArchiveDto.getPlaceName()))
+                .comment(StringConvertor.convertNullToBlank(realTimeArchiveDto.getComment()))
                 .title(TitleDto.from(realTimeArchiveDto))
                 .build();
     }

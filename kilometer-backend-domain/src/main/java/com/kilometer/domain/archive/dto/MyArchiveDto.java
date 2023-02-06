@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class MyArchiveDto {
     private Long id;
@@ -15,4 +15,16 @@ public class MyArchiveDto {
     private String listImageUrl;
     private String comment;
     private LocalDateTime updatedAt;
+
+    @Override
+    public String toString() {
+        return "MyArchiveDto{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", exhibitionType=" + exhibitionType +
+                ", listImageUrl='" + listImageUrl + '\'' +
+                ", comment='" + comment + '\'' +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

@@ -13,17 +13,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class RealTimeArchiveHandler implements ModuleHandler {
 
     private static final int MAX_ARCHIVES = 4;
 
-    private ArchiveRepository archiveRepository;
+    private final ArchiveRepository archiveRepository;
 
     @Override
     public boolean supports(final ModuleType moduleType) {

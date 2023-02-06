@@ -1,6 +1,6 @@
 package com.kilometer.backend.controller.dto.module.realtimearchive;
 
-import com.kilometer.backend.util.Convertor;
+import com.kilometer.backend.util.StringConvertor;
 import com.kilometer.domain.homeModules.ModuleResponseDto;
 import com.kilometer.domain.homeModules.modules.realTimeArchive.dto.RealTimeArchiveResponse;
 import java.util.List;
@@ -12,28 +12,28 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ArchivesDto {
+public class ArchivesResponse {
 
-    private String toptitle;
-    private String bottomTittle;
-    private List<ArchiveDto> archives;
+    private final String topTitle;
+    private final String bottomTittle;
+    private final List<ArchiveDto> archives;
 
-    public static ArchivesDto from(ModuleResponseDto<RealTimeArchiveResponse> moduleResponseDtos) {
+    public static ArchivesResponse from(ModuleResponseDto<RealTimeArchiveResponse> moduleResponseDtos) {
         RealTimeArchiveResponse realTimeArchiveResponse = moduleResponseDtos.getData();
         List<ArchiveDto> archiveDtos = realTimeArchiveResponse.getArchives()
                 .stream()
                 .map(ArchiveDto::from)
                 .collect(Collectors.toList());
-        return ArchivesDto.builder()
+        return ArchivesResponse.builder()
                 .archives(archiveDtos)
-                .toptitle(Convertor.convertNullToBlank(realTimeArchiveResponse.getTopTitle()))
-                .bottomTittle(Convertor.convertNullToBlank(realTimeArchiveResponse.getBottomTitle()))
+                .topTitle(StringConvertor.convertNullToBlank(realTimeArchiveResponse.getTopTitle()))
+                .bottomTittle(StringConvertor.convertNullToBlank(realTimeArchiveResponse.getBottomTitle()))
                 .build();
     }
 
     @Override
     public String toString() {
-        return "ArchivesDto{" +
+        return "ArchivesResponse{" +
                 "archives=" + archives +
                 '}';
     }

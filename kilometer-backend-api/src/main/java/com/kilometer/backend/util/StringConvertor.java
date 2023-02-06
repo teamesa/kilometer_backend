@@ -1,6 +1,6 @@
 package com.kilometer.backend.util;
 
-public class Convertor {
+public class StringConvertor {
 
     public static String convertNullToBlank(String target) {
         if (target == null) {

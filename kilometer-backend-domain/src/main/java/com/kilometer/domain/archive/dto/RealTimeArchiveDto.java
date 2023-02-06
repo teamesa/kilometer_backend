@@ -24,4 +24,22 @@ public class RealTimeArchiveDto {
     private String userImageUrl;
     private String userName;
     private boolean isLiked;
+
+    @Override
+    public String toString() {
+        return "RealTimeArchiveDto{" +
+                "likeCount=" + likeCount +
+                ", starRating=" + starRating +
+                ", updatedAt=" + updatedAt +
+                ", comment='" + comment + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", placeName='" + placeName + '\'' +
+                ", title='" + title + '\'' +
+                ", itemId=" + itemId +
+                ", userId=" + userId +
+                ", userImageUrl='" + userImageUrl + '\'' +
+                ", userName='" + userName + '\'' +
+                ", isLiked=" + isLiked +
+                '}';
+    }
 }

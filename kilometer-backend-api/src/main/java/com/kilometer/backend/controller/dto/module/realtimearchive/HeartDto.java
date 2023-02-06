@@ -12,8 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class HeartDto {
 
-    private String link;
-    private boolean heartClicked;
+    private final String link;
+    private final boolean heartClicked;
 
     static HeartDto from(RealTimeArchiveDto realTimeArchiveDto) {
         return HeartDto.builder()

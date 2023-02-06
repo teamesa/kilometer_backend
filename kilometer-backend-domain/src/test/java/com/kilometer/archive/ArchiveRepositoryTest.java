@@ -1,4 +1,4 @@
-package com.kilometer.domain.archive;
+package com.kilometer.archive;
 
 import static com.kilometer.common.Fixture.ARCHIVE_IMAGE_URL;
 import static com.kilometer.common.Fixture.COMMENT;
@@ -11,6 +11,9 @@ import static com.kilometer.common.Fixture.USER_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveRepository;
+import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageRepository;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;

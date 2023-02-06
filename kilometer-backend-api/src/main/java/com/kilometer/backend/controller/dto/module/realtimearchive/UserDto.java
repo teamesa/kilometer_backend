@@ -11,8 +11,8 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserDto {
 
-    private String name;
-    private String photoUrl;
+    private final String name;
+    private final String photoUrl;
 
     static UserDto from(RealTimeArchiveDto realTimeArchiveDto) {
         return UserDto.builder()

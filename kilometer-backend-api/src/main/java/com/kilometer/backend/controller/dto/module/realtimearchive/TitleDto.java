@@ -12,8 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TitleDto {
 
-    private String link;
-    private String value;
+    private final String link;
+    private final String value;
 
     static TitleDto from(RealTimeArchiveDto realTimeArchiveDto) {
         return TitleDto.builder()
