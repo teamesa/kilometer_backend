@@ -17,6 +17,7 @@ import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImage;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageRepository;
+import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.like.Like;
 import com.kilometer.domain.archive.like.LikeRepository;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
