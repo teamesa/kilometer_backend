@@ -1,6 +1,6 @@
 package com.kilometer.domain.archive.like;
 
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.user.User;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ import org.hibernate.annotations.Where;
 @Getter
 @Entity
 @Builder
-@Where(clause = "isDeleted=false")
+@Where(clause = "is_deleted=false")
 @SQLDelete(sql = "UPDATE archive_like SET isDeleted=true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -50,7 +50,7 @@ public class Like {
 
     @ManyToOne
     @JoinColumn(name = "likedArchive")
-    private Archive likedArchive;
+    private ArchiveEntity likedArchiveEntity;
 
     public Like changeIsLiked(boolean status) {
         this.isLiked = status;

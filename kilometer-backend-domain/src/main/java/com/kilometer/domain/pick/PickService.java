@@ -9,7 +9,7 @@ import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.pick.dto.MostPickItemDto;
 import com.kilometer.domain.pick.dto.MostPickResponse;
 import com.kilometer.domain.pick.dto.MyPickResponse;
-import com.kilometer.domain.pick.dto.PickItemResponse;
+import com.kilometer.domain.pick.dto.PickItemDto;
 import com.kilometer.domain.pick.dto.PickRequest;
 import com.kilometer.domain.pick.dto.PickResponse;
 import com.kilometer.domain.user.User;
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PickService {
 
     private final PickRepository pickRepository;
@@ -70,14 +71,24 @@ public class PickService {
 
         User pickedUser = User.builder().id(userId).build();
         Pageable pageable = pagingStatusService.makePageable(pickRequest.getRequestPagingStatus());
+        Page<PickItemDto> pageablePicks = pickRepository.findAllMyPickByPickedUser(pageable, pickedUser);
+        pageablePicks.stream().forEach(PickItemDto::updateApiTypeToPick);
 
-        Page<Pick> pageablePicks = pickRepository.findByPickedUserAndIsHeartedOrderByUpdatedAtDesc(pickedUser, true, pageable);
-        long pickCount = pageablePicks.getTotalElements();
-
-        return convertToMyPick(pageablePicks, pickCount);
+        return convertToMyPick(pageablePicks, pageablePicks.getTotalElements());
     }
 
-    @Transactional
+    private MyPickResponse convertToMyPick(Page<PickItemDto> pageablePicks, long pickCount) {
+        List<ListItem> items = pageablePicks.stream()
+                .map(listItemAggregateConverter::convert)
+                .collect(Collectors.toList());
+
+        return MyPickResponse.builder()
+                .count(pickCount)
+                .contents(items)
+                .responsePagingStatus(pagingStatusService.convert(pageablePicks))
+                .build();
+    }
+
     public MostPickResponse getMostPicks() {
         List<MostPickItemDto> mostPickTop4 = pickRepository.findMostPickTop4(
                 LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(),
@@ -94,19 +105,6 @@ public class PickService {
 
         return MostPickResponse.builder()
                 .contents(itemList)
-                .build();
-    }
-
-    private MyPickResponse convertToMyPick(Page<Pick> pageablePicks, long pickCount) {
-        List<ListItem> items = pageablePicks.stream()
-                .map(PickItemResponse::makePickItemResponse)
-                .map(listItemAggregateConverter::convert)
-                .collect(Collectors.toList());
-
-        return MyPickResponse.builder()
-                .count(pickCount)
-                .contents(items)
-                .responsePagingStatus(pagingStatusService.convert(pageablePicks))
                 .build();
     }
 

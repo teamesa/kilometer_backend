@@ -3,9 +3,9 @@ package com.kilometer.domain.archive.userVisitPlace;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserVisitPlaceRepository extends JpaRepository<UserVisitPlace, Long> {
+public interface UserVisitPlaceRepository extends JpaRepository<UserVisitPlaceEntity, Long> {
 
-    List<UserVisitPlace> findAllByArchiveId(Long archiveId);
+    List<UserVisitPlaceEntity> findAllByArchiveEntityId(Long archiveEntityId);
 
-    void deleteAllByArchiveId(Long archiveId);
+    void deleteAllByArchiveEntityId(Long archiveEntityId);
 }

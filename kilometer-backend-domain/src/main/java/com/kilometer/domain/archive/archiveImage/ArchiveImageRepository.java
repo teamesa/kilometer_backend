@@ -3,11 +3,11 @@ package com.kilometer.domain.archive.archiveImage;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ArchiveImageRepository extends JpaRepository<ArchiveImage, Long> {
+public interface ArchiveImageRepository extends JpaRepository<ArchiveImageEntity, Long> {
 
-    List<ArchiveImage> findAllByArchiveId(Long archiveId);
+    List<ArchiveImageEntity> findAllByArchiveEntityId(Long archiveEntityId);
 
-    boolean existsArchiveImagesByArchiveId(Long archiveId);
+    boolean existsArchiveImagesByArchiveEntityId(Long archiveEntityId);
 
-    void deleteAllByArchiveId(Long archiveId);
+    void deleteAllByArchiveEntityId(Long archiveEntityId);
 }
