@@ -32,13 +32,10 @@ public class RealTimeArchiveHandler implements ModuleHandler {
 
     @Override
     public Object generator(final ModuleParamDto paramDto) throws RuntimeException {
-        List<RealTimeArchiveDto> realTimeArchiveDtos = archiveRepository.findAll()
+        List<RealTimeArchiveDto> realTimeArchiveDtos = archiveRepository.findTopFourArchivesWithImageUrl()
                 .stream()
-                .sorted(Comparator.comparing(ArchiveEntity::getUpdatedAt))
                 .map(archive -> archiveRepository.findRealTimeArchive(archive.getId())
                         .orElseThrow(ArchiveNotFoundException::new))
-                .filter(this::hasArchiveImage)
-                .limit(MAX_ARCHIVES)
                 .map(realTimeArchiveDto -> doesLikeArchive(realTimeArchiveDto, paramDto))
                 .collect(Collectors.toList());
 

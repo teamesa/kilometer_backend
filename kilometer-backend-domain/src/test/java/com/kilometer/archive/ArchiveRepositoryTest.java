@@ -30,6 +30,7 @@ import com.kilometer.domain.item.enumType.RegionType;
 import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,20 @@ class ArchiveRepositoryTest {
                 () -> assertThat(realTimeArchiveDto.getUserName()).isEqualTo(USER_NAME),
                 () -> assertThat(realTimeArchiveDto.isLiked()).isTrue()
         );
+    }
+
+    @DisplayName("아카이브 이미지가 존재하는 아카이브들을 최대 4개 조회한다.")
+    @Test
+    void findTopFourArchievsWithImageUrl() {
+        User savedUser = saveUser();
+        for (int i = 0; i < 6; i++) {
+            ArchiveEntity savedArchiveEntity = saveArchive(savedUser);
+            saveArchiveImage(savedArchiveEntity);
+        }
+
+        List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourArchivesWithImageUrl();
+
+        assertThat(topFourArchivesWithImageUrl.size()).isEqualTo(4);
     }
 
     private User saveUser() {
