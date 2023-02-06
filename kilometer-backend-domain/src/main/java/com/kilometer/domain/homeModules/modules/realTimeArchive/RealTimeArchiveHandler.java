@@ -1,6 +1,6 @@
 package com.kilometer.domain.homeModules.modules.realTimeArchive;
 
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
@@ -12,7 +12,6 @@ import com.kilometer.domain.homeModules.modules.realTimeArchive.dto.RealTimeArch
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,7 @@ public class RealTimeArchiveHandler implements ModuleHandler {
     public Object generator(final ModuleParamDto paramDto) throws RuntimeException {
         List<RealTimeArchiveDto> realTimeArchiveDtos = archiveRepository.findAll()
                 .stream()
-                .sorted(Comparator.comparing(Archive::getUpdatedAt))
+                .sorted(Comparator.comparing(ArchiveEntity::getUpdatedAt))
                 .map(archive -> archiveRepository.findRealTimeArchive(archive.getId())
                         .orElseThrow(ArchiveNotFoundException::new))
                 .filter(this::hasArchiveImage)

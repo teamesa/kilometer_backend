@@ -12,15 +12,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.kilometer.common.annotation.SpringTestWithData;
-import com.kilometer.domain.archive.Archive;
+import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.PlaceType;
-import com.kilometer.domain.archive.archiveImage.ArchiveImage;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageRepository;
-import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.like.Like;
 import com.kilometer.domain.archive.like.LikeRepository;
-import com.kilometer.domain.archive.userVisitPlace.UserVisitPlace;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceRepository;
 import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
@@ -86,7 +85,7 @@ class RealTimeArchiveHandlerTest {
         @Test
         void generateRealTimeArchivesWithAllData() {
             User savedUser = saveUser();
-            Archive savedArchive = saveArchive(savedUser);
+            ArchiveEntity savedArchive = saveArchive(savedUser);
             saveUserVisitPlace(savedArchive);
             saveArchiveImage(savedArchive);
             saveArchiveLike(savedArchive, savedUser);
@@ -103,7 +102,7 @@ class RealTimeArchiveHandlerTest {
         @Test
         void getArchiveThatDoesNotHaveImage() {
             User savedUser = saveUser();
-            Archive savedArchive = saveArchive(savedUser);
+            ArchiveEntity savedArchive = saveArchive(savedUser);
             saveUserVisitPlace(savedArchive);
             saveArchiveLike(savedArchive, savedUser);
             RealTimeArchiveResponse savedRealTimeArchiveResponse = saveRealTImeArchiveResponse(savedUser);
@@ -116,7 +115,7 @@ class RealTimeArchiveHandlerTest {
         void getMaxFourArchives() {
             User savedUser = saveUser();
             for (int i = 0; i < 6; i++) {
-                Archive savedArchive = saveArchive(savedUser);
+                ArchiveEntity savedArchive = saveArchive(savedUser);
                 saveUserVisitPlace(savedArchive);
                 saveArchiveImage(savedArchive);
                 saveArchiveLike(savedArchive, savedUser);
@@ -138,13 +137,13 @@ class RealTimeArchiveHandlerTest {
                     .build();
             User savedUser = userRepository.save(user);
 
-            Archive savedArchive = saveArchive(savedUser);
+            ArchiveEntity savedArchive = saveArchive(savedUser);
             saveUserVisitPlace(savedArchive);
             saveArchiveImage(savedArchive);
 
             Like like = Like.builder()
                     .likedUser(user)
-                    .likedArchive(savedArchive)
+                    .likedArchiveEntity(savedArchive)
                     .isLiked(isLiked)
                     .build();
             likeRepository.save(like);
@@ -158,13 +157,13 @@ class RealTimeArchiveHandlerTest {
         @CsvSource(value = {"10, true", "10, false"})
         void getRealTimeArchiveWithoutLogIn(Long userId, boolean isLiked) {
             User savedUser = saveUser();
-            Archive savedArchive = saveArchive(savedUser);
+            ArchiveEntity savedArchive = saveArchive(savedUser);
             saveUserVisitPlace(savedArchive);
             saveArchiveImage(savedArchive);
 
             Like like = Like.builder()
                     .likedUser(savedUser)
-                    .likedArchive(savedArchive)
+                    .likedArchiveEntity(savedArchive)
                     .isLiked(isLiked)
                     .build();
             likeRepository.save(like);
@@ -189,7 +188,7 @@ class RealTimeArchiveHandlerTest {
             return userRepository.save(user);
         }
 
-        private Archive saveArchive(User user) {
+        private ArchiveEntity saveArchive(User user) {
             ItemEntity item = ItemEntity.builder()
                     .exhibitionType(ExhibitionType.EXHIBITION)
                     .exposureType(ExposureType.ON)
@@ -211,7 +210,7 @@ class RealTimeArchiveHandlerTest {
                     .build();
             ItemEntity savedItem = itemRepository.save(item);
 
-            Archive archive = Archive.builder()
+            ArchiveEntity archive = ArchiveEntity.builder()
                     .starRating(STAR_RATING)
                     .likeCount(LIKE_COUNT)
                     .isVisibleAtItem(true)
@@ -222,29 +221,29 @@ class RealTimeArchiveHandlerTest {
             return archiveRepository.save(archive);
         }
 
-        private void saveArchiveImage(final Archive savedArchive) {
-            ArchiveImage archiveImage = ArchiveImage.builder()
+        private void saveArchiveImage(final ArchiveEntity savedArchive) {
+            ArchiveImageEntity archiveImage = ArchiveImageEntity.builder()
                     .imageUrl(ARCHIVE_IMAGE_URL)
-                    .archive(savedArchive)
+                    .archiveEntity(savedArchive)
                     .build();
             archiveImageRepository.save(archiveImage);
         }
 
-        private void saveUserVisitPlace(final Archive savedArchive) {
-            UserVisitPlace userVisitPlace = UserVisitPlace.builder()
+        private void saveUserVisitPlace(final ArchiveEntity savedArchive) {
+            UserVisitPlaceEntity userVisitPlace = UserVisitPlaceEntity.builder()
                     .placeType(PlaceType.CAFE)
                     .placeName(PLACE_NAME)
                     .address("address")
                     .roadAddress("roadAddress")
-                    .archive(savedArchive)
+                    .archiveEntity(savedArchive)
                     .build();
             userVisitPlaceRepository.save(userVisitPlace);
         }
 
-        public void saveArchiveLike(Archive archive, User user) {
+        public void saveArchiveLike(ArchiveEntity archive, User user) {
             Like like = Like.builder()
                     .likedUser(user)
-                    .likedArchive(archive)
+                    .likedArchiveEntity(archive)
                     .isLiked(true)
                     .build();
             likeRepository.save(like);

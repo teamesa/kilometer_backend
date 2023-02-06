@@ -1,7 +1,8 @@
 package com.kilometer.domain.archive;
 
-import static com.kilometer.domain.archive.archiveImage.QArchiveImage.archiveImage;
-import static com.kilometer.domain.archive.userVisitPlace.QUserVisitPlace.userVisitPlace;
+import static com.kilometer.domain.archive.QArchiveEntity.archiveEntity;
+import static com.kilometer.domain.archive.archiveImage.QArchiveImageEntity.archiveImageEntity;
+import static com.kilometer.domain.archive.userVisitPlace.QUserVisitPlaceEntity.userVisitPlaceEntity;
 
 import com.kilometer.domain.archive.dto.ArchiveDetailDto;
 import com.kilometer.domain.archive.dto.ArchiveQueryRequest;
@@ -26,7 +27,7 @@ import org.springframework.data.domain.Pageable;
 public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final static QArchiveEntity archive = QArchiveEntity.archiveEntity;
+    private final static QArchiveEntity archive = archiveEntity;
     private final static QUser user = QUser.user;
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
     private final static QLike like = QLike.like;
@@ -112,7 +113,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Optional<ArchiveDetailDto> findByArchiveIdAndUserIdAndIsVisible(long archiveId, long userId,
+    public Optional<ArchiveDetailDto> findByArchiveIdAndUserIdAndIsVisible(long archiveId,
+                                                                           long userId,
                                                                            boolean isVisible) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(ArchiveDetailDto.class,
                 archive.id,
@@ -156,12 +158,12 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     public Optional<RealTimeArchiveDto> findRealTimeArchive(long archiveId) {
         return Optional.ofNullable(queryFactory.select(
                                 Projections.fields(RealTimeArchiveDto.class,
-                                        archive.likeCount,
-                                        archive.starRating,
-                                        archive.updatedAt,
-                                        archive.comment,
-                                        archiveImage.imageUrl,
-                                        userVisitPlace.placeName,
+                                        archiveEntity.likeCount,
+                                        archiveEntity.starRating,
+                                        archiveEntity.updatedAt,
+                                        archiveEntity.comment,
+                                        archiveImageEntity.imageUrl,
+                                        userVisitPlaceEntity.placeName,
                                         itemEntity.title,
                                         itemEntity.id.as("itemId"),
                                         user.id.as("userId"),
@@ -171,16 +173,16 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                                 )
                         )
                         .from(archive)
-                        .leftJoin(userVisitPlace)
-                        .on(userVisitPlace.archive.eq(archive))
+                        .leftJoin(userVisitPlaceEntity)
+                        .on(userVisitPlaceEntity.archiveEntity.eq(archive))
                         .leftJoin(itemEntity)
                         .on(archive.item.eq(itemEntity))
-                        .leftJoin(archiveImage)
-                        .on(archiveImage.archive.eq(archive))
+                        .leftJoin(archiveImageEntity)
+                        .on(archiveImageEntity.archiveEntity.eq(archive))
                         .leftJoin(user)
                         .on(archive.user.eq(user))
                         .leftJoin(like)
-                        .on(like.likedArchive.eq(archive)
+                        .on(like.likedArchiveEntity.eq(archive)
                                 .and(like.likedUser.eq(user)))
                         .where(archive.id.eq(archiveId))
                         .limit(1)
