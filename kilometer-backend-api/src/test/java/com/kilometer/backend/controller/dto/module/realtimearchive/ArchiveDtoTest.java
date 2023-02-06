@@ -20,8 +20,8 @@ class ArchiveDtoTest {
 
         assertAll(
                 () -> assertThat(archiveDto.getPhoto().getPhotoUrl()).isEqualTo(IMAGE_URL),
-                () -> assertThat(archiveDto.getAdditionalInformation().getLikeCount()).isEqualTo(LIKE_COUNT),
-                () -> assertThat(archiveDto.getInformation().getComment()).isEqualTo(COMMENT)
+                () -> assertThat(archiveDto.getMetaData().getLikeCount()).isEqualTo(LIKE_COUNT),
+                () -> assertThat(archiveDto.getIntroduction().getComment()).isEqualTo(COMMENT)
         );
     }
 }

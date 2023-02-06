@@ -11,17 +11,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("InformationDto 는 ")
-class InformationDtoTest {
+class IntroductionDtoTest {
 
     @DisplayName("InformationDto 를 생성한다.")
     @Test
     void createInformationDto() {
-        InformationDto informationDto = InformationDto.from(REAL_TIME_ARCHIVE_DTO);
+        IntroductionDto introductionDto = IntroductionDto.from(REAL_TIME_ARCHIVE_DTO);
 
         assertAll(
-                () -> assertThat(informationDto.getPlaces()).isEqualTo(PLACE_NAME),
-                () -> assertThat(informationDto.getComment()).isEqualTo(COMMENT),
-                () -> assertThat(informationDto.getTitle().getValue()).isEqualTo(TITLE)
+                () -> assertThat(introductionDto.getPlaces()).isEqualTo(PLACE_NAME),
+                () -> assertThat(introductionDto.getComment()).isEqualTo(COMMENT),
+                () -> assertThat(introductionDto.getTitle().getValue()).isEqualTo(TITLE)
         );
     }
 }

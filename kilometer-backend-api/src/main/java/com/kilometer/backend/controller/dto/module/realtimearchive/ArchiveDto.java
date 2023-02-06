@@ -11,14 +11,14 @@ import lombok.Getter;
 public class ArchiveDto {
 
     private final PhotoDto photo;
-    private final AdditionalInformationDto additionalInformation;
-    private final InformationDto information;
+    private final MetaDataDto metaData;
+    private final IntroductionDto introduction;
 
     public static ArchiveDto from(RealTimeArchiveDto realTimeArchiveDto) {
         return ArchiveDto.builder()
                 .photo(PhotoDto.from(realTimeArchiveDto))
-                .additionalInformation(AdditionalInformationDto.from(realTimeArchiveDto))
-                .information(InformationDto.from(realTimeArchiveDto))
+                .metaData(MetaDataDto.from(realTimeArchiveDto))
+                .introduction(IntroductionDto.from(realTimeArchiveDto))
                 .build();
     }
 
@@ -26,8 +26,8 @@ public class ArchiveDto {
     public String toString() {
         return "ArchiveDto{" +
                 "photo=" + photo +
-                ", additionalInformation=" + additionalInformation +
-                ", information=" + information +
+                ", metaData=" + metaData +
+                ", introduction=" + introduction +
                 '}';
     }
 }

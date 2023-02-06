@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AdditionalInformationDto {
+public class MetaDataDto {
 
     public static final String DIM_COLOR = "#fff";
     public static final String OPACITY = "0.8";
@@ -22,8 +22,8 @@ public class AdditionalInformationDto {
     private final String dimColor;
     private final String opacity;
 
-    static AdditionalInformationDto from(RealTimeArchiveDto realTimeArchiveDto) {
-        return AdditionalInformationDto.builder()
+    static MetaDataDto from(RealTimeArchiveDto realTimeArchiveDto) {
+        return MetaDataDto.builder()
                 .user(UserDto.from(realTimeArchiveDto))
                 .heart(HeartDto.from(realTimeArchiveDto))
                 .likeCount(realTimeArchiveDto.getLikeCount())

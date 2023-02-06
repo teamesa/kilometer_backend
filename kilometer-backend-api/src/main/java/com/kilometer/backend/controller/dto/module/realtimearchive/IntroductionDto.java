@@ -10,14 +10,14 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class InformationDto {
+public class IntroductionDto {
 
     private final String places;
     private final String comment;
     private final TitleDto title;
 
-    static InformationDto from(RealTimeArchiveDto realTimeArchiveDto) {
-        return InformationDto.builder()
+    static IntroductionDto from(RealTimeArchiveDto realTimeArchiveDto) {
+        return IntroductionDto.builder()
                 .places(StringConvertor.convertNullToBlank(realTimeArchiveDto.getPlaceName()))
                 .comment(StringConvertor.convertNullToBlank(realTimeArchiveDto.getComment()))
                 .title(TitleDto.from(realTimeArchiveDto))
