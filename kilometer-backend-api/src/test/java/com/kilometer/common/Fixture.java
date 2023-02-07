@@ -51,4 +51,7 @@ public class Fixture {
 
     public static final ModuleResponseDto<RealTimeArchiveResponse> MODULE_RESPONSE_DTO = ModuleResponseDto.of(
             REAL_TIME_ARCHIVE, INDEX, REAL_TIME_ARCHIVE_RESPONSE);
+
+    public static final ModuleResponseDto<Object> HOME_MODULE_RESPONSE_DTO = ModuleResponseDto.of(
+            REAL_TIME_ARCHIVE, INDEX, REAL_TIME_ARCHIVE_RESPONSE);
 }

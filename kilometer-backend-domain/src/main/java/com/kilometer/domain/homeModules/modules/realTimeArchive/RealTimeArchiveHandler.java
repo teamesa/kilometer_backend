@@ -1,6 +1,5 @@
 package com.kilometer.domain.homeModules.modules.realTimeArchive;
 
-import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
@@ -9,7 +8,6 @@ import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import com.kilometer.domain.homeModules.modules.realTimeArchive.dto.RealTimeArchiveResponse;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
