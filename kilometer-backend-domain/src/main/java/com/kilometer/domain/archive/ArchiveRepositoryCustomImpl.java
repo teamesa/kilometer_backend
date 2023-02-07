@@ -195,8 +195,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
        return queryFactory.select(archiveEntity)
                .from(archive)
                .leftJoin(archiveImageEntity)
-               .on(archiveImageEntity.archiveEntity.eq(archive)
-                       .and(archiveImageEntity.imageUrl.isNotNull()))
+               .on(archiveImageEntity.archiveEntity.eq(archive))
+               .where(archiveImageEntity.imageUrl.isNotNull())
                .orderBy(archiveEntity.updatedAt.desc())
                .limit(4)
                .fetch();
