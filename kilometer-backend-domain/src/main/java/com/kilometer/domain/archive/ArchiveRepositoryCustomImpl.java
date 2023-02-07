@@ -26,6 +26,8 @@ import org.springframework.data.domain.Pageable;
 
 public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
+    private static final int MAX_ARCHIVES = 4;
+
     private final JPAQueryFactory queryFactory;
     private final static QArchiveEntity archive = archiveEntity;
     private final static QUser user = QUser.user;
@@ -198,7 +200,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                .on(archiveImageEntity.archiveEntity.eq(archive))
                .where(archiveImageEntity.imageUrl.isNotNull())
                .orderBy(archiveEntity.updatedAt.desc())
-               .limit(4)
+               .limit(MAX_ARCHIVES)
                .fetch();
     }
 

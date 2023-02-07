@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class RealTimeArchiveHandler implements ModuleHandler {
 
-    private static final int MAX_ARCHIVES = 4;
-
     private final ArchiveRepository archiveRepository;
 
     @Override
@@ -45,11 +43,6 @@ public class RealTimeArchiveHandler implements ModuleHandler {
                 .bottomTitle(moduleDto.getLowerModuleTitle())
                 .archives(realTimeArchiveDtos)
                 .build();
-    }
-
-    private boolean hasArchiveImage(RealTimeArchiveDto realTimeArchiveDto) {
-        String imageUrl = realTimeArchiveDto.getImageUrl();
-        return imageUrl != null && !imageUrl.isBlank();
     }
 
     private RealTimeArchiveDto doesLikeArchive(RealTimeArchiveDto realTimeArchiveDto, ModuleParamDto moduleParamDto) {
