@@ -4,6 +4,8 @@ import com.kilometer.domain.archive.dto.ArchiveDetailDto;
 import com.kilometer.domain.archive.dto.ArchiveQueryRequest;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
+import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,4 +20,8 @@ public interface ArchiveRepositoryCustom {
     Optional<ArchiveDetailDto> findByArchiveIdAndUserIdAndIsVisible(long archiveId, long userId, boolean isVisible);
 
     Double avgStarRatingByItemId(long itemId);
+
+    Optional<RealTimeArchiveDto> findRealTimeArchive(long archiveId);
+
+    List<ArchiveEntity> findTopFourArchivesWithImageUrl();
 }

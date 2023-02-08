@@ -1,5 +1,6 @@
 package com.kilometer.backend.controller;
 
+import com.kilometer.backend.util.ApiGenerator;
 import com.kilometer.domain.homeModules.HomeApiResponse;
 import com.kilometer.domain.homeModules.HomeRenderingService;
 import com.kilometer.domain.homeModules.ModuleResponseDto;
@@ -16,6 +17,7 @@ import static com.kilometer.backend.security.security.SecurityUtils.getLoginUser
 public class HomeController {
 
     private final HomeRenderingService moduleService;
+    private final ApiGenerator apiGenerator;
 
     @GetMapping(ApiUrlUtils.KEY_VISUAL)
     @ApiOperation(value = "홈 모듈 중 키비주얼만 조회")
@@ -28,6 +30,6 @@ public class HomeController {
     @ApiOperation(value = "홈 모듈 모두 조회")
     public HomeApiResponse homeApi() {
         Long userId = getLoginUserId();
-        return moduleService.getHomeModules(userId);
+        return apiGenerator.generatorGetHomeMoulesApi(moduleService.getHomeModules(userId));
     }
 }
