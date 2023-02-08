@@ -20,7 +20,7 @@ import org.hibernate.annotations.Where;
 @Getter
 @Builder
 @Entity
-@Where(clause = "is_deleted=false")
+@Where(clause = "isDeleted=false")
 @SQLDelete(sql = "UPDATE archive_image SET isDeleted=true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
