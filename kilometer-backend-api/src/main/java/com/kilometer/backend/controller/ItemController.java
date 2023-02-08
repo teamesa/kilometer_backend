@@ -31,7 +31,7 @@ public class ItemController {
      * 전시글의 소개글과 사진을 반환하는 API
      * @deprecated 전시글 조회 api("api/items/{itemId}")로 이전
      */
-    @Deprecated
+    // TODO: @Deprecated 곧 변경될 API 입니다!
     @GetMapping("/api/items/{itemId}/detail")
     @ApiOperation(value = "전시글 소개 API")
     public DetailResponse getDetail(
