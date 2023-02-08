@@ -93,9 +93,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, ApiUrlUtils.SEARCH_ROOT).permitAll()
                 .antMatchers(ApiUrlUtils.ITEM_ROOT + "/**").permitAll()
                 .antMatchers(HttpMethod.GET, ApiUrlUtils.ARCHIVE_ROOT + ApiUrlUtils.ITEM_ID).permitAll()
-                .antMatchers(HttpMethod.GET, ApiUrlUtils.SEARCH_ROOT + ApiUrlUtils.SEARCH_AUTO_COMPLETE)
-                .permitAll()
                 .antMatchers(HttpMethod.GET, ApiUrlUtils.HOME_ROOT + "/**").permitAll()
+                .antMatchers(HttpMethod.GET, ApiUrlUtils.PICK_MOST).permitAll()
+                .antMatchers(HttpMethod.GET, ApiUrlUtils.SEARCH_AUTO_COMPLETE + "/**").permitAll()
                 // swagger
                 .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
                         "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
