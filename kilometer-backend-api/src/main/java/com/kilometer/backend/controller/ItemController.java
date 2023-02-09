@@ -24,7 +24,7 @@ public class ItemController {
     public ItemInfoResponse getInfo(
         @ApiParam(value = "조회할 전시글 ID", required = true) @PathVariable Long itemId) {
         long userId = getLoginUserId();
-        return itemService.getItemInfo(itemId, userId);
+        return itemService.getItem(itemId, userId);
     }
 
     /**

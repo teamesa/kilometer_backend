@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @JsonInclude(Include.NON_NULL)
@@ -27,6 +29,9 @@ public class ItemInfoResponse {
     private String homePageUrl;
     private String detailImageUrl;
     private String listImageUrl;
+    private String summary;
+    @Builder.Default
+    private List<String> photo = List.of();
 
     private ItemInfoAdditionalInfo itemInfoAdditionalInfo;
 }
