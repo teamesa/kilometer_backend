@@ -38,3 +38,4 @@ out/
 /data/logs/
 
 *.log
+kilometer-backend-domain/src/main/generated/*

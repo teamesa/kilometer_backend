@@ -4,12 +4,14 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.3'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-core:${queryDslVersion}"
     annotationProcessor(
             "javax.persistence:javax.persistence-api",
             "javax.annotation:javax.annotation-api",
             "com.querydsl:querydsl-apt:${queryDslVersion}:jpa"
     )
     implementation "org.flywaydb:flyway-mysql:8.5.10"
+    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     runtimeOnly 'mysql:mysql-connector-java'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'

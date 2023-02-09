@@ -2,6 +2,7 @@ package com.kilometer.domain.archive.dto;
 
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import java.time.LocalDateTime;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,4 +15,16 @@ public class MyArchiveDto {
     private String listImageUrl;
     private String comment;
     private LocalDateTime updatedAt;
+
+    @Override
+    public String toString() {
+        return "MyArchiveDto{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", exhibitionType=" + exhibitionType +
+                ", listImageUrl='" + listImageUrl + '\'' +
+                ", comment='" + comment + '\'' +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }
