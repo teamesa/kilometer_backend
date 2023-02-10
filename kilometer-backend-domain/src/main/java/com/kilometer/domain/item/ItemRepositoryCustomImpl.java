@@ -4,9 +4,11 @@ import com.kilometer.domain.archive.QArchiveEntity;
 import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlaceEntity;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.dto.ItemInfoDto;
+import com.kilometer.domain.item.dto.MonthlyFreeTicketDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.item.itemDetail.QItemDetail;
 import com.kilometer.domain.item.itemDetailImage.QItemDetailImage;
 import com.kilometer.domain.pick.QPick;
@@ -34,6 +36,7 @@ import org.springframework.data.domain.PageImpl;
 @SuppressWarnings("rawtypes")
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
+    public static final int MAX_MONTLY_FREE_TICKETS = 5;
     private final JPAQueryFactory queryFactory;
     private final static QItemEntity itemEntity = QItemEntity.itemEntity;
     private final static QItemDetail itemDetail = QItemDetail.itemDetail;
@@ -170,8 +173,37 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
         dto.setPhotoUrls(photos);
         return dto;
+    }
 
-
+    @Override
+    public List<MonthlyFreeTicketDto> findTopRandomFiveMonthlyFreeTicket(LocalDate now) {
+        return queryFactory.select(
+                Projections.fields(MonthlyFreeTicketDto.class,
+                            itemEntity.id.as("itemId"),
+                            itemEntity.thumbnailImageUrl,
+                            itemEntity.title,
+                            itemEntity.exhibitionType,
+                            itemEntity.feeType,
+                            itemEntity.pickCount,
+                            pick.isHearted,
+                            archive.id.count().as("archiveCount"),
+                            archive.starRating.avg().as("grade")
+                        )
+                )
+                .from(itemEntity)
+                .leftJoin(pick)
+                .on(pick.pickedItem.eq(itemEntity))
+                .leftJoin(archive)
+                .on(archive.item.eq(itemEntity))
+                .where(
+                        itemEntity.feeType.eq(FeeType.FREE),
+                        itemEntity.exposureType.eq(ExposureType.ON),
+                        itemEntity.startDate.loe(now).and(itemEntity.endDate.gt(now)),
+                        archive.isVisibleAtItem.isTrue()
+                )
+                .groupBy(itemEntity.id)
+                .limit(MAX_MONTLY_FREE_TICKETS)
+                .fetch();
     }
 
     private BooleanExpression eqExhibitionType(FilterOptions filterOptions) {
