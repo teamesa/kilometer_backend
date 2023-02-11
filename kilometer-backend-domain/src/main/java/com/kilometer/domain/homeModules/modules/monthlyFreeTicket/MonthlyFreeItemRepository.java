@@ -2,6 +2,8 @@ package com.kilometer.domain.homeModules.modules.monthlyFreeTicket;
 
 import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicket;
 import com.kilometer.domain.item.ItemEntity;
+import com.kilometer.domain.item.enumType.ExhibitionType;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,6 +35,5 @@ interface MonthlyFreeItemRepository extends JpaRepository<ItemEntity, Long> {
             + "GROUP BY i.id "
             + "ORDER BY RAND() "
             + "LIMIT 5", nativeQuery = true)
-    List<MonthlyFreeTicket> findRand5ByUserIdAndRequestTime(@Param("pickedUser")Long userId, @Param("requestTime")LocalDateTime requestTime);
-
+    List<MonthlyFreeTicket> findRand5ByUserIdAndRequestTime(@Param("pickedUser")Long userId, @Param("requestTime") LocalDate requestTime);
 }

@@ -9,6 +9,7 @@ import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDataDto;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.util.FrontUrlUtils;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Component;
@@ -27,19 +28,32 @@ public class SwipeItemHandler implements ModuleHandler {
     }
 
     @Override
-    public Object generator(ModuleParamDto paramDto) {
+    public Optional<Object> generator(ModuleParamDto paramDto) {
         Preconditions.checkNotNull(paramDto.getModuleDto(), "module must not be null");
         ModuleDto moduleDto = paramDto.getModuleDto();
         Preconditions.checkNotNull(moduleDto.getExtraData(), "Extra_data must not be null");
         long itemId = Long.parseLong(moduleDto.getExtraData());
         SwipeItemDto itemEntity = itemRepository.findSwipeItemByItemId(itemId);
-        return SwipeItemDataDto.of(
+
+        if (!isValidSwipeItem(itemEntity)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(SwipeItemDataDto.of(
             FrontUrlUtils.getFrontDetailUrlPattern(itemId),
             itemEntity.getTitle(),
             itemEntity.getContent(),
             itemEntity.getThumbnailImageUrl(),
             itemEntity.getPhotos(),
             SwipeItemKeywordGenerator.generator(itemEntity.getExhibitionType(),
-                itemEntity.getPlaceName()));
+                itemEntity.getPlaceName())));
+    }
+
+    private boolean isValidSwipeItem(SwipeItemDto swipeItemDto) {
+        return !swipeItemDto.getTitle().isBlank()
+                && !swipeItemDto.getContent().isBlank()
+                && swipeItemDto.getExhibitionType() != null
+                && !swipeItemDto.getPlaceName().isBlank()
+                && !swipeItemDto.getThumbnailImageUrl().isBlank();
     }
 }

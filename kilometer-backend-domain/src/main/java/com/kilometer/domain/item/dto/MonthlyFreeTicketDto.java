@@ -1,6 +1,7 @@
 package com.kilometer.domain.item.dto;
 
 import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,9 @@ public class MonthlyFreeTicketDto {
     private ExhibitionType exhibitionType;
     private FeeType feeType;
     private int pickCount;
+    private ExposureType exposureType;
     private boolean isHearted;
+    private Long userId;
     private Long archiveCount;
     private double grade;
 
@@ -33,7 +36,9 @@ public class MonthlyFreeTicketDto {
                 ", exhibitionType=" + exhibitionType +
                 ", feeType=" + feeType +
                 ", pickCount=" + pickCount +
+                ", exposureType=" + exposureType +
                 ", isHearted=" + isHearted +
+                ", userId=" + userId +
                 ", archiveCount=" + archiveCount +
                 ", grade=" + grade +
                 '}';

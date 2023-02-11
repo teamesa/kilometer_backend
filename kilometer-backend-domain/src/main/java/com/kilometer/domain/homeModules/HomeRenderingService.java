@@ -43,14 +43,10 @@ public class HomeRenderingService {
         for (ModuleParamDto moduleParamDto : modules) {
             try {
                 ModuleDto moduleDto = moduleParamDto.getModuleDto();
-                result.add(
-                    ModuleResponseDto.of(
-                        moduleDto.getModuleName(),
-                        indexCount,
-                        adapter.getHandlerAdapter(moduleDto.getModuleName())
-                            .generator(moduleParamDto)
-                    )
-                );
+                Object data = adapter.getHandlerAdapter(moduleDto.getModuleName())
+                        .generator(moduleParamDto)
+                        .orElseThrow(IllegalArgumentException::new);
+                result.add(ModuleResponseDto.of(moduleDto.getModuleName(), indexCount, data));
                 indexCount++;
             } catch (Exception e) {
                 log.error("Home api catch exception", e);

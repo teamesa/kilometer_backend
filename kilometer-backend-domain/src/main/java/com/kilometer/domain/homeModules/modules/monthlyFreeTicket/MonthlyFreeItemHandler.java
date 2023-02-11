@@ -1,20 +1,19 @@
 package com.kilometer.domain.homeModules.modules.monthlyFreeTicket;
 
 import com.google.common.base.Preconditions;
-import com.kilometer.domain.converter.listItem.ListItemAggregateConverter;
-import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
-import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketDto;
 import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketResponse;
+import com.kilometer.domain.item.ItemRepository;
+import com.kilometer.domain.item.dto.MonthlyFreeTicketDto;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MonthlyFreeItemHandler implements ModuleHandler {
 
-    private final MonthlyFreeItemRepository monthlyFreeItemRepository;
-    private final ListItemAggregateConverter listItemAggregateConverter;
+    private final ItemRepository itemRepository;
 
     @Override
     public boolean supports(ModuleType moduleType) {
@@ -33,19 +31,49 @@ public class MonthlyFreeItemHandler implements ModuleHandler {
     }
 
     @Override
-    public Object generator(ModuleParamDto paramDto) throws RuntimeException {
+    public Optional<Object> generator(ModuleParamDto paramDto) throws RuntimeException {
         Preconditions.checkNotNull(paramDto, "paramDto must not be null");
-        Long userId = paramDto.getUserId();
         LocalDateTime requestTime = paramDto.getTime();
         ModuleDto data = paramDto.getModuleDto();
-        List<ListItem> contents =
-            monthlyFreeItemRepository.findRand5ByUserIdAndRequestTime(userId, requestTime).stream()
-                .map(MonthlyFreeTicketDto::from)
-                .map(listItemAggregateConverter::convert)
-                .collect(Collectors.toList());
+        List<MonthlyFreeTicketDto> monthlyFreeTicketDtos = itemRepository.findTopRandomFiveMonthlyFreeTicket(
+                requestTime.toLocalDate());
 
-        return MonthlyFreeTicketResponse.of(
-            data.getUpperModuleTitle(), data.getLowerModuleTitle(), contents
-        );
+        if (monthlyFreeTicketDtos.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(MonthlyFreeTicketResponse.of(
+                data.getUpperModuleTitle(),
+                data.getLowerModuleTitle(),
+                doesHeartedTicket(monthlyFreeTicketDtos, paramDto)
+        ));
     }
+
+    private List<MonthlyFreeTicketDto> doesHeartedTicket(final List<MonthlyFreeTicketDto> monthlyFreeTicketDtos,
+                                                         ModuleParamDto moduleParamDto) {
+        return monthlyFreeTicketDtos.stream()
+                .map(content -> isAuthenticatedUser(content, moduleParamDto))
+                .collect(Collectors.toList());
+    }
+
+    private MonthlyFreeTicketDto isAuthenticatedUser(final MonthlyFreeTicketDto monthlyFreeTicketDto,
+                                                     final ModuleParamDto moduleParamDto) {
+        if (monthlyFreeTicketDto.getUserId().equals(moduleParamDto.getUserId())) {
+            return monthlyFreeTicketDto;
+        }
+        return MonthlyFreeTicketDto.builder()
+                .itemId(monthlyFreeTicketDto.getItemId())
+                .thumbnailImageUrl(monthlyFreeTicketDto.getThumbnailImageUrl())
+                .title(monthlyFreeTicketDto.getTitle())
+                .exhibitionType(monthlyFreeTicketDto.getExhibitionType())
+                .exposureType(monthlyFreeTicketDto.getExposureType())
+                .feeType(monthlyFreeTicketDto.getFeeType())
+                .pickCount(monthlyFreeTicketDto.getPickCount())
+                .isHearted(false)
+                .userId(monthlyFreeTicketDto.getUserId())
+                .archiveCount(monthlyFreeTicketDto.getArchiveCount())
+                .grade(monthlyFreeTicketDto.getGrade())
+                .build();
+    }
+
 }
