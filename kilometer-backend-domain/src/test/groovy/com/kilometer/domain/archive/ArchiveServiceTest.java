@@ -3,6 +3,8 @@ package com.kilometer.domain.archive;
 import com.kilometer.common.annotation.SpringTestWithData;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.PlaceInfo;
+import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
+import com.kilometer.domain.archive.exception.ArchiveUnauthorizedException;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
@@ -161,6 +163,65 @@ public class ArchiveServiceTest {
 
         // then
         assertEquals(actual.getErrorCode(), KilometerErrorCode.ITEM_EXPOSURE_OFF);
+    }
+
+    @Test
+    @DisplayName("아카이브를 수정한다.")
+    void updateArchive() {
+        // given
+        User user = 회원가입을_한다();
+        ItemEntity item = 아이템을_등록한다();
+        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
+
+        // when
+        ArchiveRequest updateRequest = new ArchiveRequest(null, "수정된 아카이브 코멘트", 3, false, List.of(), List.of());
+        ArchiveInfo actual = archiveService.update(user.getId(), savedArchive.getId(), updateRequest);
+
+        // then
+        assertAll(
+            () -> assertThat(actual.getComment()).isEqualTo("수정된 아카이브 코멘트"),
+            () -> assertThat(actual.getStarRating()).isEqualTo(3),
+            () -> assertThat(actual.getPhotoUrls()).isEmpty(),
+            () -> assertThat(actual.getFood()).isBlank(),
+            () -> assertThat(actual.getCafe()).isBlank()
+        );
+    }
+
+    @Test
+    @DisplayName("자신의 아카이브가 아니면 수정 요청을 보냈을 때 예외가 발생한다.")
+    void updateArchive_unauthorized() {
+        // given
+        User user = 회원가입을_한다();
+        ItemEntity item = 아이템을_등록한다();
+        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
+
+        // when
+        ArchiveRequest updateRequest = new ArchiveRequest(null, "수정된 아카이브 코멘트", 3, false, List.of(), List.of());
+        Long invalidUserId = -1L;
+        ArchiveUnauthorizedException actualException = assertThrows(ArchiveUnauthorizedException.class, () -> archiveService.update(invalidUserId, savedArchive.getId(), updateRequest));
+
+        // then
+        assertEquals(actualException.getErrorCode(), KilometerErrorCode.ARCHIVE_UNAUTHORIZED_EXCEPTION);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 아카이브를 수정 시도한다.")
+    void updateArchive_archiveNotExists() {
+        // given
+        User user = 회원가입을_한다();
+        ItemEntity item = 아이템을_등록한다();
+        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
+
+        // when
+        ArchiveRequest updateRequest = new ArchiveRequest(null, "수정된 아카이브 코멘트", 3, false, List.of(), List.of());
+        Long invalidArchiveId = -1L;
+        ArchiveNotFoundException actualException = assertThrows(ArchiveNotFoundException.class, () -> archiveService.update(user.getId(), invalidArchiveId, updateRequest));
+
+        // then
+        assertEquals(actualException.getErrorCode(), KilometerErrorCode.ARCHIVE_NOT_FOUND);
     }
 
     private User 회원가입을_한다() {

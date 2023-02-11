@@ -16,6 +16,7 @@ import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
+import com.kilometer.domain.archive.exception.ArchiveUnauthorizedException;
 import com.kilometer.domain.archive.generator.ArchiveRatingCalculator;
 import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -91,14 +93,17 @@ public class ArchiveService {
     }
 
     @Transactional
-    public ArchiveInfo update(Long userId, ArchiveRequest request) {
+    public ArchiveInfo update(Long userId, Long archiveId, ArchiveRequest request) {
         Preconditions.checkNotNull(userId, "id must not be null");
-        Preconditions.checkNotNull(request.getItemId(), "Item id must not be null");
+        Preconditions.checkNotNull(archiveId, "Archive id must not be null");
 
-        ArchiveEntity archiveEntity = archiveRepository.findByItemIdAndUserId(request.getItemId(), userId)
-            .orElseThrow(ArchiveNotFoundException::new);
+        ArchiveEntity archiveEntity = archiveRepository.findById(archiveId)
+             .orElseThrow(ArchiveNotFoundException::new);
 
-        Long archiveId = archiveEntity.getId();
+        if(!Objects.equals(archiveEntity.getUser().getId(), userId)) {
+            throw new ArchiveUnauthorizedException();
+        }
+
         List<ArchiveImageEntity> archiveImageEntities = request.makeArchiveImages();
         List<UserVisitPlaceEntity> userVisitPlaceEntities = request.makeVisitedPlace();
 
