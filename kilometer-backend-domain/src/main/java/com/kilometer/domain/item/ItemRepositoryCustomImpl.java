@@ -185,7 +185,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                             itemEntity.exhibitionType,
                             itemEntity.feeType,
                             itemEntity.pickCount,
+                            itemEntity.exposureType,
                             pick.isHearted,
+                            pick.pickedUser.id.as("userId"),
                             archive.id.count().as("archiveCount"),
                             archive.starRating.avg().as("grade")
                         )
