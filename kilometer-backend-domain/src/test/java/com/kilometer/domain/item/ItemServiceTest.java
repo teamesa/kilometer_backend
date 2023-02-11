@@ -6,7 +6,7 @@ import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.item.enumType.RegionType;
-import com.kilometer.domain.item.exception.ItemExposureFalseException;
+import com.kilometer.domain.item.exception.ItemExposureOffException;
 import com.kilometer.exception.KilometerErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -98,10 +98,10 @@ class ItemServiceTest {
 
         // when
         Long userId = -1L;
-        ItemExposureFalseException actual = assertThrows(ItemExposureFalseException.class, () -> itemService.getItem(savedItem.getId(), userId));
+        ItemExposureOffException actual = assertThrows(ItemExposureOffException.class, () -> itemService.getItem(savedItem.getId(), userId));
 
         // then
-        assertEquals(actual.getErrorCode(), KilometerErrorCode.ITEM_EXPOSURE_FALSE);
+        assertEquals(actual.getErrorCode(), KilometerErrorCode.ITEM_EXPOSURE_OFF);
 
     }
 }
