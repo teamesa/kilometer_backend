@@ -65,12 +65,13 @@ public class ArchiveController {
         return archiveService.save(userId, request);
     }
 
-    @PutMapping(ApiUrlUtils.ARCHIVE_ROOT)
+    @PutMapping(ApiUrlUtils.ARCHIVE_ID)
     @ApiOperation(value = "아카이브 수정")
     public ArchiveInfo updateArchive(
+        @ApiParam(value = "수정할 아카이브 아이디", required = true) @PathVariable Long archiveId,
         @ApiParam(value = "수정할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();
-        return archiveService.update(userId, request);
+        return archiveService.update(userId, archiveId, request);
     }
 
     @DeleteMapping(ApiUrlUtils.ARCHIVE_ID)

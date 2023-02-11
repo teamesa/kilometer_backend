@@ -1,5 +1,6 @@
 package com.kilometer.domain.archive.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ArchiveRequest {
 
     private Long itemId;
