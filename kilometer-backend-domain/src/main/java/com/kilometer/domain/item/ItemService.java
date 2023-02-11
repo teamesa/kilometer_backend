@@ -10,6 +10,8 @@ import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import com.kilometer.domain.item.dto.ItemUpdateResponse;
 import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.exception.ItemExposureFalseException;
 import com.kilometer.domain.item.itemDetail.ItemDetail;
 import com.kilometer.domain.item.itemDetail.ItemDetailRepository;
 import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
@@ -106,6 +108,10 @@ public class ItemService {
 
         ItemInfoDto itemInfoDto = itemRepository.findInfoByItemIdAndUserId(itemId, userId)
             .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id = " + itemId));
+
+        if(ExposureType.OFF == itemInfoDto.getExposureType()) {
+            throw new ItemExposureFalseException();
+        }
 
         // item detail 도메인 객체 empty 반환하도록 리팩토링 필요
         ItemDetail itemDetail = itemDetailRepository.findByItemId(itemId)

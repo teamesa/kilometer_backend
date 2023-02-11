@@ -125,6 +125,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         return Optional.ofNullable(queryFactory.select(
                 Projections.fields(ItemInfoDto.class,
                     itemEntity.id,
+                    itemEntity.exposureType,
                     itemEntity.exhibitionType,
                     itemEntity.feeType,
                     itemEntity.title,
