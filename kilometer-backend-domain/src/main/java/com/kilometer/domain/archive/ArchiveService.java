@@ -83,7 +83,7 @@ public class ArchiveService {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null");
 
         ArchiveEntity archiveEntity = archiveRepository.findById(archiveId)
-            .orElseThrow(ArchiveNotFoundException::new);
+             .orElseThrow(ArchiveNotFoundException::new);
 
         if(!Objects.equals(archiveEntity.getUser().getId(), userId)) {
             throw new ArchiveUnauthorizedException();
