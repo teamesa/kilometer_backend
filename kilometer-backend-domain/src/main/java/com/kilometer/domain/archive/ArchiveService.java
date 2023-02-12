@@ -25,6 +25,10 @@ import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
+import com.kilometer.domain.item.ItemRepository;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.exception.ItemExposureOffException;
+import com.kilometer.domain.item.exception.ItemNotFoundException;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
@@ -32,15 +36,16 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,6 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArchiveService {
 
     private final UserService userService;
+    private final ItemRepository itemRepository;
     private final ArchiveRepository archiveRepository;
     private final ArchiveImageService archiveImageService;
     private final UserVisitPlaceService userVisitPlaceService;
@@ -58,6 +64,15 @@ public class ArchiveService {
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
         validateArchiveRequest(archiveRequest, userId);
+
+        itemRepository.findExposureById(archiveRequest.getItemId())
+            .map(mapping -> {
+                if (mapping.getExposureType() == ExposureType.OFF) {
+                    throw new ItemExposureOffException();
+                }
+                return mapping;
+            })
+            .orElseThrow(ItemNotFoundException::new);
 
         Archive archive = archiveRequest.toDomain();
         archive.validate();

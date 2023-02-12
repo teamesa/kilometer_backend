@@ -1,17 +1,6 @@
 package com.kilometer.domain.archive;
 
-import static com.kilometer.common.statics.Statics.아카이브_공개_설정;
-import static com.kilometer.common.statics.Statics.아카이브_별점;
-import static com.kilometer.common.statics.Statics.아카이브_코멘트;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.kilometer.common.annotation.SpringTestWithData;
-import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
@@ -23,15 +12,26 @@ import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.item.enumType.RegionType;
+import com.kilometer.domain.item.exception.ItemExposureOffException;
+import com.kilometer.domain.item.exception.ItemNotFoundException;
 import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
-import java.time.LocalDate;
-import java.util.List;
-
 import com.kilometer.exception.KilometerErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static com.kilometer.common.statics.Statics.아카이브_공개_설정;
+import static com.kilometer.common.statics.Statics.아카이브_별점;
+import static com.kilometer.common.statics.Statics.아카이브_코멘트;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringTestWithData
 public class ArchiveServiceTest {
@@ -132,6 +132,37 @@ public class ArchiveServiceTest {
         assertThatThrownBy(() -> archiveService.save(invalidUserId, request))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("잘못된 사용자 정보 입니다.");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 전시글에 아카이브를 등록할 수 없다.")
+    void saveArchive_notExistsItem() {
+        // given
+        Long invalidItemId = -1L;
+        User user = 회원가입을_한다();
+        ArchiveRequest request = new ArchiveRequest(invalidItemId, 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+
+        // when
+        ItemNotFoundException actual = assertThrows(ItemNotFoundException.class, () -> archiveService.save(user.getId(), request));
+
+        // then
+        assertEquals(actual.getErrorCode(), KilometerErrorCode.ITEM_NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("미전시 전시글에 아카이브를 등록할 수 없다.")
+    void saveArchive_exposureOffItem() {
+        // given
+        User user = 회원가입을_한다();
+        ItemEntity item = ItemEntity.builder().exposureType(ExposureType.OFF).build();
+        itemRepository.save(item);
+        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+
+        // when
+        ItemExposureOffException actual = assertThrows(ItemExposureOffException.class, () -> archiveService.save(user.getId(), request));
+
+        // then
+        assertEquals(actual.getErrorCode(), KilometerErrorCode.ITEM_EXPOSURE_OFF);
     }
 
     @Test

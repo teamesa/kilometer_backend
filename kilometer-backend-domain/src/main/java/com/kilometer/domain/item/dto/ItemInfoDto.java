@@ -1,6 +1,7 @@
 package com.kilometer.domain.item.dto;
 
 import com.kilometer.domain.item.enumType.ExhibitionType;
+import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ItemInfoDto {
 
     private Long id;
+    private ExposureType exposureType;
     private ExhibitionType exhibitionType;
     private FeeType feeType;
     private String title;
