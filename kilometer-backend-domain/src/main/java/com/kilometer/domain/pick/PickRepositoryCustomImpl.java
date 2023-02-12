@@ -61,7 +61,7 @@ public class PickRepositoryCustomImpl implements PickRepositoryCustom {
                 .on(pick.pickedItem.eq(itemEntity))
                 .where(
                         pick.isHearted.eq(true),
-                        itemEntity.exposureType.eq(ExposureType.valueOf("ON")),
+                        itemEntity.exposureType.eq(ExposureType.ON),
                         pick.pickedUser.eq(pickedUser)
                 )
                 .fetch().size();
@@ -93,7 +93,7 @@ public class PickRepositoryCustomImpl implements PickRepositoryCustom {
                 .where(
                         pick.isHearted.eq(true),
                         pick.updatedAt.goe(firstDate),
-                        itemEntity.exposureType.eq(ExposureType.valueOf("ON"))
+                        itemEntity.exposureType.eq(ExposureType.ON)
                 )
                 .groupBy(pick.pickedItem)
                 .orderBy(pickCount.desc())

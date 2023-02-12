@@ -16,5 +16,5 @@ public interface ItemRepositoryCustom {
 
     Optional<ItemInfoDto> findInfoByItemIdAndUserId(Long itemId, Long userId);
 
-    SwipeItemDto findSwipeItemByItemId(Long itemId);
+    Optional<SwipeItemDto> findSwipeItemByItemId(Long itemId);
 }

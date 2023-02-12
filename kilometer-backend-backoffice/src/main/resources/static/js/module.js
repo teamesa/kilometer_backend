@@ -41,7 +41,7 @@ var appVue = new Vue({
                 module.titleDisabled = true;
                 module.extraDataDisabled = true;
             } else if (moduleName === 'SWIPE_ITEM') {
-                module.titleDisabled = false;
+                module.titleDisabled = true;
                 module.extraDataDisabled = false;
             } else {
                 module.titleDisabled = false;

@@ -2,6 +2,8 @@ package com.kilometer.domain.homeModules.modules.swipeItem.dto;
 
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import java.util.List;
+
+import com.kilometer.domain.item.enumType.ExposureType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ public class SwipeItemDto {
     private String content;
     private String placeName;
     private ExhibitionType exhibitionType;
+    private ExposureType exposureType;
     private String thumbnailImageUrl;
     private List<String> photos;
 

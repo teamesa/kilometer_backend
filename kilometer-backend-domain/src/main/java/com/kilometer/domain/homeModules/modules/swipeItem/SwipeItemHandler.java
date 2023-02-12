@@ -8,6 +8,9 @@ import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDataDto;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.ItemRepository;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.exception.ItemExposureOffException;
+import com.kilometer.domain.item.exception.ItemNotFoundException;
 import com.kilometer.domain.util.FrontUrlUtils;
 import lombok.RequiredArgsConstructor;
 
@@ -32,14 +35,18 @@ public class SwipeItemHandler implements ModuleHandler {
         ModuleDto moduleDto = paramDto.getModuleDto();
         Preconditions.checkNotNull(moduleDto.getExtraData(), "Extra_data must not be null");
         long itemId = Long.parseLong(moduleDto.getExtraData());
-        SwipeItemDto itemEntity = itemRepository.findSwipeItemByItemId(itemId);
+        SwipeItemDto swipeItem = itemRepository.findSwipeItemByItemId(itemId)
+            .orElseThrow(ItemNotFoundException::new);
+        if(ExposureType.OFF == swipeItem.getExposureType()) {
+            throw new ItemExposureOffException();
+        }
         return SwipeItemDataDto.of(
             FrontUrlUtils.getFrontDetailUrlPattern(itemId),
-            itemEntity.getTitle(),
-            itemEntity.getContent(),
-            itemEntity.getThumbnailImageUrl(),
-            itemEntity.getPhotos(),
-            SwipeItemKeywordGenerator.generator(itemEntity.getExhibitionType(),
-                itemEntity.getPlaceName()));
+            swipeItem.getTitle(),
+            swipeItem.getContent(),
+            swipeItem.getThumbnailImageUrl(),
+            swipeItem.getPhotos(),
+            SwipeItemKeywordGenerator.generator(swipeItem.getExhibitionType(),
+                swipeItem.getPlaceName()));
     }
 }
