@@ -34,12 +34,16 @@
             <tr>
                 <td class="subTitle">순번</td>
                 <td class="subTitle">이미지</td>
-                <td class="subTitle">타이틀1</td>
-                <td class="subTitle">타이틀2</td>
+                <td class="subTitle">상위 타이틀</td>
+                <td class="subTitle">하위 타이틀</td>
                 <td class="subTitle">URL</td>
             </tr>
             <tr v-for="(keyVisual, index) in keyVisuals">
-                <td>{{ keyVisual.id }}</td>
+                <td>
+                    <input type="text"
+                           v-model="keyVisual.id"
+                           style="width: 100%;">
+                </td>
                 <input type="hidden"
                        v-model="keyVisual.id">
                 <td>
