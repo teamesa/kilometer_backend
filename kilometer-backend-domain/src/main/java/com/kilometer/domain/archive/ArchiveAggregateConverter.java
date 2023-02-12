@@ -135,7 +135,7 @@ public class ArchiveAggregateConverter {
         List<LinkInfo> linkInfos = makeArchiveControlLink(archiveDetailDto.getId(),
             archiveDetailDto.isWrited());
         ItemSummary itemSummary = ItemSummary.of(
-            archiveDetailDto.getId(),
+            archiveDetailDto.getItemId(),
             archiveDetailDto.getItemTitle(),
             archiveDetailDto.getItemListImageUrl(),
             itemBadge
