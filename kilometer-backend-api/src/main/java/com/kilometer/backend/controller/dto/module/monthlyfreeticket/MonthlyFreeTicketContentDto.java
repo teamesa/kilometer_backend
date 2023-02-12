@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Builder
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class ContentDto {
+public class MonthlyFreeTicketContentDto {
 
     private final Long id;
     private final PresentationImageDto presentationImage;
@@ -20,8 +20,8 @@ public class ContentDto {
     private final HeartDto heart;
     private final ListItemAdditionalInfoDto listItemAdditionalInfo;
 
-    static ContentDto from(MonthlyFreeTicketDto monthlyFreeTicketDto) {
-        return ContentDto.builder()
+    static MonthlyFreeTicketContentDto from(MonthlyFreeTicketDto monthlyFreeTicketDto) {
+        return MonthlyFreeTicketContentDto.builder()
                 .id(monthlyFreeTicketDto.getItemId())
                 .presentationImage(PresentationImageDto.from(monthlyFreeTicketDto))
                 .typeBadge(TypeBadgeDto.of(monthlyFreeTicketDto.getExposureType().getDescription(), true))

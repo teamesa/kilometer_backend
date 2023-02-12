@@ -9,16 +9,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("ContentDto 는 ")
-class ContentDtoTest {
+class MonthlyFreeTicketContentDtoTest {
 
-    @DisplayName("ContentDto 인스턴스를 새성한다.")
+    @DisplayName("ContentDto 인스턴스를 생성한다.")
     @Test
     void from() {
-        ContentDto contentDto = ContentDto.from(MONTHLY_FREE_TICKET_DTO);
+        MonthlyFreeTicketContentDto monthlyFreeTicketContentDto = MonthlyFreeTicketContentDto.from(MONTHLY_FREE_TICKET_DTO);
 
         assertAll(
-                () -> assertThat(contentDto.getId()).isEqualTo(ITEM_ID),
-                () -> assertThat(contentDto.getAdditionalBadgeList().size()).isEqualTo(2)
+                () -> assertThat(monthlyFreeTicketContentDto.getId()).isEqualTo(ITEM_ID),
+                () -> assertThat(monthlyFreeTicketContentDto.getAdditionalBadgeList().size()).isEqualTo(2)
         );
     }
 }

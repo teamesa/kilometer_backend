@@ -17,13 +17,13 @@ public class MonthlyFreeTicketsResponse {
 
     private final String topTitle;
     private final String bottomTitle;
-    private final List<ContentDto> contents;
+    private final List<MonthlyFreeTicketContentDto> contents;
 
     public static MonthlyFreeTicketsResponse from(ModuleResponseDto<MonthlyFreeTicketResponse> moduleResponseDto) {
         MonthlyFreeTicketResponse monthlyFreeTicketResponse = moduleResponseDto.getData();
-        List<ContentDto> contents = monthlyFreeTicketResponse.getMonthlyFreeTicketDtos()
+        List<MonthlyFreeTicketContentDto> contents = monthlyFreeTicketResponse.getMonthlyFreeTicketDtos()
                 .stream()
-                .map(ContentDto::from)
+                .map(MonthlyFreeTicketContentDto::from)
                 .collect(Collectors.toList());
         return MonthlyFreeTicketsResponse.builder()
                 .topTitle(StringConvertor.convertNullToBlank(monthlyFreeTicketResponse.getTopTitle()))

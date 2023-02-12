@@ -19,7 +19,7 @@ class ArchivesResponseTest {
 
         assertAll(
                 () -> assertThat(archiveResponse.getTopTitle()).isEqualTo(TOP_TITLE),
-                () -> assertThat(archiveResponse.getBottomTittle()).isEqualTo(BOTTOM_TITLE),
+                () -> assertThat(archiveResponse.getBottomTitle()).isEqualTo(BOTTOM_TITLE),
                 () -> assertThat(archiveResponse.getArchives().size()).isEqualTo(1)
         );
     }

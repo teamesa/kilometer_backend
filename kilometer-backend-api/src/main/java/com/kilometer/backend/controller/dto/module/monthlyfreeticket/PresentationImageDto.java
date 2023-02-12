@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PresentationImageDto {
 
-    public static final String OPACITY = "0";
+    private static final String DEFAULT_OPACITY = "0";
 
     private String url;
     private String link;
@@ -27,7 +27,7 @@ public class PresentationImageDto {
         return PresentationImageDto.builder()
                 .url(monthlyFreeTicketDto.getThumbnailImageUrl())
                 .link(FrontUrlUtils.getFrontDetailUrlPattern(monthlyFreeTicketDto.getItemId()))
-                .opacity(OPACITY)
+                .opacity(DEFAULT_OPACITY)
                 .build();
     }
 
