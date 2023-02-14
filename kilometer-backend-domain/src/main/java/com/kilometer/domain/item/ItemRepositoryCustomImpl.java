@@ -171,7 +171,10 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .from(itemEntity)
             .leftJoin(itemDetail)
             .on(itemDetail.item.eq(itemEntity))
-            .where(itemEntity.id.eq(itemId))
+            .where(
+                    itemEntity.id.eq(itemId),
+                    itemEntity.exposureType.eq(ExposureType.ON)
+            )
             .fetchOne();
 
         dto.setPhotoUrls(photos);
