@@ -53,6 +53,7 @@ public class RealTimeArchiveHandler implements ModuleHandler {
             return realTimeArchiveDto;
         }
         return RealTimeArchiveDto.builder()
+                .archiveId(realTimeArchiveDto.getArchiveId())
                 .likeCount(realTimeArchiveDto.getLikeCount())
                 .starRating(realTimeArchiveDto.getStarRating())
                 .updatedAt(realTimeArchiveDto.getUpdatedAt())

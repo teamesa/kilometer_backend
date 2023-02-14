@@ -160,6 +160,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     public Optional<RealTimeArchiveDto> findRealTimeArchive(long archiveId) {
         return Optional.ofNullable(queryFactory.select(
                                 Projections.fields(RealTimeArchiveDto.class,
+                                        archiveEntity.id.as("archiveId"),
                                         archiveEntity.likeCount,
                                         archiveEntity.starRating,
                                         archiveEntity.updatedAt,

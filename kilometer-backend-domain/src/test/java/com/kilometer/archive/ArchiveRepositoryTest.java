@@ -72,6 +72,7 @@ class ArchiveRepositoryTest {
                 .get();
 
         assertAll(
+                () -> assertThat(realTimeArchiveDto.getArchiveId()).isEqualTo(savedArchive.getId()),
                 () -> assertThat(realTimeArchiveDto.getLikeCount()).isEqualTo(LIKE_COUNT),
                 () -> assertThat(realTimeArchiveDto.getStarRating()).isEqualTo(STAR_RATING),
                 () -> assertThat(realTimeArchiveDto.getComment()).isEqualTo(COMMENT),

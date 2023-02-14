@@ -1,5 +1,7 @@
 package com.kilometer.domain.item;
 
+import static org.springframework.data.history.RevisionSort.asc;
+
 import com.kilometer.domain.archive.QArchiveEntity;
 import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlaceEntity;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
@@ -204,7 +206,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         archive.isVisibleAtItem.isTrue()
                 )
                 .groupBy(itemEntity.id)
-                .orderBy(NumberExpression.random().asc())
+                .orderBy(Expressions.numberTemplate(Long.class, "function('rand')").asc())
                 .limit(MAX_MONTLY_FREE_TICKETS)
                 .fetch();
     }
