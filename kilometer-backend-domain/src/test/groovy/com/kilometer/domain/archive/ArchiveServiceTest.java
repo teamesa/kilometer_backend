@@ -207,6 +207,23 @@ public class ArchiveServiceTest {
     }
 
     @Test
+    @DisplayName("아카이브를 수정할 때, 수정하려는 코멘트에 금칙어가 포함되면 예외가 발생한다.")
+    void updateArchive_forbiddenComment() {
+        // given
+        User user = 회원가입을_한다();
+        ItemEntity item = 아이템을_등록한다();
+        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
+
+        ArchiveRequest updateRequest = new ArchiveRequest(null, 금칙어가_포함된_아카이브_코멘트, 3, false, List.of(), List.of());
+
+        // then
+        assertThatThrownBy(() -> archiveService.update(user.getId(), savedArchive.getId(), updateRequest))
+            .isInstanceOf(ArchiveValidationException.class)
+            .hasMessage("입력된 comment에 금칙어가 포함되어 있습니다.");
+    }
+
+    @Test
     @DisplayName("자신의 아카이브가 아니면 수정 요청을 보냈을 때 예외가 발생한다.")
     void updateArchive_unauthorized() {
         // given

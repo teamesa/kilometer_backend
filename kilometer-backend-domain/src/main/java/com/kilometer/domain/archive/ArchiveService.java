@@ -36,16 +36,15 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -97,10 +96,13 @@ public class ArchiveService {
         Preconditions.checkNotNull(userId, "id must not be null");
         Preconditions.checkNotNull(archiveId, "Archive id must not be null");
 
-        ArchiveEntity archiveEntity = archiveRepository.findById(archiveId)
-             .orElseThrow(ArchiveNotFoundException::new);
+        Archive archive = request.toDomain();
+        archive.validate();
 
-        if(!Objects.equals(archiveEntity.getUser().getId(), userId)) {
+        ArchiveEntity archiveEntity = archiveRepository.findById(archiveId)
+            .orElseThrow(ArchiveNotFoundException::new);
+
+        if (!Objects.equals(archiveEntity.getUser().getId(), userId)) {
             throw new ArchiveUnauthorizedException();
         }
 
