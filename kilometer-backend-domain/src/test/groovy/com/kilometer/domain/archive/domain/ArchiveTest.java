@@ -62,4 +62,17 @@ public class ArchiveTest {
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("별점은 0~5 사이의 양수이어야 합니다.");
     }
+
+    @Test
+    @DisplayName("Archive의 comment에 금칙어가 포함되면 예외가 발생한다.")
+    void validateCommentField() {
+        // given
+        String 금칙어가_포함된_코멘트 = "이건캐놈입니다.";
+        Archive archive = new Archive(전시회_ID, 금칙어가_포함된_코멘트, 아카이브_별점, 아카이브_공개_설정);
+
+        // when & then
+        assertThatThrownBy(archive::validate)
+            .isInstanceOf(ArchiveValidationException.class)
+            .hasMessage("입력된 comment에 금칙어가 포함되어 있습니다.");
+    }
 }
