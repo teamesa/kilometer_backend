@@ -31,6 +31,7 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -63,7 +64,7 @@ class ArchiveRepositoryTest {
     @Test
     void findReqlTimeArchive() {
         User savedUser = saveUser();
-        ArchiveEntity savedArchive = saveArchive(savedUser);
+        ArchiveEntity savedArchive = saveArchive(savedUser, ExposureType.ON);
         saveUserVisitPlace(savedArchive);
         saveArchiveImage(savedArchive);
         saveArchiveLike(savedArchive, savedUser);
@@ -95,7 +96,7 @@ class ArchiveRepositoryTest {
         void findTopFourArchievsWithImageUrl() {
             User savedUser = saveUser();
             for (int i = 0; i < 6; i++) {
-                ArchiveEntity savedArchiveEntity = saveArchive(savedUser);
+                ArchiveEntity savedArchiveEntity = saveArchive(savedUser, ExposureType.ON);
                 saveArchiveImage(savedArchiveEntity);
             }
 
@@ -108,13 +109,28 @@ class ArchiveRepositoryTest {
         @Test
         void ignoreArchivesThatDoesntHasImage() {
             User savedUser = saveUser();
-            ArchiveEntity savedArchiveEntity = saveArchive(savedUser);
+            ArchiveEntity savedArchiveEntity = saveArchive(savedUser, ExposureType.ON);
             saveArchiveImage(savedArchiveEntity);
-            saveArchive(savedUser);
+            saveArchive(savedUser, ExposureType.ON);
 
             List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourArchivesWithImageUrl();
 
             assertThat(topFourArchivesWithImageUrl.size()).isEqualTo(1);
+        }
+
+        @DisplayName("미전시 상태인 아카이브는 조회하지 않는다.")
+        @Test
+        void ignoreArchivesThatUnexposed() {
+            User savedUser = saveUser();
+            ArchiveEntity savedArchive = saveArchive(savedUser, ExposureType.OFF);
+            saveUserVisitPlace(savedArchive);
+            saveArchiveImage(savedArchive);
+            saveArchiveLike(savedArchive, savedUser);
+
+            Optional<RealTimeArchiveDto> emptyRealTimeArchiveDto = archiveRepository.findRealTimeArchive(
+                    savedArchive.getId());
+
+            assertThat(emptyRealTimeArchiveDto.isEmpty()).isTrue();
         }
     }
 
@@ -127,10 +143,10 @@ class ArchiveRepositoryTest {
         return userRepository.save(user);
     }
 
-    private ArchiveEntity saveArchive(User user) {
+    private ArchiveEntity saveArchive(User user, ExposureType exposureType) {
         ItemEntity item = ItemEntity.builder()
                 .exhibitionType(ExhibitionType.EXHIBITION)
-                .exposureType(ExposureType.ON)
+                .exposureType(exposureType)
                 .regionType(RegionType.CHUNGCHEONG)
                 .feeType(FeeType.COST)
                 .listImageUrl("listImageUrl")
