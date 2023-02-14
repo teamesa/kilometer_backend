@@ -11,7 +11,6 @@ import com.kilometer.domain.item.dto.MonthlyFreeTicketDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -36,7 +35,7 @@ public class MonthlyFreeItemHandler implements ModuleHandler {
         LocalDateTime requestTime = paramDto.getTime();
         ModuleDto data = paramDto.getModuleDto();
         List<MonthlyFreeTicketDto> monthlyFreeTicketDtos = itemRepository.findTopRandomFiveMonthlyFreeTicket(
-                requestTime.toLocalDate());
+                requestTime.toLocalDate(), paramDto.getUserId());
 
         if (monthlyFreeTicketDtos.isEmpty()) {
             return Optional.empty();
@@ -45,35 +44,7 @@ public class MonthlyFreeItemHandler implements ModuleHandler {
         return Optional.of(MonthlyFreeTicketResponse.of(
                 data.getUpperModuleTitle(),
                 data.getLowerModuleTitle(),
-                doesHeartedTicket(monthlyFreeTicketDtos, paramDto)
+                monthlyFreeTicketDtos
         ));
     }
-
-    private List<MonthlyFreeTicketDto> doesHeartedTicket(final List<MonthlyFreeTicketDto> monthlyFreeTicketDtos,
-                                                         ModuleParamDto moduleParamDto) {
-        return monthlyFreeTicketDtos.stream()
-                .map(content -> isAuthenticatedUser(content, moduleParamDto))
-                .collect(Collectors.toList());
-    }
-
-    private MonthlyFreeTicketDto isAuthenticatedUser(final MonthlyFreeTicketDto monthlyFreeTicketDto,
-                                                     final ModuleParamDto moduleParamDto) {
-        if (monthlyFreeTicketDto.getUserId().equals(moduleParamDto.getUserId())) {
-            return monthlyFreeTicketDto;
-        }
-        return MonthlyFreeTicketDto.builder()
-                .itemId(monthlyFreeTicketDto.getItemId())
-                .thumbnailImageUrl(monthlyFreeTicketDto.getThumbnailImageUrl())
-                .title(monthlyFreeTicketDto.getTitle())
-                .exhibitionType(monthlyFreeTicketDto.getExhibitionType())
-                .exposureType(monthlyFreeTicketDto.getExposureType())
-                .feeType(monthlyFreeTicketDto.getFeeType())
-                .pickCount(monthlyFreeTicketDto.getPickCount())
-                .isHearted(false)
-                .userId(monthlyFreeTicketDto.getUserId())
-                .archiveCount(monthlyFreeTicketDto.getArchiveCount())
-                .grade(monthlyFreeTicketDto.getGrade())
-                .build();
-    }
-
 }

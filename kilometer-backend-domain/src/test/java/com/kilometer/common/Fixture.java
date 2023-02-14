@@ -18,4 +18,5 @@ public class Fixture {
     public static final LocalDate MAX_DATE = LocalDate.of(9999, 12, 31);
     public static final String TOP_TITLE = "topTitle";
     public static final String LOWER_TITLE = "bottomTitle";
+    public static final Long USER_ID = 1L;
 }

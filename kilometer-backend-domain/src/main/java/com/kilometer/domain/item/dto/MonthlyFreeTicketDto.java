@@ -23,7 +23,6 @@ public class MonthlyFreeTicketDto {
     private int pickCount;
     private ExposureType exposureType;
     private boolean isHearted;
-    private Long userId;
     private Long archiveCount;
     private double grade;
 
@@ -38,7 +37,6 @@ public class MonthlyFreeTicketDto {
                 ", pickCount=" + pickCount +
                 ", exposureType=" + exposureType +
                 ", isHearted=" + isHearted +
-                ", userId=" + userId +
                 ", archiveCount=" + archiveCount +
                 ", grade=" + grade +
                 '}';

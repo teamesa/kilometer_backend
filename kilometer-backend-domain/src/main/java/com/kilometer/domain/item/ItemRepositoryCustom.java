@@ -21,5 +21,5 @@ public interface ItemRepositoryCustom {
 
     SwipeItemDto findSwipeItemByItemId(Long itemId);
 
-    List<MonthlyFreeTicketDto> findTopRandomFiveMonthlyFreeTicket(LocalDate now);
+    List<MonthlyFreeTicketDto> findTopRandomFiveMonthlyFreeTicket(LocalDate now, Long userId);
 }

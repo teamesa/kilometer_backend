@@ -6,6 +6,7 @@ import static com.kilometer.common.Fixture.MAX_DATE;
 import static com.kilometer.common.Fixture.MIN_DATE;
 import static com.kilometer.common.Fixture.STAR_RATING;
 import static com.kilometer.common.Fixture.TITLE;
+import static com.kilometer.common.Fixture.USER_ID;
 import static com.kilometer.common.Fixture.USER_IMAGE_URL;
 import static com.kilometer.common.Fixture.USER_NAME;
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -56,7 +57,7 @@ class ItemRepositoryTest {
         }
 
         List<MonthlyFreeTicketDto> monthlyFreeTicketDtos = itemRepository.findTopRandomFiveMonthlyFreeTicket(
-                LocalDate.now());
+                LocalDate.now(), USER_ID);
 
         assertThat(monthlyFreeTicketDtos.size()).isEqualTo(5);
     }

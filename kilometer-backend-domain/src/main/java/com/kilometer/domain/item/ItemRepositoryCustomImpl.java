@@ -176,7 +176,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public List<MonthlyFreeTicketDto> findTopRandomFiveMonthlyFreeTicket(LocalDate now) {
+    public List<MonthlyFreeTicketDto> findTopRandomFiveMonthlyFreeTicket(LocalDate now, Long userId) {
         return queryFactory.select(
                 Projections.fields(MonthlyFreeTicketDto.class,
                             itemEntity.id.as("itemId"),
@@ -187,14 +187,13 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                             itemEntity.pickCount,
                             itemEntity.exposureType,
                             pick.isHearted,
-                            pick.pickedUser.id.as("userId"),
                             archive.id.count().as("archiveCount"),
                             archive.starRating.avg().as("grade")
                         )
                 )
                 .from(itemEntity)
                 .leftJoin(pick)
-                .on(pick.pickedItem.eq(itemEntity))
+                .on(pick.pickedItem.eq(itemEntity), pick.pickedUser.id.eq(userId))
                 .leftJoin(archive)
                 .on(archive.item.eq(itemEntity))
                 .where(
