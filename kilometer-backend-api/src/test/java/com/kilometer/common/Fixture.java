@@ -77,7 +77,6 @@ public class Fixture {
             .feeType(FeeType.FREE)
             .pickCount(PICK_COUNT)
             .isHearted(IS_HEARTED)
-            .userId(USER_ID)
             .archiveCount(ARCHIVE_COUNT)
             .grade(GRADE)
             .build();

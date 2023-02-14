@@ -23,6 +23,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -203,6 +204,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         archive.isVisibleAtItem.isTrue()
                 )
                 .groupBy(itemEntity.id)
+                .orderBy(NumberExpression.random().asc())
                 .limit(MAX_MONTLY_FREE_TICKETS)
                 .fetch();
     }
