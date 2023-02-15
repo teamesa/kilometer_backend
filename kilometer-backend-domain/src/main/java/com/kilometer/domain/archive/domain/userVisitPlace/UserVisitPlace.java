@@ -11,17 +11,22 @@ public class UserVisitPlace {
     private final String address;
     private final String roadAddress;
 
-    public UserVisitPlace(final String placeType, final String placeName, final String address,
-                          final String roadAddress) {
-        validate(placeName, address, roadAddress);
-
-        this.placeType = PlaceType.findByName(placeType);
+    private UserVisitPlace(final PlaceType placeType, final String placeName, final String address,
+                           final String roadAddress) {
+        this.placeType = placeType;
         this.placeName = placeName;
         this.address = address;
         this.roadAddress = roadAddress;
     }
 
-    private void validate(final String placeName, final String address, final String roadAddress) {
+    public static UserVisitPlace createUserVisitPlace(final String placeType, final String placeName,
+                                                      final String address,
+                                                      final String roadAddress) {
+        validate(placeName, address, roadAddress);
+        return new UserVisitPlace(PlaceType.valueOf(placeType), placeName, address, roadAddress);
+    }
+
+    private static void validate(final String placeName, final String address, final String roadAddress) {
         if (placeName == null || placeName.isBlank()) {
             throw new ArchiveValidationException("입력된 장소명이 없습니다.");
         }

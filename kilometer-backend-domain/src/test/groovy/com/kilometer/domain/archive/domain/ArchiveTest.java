@@ -21,7 +21,7 @@ public class ArchiveTest {
     @DisplayName("Archive를 생성한다.")
     void createArchive() {
         // given & when
-        Archive archive = new Archive(아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들);
+        Archive archive = Archive.createArchive(아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들);
 
         // then
         assertThat(archive).isNotNull();
@@ -34,7 +34,7 @@ public class ArchiveTest {
         String invalidComment = null;
 
         // when & then
-        assertThatThrownBy(() -> new Archive(invalidComment, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
+        assertThatThrownBy(() -> Archive.createArchive(invalidComment, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("입력된 comment가 없습니다.");
     }
@@ -46,7 +46,7 @@ public class ArchiveTest {
         int invalidStarRating = -1;
 
         // when & then
-        assertThatThrownBy(() -> new Archive(아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
+        assertThatThrownBy(() -> Archive.createArchive(아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("별점은 0~5 사이의 양수이어야 합니다.");
     }
@@ -58,7 +58,7 @@ public class ArchiveTest {
         int invalidStarRating = 6;
 
         // when & then
-        assertThatThrownBy(() -> new Archive(아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
+        assertThatThrownBy(() -> Archive.createArchive(아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("별점은 0~5 사이의 양수이어야 합니다.");
     }
@@ -70,7 +70,7 @@ public class ArchiveTest {
         String 금칙어가_포함된_코멘트 = "이건캐놈입니다.";
 
         // when & then
-        assertThatThrownBy(() -> new Archive(금칙어가_포함된_코멘트, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
+        assertThatThrownBy(() -> Archive.createArchive(금칙어가_포함된_코멘트, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("입력된 comment에 금칙어가 포함되어 있습니다.");
     }

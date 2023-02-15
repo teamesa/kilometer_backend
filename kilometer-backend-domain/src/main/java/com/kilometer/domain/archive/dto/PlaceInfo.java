@@ -18,6 +18,6 @@ public class PlaceInfo {
     private String roadAddress;
 
     public UserVisitPlace toDomain() {
-        return new UserVisitPlace(placeType, name, address, roadAddress);
+        return UserVisitPlace.createUserVisitPlace(placeType, name, address, roadAddress);
     }
 }

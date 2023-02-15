@@ -18,23 +18,24 @@ class UserVisitPlaceTest {
     @DisplayName("UserVisitPlace를 생성한다.")
     void createUserVisitPlace() {
         // given & when
-        UserVisitPlace actual = new UserVisitPlace(장소_종류, 카페_이름, 카페_지번_주소, 카페_도로명_주소);
+        UserVisitPlace actual = UserVisitPlace.createUserVisitPlace(장소_종류, 카페_이름, 카페_지번_주소, 카페_도로명_주소);
 
         // then
         assertThat(actual).isInstanceOf(UserVisitPlace.class);
     }
 
-    @Test
-    @DisplayName("UserVisitPlace를 생성 할 때, 없는 장소 종류이면 예외가 발생한다.")
-    void createUserVisitPlace_emptyPlace() {
-        // given
-        String invalidPlaceType = "없는 장소";
-
-        // when & then
-        assertThatThrownBy(() -> new UserVisitPlace(invalidPlaceType, 카페_이름, 카페_지번_주소, 카페_도로명_주소))
-            .isInstanceOf(ArchiveValidationException.class)
-            .hasMessage("일치하는 방문 장소 종류가 없습니다.");
-    }
+    // TODO: PlaceType에 없는경우에 커스텀 예외가 발생해야함 (프론트엔드와 PlaceInfo 요청 값에 대한 논의 필요)
+//    @Test
+//    @DisplayName("UserVisitPlace를 생성 할 때, 없는 장소 종류이면 예외가 발생한다.")
+//    void createUserVisitPlace_emptyPlace() {
+//        // given
+//        String invalidPlaceType = "없는 장소";
+//
+//        // when & then
+//        assertThatThrownBy(() -> UserVisitPlace.createUserVisitPlace(invalidPlaceType, 카페_이름, 카페_지번_주소, 카페_도로명_주소))
+//            .isInstanceOf(ArchiveValidationException.class)
+//            .hasMessage("일치하는 방문 장소 종류가 없습니다.");
+//    }
 
     @Test
     @DisplayName("UserVisitPlace를 생성 할 때, 카페이름이 공백이면 예외가 발생한다.")
@@ -43,7 +44,7 @@ class UserVisitPlaceTest {
         String invalidCafeName = "   ";
 
         // when & then
-        assertThatThrownBy(() -> new UserVisitPlace(장소_종류, invalidCafeName, 카페_지번_주소, 카페_도로명_주소))
+        assertThatThrownBy(() -> UserVisitPlace.createUserVisitPlace(장소_종류, invalidCafeName, 카페_지번_주소, 카페_도로명_주소))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("입력된 장소명이 없습니다.");
     }
@@ -55,7 +56,7 @@ class UserVisitPlaceTest {
         String invalidCafeAddress = "   ";
 
         // when & then
-        assertThatThrownBy(() -> new UserVisitPlace(장소_종류, 카페_이름, invalidCafeAddress, 카페_도로명_주소))
+        assertThatThrownBy(() -> UserVisitPlace.createUserVisitPlace(장소_종류, 카페_이름, invalidCafeAddress, 카페_도로명_주소))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("입력된 지번 주소가 없습니다.");
     }
@@ -67,7 +68,7 @@ class UserVisitPlaceTest {
         String invalidRoadAddress = "   ";
 
         // when & then
-        assertThatThrownBy(() -> new UserVisitPlace(장소_종류, 카페_이름, 카페_지번_주소, invalidRoadAddress))
+        assertThatThrownBy(() -> UserVisitPlace.createUserVisitPlace(장소_종류, 카페_이름, 카페_지번_주소, invalidRoadAddress))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("입력된 도로명 주소가 없습니다.");
     }

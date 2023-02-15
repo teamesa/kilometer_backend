@@ -14,7 +14,7 @@ class ArchiveImageTest {
     @DisplayName("ArchiveImage를 생성한다.")
     void createArchiveImage() {
         // given & when
-        ArchiveImage actual = new ArchiveImage(아카이브_이미지_URL);
+        ArchiveImage actual = ArchiveImage.createArchiveImage(아카이브_이미지_URL);
 
         // then
         assertThat(actual).isInstanceOf(ArchiveImage.class);
@@ -27,7 +27,7 @@ class ArchiveImageTest {
         String invalidImageUrl = null;
 
         // when & then
-        assertThatThrownBy(() -> new ArchiveImage(invalidImageUrl))
+        assertThatThrownBy(() -> ArchiveImage.createArchiveImage(invalidImageUrl))
             .isInstanceOf(ArchiveValidationException.class);
     }
 
@@ -38,7 +38,7 @@ class ArchiveImageTest {
         String invalidImageUrl = "   ";
 
         // when & then
-        assertThatThrownBy(() -> new ArchiveImage(invalidImageUrl))
+        assertThatThrownBy(() -> ArchiveImage.createArchiveImage(invalidImageUrl))
             .isInstanceOf(ArchiveValidationException.class);
     }
 }

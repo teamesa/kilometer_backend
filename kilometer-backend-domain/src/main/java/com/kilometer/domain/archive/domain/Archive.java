@@ -3,6 +3,7 @@ package com.kilometer.domain.archive.domain;
 import com.kilometer.domain.archive.domain.archiveFilter.ArchiveFilter;
 import com.kilometer.domain.archive.domain.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
@@ -19,19 +20,24 @@ public class Archive {
     private final List<ArchiveImage> archiveImages;
     private final List<UserVisitPlace> userVisitPlaces;
 
-    public Archive(final String comment, final int starRating, final boolean isVisibleAtItem,
-                   final List<ArchiveImage> archiveImages, final List<UserVisitPlace> userVisitPlaces) {
-        validateComment(comment);
-        validateStarRating(starRating);
-
+    private Archive(final String comment, final int starRating, final boolean isVisibleAtItem,
+                    final List<ArchiveImage> archiveImages, final List<UserVisitPlace> userVisitPlaces) {
         this.comment = comment;
         this.starRating = starRating;
         this.isVisibleAtItem = isVisibleAtItem;
-        this.archiveImages = archiveImages;
-        this.userVisitPlaces = userVisitPlaces;
+        this.archiveImages = new ArrayList<>(archiveImages);
+        this.userVisitPlaces = new ArrayList<>(userVisitPlaces);
     }
 
-    private void validateComment(final String comment) {
+    public static Archive createArchive(final String comment, final int starRating, final boolean isVisibleAtItem,
+                                        final List<ArchiveImage> archiveImages,
+                                        final List<UserVisitPlace> userVisitPlaces) {
+        validateComment(comment);
+        validateStarRating(starRating);
+        return new Archive(comment, starRating, isVisibleAtItem, archiveImages, userVisitPlaces);
+    }
+
+    private static void validateComment(final String comment) {
         ArchiveFilter archiveFilter = new ArchiveFilter();
         if (comment == null) {
             throw new ArchiveValidationException("입력된 comment가 없습니다.");
@@ -41,7 +47,7 @@ public class Archive {
         }
     }
 
-    private void validateStarRating(final int starRating) {
+    private static void validateStarRating(final int starRating) {
         if (starRating < MIN_STAR_RATING || starRating > MAX_STAR_RATING) {
             throw new ArchiveValidationException("별점은 0~5 사이의 양수이어야 합니다.");
         }

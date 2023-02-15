@@ -64,6 +64,11 @@ public class ArchiveService {
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
         validateArchiveRequest(archiveRequest, userId);
 
+        Archive archive = archiveRequest.toDomain();
+
+        UserResponse userResponse = userService.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
+
         itemRepository.findExposureById(archiveRequest.getItemId())
             .map(mapping -> {
                 if (mapping.getExposureType() == ExposureType.OFF) {
@@ -72,11 +77,6 @@ public class ArchiveService {
                 return mapping;
             })
             .orElseThrow(ItemNotFoundException::new);
-
-        Archive archive = archiveRequest.toDomain();
-
-        UserResponse userResponse = userService.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
 
         ArchiveEntity archiveEntity = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
 

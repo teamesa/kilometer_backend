@@ -12,7 +12,7 @@ public class Statics {
     public static final String 아카이브_이미지_URL = "아카이브 이미지";
 
     // User Visit Place 관련 상수
-    public static final String 장소_종류 = "카페";
+    public static final String 장소_종류 = "CAFE";
     public static final String 카페_이름 = "koo cafe";
     public static final String 카페_지번_주소 = "cafe address";
     public static final String 카페_도로명_주소 = "cafe roadAddress";

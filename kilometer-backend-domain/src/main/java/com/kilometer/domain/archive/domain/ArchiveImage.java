@@ -8,12 +8,16 @@ public class ArchiveImage {
 
     private final String imageUrl;
 
-    public ArchiveImage(final String imageUrl) {
-        validateImageUrl(imageUrl);
+    private ArchiveImage(final String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    private void validateImageUrl(final String imageUrl) {
+    public static ArchiveImage createArchiveImage(final String imageUrl) {
+        validateImageUrl(imageUrl);
+        return new ArchiveImage(imageUrl);
+    }
+
+    private static void validateImageUrl(final String imageUrl) {
         if (imageUrl == null || imageUrl.isBlank()) {
             throw new ArchiveValidationException("이미지 링크가 없습니다.");
         }
