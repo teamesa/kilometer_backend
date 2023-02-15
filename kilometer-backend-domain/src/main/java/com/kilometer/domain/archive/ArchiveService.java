@@ -74,7 +74,6 @@ public class ArchiveService {
             .orElseThrow(ItemNotFoundException::new);
 
         Archive archive = archiveRequest.toDomain();
-        archive.validate();
 
         UserResponse userResponse = userService.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
@@ -97,7 +96,6 @@ public class ArchiveService {
         Preconditions.checkNotNull(archiveId, "Archive id must not be null");
 
         Archive archive = request.toDomain();
-        archive.validate();
 
         ArchiveEntity archiveEntity = archiveRepository.findById(archiveId)
             .orElseThrow(ArchiveNotFoundException::new);
@@ -223,11 +221,6 @@ public class ArchiveService {
 
 
     private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
-        Preconditions.checkNotNull(archiveRequest.getPhotoUrls(),
-            "Photo urls must not be null");
-        Preconditions.checkNotNull(archiveRequest.getPlaceInfos(),
-            "Place infos must not be null");
-
         Preconditions.checkArgument(
             !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
             String.format("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d",

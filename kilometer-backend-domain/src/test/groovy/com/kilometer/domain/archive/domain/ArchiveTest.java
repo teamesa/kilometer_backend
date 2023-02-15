@@ -3,21 +3,24 @@ package com.kilometer.domain.archive.domain;
 import static com.kilometer.common.statics.Statics.아카이브_공개_설정;
 import static com.kilometer.common.statics.Statics.아카이브_별점;
 import static com.kilometer.common.statics.Statics.아카이브_코멘트;
-import static com.kilometer.common.statics.Statics.전시회_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ArchiveTest {
 
+    private final List<ArchiveImage> 전시회_사진들 = List.of();
+    private final List<UserVisitPlace> 근처_맛집_사진들 = List.of();
+
     @Test
     @DisplayName("Archive를 생성한다.")
     void createArchive() {
         // given & when
-        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정);
+        Archive archive = new Archive(아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들);
 
         // then
         assertThat(archive).isNotNull();
@@ -29,10 +32,8 @@ public class ArchiveTest {
         // given
         String invalidComment = null;
 
-        Archive archive = new Archive(전시회_ID, invalidComment, 아카이브_별점, 아카이브_공개_설정);
-
         // when & then
-        assertThatThrownBy(archive::validate)
+        assertThatThrownBy(() -> new Archive(invalidComment, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("입력된 comment가 없습니다.");
     }
@@ -42,10 +43,9 @@ public class ArchiveTest {
     void archiveStarRatingIsNotNegative() {
         // given
         int invalidStarRating = -1;
-        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, invalidStarRating, 아카이브_공개_설정);
 
         // when & then
-        assertThatThrownBy(archive::validate)
+        assertThatThrownBy(() -> new Archive(아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("별점은 0~5 사이의 양수이어야 합니다.");
     }
@@ -55,10 +55,9 @@ public class ArchiveTest {
     void archiveStarRatingIsPositiveOutOfRange() {
         // given
         int invalidStarRating = 6;
-        Archive archive = new Archive(전시회_ID, 아카이브_코멘트, invalidStarRating, 아카이브_공개_설정);
 
         // when & then
-        assertThatThrownBy(archive::validate)
+        assertThatThrownBy(() -> new Archive(아카이브_코멘트, invalidStarRating, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("별점은 0~5 사이의 양수이어야 합니다.");
     }
@@ -68,10 +67,9 @@ public class ArchiveTest {
     void validateCommentField() {
         // given
         String 금칙어가_포함된_코멘트 = "이건캐놈입니다.";
-        Archive archive = new Archive(전시회_ID, 금칙어가_포함된_코멘트, 아카이브_별점, 아카이브_공개_설정);
 
         // when & then
-        assertThatThrownBy(archive::validate)
+        assertThatThrownBy(() -> new Archive(금칙어가_포함된_코멘트, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들))
             .isInstanceOf(ArchiveValidationException.class)
             .hasMessage("입력된 comment에 금칙어가 포함되어 있습니다.");
     }
