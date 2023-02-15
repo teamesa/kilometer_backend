@@ -1,10 +1,16 @@
 package com.kilometer.domain.archive.domain;
 
+import com.kilometer.domain.archive.ArchiveEntity;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.domain.archiveFilter.ArchiveFilter;
 import com.kilometer.domain.archive.domain.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
+import com.kilometer.domain.item.ItemEntity;
+import com.kilometer.domain.user.User;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
@@ -50,5 +56,27 @@ public class Archive {
         if (starRating < MIN_STAR_RATING || starRating > MAX_STAR_RATING) {
             throw new ArchiveValidationException("별점은 0~5 사이의 양수이어야 합니다.");
         }
+    }
+
+    public ArchiveEntity toEntity(final User user, final ItemEntity itemEntity) {
+        return ArchiveEntity.builder()
+            .comment(this.getComment())
+            .starRating(this.getStarRating())
+            .isVisibleAtItem(this.isVisibleAtItem())
+            .user(user)
+            .item(itemEntity)
+            .build();
+    }
+
+    public List<ArchiveImageEntity> createArchiveImageEntities() {
+        return this.archiveImages.stream()
+            .map(ArchiveImage::toEntity)
+            .collect(Collectors.toList());
+    }
+
+    public List<UserVisitPlaceEntity> createUserVisitPlaceEntities() {
+        return this.userVisitPlaces.stream()
+            .map(UserVisitPlace::toEntity)
+            .collect(Collectors.toList());
     }
 }

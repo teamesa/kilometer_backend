@@ -8,9 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.kilometer.common.annotation.SpringTestWithData;
-import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.PlaceInfo;
-import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
@@ -29,16 +27,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringTestWithData
-class ArchiveMapperTest {
+class ArchiveEntityMapperTest {
 
     private final List<String> 방문_사진 = List.of("photoUrls");
     private final List<PlaceInfo> 근처_맛집 = List.of(new PlaceInfo("FOOD", "맛집", "address", "roadAddress"));
 
     @Autowired
-    private ArchiveMapper archiveMapper;
-
-    @Autowired
-    private ArchiveService archiveService;
+    private ArchiveEntityMapper archiveEntityMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -57,26 +52,9 @@ class ArchiveMapperTest {
             근처_맛집);
 
         // when & then
-        assertThatThrownBy(() -> archiveMapper.mapToArchive(invalidUserId, request))
+        assertThatThrownBy(() -> archiveEntityMapper.mapToArchiveEntity(invalidUserId, request))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("저장되지 않은 사용자 입니다.");
-    }
-
-    @Test
-    @DisplayName("아카이브 정보를 등록할때, 이미 등록한 Archive를 다시 등록하려 하면 예외가 발생한다.")
-    void saveArchive_duplicate() {
-        // given
-        User 회원 = 회원가입을_한다();
-        ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
-            근처_맛집);
-        ArchiveInfo 아카이브_생성_응답 = archiveService.save(회원.getId(), request);
-
-        // when & then
-        assertThatThrownBy(() -> archiveMapper.mapToArchive(회원.getId(), request))
-            .isInstanceOf(ArchiveValidationException.class)
-            .hasMessage(
-                String.format("이미 등록한 Archive가 있습니다. sItemId : %d / UserId : %d", 아카이브_생성_응답.getId(), 회원.getId()));
     }
 
     @Test
@@ -90,7 +68,7 @@ class ArchiveMapperTest {
 
         // when
         ItemExposureOffException actual = assertThrows(ItemExposureOffException.class,
-            () -> archiveMapper.mapToArchive(user.getId(), request));
+            () -> archiveEntityMapper.mapToArchiveEntity(user.getId(), request));
 
         // then
         assertEquals(actual.getErrorCode(), KilometerErrorCode.ITEM_EXPOSURE_OFF);

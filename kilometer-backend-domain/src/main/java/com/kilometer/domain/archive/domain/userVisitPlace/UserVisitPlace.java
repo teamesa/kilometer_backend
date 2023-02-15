@@ -1,6 +1,7 @@
 package com.kilometer.domain.archive.domain.userVisitPlace;
 
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import lombok.Getter;
 
 @Getter
@@ -35,5 +36,14 @@ public class UserVisitPlace {
         if (roadAddress == null || roadAddress.isBlank()) {
             throw new ArchiveValidationException("입력된 도로명 주소가 없습니다.");
         }
+    }
+
+    public UserVisitPlaceEntity toEntity() {
+        return UserVisitPlaceEntity.builder()
+            .placeType(this.placeType)
+            .placeName(this.placeName)
+            .address(this.address)
+            .roadAddress(this.roadAddress)
+            .build();
     }
 }

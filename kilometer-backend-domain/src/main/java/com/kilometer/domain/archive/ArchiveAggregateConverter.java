@@ -8,22 +8,20 @@ import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
+import com.kilometer.domain.archive.like.dto.ArchiveLike;
+import com.kilometer.domain.archive.like.dto.ArchiveLikeGenerator;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
 import com.kilometer.domain.item.dto.ItemSummary;
 import com.kilometer.domain.item.enumType.ExhibitionType;
-import com.kilometer.domain.archive.like.dto.ArchiveLike;
-import com.kilometer.domain.archive.like.dto.ArchiveLikeGenerator;
 import com.kilometer.domain.linkInfo.LinkInfo;
-import com.kilometer.domain.user.dto.UserResponse;
+import com.kilometer.domain.user.User;
 import com.kilometer.domain.util.ApiUrlUtils;
 import com.kilometer.domain.util.FrontUrlUtils;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +33,8 @@ public class ArchiveAggregateConverter {
     private final ItemBadgeGenerator itemBadgeGenerator;
 
     public ArchiveInfo convertArchiveInfo(ItemArchiveDto itemArchiveDto,
-                                          List<ArchiveImageEntity> archiveImageEntities, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
+                                          List<ArchiveImageEntity> archiveImageEntities,
+                                          List<UserVisitPlaceEntity> userVisitPlaceEntities) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaceEntities);
 
@@ -86,20 +85,21 @@ public class ArchiveAggregateConverter {
             .build();
     }
 
-    public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity, UserResponse userResponse,
-                                          List<ArchiveImageEntity> archiveImageEntities, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
+    public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity) {
 
-        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaceEntities);
+        Map<PlaceType, String> placeTypes = convertFoodAndCafe(archiveEntity.getUserVisitPlaces());
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archiveEntity.getId());
 
-        List<String> photoUrls = archiveImageEntities.stream()
+        List<String> photoUrls = archiveEntity.getArchiveImages().stream()
             .map(ArchiveImageEntity::getImageUrl)
             .collect(Collectors.toList());
+        User user = archiveEntity.getUser();
+
         return ArchiveInfo.builder()
             .id(archiveEntity.getId())
-            .userProfileUrl(userResponse.getImageUrl())
-            .userName(userResponse.getName())
+            .userProfileUrl(user.getImageUrl())
+            .userName(user.getName())
             .updatedAt(archiveEntity.getUpdatedAt())
             .starRating(archiveEntity.getStarRating())
             .likeCount(archiveEntity.getLikeCount())
@@ -112,7 +112,7 @@ public class ArchiveAggregateConverter {
     }
 
     public MyArchiveInfo convertMyArchiveInfo(MyArchiveDto myArchiveDto,
-        boolean existImages, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
+                                              boolean existImages, List<UserVisitPlaceEntity> userVisitPlaceEntities) {
 
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(ExhibitionType.EXHIBITION);
 
@@ -129,7 +129,8 @@ public class ArchiveAggregateConverter {
     }
 
     public ArchiveDetailResponse convertArchiveDetail(ArchiveDetailDto archiveDetailDto,
-                                                      List<UserVisitPlaceEntity> visitPlaces, List<ArchiveImageEntity> archiveImageEntities) {
+                                                      List<UserVisitPlaceEntity> visitPlaces,
+                                                      List<ArchiveImageEntity> archiveImageEntities) {
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(
             archiveDetailDto.getItemExhibitionType());
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(visitPlaces);
