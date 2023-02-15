@@ -16,7 +16,7 @@ public class UserValidationException extends RuntimeException {
     private final UserForm bindingForm;
     private final List<UserValidationException> userValidationExceptionList;
 
-    public UserValidationException(PreconditionViolationException violationException, UserForm bindingForm) {
+    public UserValidationException(IllegalArgumentException violationException, UserForm bindingForm) {
         super(violationException.getMessage(), violationException.getCause());
         userId = 0;
         this.bindingForm = bindingForm;
