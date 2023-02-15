@@ -29,9 +29,6 @@ import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
-import com.kilometer.domain.item.enumType.ExposureType;
-import com.kilometer.domain.item.exception.ItemExposureOffException;
-import com.kilometer.domain.item.exception.ItemNotFoundException;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
@@ -55,7 +52,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArchiveService {
 
     private final UserService userService;
-    private final ItemRepository itemRepository;
     private final ArchiveRepository archiveRepository;
     private final ArchiveImageService archiveImageService;
     private final UserVisitPlaceService userVisitPlaceService;
@@ -66,21 +62,10 @@ public class ArchiveService {
 
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
-        validateArchiveRequest(archiveRequest, userId);
-
-        Archive archive = archiveRequest.toDomain();
+        Archive archive = archiveMapper.mapToArchive(userId, archiveRequest);
 
         UserResponse userResponse = userService.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
-
-        itemRepository.findExposureById(archiveRequest.getItemId())
-            .map(mapping -> {
-                if (mapping.getExposureType() == ExposureType.OFF) {
-                    throw new ItemExposureOffException();
-                }
-                return mapping;
-            })
-            .orElseThrow(ItemNotFoundException::new);
 
         ArchiveEntity archiveEntity = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
 
@@ -221,14 +206,6 @@ public class ArchiveService {
         return archiveRepository.findByItemIdAndUserId(itemId, userId)
             .map(ArchiveEntity::getId)
             .orElse(null);
-    }
-
-
-    private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
-        Preconditions.checkArgument(
-            !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
-            String.format("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d",
-                archiveRequest.getItemId(), userId));
     }
 
     private ArchiveEntity saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {

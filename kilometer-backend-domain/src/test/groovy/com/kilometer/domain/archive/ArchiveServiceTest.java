@@ -72,19 +72,20 @@ public class ArchiveServiceTest {
     }
 
     @Test
-    @DisplayName("아카이브 정보를 등록할때, 이미 등록한 Archive를 다시 등록하려 하면 예외가 발생한다..")
+    @DisplayName("아카이브 정보를 등록할때, 이미 등록한 Archive를 다시 등록하려 하면 예외가 발생한다.")
     void saveArchive_duplicate() {
         // given
         User 회원 = 회원가입을_한다();
         ItemEntity 아이템 = 아이템을_등록한다();
         ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             근처_맛집);
-
-        archiveService.save(회원.getId(), request);
+        ArchiveInfo 아카이브_생성_응답 = archiveService.save(회원.getId(), request);
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(회원.getId(), request))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ArchiveValidationException.class)
+            .hasMessage(
+                String.format("이미 등록한 Archive가 있습니다. sItemId : %d / UserId : %d", 아카이브_생성_응답.getId(), 회원.getId()));
     }
 
     @Test
@@ -132,7 +133,7 @@ public class ArchiveServiceTest {
         // when & then
         assertThatThrownBy(() -> archiveService.save(invalidUserId, request))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("잘못된 사용자 정보 입니다.");
+            .hasMessage("저장되지 않은 사용자 입니다.");
     }
 
     @Test
