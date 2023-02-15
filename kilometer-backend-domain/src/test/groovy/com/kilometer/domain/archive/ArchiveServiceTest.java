@@ -17,6 +17,7 @@ import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.archive.exception.ArchiveUnauthorizedException;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.service.ArchiveService;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.item.enumType.ExhibitionType;

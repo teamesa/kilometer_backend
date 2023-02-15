@@ -1,6 +1,9 @@
-package com.kilometer.domain.archive;
+package com.kilometer.domain.archive.service;
 
 import com.google.common.base.Preconditions;
+import com.kilometer.domain.archive.ArchiveAggregateConverter;
+import com.kilometer.domain.archive.ArchiveEntity;
+import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.domain.Archive;
@@ -59,6 +62,7 @@ public class ArchiveService {
     private final PagingStatusService pagingStatusService;
     private final ArchiveAggregateConverter archiveAggregateConverter;
     private final LikeService likeService;
+    private final ArchiveMapper archiveMapper;
 
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {

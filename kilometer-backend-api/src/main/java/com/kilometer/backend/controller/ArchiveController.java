@@ -1,6 +1,6 @@
 package com.kilometer.backend.controller;
 
-import com.kilometer.domain.archive.ArchiveService;
+import com.kilometer.domain.archive.service.ArchiveService;
 import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
