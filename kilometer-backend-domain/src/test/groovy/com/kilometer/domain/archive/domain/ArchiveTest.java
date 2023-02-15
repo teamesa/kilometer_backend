@@ -6,6 +6,7 @@ import static com.kilometer.common.statics.Statics.아카이브_코멘트;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.kilometer.domain.archive.domain.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

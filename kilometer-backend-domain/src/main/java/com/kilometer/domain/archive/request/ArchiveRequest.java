@@ -2,11 +2,11 @@ package com.kilometer.domain.archive.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kilometer.domain.archive.ArchiveEntity;
-import com.kilometer.domain.archive.PlaceType;
+import com.kilometer.domain.archive.domain.userVisitPlace.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.domain.Archive;
 import com.kilometer.domain.archive.domain.ArchiveImage;
-import com.kilometer.domain.archive.domain.UserVisitPlace;
+import com.kilometer.domain.archive.domain.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import java.util.ArrayList;

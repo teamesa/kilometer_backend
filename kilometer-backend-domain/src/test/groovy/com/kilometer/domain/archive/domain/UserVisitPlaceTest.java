@@ -7,6 +7,7 @@ import static com.kilometer.common.statics.Statics.카페_지번_주소;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.kilometer.domain.archive.domain.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

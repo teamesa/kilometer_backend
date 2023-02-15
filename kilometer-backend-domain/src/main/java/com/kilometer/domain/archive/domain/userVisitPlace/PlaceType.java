@@ -1,4 +1,4 @@
-package com.kilometer.domain.archive;
+package com.kilometer.domain.archive.domain.userVisitPlace;
 
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import java.util.Arrays;

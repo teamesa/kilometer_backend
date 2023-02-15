@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.ArchiveRepository;
-import com.kilometer.domain.archive.PlaceType;
+import com.kilometer.domain.archive.domain.userVisitPlace.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageRepository;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;

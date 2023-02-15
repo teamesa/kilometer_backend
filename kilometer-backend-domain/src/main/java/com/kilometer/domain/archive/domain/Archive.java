@@ -1,6 +1,7 @@
 package com.kilometer.domain.archive.domain;
 
 import com.kilometer.domain.archive.domain.archiveFilter.ArchiveFilter;
+import com.kilometer.domain.archive.domain.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import java.util.List;
 import lombok.Getter;

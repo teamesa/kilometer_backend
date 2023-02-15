@@ -1,6 +1,5 @@
-package com.kilometer.domain.archive.domain;
+package com.kilometer.domain.archive.domain.userVisitPlace;
 
-import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import lombok.Getter;
 
