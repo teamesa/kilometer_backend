@@ -1,10 +1,12 @@
 package com.kilometer.domain.archive.domain.archiveFilter;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ArchiveFilter {
 
-    private final List<String> ForbiddenCommentWord = List.of(
+    private static final Set<String> FORBIDDEN_WORD = new HashSet<>(List.of(
         "10 8",
         "10새",
         "10쉐이",
@@ -562,10 +564,10 @@ public class ArchiveFilter {
         "\\^\\^ㅣ발",
         "야동",
         "조건만남"
-    );
+    ));
 
-    public boolean isMatchWithForbiddenWords(final String comment) {
-        return this.ForbiddenCommentWord.stream()
+    public static boolean isMatchWithForbiddenWords(final String comment) {
+        return FORBIDDEN_WORD.stream()
             .anyMatch(comment::contains);
     }
 }

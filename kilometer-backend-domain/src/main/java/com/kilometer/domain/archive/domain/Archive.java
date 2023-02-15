@@ -38,11 +38,10 @@ public class Archive {
     }
 
     private static void validateComment(final String comment) {
-        ArchiveFilter archiveFilter = new ArchiveFilter();
         if (comment == null) {
             throw new ArchiveValidationException("입력된 comment가 없습니다.");
         }
-        if (archiveFilter.isMatchWithForbiddenWords(comment)) {
+        if (ArchiveFilter.isMatchWithForbiddenWords(comment)) {
             throw new ArchiveValidationException("입력된 comment에 금칙어가 포함되어 있습니다.");
         }
     }
