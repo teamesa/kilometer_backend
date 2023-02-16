@@ -23,7 +23,7 @@ public class UserVisitPlace {
     public static UserVisitPlace createUserVisitPlace(final String placeType, final String placeName,
                                                       final String address, final String roadAddress) {
         validate(placeName, address, roadAddress);
-        return new UserVisitPlace(PlaceType.valueOf(placeType), placeName, address, roadAddress);
+        return new UserVisitPlace(PlaceType.findBy(placeType), placeName, address, roadAddress);
     }
 
     private static void validate(final String placeName, final String address, final String roadAddress) {
