@@ -50,7 +50,8 @@ public class SwipeItemHandler implements ModuleHandler {
     }
 
     private boolean isValidSwipeItem(SwipeItemDto swipeItemDto) {
-        return !swipeItemDto.getTitle().isBlank()
+        return swipeItemDto != null
+                && !swipeItemDto.getTitle().isBlank()
                 && !swipeItemDto.getContent().isBlank()
                 && swipeItemDto.getExhibitionType() != null
                 && !swipeItemDto.getPlaceName().isBlank()

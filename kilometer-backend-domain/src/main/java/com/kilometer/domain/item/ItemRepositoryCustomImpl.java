@@ -177,7 +177,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             )
             .fetchOne();
 
-        dto.setPhotoUrls(photos);
+        if (dto != null) {
+            dto.setPhotoUrls(photos);
+        }
         return dto;
     }
 
