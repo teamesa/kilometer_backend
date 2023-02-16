@@ -7,27 +7,30 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class PresentationImageDto {
 
     private static final String DEFAULT_OPACITY = "0";
 
-    private String url;
-    private String link;
-    private String backGroundText;
-    private String dimColor;
-    private String opacity;
-    private boolean dimTarget;
+    private final String url;
+    private final String link;
+    private final String backGroundText;
+    private final String dimColor;
+    private final String opacity;
+    private final boolean dimTarget;
 
     static PresentationImageDto from(MonthlyFreeTicketDto monthlyFreeTicketDto) {
         return PresentationImageDto.builder()
                 .url(monthlyFreeTicketDto.getThumbnailImageUrl())
                 .link(FrontUrlUtils.getFrontDetailUrlPattern(monthlyFreeTicketDto.getItemId()))
+                .backGroundText(null)
+                .dimColor(null)
                 .opacity(DEFAULT_OPACITY)
+                .dimTarget(false)
                 .build();
     }
 
