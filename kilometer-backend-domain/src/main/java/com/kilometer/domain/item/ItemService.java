@@ -203,13 +203,18 @@ public class ItemService {
         updateAndDoFunction(ItemEntity::minusPickCount, itemId);
     }
 
-    private void updateAndDoFunction(Function<ItemEntity, ItemEntity> itemEntityItemEntityFunction,
-        long itemId) {
+    private void updateAndDoFunction(Function<ItemEntity, ItemEntity> itemEntityItemEntityFunction, long itemId) {
         Function<Long, ItemResponse> generated = it -> itemRepository.findById(it)
-            .map(itemEntityItemEntityFunction)
-            .map(itemRepository::save)
-            .map(ItemEntity::makeResponse)
-            .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + it));
+                .map(itemEntity -> {
+                    if (itemEntity.getExposureType() == ExposureType.OFF) {
+                        throw new ItemExposureOffException();
+                    }
+                    return itemEntity;
+                })
+                .map(itemEntityItemEntityFunction)
+                .map(itemRepository::save)
+                .map(ItemEntity::makeResponse)
+                .orElseThrow(ItemNotFoundException::new);
         generated.apply(itemId);
     }
 }
