@@ -28,7 +28,8 @@ class ArchiveImageTest {
 
         // when & then
         assertThatThrownBy(() -> ArchiveImage.createArchiveImage(invalidImageUrl))
-            .isInstanceOf(ArchiveValidationException.class);
+            .isInstanceOf(ArchiveValidationException.class)
+            .hasMessage("이미지 링크가 없습니다.");
     }
 
     @Test
@@ -39,6 +40,7 @@ class ArchiveImageTest {
 
         // when & then
         assertThatThrownBy(() -> ArchiveImage.createArchiveImage(invalidImageUrl))
-            .isInstanceOf(ArchiveValidationException.class);
+            .isInstanceOf(ArchiveValidationException.class)
+            .hasMessage("이미지 링크가 없습니다.");
     }
 }
