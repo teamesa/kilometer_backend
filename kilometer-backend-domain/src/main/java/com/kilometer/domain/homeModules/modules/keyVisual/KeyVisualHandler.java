@@ -6,6 +6,7 @@ import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualApiResponse;
 import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualDataDto;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,12 +25,17 @@ public class KeyVisualHandler implements ModuleHandler {
     }
 
     @Override
-    public Object generator(ModuleParamDto paramDto) {
+    public Optional<Object> generator(ModuleParamDto paramDto) {
         List<KeyVisual> keyVisuals = keyVisualRepository.findAllOrderByIdAtAsc();
-        return KeyVisualApiResponse.from(
+
+        if (keyVisuals.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(KeyVisualApiResponse.from(
             keyVisuals.stream()
             .map(KeyVisualDataDto::from)
             .collect(Collectors.toList())
-        );
+        ));
     }
 }

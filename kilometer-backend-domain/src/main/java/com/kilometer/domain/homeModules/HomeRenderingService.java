@@ -5,6 +5,8 @@ import com.kilometer.domain.homeModules.modules.ModuleHandlerAdapter;
 import com.kilometer.domain.homeModules.modules.ModuleRepository;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class HomeRenderingService {
 
@@ -39,23 +40,17 @@ public class HomeRenderingService {
             .collect(Collectors.toList());
 
         List<ModuleResponseDto<Object>> result = new ArrayList<>();
-        int indexCount = 0;
         for (ModuleParamDto moduleParamDto : modules) {
             try {
                 ModuleDto moduleDto = moduleParamDto.getModuleDto();
-                result.add(
-                    ModuleResponseDto.of(
-                        moduleDto.getModuleName(),
-                        indexCount,
-                        adapter.getHandlerAdapter(moduleDto.getModuleName())
-                            .generator(moduleParamDto)
-                    )
-                );
-                indexCount++;
+                adapter.getHandlerAdapter(moduleDto.getModuleName())
+                        .generator(moduleParamDto)
+                        .ifPresent(data -> result.add(ModuleResponseDto.of(moduleDto.getModuleName(), moduleDto.getExposureOrderNumber(), data)));
             } catch (Exception e) {
                 log.error("Home api catch exception", e);
             }
         }
+        result.sort(Comparator.comparingInt(ModuleResponseDto::getIndex));
         return HomeApiResponse.from(result);
     }
 }
