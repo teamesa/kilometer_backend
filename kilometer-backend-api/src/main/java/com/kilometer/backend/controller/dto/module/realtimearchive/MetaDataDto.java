@@ -28,7 +28,7 @@ public class MetaDataDto {
                 .heart(HeartDto.from(realTimeArchiveDto))
                 .likeCount(realTimeArchiveDto.getLikeCount())
                 .starRating(realTimeArchiveDto.getStarRating())
-                .updatedAt(realTimeArchiveDto.getUpdatedAt().toString())
+                .updatedAt(realTimeArchiveDto.getUpdatedAt().toLocalDate().toString())
                 .dimColor(DIM_COLOR)
                 .opacity(OPACITY)
                 .build();
