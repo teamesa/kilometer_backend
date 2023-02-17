@@ -161,7 +161,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Optional<SwipeItemDto> findSwipeItemByItemId(Long itemId) {
+    public SwipeItemDto findSwipeItemByItemId(Long itemId) {
         List<String> photos = queryFactory.select(itemDetailImage.imageUrl).from(itemDetailImage)
             .where(itemDetailImage.item.id.eq(itemId)).fetch();
 
