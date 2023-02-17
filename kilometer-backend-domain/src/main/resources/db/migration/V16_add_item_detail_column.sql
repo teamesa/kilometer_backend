@@ -1,0 +1,1 @@
+ALTER TABLE item_detail ADD source VARCHAR(255)
