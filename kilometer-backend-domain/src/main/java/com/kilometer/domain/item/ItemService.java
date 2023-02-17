@@ -2,6 +2,7 @@ package com.kilometer.domain.item;
 
 import com.google.common.base.Preconditions;
 import com.kilometer.domain.archive.ArchiveService;
+import com.kilometer.domain.item.domain.Item;
 import com.kilometer.domain.item.dto.DetailResponse;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.ItemInfoResponse;
@@ -10,6 +11,9 @@ import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import com.kilometer.domain.item.dto.ItemUpdateResponse;
 import com.kilometer.domain.item.dto.SearchItemResponse;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.exception.ItemExposureOffException;
+import com.kilometer.domain.item.exception.ItemNotFoundException;
 import com.kilometer.domain.item.itemDetail.ItemDetail;
 import com.kilometer.domain.item.itemDetail.ItemDetailRepository;
 import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
@@ -93,6 +97,13 @@ public class ItemService {
         return itemRepository.findById(itemId).map(ItemEntity::makeResponse);
     }
 
+    // item 만 조회하는 용도로 우선 제작. 다른 메서드들은 모두 Response 형태로 반환하고 있음.
+    public Item get(Long itemId) {
+        return itemRepository.findById(itemId)
+            .map(Item::of)
+            .orElseThrow(ItemNotFoundException::new);
+    }
+
     public ItemUpdateResponse findUpdateOne(Long itemId) {
         Preconditions.checkNotNull(itemId, "id must not be null");
 
@@ -101,17 +112,28 @@ public class ItemService {
         return itemEntity.makeUpdateResponse();
     }
 
-    public ItemInfoResponse getItemInfo(Long itemId, Long userId) {
+    public ItemInfoResponse getItem(Long itemId, Long userId) {
         Preconditions.checkNotNull(itemId, "id must not be null");
 
         ItemInfoDto itemInfoDto = itemRepository.findInfoByItemIdAndUserId(itemId, userId)
             .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id = " + itemId));
 
+        if(ExposureType.OFF == itemInfoDto.getExposureType()) {
+            throw new ItemExposureOffException();
+        }
+
+        // item detail 도메인 객체 empty 반환하도록 리팩토링 필요
+        ItemDetail itemDetail = itemDetailRepository.findByItemId(itemId)
+            .orElseGet(() -> ItemDetail.builder().introduce("").build());
+
+        List<ItemDetailImage> itemDetailImages = itemDetailImageRepository.findAllByItemId(itemId);
+
         Long archiveId = archiveService.findArchiveIdByItemIdAndUserId(itemId, userId);
 
-        return itemAggregateConverter.convert(itemInfoDto, archiveId);
+        return itemAggregateConverter.convert(itemInfoDto, itemDetail, itemDetailImages, archiveId);
     }
 
+    // TODO : @Deprecated
     public DetailResponse getItemDetail(Long itemId) {
         Preconditions.checkNotNull(itemId, "id must not be null");
 
@@ -189,11 +211,5 @@ public class ItemService {
             .map(ItemEntity::makeResponse)
             .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + it));
         generated.apply(itemId);
-    }
-
-    public List<ItemResponse> findByIdIn(List<Long> idList) {
-        return itemRepository.findByIdIn(idList).stream()
-                .map(ItemEntity::makeResponse)
-                .collect(Collectors.toList());
     }
 }

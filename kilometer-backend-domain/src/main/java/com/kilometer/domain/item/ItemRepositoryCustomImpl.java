@@ -117,7 +117,10 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         .append(itemEntity.id.stringValue()).as("link")
                 )
             )
-            .where(itemEntity.title.containsIgnoreCase(query))
+            .where(
+                itemEntity.title.containsIgnoreCase(query),
+                itemEntity.exposureType.eq(ExposureType.ON)
+            )
             .from(itemEntity)
             .orderBy(itemEntity.id.desc())
             .limit(10)
@@ -131,6 +134,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         return Optional.ofNullable(queryFactory.select(
                 Projections.fields(ItemInfoDto.class,
                     itemEntity.id,
+                    itemEntity.exposureType,
                     itemEntity.exhibitionType,
                     itemEntity.feeType,
                     itemEntity.title,
@@ -157,7 +161,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public SwipeItemDto findSwipeItemByItemId(Long itemId) {
+    public Optional<SwipeItemDto> findSwipeItemByItemId(Long itemId) {
         List<String> photos = queryFactory.select(itemDetailImage.imageUrl).from(itemDetailImage)
             .where(itemDetailImage.item.id.eq(itemId)).fetch();
 
@@ -165,6 +169,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 itemEntity.title,
                 itemDetail.introduce.as("content"),
                 itemEntity.exhibitionType,
+                itemEntity.exposureType,
                 itemEntity.placeName,
                 itemEntity.thumbnailImageUrl
             ))

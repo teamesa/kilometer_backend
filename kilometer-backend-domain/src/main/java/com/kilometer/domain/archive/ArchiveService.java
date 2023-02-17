@@ -16,6 +16,7 @@ import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
+import com.kilometer.domain.archive.exception.ArchiveUnauthorizedException;
 import com.kilometer.domain.archive.generator.ArchiveRatingCalculator;
 import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
@@ -24,6 +25,10 @@ import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
+import com.kilometer.domain.item.ItemRepository;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.exception.ItemExposureOffException;
+import com.kilometer.domain.item.exception.ItemNotFoundException;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
@@ -32,6 +37,7 @@ import com.kilometer.domain.user.UserService;
 import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArchiveService {
 
     private final UserService userService;
+    private final ItemRepository itemRepository;
     private final ArchiveRepository archiveRepository;
     private final ArchiveImageService archiveImageService;
     private final UserVisitPlaceService userVisitPlaceService;
@@ -56,6 +63,15 @@ public class ArchiveService {
     @Transactional
     public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
         validateArchiveRequest(archiveRequest, userId);
+
+        itemRepository.findExposureById(archiveRequest.getItemId())
+            .map(mapping -> {
+                if (mapping.getExposureType() == ExposureType.OFF) {
+                    throw new ItemExposureOffException();
+                }
+                return mapping;
+            })
+            .orElseThrow(ItemNotFoundException::new);
 
         Archive archive = archiveRequest.toDomain();
         archive.validate();
@@ -76,14 +92,20 @@ public class ArchiveService {
     }
 
     @Transactional
-    public ArchiveInfo update(Long userId, ArchiveRequest request) {
+    public ArchiveInfo update(Long userId, Long archiveId, ArchiveRequest request) {
         Preconditions.checkNotNull(userId, "id must not be null");
-        Preconditions.checkNotNull(request.getItemId(), "Item id must not be null");
+        Preconditions.checkNotNull(archiveId, "Archive id must not be null");
 
-        ArchiveEntity archiveEntity = archiveRepository.findByItemIdAndUserId(request.getItemId(), userId)
+        Archive archive = request.toDomain();
+        archive.validate();
+
+        ArchiveEntity archiveEntity = archiveRepository.findById(archiveId)
             .orElseThrow(ArchiveNotFoundException::new);
 
-        Long archiveId = archiveEntity.getId();
+        if (!Objects.equals(archiveEntity.getUser().getId(), userId)) {
+            throw new ArchiveUnauthorizedException();
+        }
+
         List<ArchiveImageEntity> archiveImageEntities = request.makeArchiveImages();
         List<UserVisitPlaceEntity> userVisitPlaceEntities = request.makeVisitedPlace();
 
