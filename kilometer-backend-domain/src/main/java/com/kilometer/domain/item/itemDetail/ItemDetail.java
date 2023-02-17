@@ -3,7 +3,6 @@ package com.kilometer.domain.item.itemDetail;
 import static javax.persistence.FetchType.EAGER;
 
 import com.kilometer.domain.item.ItemEntity;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,7 +29,6 @@ public class ItemDetail {
 
     private String introduce;
 
-    @Column(nullable = false)
     private String source;
 
     @OneToOne(fetch = EAGER)
