@@ -1,5 +1,6 @@
 package com.kilometer.backend.util;
 
+import com.kilometer.backend.controller.dto.module.monthlyfreeticket.MonthlyFreeTicketsResponse;
 import com.kilometer.backend.controller.dto.module.realtimearchive.ArchivesResponse;
 import com.kilometer.domain.homeModules.ModuleResponseDto;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ public class HomeModuleApiFactory {
     public HomeModuleApiFactory() {
         moduleApiMapper = new HashMap<>();
         moduleApiMapper.put("REAL_TIME_ARCHIVE", ArchivesResponse::from);
+        moduleApiMapper.put("MONTHLY_FREE_ITEM", MonthlyFreeTicketsResponse::from);
     }
 
     public ModuleResponseDto<Object> from(ModuleResponseDto<Object> moduleResponseDto) {

@@ -15,7 +15,7 @@ import lombok.Getter;
 public class ArchivesResponse {
 
     private final String topTitle;
-    private final String bottomTittle;
+    private final String bottomTitle;
     private final List<ArchiveDto> archives;
 
     public static ArchivesResponse from(ModuleResponseDto<RealTimeArchiveResponse> moduleResponseDtos) {
@@ -27,14 +27,16 @@ public class ArchivesResponse {
         return ArchivesResponse.builder()
                 .archives(archiveDtos)
                 .topTitle(StringConvertor.convertNullToBlank(realTimeArchiveResponse.getTopTitle()))
-                .bottomTittle(StringConvertor.convertNullToBlank(realTimeArchiveResponse.getBottomTitle()))
+                .bottomTitle(StringConvertor.convertNullToBlank(realTimeArchiveResponse.getBottomTitle()))
                 .build();
     }
 
     @Override
     public String toString() {
         return "ArchivesResponse{" +
-                "archives=" + archives +
+                "topTitle='" + topTitle + '\'' +
+                ", bottomTitle='" + bottomTitle + '\'' +
+                ", archives=" + archives +
                 '}';
     }
 }

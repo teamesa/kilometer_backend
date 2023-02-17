@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RealTimeArchiveDto {
 
+    private Long archiveId;
     private int likeCount;
     private int starRating;
     private LocalDateTime updatedAt;
@@ -28,7 +29,8 @@ public class RealTimeArchiveDto {
     @Override
     public String toString() {
         return "RealTimeArchiveDto{" +
-                "likeCount=" + likeCount +
+                "archiveId=" + archiveId +
+                ", likeCount=" + likeCount +
                 ", starRating=" + starRating +
                 ", updatedAt=" + updatedAt +
                 ", comment='" + comment + '\'' +

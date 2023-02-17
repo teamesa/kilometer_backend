@@ -1,6 +1,6 @@
 package com.kilometer.backend.util;
 
-import static com.kilometer.common.Fixture.HOME_MODULE_RESPONSE_DTO;
+import static com.kilometer.common.Fixture.REAL_TIME_ARCHIVE_HOME_MODULE_RESPONSE_DTO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.kilometer.domain.homeModules.HomeApiResponse;
@@ -14,7 +14,7 @@ class ApiGeneratorTest {
     @DisplayName("홈 모듈 API를 만들 수 있어야 한다.")
     @Test
     void generateHomeModuleApi() {
-        HomeApiResponse homeApiResponse = HomeApiResponse.from(List.of(HOME_MODULE_RESPONSE_DTO));
+        HomeApiResponse homeApiResponse = HomeApiResponse.from(List.of(REAL_TIME_ARCHIVE_HOME_MODULE_RESPONSE_DTO));
 
         assertThat(homeApiResponse.getModules().size()).isEqualTo(1);
     }
