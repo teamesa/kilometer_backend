@@ -1,7 +1,7 @@
 package com.kilometer.domain.archive.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kilometer.domain.item.dto.ItemSummary;
+import com.kilometer.domain.item.dto.ItemForArchive;
 import com.kilometer.domain.linkInfo.LinkInfo;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +19,7 @@ public class ArchiveDetailResponse {
     private int starRating;
     private String food;
     private String cafe;
-    private ItemSummary item;
+    private ItemForArchive item;
     private List<String> photoUrls;
     private List<LinkInfo> archiveActionButton;
     private boolean visibleAtItem;
