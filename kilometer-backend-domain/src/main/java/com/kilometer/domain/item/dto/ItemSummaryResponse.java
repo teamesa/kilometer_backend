@@ -7,8 +7,8 @@ public class ItemSummaryResponse {
     private final boolean archiveWritten;
     private final Long archiveId;
 
-    public static ItemSummaryResponse from(String title, String listImageUrl, boolean archiveWritten, Long archiveId) {
-        return new ItemSummaryResponse(title, listImageUrl, archiveWritten, archiveId);
+    public static ItemSummaryResponse from(ItemSummary summary) {
+        return new ItemSummaryResponse(summary.getTitle(), summary.getListImageUrl(), summary.isArchiveWritten(), summary.getArchiveId());
     }
 
     private ItemSummaryResponse(String title, String listImageUrl, boolean archiveWritten, Long archiveId) {
@@ -29,6 +29,7 @@ public class ItemSummaryResponse {
     public boolean isArchiveWritten() {
         return archiveWritten;
     }
+
     public Long getArchiveId() {
         return archiveId;
     }

@@ -8,6 +8,7 @@ import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.ItemInfoResponse;
 import com.kilometer.domain.item.dto.ItemRequest;
 import com.kilometer.domain.item.dto.ItemResponse;
+import com.kilometer.domain.item.dto.ItemSummaryResponse;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import com.kilometer.domain.item.dto.ItemUpdateResponse;
 import com.kilometer.domain.item.dto.SearchItemResponse;
@@ -211,5 +212,11 @@ public class ItemService {
             .map(ItemEntity::makeResponse)
             .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + it));
         generated.apply(itemId);
+    }
+
+    public ItemSummaryResponse getItemSummary(Long itemId, Long userId) {
+        return itemRepository.findSummaryByItemIdAndUserId(itemId, userId)
+            .map(ItemSummaryResponse::from)
+            .orElseThrow(ItemNotFoundException::new);
     }
 }

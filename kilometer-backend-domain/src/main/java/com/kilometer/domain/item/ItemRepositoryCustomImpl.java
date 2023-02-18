@@ -1,11 +1,10 @@
 package com.kilometer.domain.item;
 
-import static org.springframework.data.history.RevisionSort.asc;
-
 import com.kilometer.domain.archive.QArchiveEntity;
 import com.kilometer.domain.archive.userVisitPlace.QUserVisitPlaceEntity;
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.dto.ItemInfoDto;
+import com.kilometer.domain.item.dto.ItemSummary;
 import com.kilometer.domain.item.dto.MonthlyFreeTicketDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.enumType.ExhibitionType;
@@ -25,16 +24,16 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.junit.platform.commons.util.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityManager;
-import org.junit.platform.commons.util.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 @SuppressWarnings("rawtypes")
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
@@ -177,8 +176,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .leftJoin(itemDetail)
             .on(itemDetail.item.eq(itemEntity))
             .where(
-                    itemEntity.id.eq(itemId),
-                    itemEntity.exposureType.eq(ExposureType.ON)
+                itemEntity.id.eq(itemId),
+                itemEntity.exposureType.eq(ExposureType.ON)
             )
             .fetchOne();
 
@@ -192,33 +191,54 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     public List<MonthlyFreeTicketDto> findTopRandomFiveMonthlyFreeTicket(LocalDate now, Long userId) {
         return queryFactory.select(
                 Projections.fields(MonthlyFreeTicketDto.class,
-                            itemEntity.id.as("itemId"),
-                            itemEntity.thumbnailImageUrl,
-                            itemEntity.title,
-                            itemEntity.exhibitionType,
-                            itemEntity.feeType,
-                            itemEntity.pickCount,
-                            itemEntity.exposureType,
-                            pick.isHearted,
-                            archive.id.count().as("archiveCount"),
-                            archive.starRating.avg().as("grade")
-                        )
+                    itemEntity.id.as("itemId"),
+                    itemEntity.thumbnailImageUrl,
+                    itemEntity.title,
+                    itemEntity.exhibitionType,
+                    itemEntity.feeType,
+                    itemEntity.pickCount,
+                    itemEntity.exposureType,
+                    pick.isHearted,
+                    archive.id.count().as("archiveCount"),
+                    archive.starRating.avg().as("grade")
+                )
+            )
+            .from(itemEntity)
+            .leftJoin(pick)
+            .on(pick.pickedItem.eq(itemEntity), pick.pickedUser.id.eq(userId))
+            .leftJoin(archive)
+            .on(archive.item.eq(itemEntity))
+            .where(
+                itemEntity.feeType.eq(FeeType.FREE),
+                itemEntity.exposureType.eq(ExposureType.ON),
+                itemEntity.startDate.loe(now).and(itemEntity.endDate.gt(now)),
+                archive.isVisibleAtItem.isTrue()
+            )
+            .groupBy(itemEntity.id)
+            .orderBy(Expressions.numberTemplate(Long.class, "function('rand')").asc())
+            .limit(MAX_MONTLY_FREE_TICKETS)
+            .fetch();
+    }
+
+    @Override
+    public Optional<ItemSummary> findSummaryByItemIdAndUserId(Long itemId, Long userId) {
+        return Optional.ofNullable(
+            queryFactory.select(
+                    Projections.fields(ItemSummary.class,
+                        itemEntity.title,
+                        itemEntity.listImageUrl,
+                        archive.id.isNotNull().as("archiveWritten"),
+                        archive.id.as("archiveId")
+                    )
                 )
                 .from(itemEntity)
-                .leftJoin(pick)
-                .on(pick.pickedItem.eq(itemEntity), pick.pickedUser.id.eq(userId))
                 .leftJoin(archive)
-                .on(archive.item.eq(itemEntity))
+                .on(archive.item.eq(itemEntity), archive.user.id.eq(userId))
                 .where(
-                        itemEntity.feeType.eq(FeeType.FREE),
-                        itemEntity.exposureType.eq(ExposureType.ON),
-                        itemEntity.startDate.loe(now).and(itemEntity.endDate.gt(now)),
-                        archive.isVisibleAtItem.isTrue()
+                    itemEntity.id.eq(itemId),
+                    itemEntity.exposureType.eq(ExposureType.ON)
                 )
-                .groupBy(itemEntity.id)
-                .orderBy(Expressions.numberTemplate(Long.class, "function('rand')").asc())
-                .limit(MAX_MONTLY_FREE_TICKETS)
-                .fetch();
+                .fetchFirst());
     }
 
     private BooleanExpression eqExhibitionType(FilterOptions filterOptions) {
