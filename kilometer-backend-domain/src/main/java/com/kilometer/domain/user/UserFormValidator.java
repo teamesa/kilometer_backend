@@ -1,7 +1,6 @@
 package com.kilometer.domain.user;
 
 
-import com.google.common.base.Preconditions;
 import com.kilometer.domain.exception.UserValidationException;
 import com.kilometer.domain.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -53,89 +51,54 @@ class UserFormValidator {
             return;
         }
 
-        try {
-            Preconditions.checkArgument(userUpdateRequest.getBirthDay().isBefore(LocalDate.now()), "생일을 올바르게 입력해주세요.");
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.name));
+        if (userUpdateRequest.getBirthDay().isAfter(LocalDate.now())) {
+            exceptions.add(new UserValidationException("생일을 올바르게 입력해주세요.", UserForm.birthDay));
         }
 
-        try {
-            Preconditions.checkArgument(userUpdateRequest.getBirthDay().isAfter(LocalDate.parse(MIN_DATE_STRING, DateTimeFormatter.ISO_DATE)), "생일을 올바르게 입력해주세요.");
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.name));
+        if (userUpdateRequest.getBirthDay().isBefore(LocalDate.parse(MIN_DATE_STRING, DateTimeFormatter.ISO_DATE))) {
+            exceptions.add(new UserValidationException("생일을 올바르게 입력해주세요.", UserForm.birthDay));
         }
     }
 
     private void validateName(UserUpdateRequest userUpdateRequest, List<UserValidationException> exceptions) {
-        try {
-            Preconditions.checkArgument(
-                    Objects.isNull(userRepository.findByNameAndIdNot(userUpdateRequest.getName(), userUpdateRequest.getId())),
-                    "사용중인 닉네임입니다."
-            );
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.name));
+        if (Objects.nonNull(userRepository.findByNameAndIdNot(userUpdateRequest.getName(), userUpdateRequest.getId()))) {
+            exceptions.add(new UserValidationException("사용중인 닉네임입니다.", UserForm.name));
         }
 
-        try {
-            Preconditions.checkArgument(StringUtils.hasText(userUpdateRequest.getName()), "닉네임을 올바르게 입력해주세요");
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.name));
+        if (!StringUtils.hasText(userUpdateRequest.getName())) {
+            exceptions.add(new UserValidationException("닉네임을 올바르게 입력해주세요.", UserForm.name));
         }
 
-        try {
-            Preconditions.checkArgument(userUpdateRequest.getName().length() <= 20, "닉네임은 20자 이상이 될 수 없습니다.");
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.name));
+        if (userUpdateRequest.getName().length() > 20) {
+            exceptions.add(new UserValidationException("닉네임은 20자 이상이 될 수 없습니다.", UserForm.name));
         }
     }
 
     private void validatePhoneNumber(UserUpdateRequest userUpdateRequest, List<UserValidationException> exceptions) {
         int phoneNumberLength = userUpdateRequest.getPhoneNumber().length();
-        try {
-            Preconditions.checkArgument(userUpdateRequest.getPhoneNumber().indexOf("01") == 0
-                    , "핸드폰 번호를 올바르게 입력해주세요");
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.phoneNumber));
+
+        if (userUpdateRequest.getPhoneNumber().indexOf("01") != 0) {
+            exceptions.add(new UserValidationException("핸드폰 번호를 올바르게 입력해주세요", UserForm.phoneNumber));
         }
 
-        try {
-            Preconditions.checkArgument(phoneNumberLength == 10 || phoneNumberLength == 11, "핸드폰 번호를 올바르게 입력해주세요.");
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.phoneNumber));
+        if (phoneNumberLength != 11 && phoneNumberLength != 10) {
+            exceptions.add(new UserValidationException("핸드폰 번호를 올바르게 입력해주세요", UserForm.phoneNumber));
         }
     }
 
     private void validateGender(UserUpdateRequest userUpdateRequest, List<UserValidationException> exceptions) {
-        try {
-            Preconditions.checkArgument(StringUtils.hasText(userUpdateRequest.getGender()), "성별을 올바르게 선택해주세요");
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.gender));
-        }
-
-        try {
-            Preconditions.checkArgument(
-                    Arrays.stream(Gender.values()).anyMatch(gender -> gender.name().equals(userUpdateRequest.getGender())),
-                    "성별을 올바르게 선택해주세요"
-            );
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.gender));
+        if (!StringUtils.hasText(userUpdateRequest.getGender())) {
+            exceptions.add(new UserValidationException("성별을 올바르게 선택해주세요", UserForm.gender));
         }
     }
 
     private void validationEmail(UserUpdateRequest userUpdateRequest, List<UserValidationException> exceptions) {
-        try {
-            Preconditions.checkArgument(StringUtils.hasText(userUpdateRequest.getEmail()), "이메일을 올바르게 입력해주세요.");
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.email));
+        if (!StringUtils.hasText(userUpdateRequest.getEmail())) {
+            exceptions.add(new UserValidationException("이메일을 올바르게 입력해주세요.", UserForm.email));
         }
 
-        try {
-            Preconditions.checkArgument(
-                    Pattern.compile(EMAIL_REGEX).matcher(userUpdateRequest.getEmail()).find(),
-                    "이메일을 올바르게 입력해주세요."
-            );
-        } catch (IllegalArgumentException e) {
-            exceptions.add(new UserValidationException(e, UserForm.email));
+        if (!Pattern.compile(EMAIL_REGEX).matcher(userUpdateRequest.getEmail()).find()) {
+            exceptions.add(new UserValidationException("이메일을 올바르게 입력해주세요.", UserForm.email));
         }
     }
 }
