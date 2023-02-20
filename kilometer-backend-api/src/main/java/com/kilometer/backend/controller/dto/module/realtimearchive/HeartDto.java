@@ -17,7 +17,7 @@ public class HeartDto {
 
     static HeartDto from(RealTimeArchiveDto realTimeArchiveDto) {
         return HeartDto.builder()
-                .link(ApiUrlUtils.getPickItemUrl(realTimeArchiveDto.getItemId()))
+                .link(ApiUrlUtils.getLikeArchiveUrl(realTimeArchiveDto.getItemId()))
                 .heartClicked(realTimeArchiveDto.isLiked())
                 .build();
     }
