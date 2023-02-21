@@ -1,5 +1,6 @@
 package com.kilometer.backend.controller;
 
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
 import com.kilometer.domain.archive.service.ArchiveService;
 import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
@@ -60,7 +61,7 @@ public class ArchiveController {
     @PostMapping(ApiUrlUtils.ARCHIVE_ROOT)
     @ApiOperation(value = "신규 아카이브 등록")
     public ArchiveInfo saveArchive(
-        @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
+        @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveCreateRequest request) {
         long userId = getLoginUserId();
         return archiveService.save(userId, request);
     }

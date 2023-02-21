@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.kilometer.common.annotation.SpringTestWithData;
 import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.dto.PlaceInfo;
-import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.item.enumType.ExhibitionType;
@@ -51,17 +51,18 @@ class ArchiveEntityMapperTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 전시_아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
 
         // when
         ArchiveEntity actual = archiveEntityMapper.mapToArchiveEntity(user.getId(), request);
 
         // then
         assertAll(
-                () -> assertThat(actual.getComment()).isEqualTo(아카이브_코멘트),
-                () -> assertThat(actual.getStarRating()).isEqualTo(아카이브_별점),
-                () -> assertThat(actual.getUser().getId()).isEqualTo(user.getId()),
-                () -> assertThat(actual.getItem().getId()).isEqualTo(item.getId())
+            () -> assertThat(actual.getComment()).isEqualTo(아카이브_코멘트),
+            () -> assertThat(actual.getStarRating()).isEqualTo(아카이브_별점),
+            () -> assertThat(actual.getUser().getId()).isEqualTo(user.getId()),
+            () -> assertThat(actual.getItem().getId()).isEqualTo(item.getId())
         );
     }
 
@@ -72,13 +73,13 @@ class ArchiveEntityMapperTest {
         Long invalidUserId = 1L;
 
         ItemEntity 아이템 = 전시_아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
-                근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
 
         // when & then
         assertThatThrownBy(() -> archiveEntityMapper.mapToArchiveEntity(invalidUserId, request))
-                .isInstanceOf(UserNotFoundException.class)
-                .hasMessage("저장되지 않은 사용자 입니다.");
+            .isInstanceOf(UserNotFoundException.class)
+            .hasMessage("저장되지 않은 사용자 입니다.");
     }
 
     @Test
@@ -87,11 +88,12 @@ class ArchiveEntityMapperTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 미전시_아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
 
         // when
         ItemExposureOffException actual = assertThrows(ItemExposureOffException.class,
-                () -> archiveEntityMapper.mapToArchiveEntity(user.getId(), request));
+            () -> archiveEntityMapper.mapToArchiveEntity(user.getId(), request));
 
         // then
         assertEquals(actual.getErrorCode(), KilometerErrorCode.ITEM_EXPOSURE_OFF);
@@ -100,41 +102,41 @@ class ArchiveEntityMapperTest {
 
     private User 회원가입을_한다() {
         User user = User.builder()
-                .name("user")
-                .email("user@email.com")
-                .build();
+            .name("user")
+            .email("user@email.com")
+            .build();
         return userRepository.save(user);
     }
 
     private ItemEntity 전시_아이템을_등록한다() {
         ItemEntity item = ItemEntity.builder()
-                .exposureType(ExposureType.ON)
-                .exhibitionType(ExhibitionType.EXHIBITION)
-                .regionType(RegionType.CHUNGCHEONG)
-                .feeType(FeeType.FREE)
-                .listImageUrl("listImageUrl")
-                .thumbnailImageUrl("thumbnailImageUrl")
-                .title("title")
-                .placeName("placeName")
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now())
-                .build();
+            .exposureType(ExposureType.ON)
+            .exhibitionType(ExhibitionType.EXHIBITION)
+            .regionType(RegionType.CHUNGCHEONG)
+            .feeType(FeeType.FREE)
+            .listImageUrl("listImageUrl")
+            .thumbnailImageUrl("thumbnailImageUrl")
+            .title("title")
+            .placeName("placeName")
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now())
+            .build();
         return itemRepository.save(item);
     }
 
     private ItemEntity 미전시_아이템을_등록한다() {
         ItemEntity item = ItemEntity.builder()
-                .exposureType(ExposureType.OFF)
-                .exhibitionType(ExhibitionType.EXHIBITION)
-                .regionType(RegionType.CHUNGCHEONG)
-                .feeType(FeeType.FREE)
-                .listImageUrl("listImageUrl")
-                .thumbnailImageUrl("thumbnailImageUrl")
-                .title("title")
-                .placeName("placeName")
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now())
-                .build();
+            .exposureType(ExposureType.OFF)
+            .exhibitionType(ExhibitionType.EXHIBITION)
+            .regionType(RegionType.CHUNGCHEONG)
+            .feeType(FeeType.FREE)
+            .listImageUrl("listImageUrl")
+            .thumbnailImageUrl("thumbnailImageUrl")
+            .title("title")
+            .placeName("placeName")
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now())
+            .build();
         return itemRepository.save(item);
     }
 }

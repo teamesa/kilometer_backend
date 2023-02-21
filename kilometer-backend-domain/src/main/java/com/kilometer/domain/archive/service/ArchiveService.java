@@ -25,6 +25,7 @@ import com.kilometer.domain.archive.generator.ArchiveRatingCalculator;
 import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
@@ -58,9 +59,9 @@ public class ArchiveService {
     private final ArchiveEntityMapper archiveEntityMapper;
 
     @Transactional
-    public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
-        validateNotDuplicateArchive(userId, archiveRequest.getItemId());
-        ArchiveEntity archiveEntity = archiveEntityMapper.mapToArchiveEntity(userId, archiveRequest);
+    public ArchiveInfo save(final Long userId, final ArchiveCreateRequest request) {
+        validateNotDuplicateArchive(userId, request.getItemId());
+        ArchiveEntity archiveEntity = archiveEntityMapper.mapToArchiveEntity(userId, request);
         ArchiveEntity savedArchiveEntity = archiveRepository.save(archiveEntity);
         return archiveAggregateConverter.convertArchiveInfo(savedArchiveEntity);
     }

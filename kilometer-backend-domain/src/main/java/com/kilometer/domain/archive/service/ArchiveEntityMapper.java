@@ -2,7 +2,7 @@ package com.kilometer.domain.archive.service;
 
 import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.domain.Archive;
-import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.item.exception.ItemNotFoundException;
@@ -21,10 +21,10 @@ public class ArchiveEntityMapper {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
-    public ArchiveEntity mapToArchiveEntity(final Long userId, final ArchiveRequest archiveRequest) {
-        Archive archive = archiveRequest.toDomain();
+    public ArchiveEntity mapToArchiveEntity(final Long userId, final ArchiveCreateRequest request) {
+        Archive archive = request.toDomain();
 
-        ArchiveEntity archiveEntity = createArchiveEntity(userId, archiveRequest.getItemId(), archive);
+        ArchiveEntity archiveEntity = createArchiveEntity(userId, request.getItemId(), archive);
         archiveEntity.addArchiveImages(archive.createArchiveImageEntities());
         archiveEntity.addUserVisitPlaces(archive.createUserVisitPlaceEntities());
         return archiveEntity;

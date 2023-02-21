@@ -18,6 +18,7 @@ import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.archive.exception.ArchiveUnauthorizedException;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceRepository;
@@ -66,7 +67,7 @@ public class ArchiveServiceTest {
         // given
         User 회원 = 회원가입을_한다();
         ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             근처_맛집);
 
         // when
@@ -87,7 +88,7 @@ public class ArchiveServiceTest {
         // given
         User 회원 = 회원가입을_한다();
         ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             근처_맛집);
 
         // when
@@ -107,7 +108,7 @@ public class ArchiveServiceTest {
         // given
         User 회원 = 회원가입을_한다();
         ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             근처_맛집);
         ArchiveInfo 아카이브_생성_응답 = archiveService.save(회원.getId(), request);
 
@@ -127,7 +128,7 @@ public class ArchiveServiceTest {
         ItemEntity 아이템 = 아이템을_등록한다();
 
         List<String> invalidPhotoUrls = null;
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, invalidPhotoUrls,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, invalidPhotoUrls,
             근처_맛집);
 
         // when & then
@@ -143,7 +144,7 @@ public class ArchiveServiceTest {
         ItemEntity 아이템 = 아이템을_등록한다();
 
         List<PlaceInfo> invalidPhotoInfos = null;
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             invalidPhotoInfos);
 
         // when & then
@@ -158,7 +159,7 @@ public class ArchiveServiceTest {
         Long invalidUserId = 1L;
 
         ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             근처_맛집);
 
         // when & then
@@ -173,7 +174,7 @@ public class ArchiveServiceTest {
         // given
         User 회원 = 회원가입을_한다();
         ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 금칙어가_포함된_아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 금칙어가_포함된_아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             근처_맛집);
 
         // when & then
@@ -188,7 +189,7 @@ public class ArchiveServiceTest {
         // given
         Long invalidItemId = -1L;
         User user = 회원가입을_한다();
-        ArchiveRequest request = new ArchiveRequest(invalidItemId, 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(invalidItemId, 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
 
         // when
         ItemNotFoundException actual = assertThrows(ItemNotFoundException.class,
@@ -205,7 +206,7 @@ public class ArchiveServiceTest {
         User user = 회원가입을_한다();
         ItemEntity item = ItemEntity.builder().exposureType(ExposureType.OFF).build();
         itemRepository.save(item);
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
 
         // when
         ItemExposureOffException actual = assertThrows(ItemExposureOffException.class,
@@ -221,7 +222,7 @@ public class ArchiveServiceTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
         ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
 
         // when
@@ -244,7 +245,7 @@ public class ArchiveServiceTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
         ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
 
         ArchiveRequest updateRequest = new ArchiveRequest(null, 금칙어가_포함된_아카이브_코멘트, 3, false, List.of(), List.of());
@@ -261,7 +262,7 @@ public class ArchiveServiceTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
         ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
 
         // when
@@ -280,7 +281,7 @@ public class ArchiveServiceTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
         ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
 
         // when
