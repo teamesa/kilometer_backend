@@ -7,6 +7,7 @@ import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.user.User;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -69,10 +70,10 @@ public class ArchiveEntity {
     @JoinColumn(name = "item")
     private ItemEntity item;
 
-    @OneToMany(mappedBy = "archiveEntity")
+    @OneToMany(mappedBy = "archiveEntity", cascade = CascadeType.PERSIST)
     private List<ArchiveImageEntity> archiveImages;
 
-    @OneToMany(mappedBy = "archiveEntity")
+    @OneToMany(mappedBy = "archiveEntity", cascade = CascadeType.PERSIST)
     private List<UserVisitPlaceEntity> userVisitPlaces;
 
     public void addArchiveImages(final List<ArchiveImageEntity> archiveImages) {

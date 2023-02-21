@@ -7,6 +7,7 @@ import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.item.enumType.RegionType;
+import com.kilometer.domain.item.exception.ItemExposureOffException;
 import com.kilometer.domain.item.itemDetail.ItemDetail;
 import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
 import java.time.LocalDate;
@@ -192,6 +193,12 @@ public class ItemEntity {
 
     public void setItemDetail(ItemDetail itemDetail) {
         this.itemDetail = itemDetail;
+    }
+
+    public void validateExposureTypeIsOn() {
+        if (this.exposureType.equals(ExposureType.OFF)) {
+            throw new ItemExposureOffException("미전시 아이템은 아카이빙 할 수 없습니다.");
+        }
     }
 
     public ItemEntity plusPickCount() {

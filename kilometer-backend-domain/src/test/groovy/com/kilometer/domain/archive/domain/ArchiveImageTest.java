@@ -4,6 +4,7 @@ import static com.kilometer.common.statics.Statics.아카이브_이미지_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,8 +29,8 @@ class ArchiveImageTest {
 
         // when & then
         assertThatThrownBy(() -> ArchiveImage.createArchiveImage(invalidImageUrl))
-            .isInstanceOf(ArchiveValidationException.class)
-            .hasMessage("이미지 링크가 없습니다.");
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("이미지 링크가 없습니다.");
     }
 
     @Test
@@ -40,7 +41,20 @@ class ArchiveImageTest {
 
         // when & then
         assertThatThrownBy(() -> ArchiveImage.createArchiveImage(invalidImageUrl))
-            .isInstanceOf(ArchiveValidationException.class)
-            .hasMessage("이미지 링크가 없습니다.");
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("이미지 링크가 없습니다.");
+    }
+
+    @Test
+    @DisplayName("ArchiveImage를 Entity 객체로 변환 한다.")
+    void toEntity() {
+        // given
+        ArchiveImage archiveImage = ArchiveImage.createArchiveImage(아카이브_이미지_URL);
+
+        // when
+        ArchiveImageEntity actual = archiveImage.toEntity();
+
+        // then
+        assertThat(actual).isInstanceOf(ArchiveImageEntity.class);
     }
 }
