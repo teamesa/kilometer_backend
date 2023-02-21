@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -87,7 +88,11 @@ public class User {
         this.email = userUpdateRequest.getEmail();
         this.gender = Gender.valueOf(userUpdateRequest.getGender());
         this.phoneNumber = userUpdateRequest.getPhoneNumber();
-        this.birthdate = userUpdateRequest.getBirthDay().atStartOfDay();
+        if (Objects.nonNull(userUpdateRequest.getBirthDay())) {
+            this.birthdate = userUpdateRequest.getBirthDay().atStartOfDay();
+        } else {
+            this.birthdate = null;
+        }
         return this;
     }
 

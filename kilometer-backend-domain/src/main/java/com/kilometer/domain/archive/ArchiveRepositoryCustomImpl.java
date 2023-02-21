@@ -12,6 +12,7 @@ import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
 import com.kilometer.domain.archive.like.QLike;
 import com.kilometer.domain.item.QItemEntity;
+import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.user.QUser;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -160,6 +161,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     public Optional<RealTimeArchiveDto> findRealTimeArchive(long archiveId) {
         return Optional.ofNullable(queryFactory.select(
                                 Projections.fields(RealTimeArchiveDto.class,
+                                        archiveEntity.id.as("archiveId"),
                                         archiveEntity.likeCount,
                                         archiveEntity.starRating,
                                         archiveEntity.updatedAt,
@@ -186,7 +188,10 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                         .leftJoin(like)
                         .on(like.likedArchiveEntity.eq(archive)
                                 .and(like.likedUser.eq(user)))
-                        .where(archive.id.eq(archiveId))
+                        .where(
+                                archive.id.eq(archiveId),
+                                itemEntity.exposureType.eq(ExposureType.ON)
+                        )
                         .limit(1)
                         .fetchOne()
         );

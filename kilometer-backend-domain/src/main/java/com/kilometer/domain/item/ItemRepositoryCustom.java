@@ -2,9 +2,12 @@ package com.kilometer.domain.item;
 
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.dto.ItemInfoDto;
+import com.kilometer.domain.item.dto.MonthlyFreeTicketDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 
@@ -16,5 +19,7 @@ public interface ItemRepositoryCustom {
 
     Optional<ItemInfoDto> findInfoByItemIdAndUserId(Long itemId, Long userId);
 
-    Optional<SwipeItemDto> findSwipeItemByItemId(Long itemId);
+    SwipeItemDto findSwipeItemByItemId(Long itemId);
+
+    List<MonthlyFreeTicketDto> findTopRandomFiveMonthlyFreeTicket(LocalDate now, Long userId);
 }

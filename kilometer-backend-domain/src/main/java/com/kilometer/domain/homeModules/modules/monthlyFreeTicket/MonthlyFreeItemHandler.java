@@ -1,20 +1,18 @@
 package com.kilometer.domain.homeModules.modules.monthlyFreeTicket;
 
 import com.google.common.base.Preconditions;
-import com.kilometer.domain.converter.listItem.ListItemAggregateConverter;
-import com.kilometer.domain.converter.listItem.dto.ListItem;
 import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
-import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketDto;
 import com.kilometer.domain.homeModules.modules.monthlyFreeTicket.dto.MonthlyFreeTicketResponse;
+import com.kilometer.domain.item.ItemRepository;
+import com.kilometer.domain.item.dto.MonthlyFreeTicketDto;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MonthlyFreeItemHandler implements ModuleHandler {
 
-    private final MonthlyFreeItemRepository monthlyFreeItemRepository;
-    private final ListItemAggregateConverter listItemAggregateConverter;
+    private final ItemRepository itemRepository;
 
     @Override
     public boolean supports(ModuleType moduleType) {
@@ -33,19 +30,21 @@ public class MonthlyFreeItemHandler implements ModuleHandler {
     }
 
     @Override
-    public Object generator(ModuleParamDto paramDto) throws RuntimeException {
+    public Optional<Object> generator(ModuleParamDto paramDto) throws RuntimeException {
         Preconditions.checkNotNull(paramDto, "paramDto must not be null");
-        Long userId = paramDto.getUserId();
         LocalDateTime requestTime = paramDto.getTime();
         ModuleDto data = paramDto.getModuleDto();
-        List<ListItem> contents =
-            monthlyFreeItemRepository.findRand5ByUserIdAndRequestTime(userId, requestTime).stream()
-                .map(MonthlyFreeTicketDto::from)
-                .map(listItemAggregateConverter::convert)
-                .collect(Collectors.toList());
+        List<MonthlyFreeTicketDto> monthlyFreeTicketDtos = itemRepository.findTopRandomFiveMonthlyFreeTicket(
+                requestTime.toLocalDate(), paramDto.getUserId());
 
-        return MonthlyFreeTicketResponse.of(
-            data.getUpperModuleTitle(), data.getLowerModuleTitle(), contents
-        );
+        if (monthlyFreeTicketDtos.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(MonthlyFreeTicketResponse.of(
+                data.getUpperModuleTitle(),
+                data.getLowerModuleTitle(),
+                monthlyFreeTicketDtos
+        ));
     }
 }

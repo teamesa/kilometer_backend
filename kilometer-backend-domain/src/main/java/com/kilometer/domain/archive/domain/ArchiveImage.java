@@ -3,6 +3,7 @@ package com.kilometer.domain.archive.domain;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import lombok.Getter;
+import org.junit.platform.commons.util.StringUtils;
 
 @Getter
 public class ArchiveImage {
@@ -19,7 +20,7 @@ public class ArchiveImage {
     }
 
     private static void validateImageUrl(final String imageUrl) {
-        if (imageUrl == null || imageUrl.isBlank()) {
+        if (StringUtils.isBlank(imageUrl)) {
             throw new ArchiveValidationException("이미지 링크가 없습니다.");
         }
     }

@@ -10,12 +10,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ArchiveDto {
 
+    private final Long id;
     private final PhotoDto photo;
     private final MetaDataDto metaData;
     private final IntroductionDto introduction;
 
     public static ArchiveDto from(RealTimeArchiveDto realTimeArchiveDto) {
         return ArchiveDto.builder()
+                .id(realTimeArchiveDto.getArchiveId())
                 .photo(PhotoDto.from(realTimeArchiveDto))
                 .metaData(MetaDataDto.from(realTimeArchiveDto))
                 .introduction(IntroductionDto.from(realTimeArchiveDto))
@@ -25,7 +27,8 @@ public class ArchiveDto {
     @Override
     public String toString() {
         return "ArchiveDto{" +
-                "photo=" + photo +
+                "id=" + id +
+                ", photo=" + photo +
                 ", metaData=" + metaData +
                 ", introduction=" + introduction +
                 '}';

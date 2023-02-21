@@ -9,6 +9,7 @@ import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import com.kilometer.domain.homeModules.modules.realTimeArchive.dto.RealTimeArchiveResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class RealTimeArchiveHandler implements ModuleHandler {
     }
 
     @Override
-    public Object generator(final ModuleParamDto paramDto) throws RuntimeException {
+    public Optional<Object> generator(final ModuleParamDto paramDto) throws RuntimeException {
         List<RealTimeArchiveDto> realTimeArchiveDtos = archiveRepository.findTopFourArchivesWithImageUrl()
                 .stream()
                 .map(archive -> archiveRepository.findRealTimeArchive(archive.getId())
@@ -35,12 +36,16 @@ public class RealTimeArchiveHandler implements ModuleHandler {
                 .map(realTimeArchiveDto -> doesLikeArchive(realTimeArchiveDto, paramDto))
                 .collect(Collectors.toList());
 
+        if (realTimeArchiveDtos.isEmpty()) {
+            return Optional.empty();
+        }
+
         ModuleDto moduleDto = paramDto.getModuleDto();
-        return RealTimeArchiveResponse.builder()
+        return Optional.of(RealTimeArchiveResponse.builder()
                 .topTitle(moduleDto.getUpperModuleTitle())
                 .bottomTitle(moduleDto.getLowerModuleTitle())
                 .archives(realTimeArchiveDtos)
-                .build();
+                .build());
     }
 
     private RealTimeArchiveDto doesLikeArchive(RealTimeArchiveDto realTimeArchiveDto, ModuleParamDto moduleParamDto) {
@@ -48,6 +53,7 @@ public class RealTimeArchiveHandler implements ModuleHandler {
             return realTimeArchiveDto;
         }
         return RealTimeArchiveDto.builder()
+                .archiveId(realTimeArchiveDto.getArchiveId())
                 .likeCount(realTimeArchiveDto.getLikeCount())
                 .starRating(realTimeArchiveDto.getStarRating())
                 .updatedAt(realTimeArchiveDto.getUpdatedAt())

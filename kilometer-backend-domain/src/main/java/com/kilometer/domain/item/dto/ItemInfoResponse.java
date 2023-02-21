@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemInfoResponse {
+
     private String type;
     private String title;
     private String term;
@@ -30,6 +31,8 @@ public class ItemInfoResponse {
     private String detailImageUrl;
     private String listImageUrl;
     private String summary;
+    private String source;
+
     @Builder.Default
     private List<String> photo = List.of();
 

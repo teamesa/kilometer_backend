@@ -37,6 +37,7 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -89,7 +90,8 @@ class RealTimeArchiveHandlerTest {
             saveUserVisitPlace(savedArchive);
             saveArchiveImage(savedArchive);
             saveArchiveLike(savedArchive, savedUser);
-            RealTimeArchiveResponse savedRealTimeArchiveResponse = saveRealTImeArchiveResponse(savedUser);
+            RealTimeArchiveResponse savedRealTimeArchiveResponse = (RealTimeArchiveResponse) saveRealTImeArchiveResponse(savedUser)
+                    .get();
 
             assertAll(
                     () -> assertThat(savedRealTimeArchiveResponse.getArchives().size()).isEqualTo(1),
@@ -105,9 +107,8 @@ class RealTimeArchiveHandlerTest {
             ArchiveEntity savedArchive = saveArchive(savedUser);
             saveUserVisitPlace(savedArchive);
             saveArchiveLike(savedArchive, savedUser);
-            RealTimeArchiveResponse savedRealTimeArchiveResponse = saveRealTImeArchiveResponse(savedUser);
 
-            assertThat(savedRealTimeArchiveResponse.getArchives().size()).isEqualTo(0);
+            assertThat(saveRealTImeArchiveResponse(savedUser).isEmpty()).isTrue();
         }
 
         @DisplayName("최대 4개의 실시간 아카이브만 가져온다.")
@@ -120,9 +121,18 @@ class RealTimeArchiveHandlerTest {
                 saveArchiveImage(savedArchive);
                 saveArchiveLike(savedArchive, savedUser);
             }
-            RealTimeArchiveResponse savedRealTimeArchiveResponse = saveRealTImeArchiveResponse(savedUser);
+            RealTimeArchiveResponse savedRealTimeArchiveResponse = (RealTimeArchiveResponse) saveRealTImeArchiveResponse(savedUser)
+                    .get();
 
             assertThat(savedRealTimeArchiveResponse.getArchives().size()).isEqualTo(4);
+        }
+
+        @DisplayName("실시간 아카이브 데이터가 존재하지 않으면 아카이브를 가져오지 않는다.")
+        @Test
+        void getEmptyRealTimeArchive() {
+            User savedUser = saveUser();
+
+            assertThat(saveRealTImeArchiveResponse(savedUser).isEmpty()).isTrue();
         }
 
         @DisplayName("유저가 로그인 상태이면 좋아요 클릭 여부를 있는 그대로 반환한다.")
@@ -147,7 +157,8 @@ class RealTimeArchiveHandlerTest {
                     .isLiked(isLiked)
                     .build();
             likeRepository.save(like);
-            RealTimeArchiveResponse savedRealTimeArchiveResponse = saveRealTImeArchiveResponse(savedUser);
+            RealTimeArchiveResponse savedRealTimeArchiveResponse = (RealTimeArchiveResponse) saveRealTImeArchiveResponse(savedUser)
+                    .get();
 
             assertThat(savedRealTimeArchiveResponse.getArchives().get(0).isLiked()).isEqualTo(isLiked);
         }
@@ -174,7 +185,8 @@ class RealTimeArchiveHandlerTest {
                     .email("email@email.com")
                     .imageUrl(USER_IMAGE_URL)
                     .build();
-            RealTimeArchiveResponse savedRealTimeArchiveResponse = saveRealTImeArchiveResponse(guestUser);
+            RealTimeArchiveResponse savedRealTimeArchiveResponse = (RealTimeArchiveResponse) saveRealTImeArchiveResponse(guestUser)
+                    .get();
 
             assertThat(savedRealTimeArchiveResponse.getArchives().get(0).isLiked()).isFalse();
         }
@@ -249,7 +261,7 @@ class RealTimeArchiveHandlerTest {
             likeRepository.save(like);
         }
 
-        private RealTimeArchiveResponse saveRealTImeArchiveResponse(User user) {
+        private Optional<Object> saveRealTImeArchiveResponse(User user) {
             Module module = Module.builder()
                     .moduleName(ModuleType.REAL_TIME_ARCHIVE)
                     .upperModuleTitle("upperTitle")
@@ -257,9 +269,7 @@ class RealTimeArchiveHandlerTest {
                     .build();
             ModuleParamDto moduleParamDto = ModuleParamDto.of(LocalDateTime.now(), user.getId(),
                     ModuleDto.from(module));
-            return (RealTimeArchiveResponse) realTimeArchiveHandler.generator(
-                    moduleParamDto);
-
+            return realTimeArchiveHandler.generator(moduleParamDto);
         }
     }
 }
