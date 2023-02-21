@@ -1,7 +1,6 @@
 package com.kilometer.domain.archive.userVisitPlace;
 
 import com.google.common.base.Preconditions;
-import com.kilometer.domain.archive.ArchiveEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,16 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserVisitPlaceService {
 
     private final UserVisitPlaceRepository userVisitPlaceRepository;
-
-    @Transactional
-    public List<UserVisitPlaceEntity> saveAll(List<UserVisitPlaceEntity> userVisitPlaceEntities, Long archiveId) {
-        if (!userVisitPlaceEntities.isEmpty()) {
-            ArchiveEntity archiveEntity = ArchiveEntity.builder().id(archiveId).build();
-            userVisitPlaceEntities.forEach(userVisitPlace -> userVisitPlace.initArchiveEntity(archiveEntity));
-            userVisitPlaceRepository.saveAll(userVisitPlaceEntities);
-        }
-        return userVisitPlaceEntities;
-    }
 
     @Transactional
     public void deleteAllByArchiveId(Long archiveId) {

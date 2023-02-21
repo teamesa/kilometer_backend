@@ -24,8 +24,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class ArchiveAggregateConverter {
 
@@ -58,40 +60,14 @@ public class ArchiveAggregateConverter {
             .build();
     }
 
-    public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity,
-                                          List<ArchiveImageEntity> archiveImageEntities,
-                                          List<UserVisitPlaceEntity> userVisitPlaceEntities) {
-
-        Map<PlaceType, String> placeTypes = convertFoodAndCafe(userVisitPlaceEntities);
-
-        ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archiveEntity.getId());
-
-        List<String> photoUrls = archiveImageEntities.stream()
-            .map(ArchiveImageEntity::getImageUrl)
-            .collect(Collectors.toList());
-
-        return ArchiveInfo.builder()
-            .id(archiveEntity.getId())
-            .userProfileUrl(archiveEntity.getUser().getImageUrl())
-            .userName(archiveEntity.getUser().getName())
-            .updatedAt(archiveEntity.getUpdatedAt())
-            .starRating(archiveEntity.getStarRating())
-            .likeCount(archiveEntity.getLikeCount())
-            .heart(archiveLike)
-            .comment(archiveEntity.getComment())
-            .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
-            .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
-            .photoUrls(photoUrls)
-            .build();
-    }
-
-    public ArchiveInfo convertArchiveInfo(ArchiveEntity archiveEntity) {
+    public ArchiveInfo convertArchiveInfo(final ArchiveEntity archiveEntity) {
 
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(archiveEntity.getUserVisitPlaces());
 
         ArchiveLike archiveLike = archiveLikeGenerator.generateArchiveLike(archiveEntity.getId());
 
-        List<String> photoUrls = archiveEntity.getArchiveImages().stream()
+        List<String> photoUrls = archiveEntity.getArchiveImages()
+            .stream()
             .map(ArchiveImageEntity::getImageUrl)
             .collect(Collectors.toList());
         User user = archiveEntity.getUser();

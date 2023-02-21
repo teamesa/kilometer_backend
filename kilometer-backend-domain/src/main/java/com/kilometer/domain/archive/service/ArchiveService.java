@@ -19,24 +19,20 @@ import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
-import com.kilometer.domain.archive.exception.ArchiveUnauthorizedException;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import com.kilometer.domain.archive.generator.ArchiveRatingCalculator;
 import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
 import com.kilometer.domain.archive.request.ArchiveCreateRequest;
-import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.request.ArchiveUpdateRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
-import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
-import com.kilometer.domain.user.User;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -74,29 +70,14 @@ public class ArchiveService {
     }
 
     @Transactional
-    public ArchiveInfo update(Long userId, Long archiveId, ArchiveRequest request) {
-        Preconditions.checkNotNull(userId, "id must not be null");
-        Preconditions.checkNotNull(archiveId, "Archive id must not be null");
+    public ArchiveInfo update(final Long userId, final Long archiveId, final ArchiveUpdateRequest request) {
+        Archive archive = request.toDomain(archiveId);
+        ArchiveEntity archiveEntity = archiveRepository.getByIdAndUserId(archive.getId(), userId);
+        archiveEntity.update(archive.getComment(), archive.getStarRating(), archive.getIsVisibleAtItem(),
+            archive.toArchiveImageEntities(), archive.createUserVisitPlaceEntities());
 
-        Archive archive = request.toDomain();
-
-        ArchiveEntity archiveEntity = archiveRepository.findById(archiveId)
-            .orElseThrow(ArchiveNotFoundException::new);
-
-        if (!Objects.equals(archiveEntity.getUser().getId(), userId)) {
-            throw new ArchiveUnauthorizedException();
-        }
-
-        List<ArchiveImageEntity> archiveImageEntities = request.makeArchiveImages();
-        List<UserVisitPlaceEntity> userVisitPlaceEntities = request.makeVisitedPlace();
-
-        updateArchiveImages(archiveImageEntities, archiveId);
-        updateUserVisitPlace(userVisitPlaceEntities, archiveId);
-
-        archiveEntity.update(request);
-
-        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, archiveImageEntities,
-            userVisitPlaceEntities);
+        ArchiveEntity updatedArchiveEntity = archiveRepository.save(archiveEntity);
+        return archiveAggregateConverter.convertArchiveInfo(updatedArchiveEntity);
     }
 
     public ArchiveResponse findAllByItemIdAndUserId(Long itemId, Long userId,
@@ -200,26 +181,6 @@ public class ArchiveService {
         return archiveRepository.findByItemIdAndUserId(itemId, userId)
             .map(ArchiveEntity::getId)
             .orElse(null);
-    }
-
-    private ArchiveEntity saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {
-        ArchiveEntity archiveEntity = archiveRequest.makeArchive();
-        archiveEntity.setUser(User.builder().id(userId).build());
-        archiveEntity.setItem(ItemEntity.builder().id(itemId).build());
-        archiveRepository.save(archiveEntity);
-        return archiveEntity;
-    }
-
-    private List<ArchiveImageEntity> updateArchiveImages(List<ArchiveImageEntity> newArchiveImageEntities,
-                                                         Long archiveId) {
-        archiveImageService.deleteAllByArchiveId(archiveId);
-        return archiveImageService.saveAll(newArchiveImageEntities, archiveId);
-    }
-
-    private List<UserVisitPlaceEntity> updateUserVisitPlace(List<UserVisitPlaceEntity> newUserVisitPlaceEntities,
-                                                            Long archiveId) {
-        userVisitPlaceService.deleteAllByArchiveId(archiveId);
-        return userVisitPlaceService.saveAll(newUserVisitPlaceEntities, archiveId);
     }
 
     private void updateArchiveLikeCount(boolean status, Long archiveId) {

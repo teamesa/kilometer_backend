@@ -25,8 +25,8 @@ public class ArchiveEntityMapper {
         Archive archive = request.toDomain();
 
         ArchiveEntity archiveEntity = createArchiveEntity(userId, request.getItemId(), archive);
-        archiveEntity.addArchiveImages(archive.createArchiveImageEntities());
-        archiveEntity.addUserVisitPlaces(archive.createUserVisitPlaceEntities());
+        archiveEntity.initArchiveImages(archive.toArchiveImageEntities());
+        archiveEntity.initUserVisitPlaces(archive.createUserVisitPlaceEntities());
         return archiveEntity;
     }
 

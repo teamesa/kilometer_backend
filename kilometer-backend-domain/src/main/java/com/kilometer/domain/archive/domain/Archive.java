@@ -19,6 +19,7 @@ public class Archive {
     private static final int MAX_STAR_RATING = 5;
     private static final int MIN_STAR_RATING = 1;
 
+    private final Long id;
     private final String comment;
     private final int starRating;
     private final boolean isVisibleAtItem;
@@ -26,8 +27,9 @@ public class Archive {
     private final List<ArchiveImage> archiveImages;
     private final List<UserVisitPlace> userVisitPlaces;
 
-    private Archive(final String comment, final int starRating, final boolean isVisibleAtItem,
+    private Archive(final Long id, final String comment, final int starRating, final boolean isVisibleAtItem,
                     final List<ArchiveImage> archiveImages, final List<UserVisitPlace> userVisitPlaces) {
+        this.id = id;
         this.comment = comment;
         this.starRating = starRating;
         this.isVisibleAtItem = isVisibleAtItem;
@@ -40,7 +42,22 @@ public class Archive {
                                         final List<UserVisitPlace> userVisitPlaces) {
         validateComment(comment);
         validateStarRating(starRating);
-        return new Archive(comment, starRating, isVisibleAtItem, archiveImages, userVisitPlaces);
+        return new Archive(null, comment, starRating, isVisibleAtItem, archiveImages, userVisitPlaces);
+    }
+
+    public static Archive createArchiveForUpdate(final Long id, final String comment, final int starRating,
+                                                 final boolean isVisibleAtItem, final List<ArchiveImage> archiveImages,
+                                                 final List<UserVisitPlace> userVisitPlaces) {
+        validateId(id);
+        validateComment(comment);
+        validateStarRating(starRating);
+        return new Archive(id, comment, starRating, isVisibleAtItem, archiveImages, userVisitPlaces);
+    }
+
+    private static void validateId(final Long id) {
+        if (id == null) {
+            throw new ArchiveValidationException("입력된 id가 없습니다.");
+        }
     }
 
     private static void validateComment(final String comment) {
@@ -62,13 +79,13 @@ public class Archive {
         return ArchiveEntity.builder()
             .comment(this.getComment())
             .starRating(this.getStarRating())
-            .isVisibleAtItem(this.isVisibleAtItem())
+            .isVisibleAtItem(this.getIsVisibleAtItem())
             .user(user)
             .item(itemEntity)
             .build();
     }
 
-    public List<ArchiveImageEntity> createArchiveImageEntities() {
+    public List<ArchiveImageEntity> toArchiveImageEntities() {
         return this.archiveImages.stream()
             .map(ArchiveImage::toEntity)
             .collect(Collectors.toList());
@@ -78,5 +95,9 @@ public class Archive {
         return this.userVisitPlaces.stream()
             .map(UserVisitPlace::toEntity)
             .collect(Collectors.toList());
+    }
+
+    public boolean getIsVisibleAtItem() {
+        return isVisibleAtItem;
     }
 }

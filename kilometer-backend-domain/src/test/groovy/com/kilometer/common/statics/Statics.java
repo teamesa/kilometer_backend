@@ -8,6 +8,10 @@ public class Statics {
     public static final int 아카이브_별점 = 1;
     public static final boolean 아카이브_공개_설정 = true;
 
+    public static final String 새로운_아카이브_코멘트 = "new comment";
+    public static final int 새로운_아카이브_별점 = 3;
+    public static final boolean 아카이브_비공개_설정 = false;
+
     // Archive Image 관련 상수
     public static final String 아카이브_이미지_URL = "아카이브 이미지";
 

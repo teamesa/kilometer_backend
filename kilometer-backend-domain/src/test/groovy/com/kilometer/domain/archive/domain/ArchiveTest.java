@@ -111,7 +111,7 @@ public class ArchiveTest {
         Archive archive = Archive.createArchive(아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 전시회_사진들, 근처_맛집_사진들);
 
         // when
-        List<ArchiveImageEntity> archiveImageEntities = archive.createArchiveImageEntities();
+        List<ArchiveImageEntity> archiveImageEntities = archive.toArchiveImageEntities();
 
         // then
         assertThat(archiveImageEntities).hasSize(1);
