@@ -5,7 +5,7 @@ import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.item.ItemService;
 import com.kilometer.domain.item.enumType.RegionType;
-import com.kilometer.domain.item.dto.ItemRequest;
+import com.kilometer.domain.item.dto.ItemCreateRequest;
 import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
 import com.kilometer.domain.item.dto.ItemUpdateResponse;
@@ -67,8 +67,8 @@ public class ItemController {
     }
 
     @PostMapping(BoUrlUtils.ITEM_ADD)
-    public String addItem(@ModelAttribute ItemRequest itemRequest, Principal principal) {
-        itemService.saveItem(itemRequest, principal.getName());
+    public String addItem(@ModelAttribute ItemCreateRequest itemCreateRequest, Principal principal) {
+        itemService.createItem(itemCreateRequest, principal.getName());
         return "redirect:/form/items";
     }
 
@@ -82,7 +82,7 @@ public class ItemController {
     @PostMapping(BoUrlUtils.ITEM_EDIT)
     public String updateItem(@PathVariable Long itemId,
                              @ModelAttribute ItemUpdateRequest itemUpdateRequest, Principal principal) {
-        itemService.updateEditItem(itemId, itemUpdateRequest, principal.getName());
+        itemService.updateItem(itemId, itemUpdateRequest, principal.getName());
         return "redirect:/form/items";
     }
 
