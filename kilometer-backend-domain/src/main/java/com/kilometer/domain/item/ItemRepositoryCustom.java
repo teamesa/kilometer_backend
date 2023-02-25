@@ -2,6 +2,7 @@ package com.kilometer.domain.item;
 
 import com.kilometer.domain.homeModules.modules.swipeItem.dto.SwipeItemDto;
 import com.kilometer.domain.item.dto.ItemInfoDto;
+import com.kilometer.domain.item.dto.ItemSummary;
 import com.kilometer.domain.item.dto.MonthlyFreeTicketDto;
 import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
@@ -22,4 +23,6 @@ public interface ItemRepositoryCustom {
     SwipeItemDto findSwipeItemByItemId(Long itemId);
 
     List<MonthlyFreeTicketDto> findTopRandomFiveMonthlyFreeTicket(LocalDate now, Long userId);
+
+    Optional<ItemSummary> findSummaryByItemIdAndUserId(Long itemId, Long userId);
 }

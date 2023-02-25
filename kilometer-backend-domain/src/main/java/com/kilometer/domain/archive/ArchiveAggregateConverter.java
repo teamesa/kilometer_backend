@@ -11,7 +11,7 @@ import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.badge.ItemBadge;
 import com.kilometer.domain.badge.ItemBadgeGenerator;
-import com.kilometer.domain.item.dto.ItemSummary;
+import com.kilometer.domain.item.dto.ItemForArchive;
 import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.archive.like.dto.ArchiveLike;
 import com.kilometer.domain.archive.like.dto.ArchiveLikeGenerator;
@@ -135,7 +135,7 @@ public class ArchiveAggregateConverter {
         Map<PlaceType, String> placeTypes = convertFoodAndCafe(visitPlaces);
         List<LinkInfo> linkInfos = makeArchiveControlLink(archiveDetailDto.getId(),
             archiveDetailDto.isWrited());
-        ItemSummary itemSummary = ItemSummary.of(
+        ItemForArchive itemForArchive = ItemForArchive.of(
             archiveDetailDto.getItemId(),
             archiveDetailDto.getItemTitle(),
             archiveDetailDto.getItemListImageUrl(),
@@ -143,7 +143,7 @@ public class ArchiveAggregateConverter {
         );
         return ArchiveDetailResponse.builder()
             .updatedAt(archiveDetailDto.getUpdatedAt())
-            .item(itemSummary)
+            .item(itemForArchive)
             .comment(archiveDetailDto.getComment())
             .starRating(archiveDetailDto.getStarRating())
             .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))

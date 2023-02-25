@@ -30,7 +30,6 @@ public class ItemController {
 
     /**
      * 전시글의 소개글과 사진을 반환하는 API
-     *
      * @deprecated 전시글 조회 api("api/items/{itemId}")로 이전
      */
     // TODO: @Deprecated 곧 변경될 API 입니다!
@@ -42,9 +41,10 @@ public class ItemController {
     }
 
     @GetMapping(ApiUrlUtils.ITEM_SUMMARY)
-    @ApiOperation(value = "전시글 제목, 리스트이미지, 아카이브 작성 여부만 조회")
+    @ApiOperation(value ="전시글 제목, 리스트이미지, 아카이브 작성 여부만 조회")
     public ItemSummaryResponse getSummary(
         @ApiParam(value = "전시글 ID", required = true) @PathVariable Long itemId) {
-        return ItemSummaryResponse.from("제목", "https://kilometer-image.s3.ap-northeast-2.amazonaws.com/static/bo/2022-06-27/121332-163c1b616f2a4f11815aeac11418fee9_20220124174205.jpg", false, null);
+        Long userId = getLoginUserId();
+        return itemService.getItemSummary(itemId, userId);
     }
 }

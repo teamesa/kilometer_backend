@@ -1,24 +1,27 @@
 package com.kilometer.domain.item.dto;
 
-import com.kilometer.domain.badge.ItemBadge;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemSummary {
-
-    private Long id;
-
     private String title;
+    private String listImageUrl;
+    private boolean archiveWritten;
+    private Long archiveId;
 
-    // Item의 List image url
-    private String imageUrl;
+    public ItemSummary() {
+    }
 
-    private ItemBadge typeBadge;
+    public String getTitle() {
+        return title;
+    }
 
-    public static ItemSummary of(Long id, String title, String listImageUrl, ItemBadge badge) {
-        return new ItemSummary(id, title, listImageUrl, badge);
+    public String getListImageUrl() {
+        return listImageUrl;
+    }
+
+    public boolean isArchiveWritten() {
+        return archiveWritten;
+    }
+
+    public Long getArchiveId() {
+        return archiveId;
     }
 }
