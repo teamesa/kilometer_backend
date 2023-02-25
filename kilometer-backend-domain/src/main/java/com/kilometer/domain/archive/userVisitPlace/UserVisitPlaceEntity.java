@@ -57,7 +57,7 @@ public class UserVisitPlaceEntity {
     @Builder.Default
     private boolean isDeleted = false;
 
-    public void setArchiveEntity(ArchiveEntity archiveEntity) {
+    public void initArchiveEntity(ArchiveEntity archiveEntity) {
         this.archiveEntity = archiveEntity;
     }
 }

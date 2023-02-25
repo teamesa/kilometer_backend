@@ -1,4 +1,4 @@
-package com.kilometer.domain.archive;
+package com.kilometer.domain.archive.service;
 
 import static com.kilometer.common.statics.Statics.금칙어가_포함된_아카이브_코멘트;
 import static com.kilometer.common.statics.Statics.아카이브_공개_설정;
@@ -11,12 +11,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.kilometer.common.annotation.SpringTestWithData;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
+import com.kilometer.domain.archive.archiveImage.ArchiveImageRepository;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
-import com.kilometer.domain.archive.exception.ArchiveUnauthorizedException;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
-import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
+import com.kilometer.domain.archive.request.ArchiveUpdateRequest;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceRepository;
 import com.kilometer.domain.item.ItemEntity;
 import com.kilometer.domain.item.ItemRepository;
 import com.kilometer.domain.item.enumType.ExhibitionType;
@@ -27,6 +31,7 @@ import com.kilometer.domain.item.exception.ItemExposureOffException;
 import com.kilometer.domain.item.exception.ItemNotFoundException;
 import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
+import com.kilometer.domain.user.exception.UserNotFoundException;
 import com.kilometer.exception.KilometerErrorCode;
 import java.time.LocalDate;
 import java.util.List;
@@ -44,6 +49,12 @@ public class ArchiveServiceTest {
     private ArchiveService archiveService;
 
     @Autowired
+    private ArchiveImageRepository archiveImageRepository;
+
+    @Autowired
+    private UserVisitPlaceRepository userVisitPlaceRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -55,7 +66,7 @@ public class ArchiveServiceTest {
         // given
         User 회원 = 회원가입을_한다();
         ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             근처_맛집);
 
         // when
@@ -71,19 +82,41 @@ public class ArchiveServiceTest {
     }
 
     @Test
-    @DisplayName("아카이브 정보를 등록할때, 이미 등록한 Archive를 다시 등록하려 하면 예외가 발생한다..")
+    @DisplayName("아카이브와 관련한 정보를 등록 할 때, 아카이브 이미지와 방문장소도 같이 저장된다.")
+    void saveArchive_archiveImageAndUserVisitPlace() {
+        // given
+        User 회원 = 회원가입을_한다();
+        ItemEntity 아이템 = 아이템을_등록한다();
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
+
+        // when
+        ArchiveInfo archiveInfo = archiveService.save(회원.getId(), request);
+
+        // then
+        ArchiveImageEntity archiveImageEntity = archiveImageRepository.findById(1L).get();
+        UserVisitPlaceEntity userVisitPlaceEntity = userVisitPlaceRepository.findById(1L).get();
+
+        assertThat(archiveImageEntity.getId()).isEqualTo(1L);
+        assertThat(userVisitPlaceEntity.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("아카이브 정보를 등록할때, 이미 등록한 Archive를 다시 등록하려 하면 예외가 발생한다.")
     void saveArchive_duplicate() {
         // given
         User 회원 = 회원가입을_한다();
         ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             근처_맛집);
-
-        archiveService.save(회원.getId(), request);
+        ArchiveInfo 아카이브_생성_응답 = archiveService.save(회원.getId(), request);
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(회원.getId(), request))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ArchiveValidationException.class)
+            .hasMessage(
+                String.format("이미 등록한 Archive가 있습니다. sItemId : %d / UserId : %d", 아카이브_생성_응답.getId(),
+                    회원.getId()));
     }
 
     @Test
@@ -94,7 +127,8 @@ public class ArchiveServiceTest {
         ItemEntity 아이템 = 아이템을_등록한다();
 
         List<String> invalidPhotoUrls = null;
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, invalidPhotoUrls,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정,
+            invalidPhotoUrls,
             근처_맛집);
 
         // when & then
@@ -110,7 +144,7 @@ public class ArchiveServiceTest {
         ItemEntity 아이템 = 아이템을_등록한다();
 
         List<PlaceInfo> invalidPhotoInfos = null;
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             invalidPhotoInfos);
 
         // when & then
@@ -125,13 +159,13 @@ public class ArchiveServiceTest {
         Long invalidUserId = 1L;
 
         ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
             근처_맛집);
 
         // when & then
         assertThatThrownBy(() -> archiveService.save(invalidUserId, request))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("잘못된 사용자 정보 입니다.");
+            .isInstanceOf(UserNotFoundException.class)
+            .hasMessage("저장되지 않은 사용자 입니다.");
     }
 
     @Test
@@ -140,7 +174,8 @@ public class ArchiveServiceTest {
         // given
         User 회원 = 회원가입을_한다();
         ItemEntity 아이템 = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(아이템.getId(), 금칙어가_포함된_아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+        ArchiveCreateRequest request = new ArchiveCreateRequest(아이템.getId(), 금칙어가_포함된_아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정,
+            방문_사진,
             근처_맛집);
 
         // when & then
@@ -155,7 +190,8 @@ public class ArchiveServiceTest {
         // given
         Long invalidItemId = -1L;
         User user = 회원가입을_한다();
-        ArchiveRequest request = new ArchiveRequest(invalidItemId, 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(invalidItemId, 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
 
         // when
         ItemNotFoundException actual = assertThrows(ItemNotFoundException.class,
@@ -172,7 +208,8 @@ public class ArchiveServiceTest {
         User user = 회원가입을_한다();
         ItemEntity item = ItemEntity.builder().exposureType(ExposureType.OFF).build();
         itemRepository.save(item);
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
 
         // when
         ItemExposureOffException actual = assertThrows(ItemExposureOffException.class,
@@ -188,21 +225,47 @@ public class ArchiveServiceTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
         ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
 
         // when
-        ArchiveRequest updateRequest = new ArchiveRequest(null, "수정된 아카이브 코멘트", 3, false, List.of(), List.of());
+        ArchiveUpdateRequest updateRequest = new ArchiveUpdateRequest(null, "수정된 아카이브 코멘트", 3, false, 방문_사진,
+            근처_맛집);
         ArchiveInfo actual = archiveService.update(user.getId(), savedArchive.getId(), updateRequest);
 
         // then
         assertAll(
             () -> assertThat(actual.getComment()).isEqualTo("수정된 아카이브 코멘트"),
             () -> assertThat(actual.getStarRating()).isEqualTo(3),
-            () -> assertThat(actual.getPhotoUrls()).isEmpty(),
-            () -> assertThat(actual.getFood()).isBlank(),
+            () -> assertThat(actual.getPhotoUrls()).hasSize(1),
+            () -> assertThat(actual.getFood()).isEqualTo("맛집"),
             () -> assertThat(actual.getCafe()).isBlank()
         );
+    }
+
+    @Test
+    @DisplayName("아카이브를 수정 할 때, 아카이브 이미지와 방문 사진도 함께 수정된다.")
+    void updateArchive_withArchiveImageAndUserVisitPlace() {
+        // given
+        User user = 회원가입을_한다();
+        ItemEntity item = 아이템을_등록한다();
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, List.of(),
+            List.of());
+        ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
+
+        ArchiveUpdateRequest updateRequest = new ArchiveUpdateRequest(null, "수정된 아카이브 코멘트", 3, false, 방문_사진,
+            근처_맛집);
+
+        // when
+        archiveService.update(user.getId(), savedArchive.getId(), updateRequest);
+
+        // then
+        ArchiveImageEntity archiveImageEntity = archiveImageRepository.findById(1L).get();
+        UserVisitPlaceEntity userVisitPlaceEntity = userVisitPlaceRepository.findById(1L).get();
+
+        assertThat(archiveImageEntity.getId()).isEqualTo(1L);
+        assertThat(userVisitPlaceEntity.getId()).isEqualTo(1L);
     }
 
     @Test
@@ -211,10 +274,12 @@ public class ArchiveServiceTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
         ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
 
-        ArchiveRequest updateRequest = new ArchiveRequest(null, 금칙어가_포함된_아카이브_코멘트, 3, false, List.of(), List.of());
+        ArchiveUpdateRequest updateRequest = new ArchiveUpdateRequest(null, 금칙어가_포함된_아카이브_코멘트, 3, false, List.of(),
+            List.of());
 
         // then
         assertThatThrownBy(() -> archiveService.update(user.getId(), savedArchive.getId(), updateRequest))
@@ -228,17 +293,20 @@ public class ArchiveServiceTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
         ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
 
-        // when
-        ArchiveRequest updateRequest = new ArchiveRequest(null, "수정된 아카이브 코멘트", 3, false, List.of(), List.of());
+        ArchiveUpdateRequest updateRequest = new ArchiveUpdateRequest(null, "수정된 아카이브 코멘트", 3, false, List.of(),
+            List.of());
         Long invalidUserId = -1L;
-        ArchiveUnauthorizedException actualException = assertThrows(ArchiveUnauthorizedException.class,
+
+        // when
+        ArchiveNotFoundException actualException = assertThrows(ArchiveNotFoundException.class,
             () -> archiveService.update(invalidUserId, savedArchive.getId(), updateRequest));
 
         // then
-        assertEquals(actualException.getErrorCode(), KilometerErrorCode.ARCHIVE_UNAUTHORIZED_EXCEPTION);
+        assertEquals(actualException.getErrorCode(), KilometerErrorCode.ARCHIVE_NOT_FOUND);
     }
 
     @Test
@@ -247,11 +315,13 @@ public class ArchiveServiceTest {
         // given
         User user = 회원가입을_한다();
         ItemEntity item = 아이템을_등록한다();
-        ArchiveRequest request = new ArchiveRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진, 근처_맛집);
+        ArchiveCreateRequest request = new ArchiveCreateRequest(item.getId(), 아카이브_코멘트, 아카이브_별점, 아카이브_공개_설정, 방문_사진,
+            근처_맛집);
         ArchiveInfo savedArchive = archiveService.save(user.getId(), request);
 
         // when
-        ArchiveRequest updateRequest = new ArchiveRequest(null, "수정된 아카이브 코멘트", 3, false, List.of(), List.of());
+        ArchiveUpdateRequest updateRequest = new ArchiveUpdateRequest(null, "수정된 아카이브 코멘트", 3, false, List.of(),
+            List.of());
         Long invalidArchiveId = -1L;
         ArchiveNotFoundException actualException = assertThrows(ArchiveNotFoundException.class,
             () -> archiveService.update(user.getId(), invalidArchiveId, updateRequest));

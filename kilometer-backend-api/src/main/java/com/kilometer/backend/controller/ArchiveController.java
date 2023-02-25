@@ -1,6 +1,7 @@
 package com.kilometer.backend.controller;
 
-import com.kilometer.domain.archive.ArchiveService;
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
+import com.kilometer.domain.archive.service.ArchiveService;
 import com.kilometer.domain.archive.dto.ArchiveDeleteResponse;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
@@ -8,7 +9,7 @@ import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
-import com.kilometer.domain.archive.request.ArchiveRequest;
+import com.kilometer.domain.archive.request.ArchiveUpdateRequest;
 import com.kilometer.domain.dto.GeneralResponse;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.util.ApiUrlUtils;
@@ -60,7 +61,7 @@ public class ArchiveController {
     @PostMapping(ApiUrlUtils.ARCHIVE_ROOT)
     @ApiOperation(value = "신규 아카이브 등록")
     public ArchiveInfo saveArchive(
-        @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
+        @ApiParam(value = "등록할 아카이브 데이터", required = true) @RequestBody ArchiveCreateRequest request) {
         long userId = getLoginUserId();
         return archiveService.save(userId, request);
     }
@@ -69,7 +70,7 @@ public class ArchiveController {
     @ApiOperation(value = "아카이브 수정")
     public ArchiveInfo updateArchive(
         @ApiParam(value = "수정할 아카이브 아이디", required = true) @PathVariable Long archiveId,
-        @ApiParam(value = "수정할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
+        @ApiParam(value = "수정할 아카이브 데이터", required = true) @RequestBody ArchiveUpdateRequest request) {
         long userId = getLoginUserId();
         return archiveService.update(userId, archiveId, request);
     }
