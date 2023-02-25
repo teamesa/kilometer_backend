@@ -196,6 +196,12 @@ public class ItemEntity {
         this.itemDetail = itemDetail;
     }
 
+    public void validateExposureTypeIsOn() {
+        if (this.exposureType.equals(ExposureType.OFF)) {
+            throw new ItemExposureOffException("미전시 아이템은 아카이빙 할 수 없습니다.");
+        }
+    }
+
     public ItemEntity plusPickCount() {
         isExposureOn();
         this.pickCount++;

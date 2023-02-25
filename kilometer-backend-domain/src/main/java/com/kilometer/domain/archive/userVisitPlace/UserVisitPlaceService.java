@@ -18,7 +18,7 @@ public class UserVisitPlaceService {
     public List<UserVisitPlaceEntity> saveAll(List<UserVisitPlaceEntity> userVisitPlaceEntities, Long archiveId) {
         if (!userVisitPlaceEntities.isEmpty()) {
             ArchiveEntity archiveEntity = ArchiveEntity.builder().id(archiveId).build();
-            userVisitPlaceEntities.forEach(userVisitPlace -> userVisitPlace.setArchiveEntity(archiveEntity));
+            userVisitPlaceEntities.forEach(userVisitPlace -> userVisitPlace.initArchiveEntity(archiveEntity));
             userVisitPlaceRepository.saveAll(userVisitPlaceEntities);
         }
         return userVisitPlaceEntities;

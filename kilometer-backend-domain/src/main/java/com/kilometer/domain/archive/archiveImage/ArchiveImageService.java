@@ -23,7 +23,7 @@ public class ArchiveImageService {
             return List.of();
         }
         ArchiveEntity archiveEntity = ArchiveEntity.builder().id(archiveId).build();
-        archiveImageEntities.forEach(archiveImage -> archiveImage.setArchiveEntity(archiveEntity));
+        archiveImageEntities.forEach(archiveImage -> archiveImage.initArchiveEntity(archiveEntity));
         return  archiveImageRepository.saveAll(archiveImageEntities);
     }
     @Transactional

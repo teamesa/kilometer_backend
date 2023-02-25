@@ -1,6 +1,9 @@
-package com.kilometer.domain.archive;
+package com.kilometer.domain.archive.service;
 
 import com.google.common.base.Preconditions;
+import com.kilometer.domain.archive.ArchiveAggregateConverter;
+import com.kilometer.domain.archive.ArchiveEntity;
+import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageService;
 import com.kilometer.domain.archive.domain.Archive;
@@ -17,24 +20,20 @@ import com.kilometer.domain.archive.dto.MyArchiveInfo;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.archive.exception.ArchiveUnauthorizedException;
+import com.kilometer.domain.archive.exception.ArchiveValidationException;
 import com.kilometer.domain.archive.generator.ArchiveRatingCalculator;
 import com.kilometer.domain.archive.like.LikeService;
 import com.kilometer.domain.archive.like.dto.LikeDto;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
+import com.kilometer.domain.archive.request.ArchiveCreateRequest;
 import com.kilometer.domain.archive.request.ArchiveRequest;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceService;
 import com.kilometer.domain.item.ItemEntity;
-import com.kilometer.domain.item.ItemRepository;
-import com.kilometer.domain.item.enumType.ExposureType;
-import com.kilometer.domain.item.exception.ItemExposureOffException;
-import com.kilometer.domain.item.exception.ItemNotFoundException;
 import com.kilometer.domain.paging.PagingStatusService;
 import com.kilometer.domain.paging.RequestPagingStatus;
 import com.kilometer.domain.paging.ResponsePagingStatus;
 import com.kilometer.domain.user.User;
-import com.kilometer.domain.user.UserService;
-import com.kilometer.domain.user.dto.UserResponse;
 import com.kilometer.domain.util.FrontUrlUtils;
 import java.util.List;
 import java.util.Objects;
@@ -51,43 +50,27 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ArchiveService {
 
-    private final UserService userService;
-    private final ItemRepository itemRepository;
     private final ArchiveRepository archiveRepository;
     private final ArchiveImageService archiveImageService;
     private final UserVisitPlaceService userVisitPlaceService;
     private final PagingStatusService pagingStatusService;
     private final ArchiveAggregateConverter archiveAggregateConverter;
     private final LikeService likeService;
+    private final ArchiveEntityMapper archiveEntityMapper;
 
     @Transactional
-    public ArchiveInfo save(Long userId, ArchiveRequest archiveRequest) {
-        validateArchiveRequest(archiveRequest, userId);
+    public ArchiveInfo save(final Long userId, final ArchiveCreateRequest request) {
+        validateNotDuplicateArchive(userId, request.getItemId());
+        ArchiveEntity archiveEntity = archiveEntityMapper.mapToArchiveEntity(userId, request);
+        ArchiveEntity savedArchiveEntity = archiveRepository.save(archiveEntity);
+        return archiveAggregateConverter.convertArchiveInfo(savedArchiveEntity);
+    }
 
-        Archive archive = archiveRequest.toDomain();
-
-        UserResponse userResponse = userService.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보 입니다."));
-
-        itemRepository.findExposureById(archiveRequest.getItemId())
-            .map(mapping -> {
-                if (mapping.getExposureType() == ExposureType.OFF) {
-                    throw new ItemExposureOffException();
-                }
-                return mapping;
-            })
-            .orElseThrow(ItemNotFoundException::new);
-
-        ArchiveEntity archiveEntity = saveArchive(archiveRequest, userId, archiveRequest.getItemId());
-
-        Long archiveId = archiveEntity.getId();
-        List<ArchiveImageEntity> archiveImageEntities = archiveRequest.makeArchiveImages();
-        List<UserVisitPlaceEntity> userVisitPlaceEntities = archiveRequest.makeVisitedPlace();
-        archiveImageService.saveAll(archiveImageEntities, archiveId);
-        userVisitPlaceService.saveAll(userVisitPlaceEntities, archiveId);
-
-        return archiveAggregateConverter.convertArchiveInfo(archiveEntity, userResponse, archiveImageEntities,
-            userVisitPlaceEntities);
+    private void validateNotDuplicateArchive(Long userId, Long itemId) {
+        if (archiveRepository.existsByItemIdAndUserId(itemId, userId)) {
+            throw new ArchiveValidationException(String.format("이미 등록한 Archive가 있습니다. sItemId : %d / UserId : %d",
+                itemId, userId));
+        }
     }
 
     @Transactional
@@ -217,14 +200,6 @@ public class ArchiveService {
         return archiveRepository.findByItemIdAndUserId(itemId, userId)
             .map(ArchiveEntity::getId)
             .orElse(null);
-    }
-
-
-    private void validateArchiveRequest(ArchiveRequest archiveRequest, Long userId) {
-        Preconditions.checkArgument(
-            !archiveRepository.existsByItemIdAndUserId(archiveRequest.getItemId(), userId),
-            String.format("기 등록한 Archive가 있습니다. sItemId : %d / UserId : %d",
-                archiveRequest.getItemId(), userId));
     }
 
     private ArchiveEntity saveArchive(ArchiveRequest archiveRequest, Long userId, Long itemId) {

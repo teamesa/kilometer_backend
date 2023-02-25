@@ -1,7 +1,7 @@
 package com.kilometer.domain.item;
 
 import com.google.common.base.Preconditions;
-import com.kilometer.domain.archive.ArchiveService;
+import com.kilometer.domain.archive.service.ArchiveService;
 import com.kilometer.domain.item.domain.Item;
 import com.kilometer.domain.item.dto.DetailResponse;
 import com.kilometer.domain.item.dto.ItemInfoDto;

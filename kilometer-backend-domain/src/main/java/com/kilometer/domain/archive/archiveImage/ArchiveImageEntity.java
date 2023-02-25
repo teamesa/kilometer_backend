@@ -47,7 +47,7 @@ public class ArchiveImageEntity {
     @JoinColumn(name = "archive")
     private ArchiveEntity archiveEntity;
 
-    public void setArchiveEntity(ArchiveEntity archiveEntity) {
+    public void initArchiveEntity(ArchiveEntity archiveEntity) {
         this.archiveEntity = archiveEntity;
     }
 }

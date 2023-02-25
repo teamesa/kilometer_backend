@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.kilometer.domain.archive.domain.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.exception.ArchiveValidationException;
+import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,8 +33,8 @@ class UserVisitPlaceTest {
 
         // when & then
         assertThatThrownBy(() -> UserVisitPlace.createUserVisitPlace(invalidPlaceType, 카페_이름, 카페_지번_주소, 카페_도로명_주소))
-            .isInstanceOf(ArchiveValidationException.class)
-            .hasMessage("일치하는 방문 장소 종류가 없습니다.");
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("일치하는 방문 장소 종류가 없습니다.");
     }
 
     @Test
@@ -44,8 +45,8 @@ class UserVisitPlaceTest {
 
         // when & then
         assertThatThrownBy(() -> UserVisitPlace.createUserVisitPlace(장소_종류, invalidCafeName, 카페_지번_주소, 카페_도로명_주소))
-            .isInstanceOf(ArchiveValidationException.class)
-            .hasMessage("입력된 장소명이 없습니다.");
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("입력된 장소명이 없습니다.");
     }
 
     @Test
@@ -56,8 +57,8 @@ class UserVisitPlaceTest {
 
         // when & then
         assertThatThrownBy(() -> UserVisitPlace.createUserVisitPlace(장소_종류, 카페_이름, invalidCafeAddress, 카페_도로명_주소))
-            .isInstanceOf(ArchiveValidationException.class)
-            .hasMessage("입력된 지번 주소가 없습니다.");
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("입력된 지번 주소가 없습니다.");
     }
 
     @Test
@@ -68,7 +69,20 @@ class UserVisitPlaceTest {
 
         // when & then
         assertThatThrownBy(() -> UserVisitPlace.createUserVisitPlace(장소_종류, 카페_이름, 카페_지번_주소, invalidRoadAddress))
-            .isInstanceOf(ArchiveValidationException.class)
-            .hasMessage("입력된 도로명 주소가 없습니다.");
+                .isInstanceOf(ArchiveValidationException.class)
+                .hasMessage("입력된 도로명 주소가 없습니다.");
+    }
+
+    @Test
+    @DisplayName("UserVisitPlace를 Entity 객체로 변환 한다.")
+    void toEntity() {
+        // given
+        UserVisitPlace userVisitPlace = UserVisitPlace.createUserVisitPlace(장소_종류, 카페_이름, 카페_지번_주소, 카페_도로명_주소);
+
+        // when
+        UserVisitPlaceEntity actual = userVisitPlace.toEntity();
+
+        // then
+        assertThat(actual).isInstanceOf(UserVisitPlaceEntity.class);
     }
 }
