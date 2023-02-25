@@ -1,6 +1,7 @@
 package com.kilometer.domain.archive;
 
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
+import com.kilometer.domain.archive.domain.userVisitPlace.PlaceType;
 import com.kilometer.domain.archive.dto.ArchiveDetailDto;
 import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
 import com.kilometer.domain.archive.dto.ArchiveInfo;

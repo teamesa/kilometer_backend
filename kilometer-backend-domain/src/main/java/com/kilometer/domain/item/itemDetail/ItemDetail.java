@@ -29,6 +29,8 @@ public class ItemDetail {
 
     private String introduce;
 
+    private String source;
+
     @OneToOne(fetch = EAGER)
     @JoinColumn(name = "item")
     private ItemEntity item;

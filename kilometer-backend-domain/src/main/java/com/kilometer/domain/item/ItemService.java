@@ -22,8 +22,6 @@ import com.kilometer.domain.item.itemDetailImage.ItemDetailImageRepository;
 import com.kilometer.domain.search.dto.AutoCompleteItem;
 import com.kilometer.domain.search.dto.ListQueryRequest;
 import lombok.RequiredArgsConstructor;
-
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -204,13 +202,11 @@ public class ItemService {
         updateAndDoFunction(ItemEntity::minusPickCount, itemId);
     }
 
-    private void updateAndDoFunction(Function<ItemEntity, ItemEntity> itemEntityItemEntityFunction,
-        long itemId) {
-        Function<Long, ItemResponse> generated = it -> itemRepository.findById(it)
-            .map(itemEntityItemEntityFunction)
-            .map(itemRepository::save)
-            .map(ItemEntity::makeResponse)
-            .orElseThrow(() -> new IllegalArgumentException("Item이 존재하지 않습니다. id=" + it));
+    private void updateAndDoFunction(Function<ItemEntity, ItemEntity> calculationPickCountIsExposureOn, long itemId) {
+        Function<Long, ItemEntity> generated = it -> itemRepository.findById(it)
+                .map(calculationPickCountIsExposureOn)
+                .map(itemRepository::save)
+                .orElseThrow(ItemNotFoundException::new);
         generated.apply(itemId);
     }
 

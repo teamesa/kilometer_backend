@@ -1,7 +1,7 @@
 package com.kilometer.domain.archive.userVisitPlace;
 
 import com.kilometer.domain.archive.ArchiveEntity;
-import com.kilometer.domain.archive.PlaceType;
+import com.kilometer.domain.archive.domain.userVisitPlace.PlaceType;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

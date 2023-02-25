@@ -7,14 +7,18 @@ import com.kilometer.domain.item.enumType.ExhibitionType;
 import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import com.kilometer.domain.item.enumType.RegionType;
+import com.kilometer.domain.item.exception.ItemExposureOffException;
 import com.kilometer.domain.item.itemDetail.ItemDetail;
 import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,14 +29,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -195,12 +197,20 @@ public class ItemEntity {
     }
 
     public ItemEntity plusPickCount() {
+        isExposureOn();
         this.pickCount++;
         return this;
     }
 
     public ItemEntity minusPickCount() {
+        isExposureOn();
         this.pickCount = Math.max(this.pickCount - 1, 0);
         return this;
+    }
+
+    private void isExposureOn() {
+        if (this.exposureType == ExposureType.OFF) {
+            throw new ItemExposureOffException();
+        }
     }
 }

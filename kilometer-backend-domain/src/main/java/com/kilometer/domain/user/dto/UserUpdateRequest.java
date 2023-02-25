@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
+@SuppressWarnings("unused")
 public class UserUpdateRequest {
     private long id;
     private String name;

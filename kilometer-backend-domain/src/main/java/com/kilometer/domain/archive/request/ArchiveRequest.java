@@ -2,13 +2,16 @@ package com.kilometer.domain.archive.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kilometer.domain.archive.ArchiveEntity;
-import com.kilometer.domain.archive.PlaceType;
 import com.kilometer.domain.archive.archiveImage.ArchiveImageEntity;
 import com.kilometer.domain.archive.domain.Archive;
+import com.kilometer.domain.archive.domain.ArchiveImage;
+import com.kilometer.domain.archive.domain.userVisitPlace.PlaceType;
+import com.kilometer.domain.archive.domain.userVisitPlace.UserVisitPlace;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -61,6 +64,19 @@ public class ArchiveRequest {
     }
 
     public Archive toDomain() {
-        return new Archive(null, this.comment, this.starRating, this.isVisibleAtItem);
+        return Archive.createArchive(
+            this.comment, this.starRating, this.isVisibleAtItem, archiveImages(), userVisitPlace());
+    }
+
+    public List<ArchiveImage> archiveImages() {
+        return this.photoUrls.stream()
+            .map(ArchiveImage::createArchiveImage)
+            .collect(Collectors.toList());
+    }
+
+    public List<UserVisitPlace> userVisitPlace() {
+        return this.placeInfos.stream()
+            .map(PlaceInfo::toDomain)
+            .collect(Collectors.toList());
     }
 }

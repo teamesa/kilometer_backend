@@ -19,7 +19,7 @@ class HeartDtoTest {
 
         assertAll(
                 () -> assertThat(heartDto.isHeartClicked()).isEqualTo(IS_LIKED),
-                () -> assertThat(heartDto.getLink()).isEqualTo("/api/pick/1?status=")
+                () -> assertThat(heartDto.getLink()).isEqualTo("/api/archives/1/like?status=")
         );
     }
 }
