@@ -23,4 +23,6 @@ public class MyArchiveInfo {
     private boolean existArchiveImages;
     private String listImageUrl;
     private String api;
+    private String itemPageUrl;
+    private String itemApiUrl;
 }

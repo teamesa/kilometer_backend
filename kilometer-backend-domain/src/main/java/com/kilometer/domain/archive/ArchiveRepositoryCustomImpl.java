@@ -86,7 +86,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
 
         List<MyArchiveDto> archives = queryFactory
             .select(Projections.fields(MyArchiveDto.class,
-                archive.id,
+                archive.id.as("archiveId"),
+                itemEntity.id.as("itemId"),
                 itemEntity.title,
                 itemEntity.exhibitionType,
                 itemEntity.listImageUrl,

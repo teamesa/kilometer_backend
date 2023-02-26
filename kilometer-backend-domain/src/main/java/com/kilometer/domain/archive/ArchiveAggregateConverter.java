@@ -124,7 +124,9 @@ public class ArchiveAggregateConverter {
             .typeBadge(itemBadge)
             .updatedAt(myArchiveDto.getUpdatedAt())
             .existArchiveImages(existImages)
-            .api(ApiUrlUtils.getArchiveUrl(myArchiveDto.getId()))
+            .api(ApiUrlUtils.getArchiveUrl(myArchiveDto.getArchiveId()))
+            .itemPageUrl(FrontUrlUtils.getFrontDetailUrlPattern(myArchiveDto.getItemId()))
+            .itemApiUrl(ApiUrlUtils.getItemUrl(myArchiveDto.getItemId()))
             .build();
     }
 

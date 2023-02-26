@@ -277,9 +277,9 @@ public class ArchiveService {
         return archives.stream()
             .map(myArchiveDto -> {
                 boolean existImages = archiveImageService.existArchiveImagesByArchiveId(
-                    myArchiveDto.getId());
+                    myArchiveDto.getArchiveId());
                 List<UserVisitPlaceEntity> userVisitPlaceEntities = userVisitPlaceService.findAllByArchiveId(
-                    myArchiveDto.getId());
+                    myArchiveDto.getArchiveId());
                 return archiveAggregateConverter.convertMyArchiveInfo(myArchiveDto, existImages,
                     userVisitPlaceEntities);
             })
