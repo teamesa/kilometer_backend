@@ -261,7 +261,7 @@ class RealTimeArchiveHandlerTest {
             likeRepository.save(like);
         }
 
-        private Optional<Object> saveRealTImeArchiveResponse(User user) {
+        private Optional<?> saveRealTImeArchiveResponse(User user) {
             Module module = Module.builder()
                     .moduleName(ModuleType.REAL_TIME_ARCHIVE)
                     .upperModuleTitle("upperTitle")

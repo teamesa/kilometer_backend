@@ -28,7 +28,7 @@ public class RealTimeArchiveHandler implements ModuleHandler {
     }
 
     @Override
-    public Optional<Object> generator(final ModuleParamDto paramDto) throws RuntimeException {
+    public Optional<RealTimeArchiveResponse> generator(final ModuleParamDto paramDto) {
         List<RealTimeArchiveDto> realTimeArchiveDtos = archiveRepository.findTopFourArchivesWithImageUrl()
                 .stream()
                 .map(archive -> archiveRepository.findRealTimeArchive(archive.getId())

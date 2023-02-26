@@ -8,5 +8,5 @@ public interface ModuleHandler {
 
     boolean supports(ModuleType moduleType);
 
-    Optional<Object> generator(ModuleParamDto paramDto) throws RuntimeException;
+    Optional<?> generator(ModuleParamDto paramDto);
 }

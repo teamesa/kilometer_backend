@@ -31,7 +31,7 @@ public class SwipeItemHandler implements ModuleHandler {
     }
 
     @Override
-    public Optional<Object> generator(ModuleParamDto paramDto) {
+    public Optional<SwipeItemDataDto> generator(ModuleParamDto paramDto) {
         Preconditions.checkNotNull(paramDto.getModuleDto(), "module must not be null");
         ModuleDto moduleDto = paramDto.getModuleDto();
         Preconditions.checkNotNull(moduleDto.getExtraData(), "Extra_data must not be null");
