@@ -1,4 +1,4 @@
-package com.kilometer.homeModules.modules.realTimeArchive;
+package com.kilometer.domain.homeModules.modules.realTimeArchive;
 
 import static com.kilometer.common.Fixture.ARCHIVE_IMAGE_URL;
 import static com.kilometer.common.Fixture.COMMENT;
