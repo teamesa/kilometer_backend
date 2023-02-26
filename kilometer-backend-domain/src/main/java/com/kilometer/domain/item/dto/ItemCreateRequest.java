@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemRequest {
+public class ItemCreateRequest implements DetailRequest {
 
     private ExhibitionType exhibitionType;
     private ExposureType exposureType;
@@ -48,15 +48,10 @@ public class ItemRequest {
     private String operatingTime;
     private String ticketUrl;
     private String introduce;
+    private String source;
     @Builder.Default
     private List<String> detailImageUrls = new ArrayList<>();
     private String regAccount;
-
-    public ItemDetail makeItemDetail() {
-        return ItemDetail.builder()
-            .introduce(this.introduce)
-            .build();
-    }
 
     public List<ItemDetailImage> makeItemDetailImage() {
         return this.detailImageUrls.stream()

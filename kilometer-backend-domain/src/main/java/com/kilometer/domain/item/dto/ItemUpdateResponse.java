@@ -55,6 +55,7 @@ public class ItemUpdateResponse {
 
     // ItemDetail & DetailImage
     private String introduce;
+    private String source;
     @Builder.Default
     private List<ItemDetailImages> detailImageUrlsAndIndex = new ArrayList<>();
 

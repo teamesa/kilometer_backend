@@ -6,7 +6,7 @@ import com.kilometer.domain.item.domain.Item;
 import com.kilometer.domain.item.dto.DetailResponse;
 import com.kilometer.domain.item.dto.ItemInfoDto;
 import com.kilometer.domain.item.dto.ItemInfoResponse;
-import com.kilometer.domain.item.dto.ItemRequest;
+import com.kilometer.domain.item.dto.ItemCreateRequest;
 import com.kilometer.domain.item.dto.ItemResponse;
 import com.kilometer.domain.item.dto.ItemSummaryResponse;
 import com.kilometer.domain.item.dto.ItemUpdateRequest;
@@ -15,6 +15,7 @@ import com.kilometer.domain.item.dto.SearchItemResponse;
 import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.exception.ItemExposureOffException;
 import com.kilometer.domain.item.exception.ItemNotFoundException;
+import com.kilometer.domain.item.itemDetail.DetailCommandService;
 import com.kilometer.domain.item.itemDetail.ItemDetail;
 import com.kilometer.domain.item.itemDetail.ItemDetailRepository;
 import com.kilometer.domain.item.itemDetailImage.ItemDetailImage;
@@ -26,7 +27,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,27 +39,17 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final DetailCommandService detailCommandService;
     private final ItemDetailRepository itemDetailRepository;
     private final ItemDetailImageRepository itemDetailImageRepository;
     private final ItemAggregateConverter itemAggregateConverter;
     private final ArchiveService archiveService;
 
     @Transactional
-    public void saveItem(ItemRequest request, String regAccount) {
-        ItemEntity item = saveItemEntity(request, regAccount);
-
-        saveItemDetail(request.makeItemDetail(), item);
-
+    public void createItem(ItemCreateRequest request, String updateBackOfficeUser) {
+        ItemEntity item = itemRepository.save(request.makeItemEntity(updateBackOfficeUser));
+        detailCommandService.createItemDetail(request, item);
         saveDetailImage(request.makeItemDetailImage(), item);
-    }
-
-    private void saveItemDetail(ItemDetail itemDetail, ItemEntity item) {
-        if (!StringUtils.hasText(itemDetail.getIntroduce())) {
-            return;
-        }
-
-        itemDetail.setItemEntity(item);
-        itemDetailRepository.save(itemDetail);
     }
 
     private void saveDetailImage(List<ItemDetailImage> itemDetailImages, ItemEntity item) {
@@ -70,10 +60,6 @@ public class ItemService {
         itemDetailImages.forEach(detailImage -> detailImage.setItemEntity(item));
 
         itemDetailImageRepository.saveAll(itemDetailImages);
-    }
-
-    private ItemEntity saveItemEntity(ItemRequest request, String regAccount) {
-        return itemRepository.save(request.makeItemEntity(regAccount));
     }
 
     public Page<SearchItemResponse> getItemBySearchOptions(ListQueryRequest queryRequest) {
@@ -144,15 +130,15 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateEditItem(Long itemId, ItemUpdateRequest request, String udtAccount) {
+    public void updateItem(Long itemId, ItemUpdateRequest request, String updateBackOfficeUser) {
         Preconditions.checkNotNull(itemId, "id must not be null");
         Preconditions.checkNotNull(request, "item must not be null");
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
             .orElseThrow(() -> new IllegalArgumentException("해당 전시글이 없습니다. id=" + itemId));
 
-        itemEntity.update(request, udtAccount);
-        updateItemDetail(request, itemEntity);
+        itemEntity.update(request, updateBackOfficeUser);
+        detailCommandService.commandItemDetail(request, itemEntity);
         updateItemDetailImage(request, itemEntity);
     }
 
@@ -160,28 +146,9 @@ public class ItemService {
         itemDetailImageRepository.deleteAllById(imageIndex);
     }
 
-    private void deleteItemDetail(ItemDetail itemDetail) {
-        itemDetailRepository.delete(itemDetail);
-    }
-
     private void updateItemDetailImage(ItemUpdateRequest request, ItemEntity item) {
         deleteDetailImages(request.getDeleteDetailImages());
         saveDetailImage(request.makeUpdateItemDetailImage(), item);
-    }
-
-    private void updateItemDetail(ItemUpdateRequest request, ItemEntity item) {
-        ItemDetail itemDetail = item.getItemDetail();
-        if (itemDetail != null) {
-            if (StringUtils.hasText(request.getIntroduce())) {
-                itemDetail.update(request.getIntroduce());
-            } else {
-                deleteItemDetail(itemDetail);
-            }
-        } else {
-            if (StringUtils.hasText(request.getIntroduce())) {
-                saveItemDetail(request.makeUpdateItemDetail(), item);
-            }
-        }
     }
 
     @Transactional

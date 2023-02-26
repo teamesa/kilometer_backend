@@ -21,7 +21,7 @@ import org.springframework.util.StringUtils;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemUpdateRequest {
+public class ItemUpdateRequest implements DetailRequest {
 
     private ExhibitionType exhibitionType;
     private ExposureType exposureType;
@@ -47,17 +47,12 @@ public class ItemUpdateRequest {
     private String operatingTime;
     private String ticketUrl;
     private String introduce;
+    private String source;
     @Builder.Default
     private List<String> detailImageUrls = new ArrayList<>();
 
     @Builder.Default
     private List<Long> deleteDetailImages = new ArrayList<>();
-
-    public ItemDetail makeUpdateItemDetail() {
-        return ItemDetail.builder()
-            .introduce(this.introduce)
-            .build();
-    }
 
     public List<ItemDetailImage> makeUpdateItemDetailImage() {
         return this.detailImageUrls.stream()
