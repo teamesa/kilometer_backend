@@ -33,6 +33,7 @@ public class ApiUrlUtils {
     public static final String ITEM_ID = ITEM_ROOT + "/{itemId}";
     public static final String ITEM_SUMMARY = ITEM_ID + "/summary";
     public static final String ITEM_ARCHIVES = ITEM_ID + "/archives";
+    public static final String ITEM_PATTERN = ITEM_ROOT + "/%s";
 
     // User
     public static final String USER_ROOT = ROOT + "/users";
@@ -55,5 +56,9 @@ public class ApiUrlUtils {
 
     public static String getArchiveUrl(Long archiveId) {
         return String.format(ARCHIVE_PATTERN, archiveId);
+    }
+
+    public static String getItemUrl(Long itemId) {
+        return String.format(ITEM_PATTERN, itemId);
     }
 }
