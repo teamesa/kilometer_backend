@@ -33,9 +33,9 @@ class HomeModuleApiFactoryTest {
         @DisplayName("변환 가능한 모듈 타입이면 API를 생성한다.")
         @Test
         void createModuleApi() {
-            ModuleResponseDto<Object> moduleResponseDto = ModuleResponseDto.of(
+            ModuleResponseDto<?> moduleResponseDto = ModuleResponseDto.of(
                     REAL_TIME_ARCHIVE, INDEX, REAL_TIME_ARCHIVE_RESPONSE);
-            ModuleResponseDto<Object> homeModuleResponse = homeModuleApiFactory.from(moduleResponseDto);
+            ModuleResponseDto<?> homeModuleResponse = homeModuleApiFactory.from(moduleResponseDto);
 
             ArchivesResponse archivesResponse = (ArchivesResponse) homeModuleResponse.getData();
 
@@ -50,9 +50,9 @@ class HomeModuleApiFactoryTest {
         @DisplayName("변환 가능하지 않은 모듈 타입이면 입력한 DTO를 그대로 반환한다.")
         @Test
         void returnModule() {
-            ModuleResponseDto<Object> moduleResponseDto = ModuleResponseDto.of(
+            ModuleResponseDto<?> moduleResponseDto = ModuleResponseDto.of(
                     ModuleType.SWIPE_ITEM, INDEX, REAL_TIME_ARCHIVE_RESPONSE);
-            ModuleResponseDto<Object> homeModuleResponse = homeModuleApiFactory.from(moduleResponseDto);
+            ModuleResponseDto<?> homeModuleResponse = homeModuleApiFactory.from(moduleResponseDto);
 
             RealTimeArchiveResponse realTimeArchiveResponse = (RealTimeArchiveResponse) homeModuleResponse.getData();
 

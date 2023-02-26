@@ -14,7 +14,7 @@ public class ApiGenerator {
     private final HomeModuleApiFactory homeModuleApiFactory;
 
     public HomeApiResponse generatorGetHomeMoulesApi(HomeApiResponse homeApiResponse) {
-        List<ModuleResponseDto<Object>> moduleResponseDtos = homeApiResponse.getModules()
+        List<ModuleResponseDto<?>> moduleResponseDtos = homeApiResponse.getModules()
                 .stream()
                 .map(homeModuleApiFactory::from)
                 .collect(Collectors.toList());

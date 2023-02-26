@@ -39,7 +39,7 @@ public class HomeRenderingService {
             .map(module -> moduleParamGenerator.from(userId, ModuleDto.from(module)))
             .collect(Collectors.toList());
 
-        List<ModuleResponseDto<Object>> result = new ArrayList<>();
+        List<ModuleResponseDto<?>> result = new ArrayList<>();
         for (ModuleParamDto moduleParamDto : modules) {
             try {
                 ModuleDto moduleDto = moduleParamDto.getModuleDto();

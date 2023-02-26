@@ -19,8 +19,8 @@ public class HomeModuleApiFactory {
         moduleApiMapper.put("MONTHLY_FREE_ITEM", MonthlyFreeTicketsResponse::from);
     }
 
-    public ModuleResponseDto<Object> from(ModuleResponseDto<Object> moduleResponseDto) {
-        Object data = moduleApiMapper.getOrDefault(moduleResponseDto.getModuleName(), ModuleResponseDto::getData)
+    public ModuleResponseDto<?> from(ModuleResponseDto<?> moduleResponseDto) {
+        var data = moduleApiMapper.getOrDefault(moduleResponseDto.getModuleName(), ModuleResponseDto::getData)
                 .apply(moduleResponseDto);
         return new ModuleResponseDto<>(moduleResponseDto.getModuleName(), moduleResponseDto.getIndex(), data);
     }
