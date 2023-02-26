@@ -18,8 +18,8 @@ public class ArchivesResponse {
     private final String bottomTitle;
     private final List<ArchiveDto> archives;
 
-    public static ArchivesResponse from(ModuleResponseDto<RealTimeArchiveResponse> moduleResponseDtos) {
-        RealTimeArchiveResponse realTimeArchiveResponse = moduleResponseDtos.getData();
+    public static ArchivesResponse from(ModuleResponseDto<?> moduleResponseDtos) {
+        RealTimeArchiveResponse realTimeArchiveResponse = (RealTimeArchiveResponse) moduleResponseDtos.getData();
         List<ArchiveDto> archiveDtos = realTimeArchiveResponse.getArchives()
                 .stream()
                 .map(ArchiveDto::from)

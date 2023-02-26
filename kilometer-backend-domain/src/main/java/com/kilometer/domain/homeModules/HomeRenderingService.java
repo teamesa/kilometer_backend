@@ -4,6 +4,7 @@ import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandlerAdapter;
 import com.kilometer.domain.homeModules.modules.ModuleRepository;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualApiResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,11 +24,14 @@ public class HomeRenderingService {
     private final ModuleRepository moduleRepository;
     private final ModuleParamGenerator moduleParamGenerator;
 
-    public ModuleResponseDto<Object> getKeyVisual(Long userId) {
+    public ModuleResponseDto<KeyVisualApiResponse> getKeyVisual(Long userId) {
         ModuleType type = ModuleType.KEY_VISUAL;
         ModuleParamDto paramDto = moduleParamGenerator.from(userId, null);
         try {
-            return ModuleResponseDto.of(type, 0, adapter.getHandlerAdapter(type).generator(paramDto));
+            var keyVisualApiResponse = adapter.getHandlerAdapter(type)
+                    .generator(paramDto)
+                    .orElseThrow(IllegalAccessError::new);
+            return ModuleResponseDto.of(type, 0, (KeyVisualApiResponse) keyVisualApiResponse);
         } catch (Exception e) {
             // TODO KeyVisual Exception handling
             throw new RuntimeException(e);

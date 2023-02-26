@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class HomeModuleApiFactory {
 
-    public final Map<String, Function<ModuleResponseDto, Object>> moduleApiMapper;
+    public final Map<String, Function<ModuleResponseDto<?>, ?>> moduleApiMapper;
 
     public HomeModuleApiFactory() {
         moduleApiMapper = new HashMap<>();
