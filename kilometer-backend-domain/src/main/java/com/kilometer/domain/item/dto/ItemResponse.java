@@ -61,6 +61,7 @@ public class ItemResponse {
     private String introduce;
     @Builder.Default
     private List<String> detailImageUrls = new ArrayList<>();
+    private String source;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

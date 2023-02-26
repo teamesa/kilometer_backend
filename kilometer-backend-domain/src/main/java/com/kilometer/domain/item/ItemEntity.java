@@ -106,7 +106,7 @@ public class ItemEntity {
     @Builder.Default
     private List<ItemDetailImage> itemDetailImages = new ArrayList<>();
 
-    public void update(ItemUpdateRequest item, String udtAccount) {
+    public void update(ItemUpdateRequest item, String updateBackOfficeUser) {
         this.exhibitionType = item.getExhibitionType();
         this.exposureType = item.getExposureType();
         this.listImageUrl = item.getListImageUrl();
@@ -124,72 +124,15 @@ public class ItemEntity {
         this.operatingTime = item.getOperatingTime();
         this.ticketUrl = item.getTicketUrl();
         this.updatedAt = LocalDateTime.now();
-        this.udtAccount = udtAccount;
+        this.udtAccount = updateBackOfficeUser;
     }
 
     public ItemResponse makeResponse() {
-        return ItemResponse.builder()
-            .id(this.id)
-            .exhibitionType(this.exhibitionType)
-            .exposureType(this.exposureType)
-            .listImageUrl(this.listImageUrl)
-            .thumbnailImageUrl(this.thumbnailImageUrl)
-            .title(this.title)
-            .startDate(this.startDate)
-            .endDate(this.endDate)
-            .placeName(this.placeName)
-            .latitude(this.latitude)
-            .longitude(this.longitude)
-            .regionType(this.regionType)
-            .feeType(this.feeType)
-            .price(this.price)
-            .homepageUrl(this.homepageUrl)
-            .operatingTime(this.operatingTime)
-            .itemPickCount(this.pickCount)
-            .ticketUrl(this.ticketUrl)
-            .detailImageUrls(Optional.ofNullable(this.itemDetailImages)
-                .map(itemDetailImages -> itemDetailImages.stream()
-                    .map(ItemDetailImage::getImageUrl)
-                    .collect(Collectors.toList()))
-                .orElse(new ArrayList<>()))
-            .introduce(Optional.ofNullable(this.itemDetail)
-                .map(ItemDetail::getIntroduce)
-                .orElse(""))
-            .regAccount(this.regAccount)
-            .createdAt(this.createdAt)
-            .udtAccount(this.udtAccount)
-            .updatedAt(this.updatedAt)
-            .build();
+        return ItemResponse.builder().id(this.id).exhibitionType(this.exhibitionType).exposureType(this.exposureType).listImageUrl(this.listImageUrl).thumbnailImageUrl(this.thumbnailImageUrl).title(this.title).startDate(this.startDate).endDate(this.endDate).placeName(this.placeName).latitude(this.latitude).longitude(this.longitude).regionType(this.regionType).feeType(this.feeType).price(this.price).homepageUrl(this.homepageUrl).operatingTime(this.operatingTime).itemPickCount(this.pickCount).ticketUrl(this.ticketUrl).detailImageUrls(Optional.ofNullable(this.itemDetailImages).map(itemDetailImages -> itemDetailImages.stream().map(ItemDetailImage::getImageUrl).collect(Collectors.toList())).orElse(new ArrayList<>())).introduce(Optional.ofNullable(this.itemDetail).map(ItemDetail::getIntroduce).orElse("")).regAccount(this.regAccount).createdAt(this.createdAt).udtAccount(this.udtAccount).updatedAt(this.updatedAt).build();
     }
 
     public ItemUpdateResponse makeUpdateResponse() {
-        return ItemUpdateResponse.builder()
-            .id(this.id)
-            .exhibitionType(this.exhibitionType)
-            .exposureType(this.exposureType)
-            .listImageUrl(this.listImageUrl)
-            .thumbnailImageUrl(this.thumbnailImageUrl)
-            .title(this.title)
-            .startDate(this.startDate)
-            .endDate(this.endDate)
-            .placeName(this.placeName)
-            .latitude(this.latitude)
-            .longitude(this.longitude)
-            .regionType(this.regionType)
-            .feeType(this.feeType)
-            .price(this.price)
-            .homepageUrl(this.homepageUrl)
-            .operatingTime(this.operatingTime)
-            .ticketUrl(this.ticketUrl)
-            .detailImageUrlsAndIndex(Optional.ofNullable(this.itemDetailImages)
-                .map(itemDetailImages -> itemDetailImages.stream()
-                    .map(ItemDetailImage::getItemDetailImage)
-                    .collect(Collectors.toList()))
-                .orElse(new ArrayList<>()))
-            .introduce(Optional.ofNullable(this.itemDetail)
-                .map(ItemDetail::getIntroduce)
-                .orElse(""))
-            .build();
+        return ItemUpdateResponse.builder().id(this.id).exhibitionType(this.exhibitionType).exposureType(this.exposureType).listImageUrl(this.listImageUrl).thumbnailImageUrl(this.thumbnailImageUrl).title(this.title).startDate(this.startDate).endDate(this.endDate).placeName(this.placeName).latitude(this.latitude).longitude(this.longitude).regionType(this.regionType).feeType(this.feeType).price(this.price).homepageUrl(this.homepageUrl).operatingTime(this.operatingTime).ticketUrl(this.ticketUrl).detailImageUrlsAndIndex(Optional.ofNullable(this.itemDetailImages).map(itemDetailImages -> itemDetailImages.stream().map(ItemDetailImage::getItemDetailImage).collect(Collectors.toList())).orElse(new ArrayList<>())).introduce(Optional.ofNullable(this.itemDetail).map(ItemDetail::getIntroduce).orElse("")).source(Optional.ofNullable(this.itemDetail).map(ItemDetail::getSource).orElse("")).build();
     }
 
     public void setItemDetail(ItemDetail itemDetail) {

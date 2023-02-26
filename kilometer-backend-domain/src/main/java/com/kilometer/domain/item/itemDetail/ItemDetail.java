@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.kilometer.domain.item.dto.DetailRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,8 +37,9 @@ public class ItemDetail {
     @JoinColumn(name = "item")
     private ItemEntity item;
 
-    public void update(String introduce) {
-        this.introduce = introduce;
+    public void update(DetailRequest request) {
+        introduce = request.getIntroduce();
+        source = request.getSource();
     }
 
     public void setItemEntity(ItemEntity item) {
