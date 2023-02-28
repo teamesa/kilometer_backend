@@ -25,7 +25,7 @@ public class KeyVisualHandler implements ModuleHandler {
     }
 
     @Override
-    public Optional<Object> generator(ModuleParamDto paramDto) {
+    public Optional<KeyVisualApiResponse> generator(ModuleParamDto paramDto) {
         List<KeyVisual> keyVisuals = keyVisualRepository.findAllOrderByIdAtAsc();
 
         if (keyVisuals.isEmpty()) {

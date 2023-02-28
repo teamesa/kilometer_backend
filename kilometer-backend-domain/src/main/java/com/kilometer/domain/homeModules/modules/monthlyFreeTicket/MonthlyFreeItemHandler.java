@@ -30,7 +30,7 @@ public class MonthlyFreeItemHandler implements ModuleHandler {
     }
 
     @Override
-    public Optional<Object> generator(ModuleParamDto paramDto) throws RuntimeException {
+    public Optional<MonthlyFreeTicketResponse> generator(ModuleParamDto paramDto) {
         Preconditions.checkNotNull(paramDto, "paramDto must not be null");
         LocalDateTime requestTime = paramDto.getTime();
         ModuleDto data = paramDto.getModuleDto();

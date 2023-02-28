@@ -1,4 +1,4 @@
-package com.kilometer.homeModules.modules.realTimeArchive;
+package com.kilometer.domain.homeModules.modules.realTimeArchive;
 
 import static com.kilometer.common.Fixture.ARCHIVE_IMAGE_URL;
 import static com.kilometer.common.Fixture.COMMENT;
@@ -261,7 +261,7 @@ class RealTimeArchiveHandlerTest {
             likeRepository.save(like);
         }
 
-        private Optional<Object> saveRealTImeArchiveResponse(User user) {
+        private Optional<?> saveRealTImeArchiveResponse(User user) {
             Module module = Module.builder()
                     .moduleName(ModuleType.REAL_TIME_ARCHIVE)
                     .upperModuleTitle("upperTitle")

@@ -19,8 +19,8 @@ public class MonthlyFreeTicketsResponse {
     private final String bottomTitle;
     private final List<MonthlyFreeTicketContentDto> contents;
 
-    public static MonthlyFreeTicketsResponse from(ModuleResponseDto<MonthlyFreeTicketResponse> moduleResponseDto) {
-        MonthlyFreeTicketResponse monthlyFreeTicketResponse = moduleResponseDto.getData();
+    public static MonthlyFreeTicketsResponse from(ModuleResponseDto<?> moduleResponseDto) {
+        MonthlyFreeTicketResponse monthlyFreeTicketResponse = (MonthlyFreeTicketResponse) moduleResponseDto.getData();
         List<MonthlyFreeTicketContentDto> contents = monthlyFreeTicketResponse.getMonthlyFreeTicketDtos()
                 .stream()
                 .map(MonthlyFreeTicketContentDto::from)

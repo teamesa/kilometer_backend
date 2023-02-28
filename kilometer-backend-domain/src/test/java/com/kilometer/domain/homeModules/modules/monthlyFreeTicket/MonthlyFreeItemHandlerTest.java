@@ -169,7 +169,7 @@ class MonthlyFreeItemHandlerTest {
         archiveRepository.save(archive);
     }
 
-    private Optional<Object> generateMonthlyFreeTicket(User user) {
+    private Optional<?> generateMonthlyFreeTicket(User user) {
         Module module = Module.builder()
                 .moduleName(ModuleType.MONTHLY_FREE_ITEM)
                 .upperModuleTitle(TOP_TITLE)

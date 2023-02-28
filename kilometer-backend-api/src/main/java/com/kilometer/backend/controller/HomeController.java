@@ -4,6 +4,7 @@ import com.kilometer.backend.util.ApiGenerator;
 import com.kilometer.domain.homeModules.HomeApiResponse;
 import com.kilometer.domain.homeModules.HomeRenderingService;
 import com.kilometer.domain.homeModules.ModuleResponseDto;
+import com.kilometer.domain.homeModules.modules.keyVisual.dto.KeyVisualApiResponse;
 import com.kilometer.domain.util.ApiUrlUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class HomeController {
 
     @GetMapping(ApiUrlUtils.KEY_VISUAL)
     @ApiOperation(value = "홈 모듈 중 키비주얼만 조회")
-    public ModuleResponseDto getKeyVisual() {
+    public ModuleResponseDto<KeyVisualApiResponse> getKeyVisual() {
         Long userId = getLoginUserId();
         return moduleService.getKeyVisual(userId);
     }
