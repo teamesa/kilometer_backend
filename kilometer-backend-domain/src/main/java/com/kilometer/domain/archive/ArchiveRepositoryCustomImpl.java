@@ -203,7 +203,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                .distinct()
                .from(archive)
                .leftJoin(archiveImageEntity)
-               .on(archiveImageEntity.archiveEntity.eq(archive).and(archiveImageEntity.isNotNull()))
+               .on(archiveImageEntity.archiveEntity.eq(archive))
+               .where(archiveImageEntity.isNotNull())
                .orderBy(archiveEntity.updatedAt.desc())
                .limit(MAX_ARCHIVES)
                .fetch();
