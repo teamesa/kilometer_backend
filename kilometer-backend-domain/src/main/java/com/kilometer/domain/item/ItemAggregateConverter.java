@@ -53,6 +53,7 @@ public class ItemAggregateConverter {
             .homePageUrl(itemInfoDto.getHomepageUrl())
             .detailImageUrl(itemInfoDto.getThumbnailImageUrl())
             .listImageUrl(itemInfoDto.getListImageUrl())
+            .source(itemDetail.getSource())
             .summary(Optional.ofNullable(itemDetail)
                 .map(ItemDetail::getIntroduce)
                 .orElse(null))
@@ -69,6 +70,5 @@ public class ItemAggregateConverter {
                     .archiveLink(archiveLink)
                     .build())
             .build();
-
     }
 }
