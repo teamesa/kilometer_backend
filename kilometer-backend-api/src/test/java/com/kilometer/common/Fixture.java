@@ -42,6 +42,7 @@ public class Fixture {
     public static final ExhibitionType EXHIBITION_TYPE = ExhibitionType.EXHIBITION;
 
     public static final RealTimeArchiveDto REAL_TIME_ARCHIVE_DTO = RealTimeArchiveDto.builder()
+            .archiveId(1L)
             .likeCount(LIKE_COUNT)
             .starRating(STAR_RATING)
             .updatedAt(LocalDateTime.now())
