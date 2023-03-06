@@ -183,7 +183,7 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                         .leftJoin(itemEntity)
                         .on(archive.item.eq(itemEntity))
                         .leftJoin(archiveImageEntity)
-                        .on(archiveImageEntity.archiveEntity.eq(archive))
+                        .on(archiveImageEntity.archiveEntity.eq(archive).and(archiveImageEntity.isDeleted.isFalse()))
                         .leftJoin(user)
                         .on(archive.user.eq(user))
                         .leftJoin(like)
