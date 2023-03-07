@@ -6,6 +6,7 @@ import com.kilometer.domain.archive.dto.ArchiveDetailResponse;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
+import com.kilometer.domain.archive.dto.ArchiveUpdateResponse;
 import com.kilometer.domain.archive.dto.MyArchiveResponse;
 import com.kilometer.domain.archive.like.dto.LikeResponse;
 import com.kilometer.domain.archive.request.ArchiveRequest;
@@ -67,7 +68,7 @@ public class ArchiveController {
 
     @PutMapping(ApiUrlUtils.ARCHIVE_ID)
     @ApiOperation(value = "아카이브 수정")
-    public ArchiveInfo updateArchive(
+    public ArchiveUpdateResponse updateArchive(
         @ApiParam(value = "수정할 아카이브 아이디", required = true) @PathVariable Long archiveId,
         @ApiParam(value = "수정할 아카이브 데이터", required = true) @RequestBody ArchiveRequest request) {
         long userId = getLoginUserId();
