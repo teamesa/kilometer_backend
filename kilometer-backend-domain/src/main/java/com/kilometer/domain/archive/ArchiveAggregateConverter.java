@@ -8,6 +8,7 @@ import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
+import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.like.dto.ArchiveLike;
 import com.kilometer.domain.archive.like.dto.ArchiveLikeGenerator;
 import com.kilometer.domain.archive.userVisitPlace.UserVisitPlaceEntity;
@@ -134,7 +135,7 @@ public class ArchiveAggregateConverter {
                                                       List<ArchiveImageEntity> archiveImageEntities) {
         ItemBadge itemBadge = itemBadgeGenerator.generateTypeItemBadge(
             archiveDetailDto.getItemExhibitionType());
-        Map<PlaceType, String> placeTypes = convertFoodAndCafe(visitPlaces);
+        List<PlaceInfo> placeInfos = convertToPlaceInfos(visitPlaces);
         List<LinkInfo> linkInfos = makeArchiveControlLink(archiveDetailDto.getId(),
             archiveDetailDto.isWrited());
         ItemForArchive itemForArchive = ItemForArchive.of(
@@ -148,13 +149,19 @@ public class ArchiveAggregateConverter {
             .item(itemForArchive)
             .comment(archiveDetailDto.getComment())
             .starRating(archiveDetailDto.getStarRating())
-            .food(placeTypes.getOrDefault(PlaceType.FOOD, ""))
-            .cafe(placeTypes.getOrDefault(PlaceType.CAFE, ""))
+            .placeInfos(placeInfos)
             .photoUrls(
                 archiveImageEntities.stream().map(ArchiveImageEntity::getImageUrl).collect(Collectors.toList()))
             .archiveActionButton(linkInfos)
             .visibleAtItem(archiveDetailDto.isVisibleAtItem())
             .build();
+    }
+
+    private List<PlaceInfo> convertToPlaceInfos(List<UserVisitPlaceEntity> userVisitPlaceEntities) {
+        return userVisitPlaceEntities.stream()
+            .map(entity -> new PlaceInfo(entity.getPlaceType().getName(), entity.getPlaceName(), entity.getAddress(),
+                entity.getRoadAddress()))
+            .collect(Collectors.toList());
     }
 
     private Map<PlaceType, String> convertFoodAndCafe(List<UserVisitPlaceEntity> userVisitPlaceEntities) {

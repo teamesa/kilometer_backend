@@ -17,8 +17,7 @@ public class ArchiveDetailResponse {
     private LocalDateTime updatedAt;
     private String comment;
     private int starRating;
-    private String food;
-    private String cafe;
+    private List<PlaceInfo> placeInfos;
     private ItemForArchive item;
     private List<String> photoUrls;
     private List<LinkInfo> archiveActionButton;
