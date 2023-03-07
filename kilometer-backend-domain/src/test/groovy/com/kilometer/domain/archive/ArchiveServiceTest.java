@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.kilometer.common.annotation.SpringTestWithData;
 import com.kilometer.domain.archive.dto.ArchiveInfo;
+import com.kilometer.domain.archive.dto.ArchiveUpdateResponse;
 import com.kilometer.domain.archive.dto.PlaceInfo;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.archive.exception.ArchiveUnauthorizedException;
@@ -193,15 +194,14 @@ public class ArchiveServiceTest {
 
         // when
         ArchiveRequest updateRequest = new ArchiveRequest(null, "수정된 아카이브 코멘트", 3, false, List.of(), List.of());
-        ArchiveInfo actual = archiveService.update(user.getId(), savedArchive.getId(), updateRequest);
+        ArchiveUpdateResponse actual = archiveService.update(user.getId(), savedArchive.getId(), updateRequest);
 
         // then
         assertAll(
             () -> assertThat(actual.getComment()).isEqualTo("수정된 아카이브 코멘트"),
             () -> assertThat(actual.getStarRating()).isEqualTo(3),
             () -> assertThat(actual.getPhotoUrls()).isEmpty(),
-            () -> assertThat(actual.getFood()).isBlank(),
-            () -> assertThat(actual.getCafe()).isBlank()
+            () -> assertThat(actual.getPlaceInfos()).hasSize(0)
         );
     }
 

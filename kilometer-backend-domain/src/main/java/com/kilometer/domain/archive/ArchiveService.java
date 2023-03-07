@@ -11,6 +11,7 @@ import com.kilometer.domain.archive.dto.ArchiveInfo;
 import com.kilometer.domain.archive.dto.ArchiveQueryRequest;
 import com.kilometer.domain.archive.dto.ArchiveResponse;
 import com.kilometer.domain.archive.dto.ArchiveSortType;
+import com.kilometer.domain.archive.dto.ArchiveUpdateResponse;
 import com.kilometer.domain.archive.dto.ItemArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveDto;
 import com.kilometer.domain.archive.dto.MyArchiveInfo;
@@ -91,7 +92,7 @@ public class ArchiveService {
     }
 
     @Transactional
-    public ArchiveInfo update(Long userId, Long archiveId, ArchiveRequest request) {
+    public ArchiveUpdateResponse update(Long userId, Long archiveId, ArchiveRequest request) {
         Preconditions.checkNotNull(userId, "id must not be null");
         Preconditions.checkNotNull(archiveId, "Archive id must not be null");
 
