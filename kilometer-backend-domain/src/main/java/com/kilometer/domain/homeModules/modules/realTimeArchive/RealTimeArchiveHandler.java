@@ -1,13 +1,17 @@
 package com.kilometer.domain.homeModules.modules.realTimeArchive;
 
+import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
 import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
+import com.kilometer.domain.archive.like.Like;
+import com.kilometer.domain.archive.like.LikeRepository;
 import com.kilometer.domain.homeModules.ModuleParamDto;
 import com.kilometer.domain.homeModules.enumType.ModuleType;
 import com.kilometer.domain.homeModules.modules.ModuleHandler;
 import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import com.kilometer.domain.homeModules.modules.realTimeArchive.dto.RealTimeArchiveResponse;
+import com.kilometer.domain.user.User;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RealTimeArchiveHandler implements ModuleHandler {
 
     private final ArchiveRepository archiveRepository;
+    private final LikeRepository likeRepository;
 
     @Override
     public boolean supports(final ModuleType moduleType) {
@@ -49,8 +54,10 @@ public class RealTimeArchiveHandler implements ModuleHandler {
     }
 
     private RealTimeArchiveDto doesLikeArchive(RealTimeArchiveDto realTimeArchiveDto, ModuleParamDto moduleParamDto) {
-        if (moduleParamDto.getUserId().equals(realTimeArchiveDto.getUserId())) {
-            return realTimeArchiveDto;
+        boolean isLiked = true;
+        Optional<Like> like = findLike(realTimeArchiveDto, moduleParamDto);
+        if (moduleParamDto.getUserId() == null || like.isEmpty() || !like.get().isLiked()) {
+            isLiked = false;
         }
         return RealTimeArchiveDto.builder()
                 .archiveId(realTimeArchiveDto.getArchiveId())
@@ -62,10 +69,20 @@ public class RealTimeArchiveHandler implements ModuleHandler {
                 .placeName(realTimeArchiveDto.getPlaceName())
                 .title(realTimeArchiveDto.getTitle())
                 .itemId(realTimeArchiveDto.getItemId())
-                .userId(realTimeArchiveDto.getUserId())
                 .userImageUrl(realTimeArchiveDto.getUserImageUrl())
                 .userName(realTimeArchiveDto.getUserName())
-                .isLiked(false)
+                .isLiked(isLiked)
                 .build();
+
+    }
+
+    private Optional<Like> findLike(RealTimeArchiveDto realTimeArchiveDto, ModuleParamDto moduleParamDto) {
+        ArchiveEntity archiveEntity = ArchiveEntity.builder()
+                .id(realTimeArchiveDto.getArchiveId())
+                .build();
+        User user = User.builder()
+                .id(moduleParamDto.getUserId())
+                .build();
+        return likeRepository.findByLikedArchiveEntityAndLikedUser(archiveEntity, user);
     }
 }
