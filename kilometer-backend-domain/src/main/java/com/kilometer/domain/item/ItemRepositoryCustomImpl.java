@@ -233,7 +233,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 )
                 .from(itemEntity)
                 .leftJoin(archive)
-                .on(archive.item.eq(itemEntity), archive.user.id.eq(userId))
+                .on(archive.item.eq(itemEntity), archive.user.id.eq(userId), archive.isDeleted.isFalse())
                 .where(
                     itemEntity.id.eq(itemId),
                     itemEntity.exposureType.eq(ExposureType.ON)
