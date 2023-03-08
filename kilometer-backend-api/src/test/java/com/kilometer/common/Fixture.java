@@ -51,7 +51,6 @@ public class Fixture {
             .placeName(PLACE_NAME)
             .title(TITLE)
             .itemId(ITEM_ID)
-            .userId(USER_ID)
             .userImageUrl(USER_IMAGE_URL)
             .userName(USER_NAME)
             .isLiked(IS_LIKED)

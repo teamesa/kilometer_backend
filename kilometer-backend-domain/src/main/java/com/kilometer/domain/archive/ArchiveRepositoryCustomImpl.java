@@ -171,10 +171,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                                         userVisitPlaceEntity.placeName,
                                         itemEntity.title,
                                         itemEntity.id.as("itemId"),
-                                        user.id.as("userId"),
                                         user.imageUrl.as("userImageUrl"),
-                                        user.name.as("userName"),
-                                        like.isLiked
+                                        user.name.as("userName")
                                 )
                         )
                         .from(archive)
@@ -186,9 +184,6 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                         .on(archiveImageEntity.archiveEntity.eq(archive).and(archiveImageEntity.isDeleted.isFalse()))
                         .leftJoin(user)
                         .on(archive.user.eq(user))
-                        .leftJoin(like)
-                        .on(like.likedArchiveEntity.eq(archive)
-                                .and(like.likedUser.eq(user)))
                         .where(
                                 archive.id.eq(archiveId),
                                 itemEntity.exposureType.eq(ExposureType.ON)
