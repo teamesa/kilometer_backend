@@ -159,8 +159,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public Optional<RealTimeArchiveDto> findRealTimeArchive(long archiveId) {
-        return Optional.ofNullable(queryFactory.select(
+    public List<RealTimeArchiveDto> findRealTimeArchive(long archiveId) {
+        return queryFactory.select(
                                 Projections.fields(RealTimeArchiveDto.class,
                                         archiveEntity.id.as("archiveId"),
                                         archiveEntity.likeCount,
@@ -188,9 +188,8 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                                 archive.id.eq(archiveId),
                                 itemEntity.exposureType.eq(ExposureType.ON)
                         )
-                        .limit(1)
-                        .fetchOne()
-        );
+//                        .limit(1)
+                        .fetch();
     }
 
     @Override

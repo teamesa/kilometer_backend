@@ -21,7 +21,7 @@ public interface ArchiveRepositoryCustom {
 
     Double avgStarRatingByItemId(long itemId);
 
-    Optional<RealTimeArchiveDto> findRealTimeArchive(long archiveId);
+    List<RealTimeArchiveDto> findRealTimeArchive(long archiveId);
 
     List<ArchiveEntity> findTopFourArchivesWithImageUrl();
 }

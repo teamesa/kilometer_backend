@@ -70,7 +70,7 @@ class ArchiveRepositoryTest {
         saveArchiveLike(savedArchive, savedUser);
 
         RealTimeArchiveDto realTimeArchiveDto = archiveRepository.findRealTimeArchive(savedArchive.getId())
-                .get();
+                .get(0);
 
         assertAll(
                 () -> assertThat(realTimeArchiveDto.getArchiveId()).isEqualTo(savedArchive.getId()),
@@ -126,7 +126,7 @@ class ArchiveRepositoryTest {
             saveArchiveImage(savedArchive);
             saveArchiveLike(savedArchive, savedUser);
 
-            Optional<RealTimeArchiveDto> emptyRealTimeArchiveDto = archiveRepository.findRealTimeArchive(
+            List<RealTimeArchiveDto> emptyRealTimeArchiveDto = archiveRepository.findRealTimeArchive(
                     savedArchive.getId());
 
             assertThat(emptyRealTimeArchiveDto.isEmpty()).isTrue();
