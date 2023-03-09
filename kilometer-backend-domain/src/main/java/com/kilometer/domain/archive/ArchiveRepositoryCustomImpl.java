@@ -188,7 +188,6 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
                                 archive.id.eq(archiveId),
                                 itemEntity.exposureType.eq(ExposureType.ON)
                         )
-//                        .limit(1)
                         .fetch();
     }
 
