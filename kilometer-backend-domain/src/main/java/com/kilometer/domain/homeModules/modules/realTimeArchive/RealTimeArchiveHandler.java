@@ -13,6 +13,7 @@ import com.kilometer.domain.homeModules.modules.dto.ModuleDto;
 import com.kilometer.domain.homeModules.modules.realTimeArchive.dto.RealTimeArchiveResponse;
 import com.kilometer.domain.user.User;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,8 @@ public class RealTimeArchiveHandler implements ModuleHandler {
     public Optional<RealTimeArchiveResponse> generator(final ModuleParamDto paramDto) {
         List<RealTimeArchiveDto> realTimeArchiveDtos = archiveRepository.findTopFourArchivesWithImageUrl()
                 .stream()
-                .map(archive -> archiveRepository.findRealTimeArchive(archive.getId())
-                        .orElseThrow(ArchiveNotFoundException::new))
+                .map(archive -> archiveRepository.findRealTimeArchive(archive.getId()))
+                .map(this::combineVisitedPlaces)
                 .map(realTimeArchiveDto -> doesLikeArchive(realTimeArchiveDto, paramDto))
                 .collect(Collectors.toList());
 
@@ -51,6 +52,29 @@ public class RealTimeArchiveHandler implements ModuleHandler {
                 .bottomTitle(moduleDto.getLowerModuleTitle())
                 .archives(realTimeArchiveDtos)
                 .build());
+    }
+
+    private RealTimeArchiveDto combineVisitedPlaces(List<RealTimeArchiveDto> realTimeArchiveDtos) {
+        String visitedPlaces = realTimeArchiveDtos.stream()
+                .map(RealTimeArchiveDto::getPlaceName)
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(", "));
+
+        RealTimeArchiveDto realTimeArchiveDto = realTimeArchiveDtos.get(0);
+        return RealTimeArchiveDto.builder()
+                .archiveId(realTimeArchiveDto.getArchiveId())
+                .likeCount(realTimeArchiveDto.getLikeCount())
+                .starRating(realTimeArchiveDto.getStarRating())
+                .updatedAt(realTimeArchiveDto.getUpdatedAt())
+                .comment(realTimeArchiveDto.getComment())
+                .imageUrl(realTimeArchiveDto.getImageUrl())
+                .placeName(visitedPlaces)
+                .title(realTimeArchiveDto.getTitle())
+                .itemId(realTimeArchiveDto.getItemId())
+                .userImageUrl(realTimeArchiveDto.getUserImageUrl())
+                .userName(realTimeArchiveDto.getUserName())
+                .build();
+
     }
 
     private RealTimeArchiveDto doesLikeArchive(RealTimeArchiveDto realTimeArchiveDto, ModuleParamDto moduleParamDto) {

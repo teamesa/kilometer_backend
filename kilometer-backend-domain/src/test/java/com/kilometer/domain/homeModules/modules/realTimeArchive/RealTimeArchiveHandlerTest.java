@@ -100,6 +100,29 @@ class RealTimeArchiveHandlerTest {
             );
         }
 
+        @DisplayName("카페와 음식점을 모두 방문했다면 두 곳 이름이 모두 가져와져야 한다.")
+        @Test
+        void generateRealTimeArchiveWithRestaurantAndCafe() {
+            User savedUser = saveUser();
+            ArchiveEntity savedArchive = saveArchive(savedUser);
+            saveUserVisitPlace(savedArchive);
+            UserVisitPlaceEntity userVisitPlace = UserVisitPlaceEntity.builder()
+                    .placeType(PlaceType.FOOD)
+                    .placeName("food")
+                    .address("address")
+                    .roadAddress("roadAddress")
+                    .archiveEntity(savedArchive)
+                    .build();
+            userVisitPlaceRepository.save(userVisitPlace);
+
+            saveArchiveImage(savedArchive);
+            saveArchiveLike(savedArchive, savedUser);
+            RealTimeArchiveResponse savedRealTimeArchiveResponse = (RealTimeArchiveResponse) saveRealTImeArchiveResponse(savedUser)
+                    .get();
+
+            assertThat(savedRealTimeArchiveResponse.getArchives().get(0).getPlaceName()).isEqualTo(PLACE_NAME + ", food");
+        }
+
         @DisplayName("아카이브 이미지가 존재하지 않으면 아카이브를 가져오지 않는다.")
         @Test
         void getArchiveThatDoesNotHaveImage() {
