@@ -72,7 +72,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .leftJoin(pick)
             .on(pick.pickedItem.eq(itemEntity), eqUserId(queryRequest.getUserId()))
             .leftJoin(archive)
-            .on(archive.item.eq(itemEntity).and(archive.isVisibleAtItem.eq(true)))
+            .on(archive.item.eq(itemEntity).and(archive.isVisibleAtItem.isTrue()).and(archive.isDeleted.isFalse()))
             .where(
                 itemEntity.exposureType.eq(ExposureType.ON),
                 eqTitle(queryRequest.getQueryString()),
@@ -212,7 +212,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 itemEntity.feeType.eq(FeeType.FREE),
                 itemEntity.exposureType.eq(ExposureType.ON),
                 itemEntity.startDate.loe(now).and(itemEntity.endDate.gt(now)),
-                archive.isVisibleAtItem.isTrue()
+                archive.isVisibleAtItem.isTrue(),
+                archive.isDeleted.isFalse()
             )
             .groupBy(itemEntity.id)
             .orderBy(Expressions.numberTemplate(Long.class, "function('rand')").asc())
