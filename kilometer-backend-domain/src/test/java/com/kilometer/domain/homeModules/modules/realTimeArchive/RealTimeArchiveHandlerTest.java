@@ -123,6 +123,30 @@ class RealTimeArchiveHandlerTest {
             assertThat(savedRealTimeArchiveResponse.getArchives().get(0).getPlaceName()).isEqualTo(PLACE_NAME + ", food");
         }
 
+        @DisplayName("같은 방문지 이름을 한번만 가지고 와야한다.")
+        @Test
+        void generateRealTimeArchiveWithDistinctPlaceName() {
+            User savedUser = saveUser();
+            ArchiveEntity savedArchive = saveArchive(savedUser);
+            saveUserVisitPlace(savedArchive);
+            UserVisitPlaceEntity userVisitPlace = UserVisitPlaceEntity.builder()
+                    .placeType(PlaceType.FOOD)
+                    .placeName("food")
+                    .address("address")
+                    .roadAddress("roadAddress")
+                    .archiveEntity(savedArchive)
+                    .build();
+            userVisitPlaceRepository.save(userVisitPlace);
+
+            saveArchiveImage(savedArchive);
+            saveArchiveImage(savedArchive);
+            saveArchiveLike(savedArchive, savedUser);
+            RealTimeArchiveResponse savedRealTimeArchiveResponse = (RealTimeArchiveResponse) saveRealTImeArchiveResponse(savedUser)
+                    .get();
+
+            assertThat(savedRealTimeArchiveResponse.getArchives().get(0).getPlaceName()).isEqualTo(PLACE_NAME + ", food");
+        }
+
         @DisplayName("아카이브 이미지가 존재하지 않으면 아카이브를 가져오지 않는다.")
         @Test
         void getArchiveThatDoesNotHaveImage() {
