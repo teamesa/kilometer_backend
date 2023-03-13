@@ -57,6 +57,7 @@ public class RealTimeArchiveHandler implements ModuleHandler {
     private RealTimeArchiveDto combineVisitedPlaces(List<RealTimeArchiveDto> realTimeArchiveDtos) {
         String visitedPlaces = realTimeArchiveDtos.stream()
                 .map(RealTimeArchiveDto::getPlaceName)
+                .distinct()
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(", "));
 
