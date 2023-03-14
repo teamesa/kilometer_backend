@@ -23,5 +23,5 @@ public interface ArchiveRepositoryCustom {
 
     List<RealTimeArchiveDto> findRealTimeArchive(long archiveId);
 
-    List<ArchiveEntity> findTopFourArchivesWithImageUrl();
+    List<ArchiveEntity> findTopFourVisibleAtItemArchivesWithImageUrl();
 }

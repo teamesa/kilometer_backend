@@ -31,7 +31,6 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -99,7 +98,7 @@ class ArchiveRepositoryTest {
                 saveArchiveImage(savedArchiveEntity);
             }
 
-            List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourArchivesWithImageUrl();
+            List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourVisibleAtItemArchivesWithImageUrl();
 
             assertThat(topFourArchivesWithImageUrl.size()).isEqualTo(4);
         }
@@ -112,7 +111,7 @@ class ArchiveRepositoryTest {
             saveArchiveImage(savedArchiveEntity);
             saveArchive(savedUser, ExposureType.ON, true);
 
-            List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourArchivesWithImageUrl();
+            List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourVisibleAtItemArchivesWithImageUrl();
 
             assertThat(topFourArchivesWithImageUrl.size()).isEqualTo(1);
         }
@@ -140,7 +139,7 @@ class ArchiveRepositoryTest {
         ArchiveEntity savedArchiveEntity = saveArchive(savedUser, ExposureType.ON, false);
         saveArchiveImage(savedArchiveEntity);
 
-        List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourArchivesWithImageUrl();
+        List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourVisibleAtItemArchivesWithImageUrl();
 
         assertThat(topFourArchivesWithImageUrl.size()).isEqualTo(0);
     }
