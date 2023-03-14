@@ -31,7 +31,6 @@ import com.kilometer.domain.user.User;
 import com.kilometer.domain.user.UserRepository;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -64,7 +63,7 @@ class ArchiveRepositoryTest {
     @Test
     void findReqlTimeArchive() {
         User savedUser = saveUser();
-        ArchiveEntity savedArchive = saveArchive(savedUser, ExposureType.ON);
+        ArchiveEntity savedArchive = saveArchive(savedUser, ExposureType.ON, true);
         saveUserVisitPlace(savedArchive);
         saveArchiveImage(savedArchive);
         saveArchiveLike(savedArchive, savedUser);
@@ -95,11 +94,11 @@ class ArchiveRepositoryTest {
         void findTopFourArchievsWithImageUrl() {
             User savedUser = saveUser();
             for (int i = 0; i < 6; i++) {
-                ArchiveEntity savedArchiveEntity = saveArchive(savedUser, ExposureType.ON);
+                ArchiveEntity savedArchiveEntity = saveArchive(savedUser, ExposureType.ON, true);
                 saveArchiveImage(savedArchiveEntity);
             }
 
-            List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourArchivesWithImageUrl();
+            List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourVisibleAtItemArchivesWithImageUrl();
 
             assertThat(topFourArchivesWithImageUrl.size()).isEqualTo(4);
         }
@@ -108,11 +107,11 @@ class ArchiveRepositoryTest {
         @Test
         void ignoreArchivesThatDoesntHasImage() {
             User savedUser = saveUser();
-            ArchiveEntity savedArchiveEntity = saveArchive(savedUser, ExposureType.ON);
+            ArchiveEntity savedArchiveEntity = saveArchive(savedUser, ExposureType.ON, true);
             saveArchiveImage(savedArchiveEntity);
-            saveArchive(savedUser, ExposureType.ON);
+            saveArchive(savedUser, ExposureType.ON, true);
 
-            List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourArchivesWithImageUrl();
+            List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourVisibleAtItemArchivesWithImageUrl();
 
             assertThat(topFourArchivesWithImageUrl.size()).isEqualTo(1);
         }
@@ -121,7 +120,7 @@ class ArchiveRepositoryTest {
         @Test
         void ignoreArchivesThatUnexposed() {
             User savedUser = saveUser();
-            ArchiveEntity savedArchive = saveArchive(savedUser, ExposureType.OFF);
+            ArchiveEntity savedArchive = saveArchive(savedUser, ExposureType.OFF, true);
             saveUserVisitPlace(savedArchive);
             saveArchiveImage(savedArchive);
             saveArchiveLike(savedArchive, savedUser);
@@ -133,6 +132,18 @@ class ArchiveRepositoryTest {
         }
     }
 
+    @DisplayName("나만보기를 선택한 아카이브는 조회하지 않는다.")
+    @Test
+    void ignoreArchivesThatIsNotVisibleAtItem() {
+        User savedUser = saveUser();
+        ArchiveEntity savedArchiveEntity = saveArchive(savedUser, ExposureType.ON, false);
+        saveArchiveImage(savedArchiveEntity);
+
+        List<ArchiveEntity> topFourArchivesWithImageUrl = archiveRepository.findTopFourVisibleAtItemArchivesWithImageUrl();
+
+        assertThat(topFourArchivesWithImageUrl.size()).isEqualTo(0);
+    }
+
     private User saveUser() {
         User user = User.builder()
                 .name(USER_NAME)
@@ -142,7 +153,7 @@ class ArchiveRepositoryTest {
         return userRepository.save(user);
     }
 
-    private ArchiveEntity saveArchive(User user, ExposureType exposureType) {
+    private ArchiveEntity saveArchive(User user, ExposureType exposureType, boolean isVisibleAtItem) {
         ItemEntity item = ItemEntity.builder()
                 .exhibitionType(ExhibitionType.EXHIBITION)
                 .exposureType(exposureType)
@@ -167,7 +178,7 @@ class ArchiveRepositoryTest {
         ArchiveEntity archive = ArchiveEntity.builder()
                 .starRating(STAR_RATING)
                 .likeCount(LIKE_COUNT)
-                .isVisibleAtItem(true)
+                .isVisibleAtItem(isVisibleAtItem)
                 .comment(COMMENT)
                 .user(user)
                 .item(savedItem)

@@ -3,7 +3,6 @@ package com.kilometer.domain.homeModules.modules.realTimeArchive;
 import com.kilometer.domain.archive.ArchiveEntity;
 import com.kilometer.domain.archive.ArchiveRepository;
 import com.kilometer.domain.archive.dto.RealTimeArchiveDto;
-import com.kilometer.domain.archive.exception.ArchiveNotFoundException;
 import com.kilometer.domain.archive.like.Like;
 import com.kilometer.domain.archive.like.LikeRepository;
 import com.kilometer.domain.homeModules.ModuleParamDto;
@@ -35,7 +34,7 @@ public class RealTimeArchiveHandler implements ModuleHandler {
 
     @Override
     public Optional<RealTimeArchiveResponse> generator(final ModuleParamDto paramDto) {
-        List<RealTimeArchiveDto> realTimeArchiveDtos = archiveRepository.findTopFourArchivesWithImageUrl()
+        List<RealTimeArchiveDto> realTimeArchiveDtos = archiveRepository.findTopFourVisibleAtItemArchivesWithImageUrl()
                 .stream()
                 .map(archive -> archiveRepository.findRealTimeArchive(archive.getId()))
                 .map(this::combineVisitedPlaces)

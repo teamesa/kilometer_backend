@@ -192,13 +192,14 @@ public class ArchiveRepositoryCustomImpl implements ArchiveRepositoryCustom {
     }
 
     @Override
-    public List<ArchiveEntity> findTopFourArchivesWithImageUrl() {
+    public List<ArchiveEntity> findTopFourVisibleAtItemArchivesWithImageUrl() {
        return queryFactory.select(archiveEntity)
                .distinct()
                .from(archive)
                .leftJoin(archiveImageEntity)
                .on(archiveImageEntity.archiveEntity.eq(archive))
-               .where(archiveImageEntity.isNotNull())
+               .where(archiveImageEntity.isNotNull(),
+                       archiveEntity.isVisibleAtItem.isTrue())
                .orderBy(archiveEntity.updatedAt.desc())
                .limit(MAX_ARCHIVES)
                .fetch();
