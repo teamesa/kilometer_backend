@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.junit.jupiter.api.Test;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
@@ -44,5 +43,5 @@ public class CrawledItemDto {
     private String introduce;
     private String source;
 
-    private List<String> itemDetailImeags;
+    private List<String> itemDetailImages;
 }

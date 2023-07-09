@@ -51,16 +51,14 @@ public class Yes24Crawler implements Crawler {
 
     private List<String> extractPerformanceDetailPageUrls(final String pageUrl) {
         ChromeDriver<List<String>> chromeDriver = new ChromeDriver<>(remoteDriverUrl);
-        Function<String, List<String>> page = (pageSource) -> {
-            return Jsoup.parse(pageSource)
-                    .getElementsByClass("m2-sec02")
-                    .get(0)
-                    .getElementsByTag("a")
-                    .stream()
-                    .map(aTag -> ORIGIN + aTag.attr("href"))
-                    .filter(performanceUrl -> performanceUrl.contains("/Perf"))
-                    .collect(Collectors.toList());
-        };
+        Function<String, List<String>> page = (pageSource) -> Jsoup.parse(pageSource)
+                .getElementsByClass("m2-sec02")
+                .get(0)
+                .getElementsByTag("a")
+                .stream()
+                .map(aTag -> ORIGIN + aTag.attr("href"))
+                .filter(performanceUrl -> performanceUrl.contains("/Perf"))
+                .collect(Collectors.toList());
         return chromeDriver.crawlUrl(pageUrl, page, Collections.emptyList())
                 .orElse(Collections.emptyList());
     }
@@ -79,7 +77,7 @@ public class Yes24Crawler implements Crawler {
         Document document = Jsoup.parse(pageSource);
         String mainImageUrl = extractMainImageUrl(document);
         String operatingTime = generateOperatingTime(extractPerformanceDuration(document), extractPerformanceSchedule(document));
-        String[] period = extractPerformancePeriod(document)
+        String[] period = extractTextByClass(document, "ps-date")
                 .replace(".", "-")
                 .split(PERFORMANCE_PERIOD_DELIMETER);
 
@@ -89,18 +87,23 @@ public class Yes24Crawler implements Crawler {
                 .startDate(LocalDate.parse(period[0], DateTimeFormatter.ISO_DATE))
                 .endDate(LocalDate.parse(period[1], DateTimeFormatter.ISO_DATE))
                 .feeType("COST")
-                .price(extractPrice(document))
+                .price(extractTextByClass(document, "rn-product-price1")
+                        .replace("원 ", "원\n"))
                 .ticketUrl(pageUrl)
                 .regionType(extractRegion(document))
                 .listImageUrl(mainImageUrl)
                 .thumbnailImageUrl(mainImageUrl)
                 .operatingTime(operatingTime)
-                .itemDetailImeags(extractIntroductionImages(document))
-                .placeName(extractPlaceName(document))
-                .title(extractTitle(document))
+                .itemDetailImages(extractIntroductionImages(document))
+                .placeName(extractTextByClass(document, "ps-location"))
+                .title(extractTextByClass(document, "rn-big-title"))
                 .build();
     }
 
+    private String extractTextByClass(final Document document, final String className) {
+        return document.getElementsByClass(className)
+                .text();
+    }
 
     private String extractExhibitionType(final Document document) {
         return document.getElementsByClass("rn-location")
@@ -128,12 +131,6 @@ public class Yes24Crawler implements Crawler {
             return "";
         }
         return performanceDuration;
-    }
-
-    private String extractPrice(final Document document) {
-        return document.getElementsByClass("rn-product-price1")
-                .text()
-                .replace("원 ", "원\n");
     }
 
     private String extractPerformanceSchedule(final Document document) {
@@ -167,20 +164,5 @@ public class Yes24Crawler implements Crawler {
         return Objects.requireNonNull(document.getElementById("TheaterAddress"))
                 .text()
                 .split(" ")[0];
-    }
-
-    private String extractPerformancePeriod(final Document document) {
-        return document.getElementsByClass("ps-date")
-                .text();
-    }
-
-    private String extractPlaceName(final Document document) {
-        return document.getElementsByClass("ps-location")
-                .text();
-    }
-
-    private String extractTitle(final Document document) {
-        return document.getElementsByClass("rn-big-title")
-                .text();
     }
 }
