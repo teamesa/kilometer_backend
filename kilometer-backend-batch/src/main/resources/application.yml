@@ -18,3 +18,11 @@ spring:
     enabled: true
     baseline-on-migrate: true
     baseline-version: 0
+
+crawler:
+  selenium:
+    remote-driver-url: http://61.73.21.98:10004
+  target: # 뮤지컬, 전시, 콘서트 순
+    yes24:
+      origin: http://ticket.yes24.com
+      category: http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15457&Gcode=009_202_002 , http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15460&Gcode=009_202_005, http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15456&Gcode=009_202_001

@@ -1,0 +1,41 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    open-in-view: false
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        show_sql: true
+        format_sql: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:kilometer-test;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+
+  flyway:
+    enabled: false
+
+crawler:
+  selenium:
+    remote-driver-url: http://61.73.21.98:10004
+  target: # 뮤지컬, 전시, 콘서트 순
+    yes24:
+      origin: http://ticket.yes24.com
+      category: http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15457&Gcode=009_202_002 , http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15460&Gcode=009_202_005, http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15456&Gcode=009_202_001
+
+cloud:
+  aws:
+    s3:
+      bucket: fake-bycket
+      folderName: api
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: sdafevawegjo
+      secretKey: dafevaojisvpae
