@@ -6,7 +6,6 @@ import com.kilometer.backend.batch.crawler.util.Yes24ExhibitionTypeConverter;
 import com.kilometer.backend.batch.crawler.util.Yes24FeeTypeConverter;
 import com.kilometer.backend.batch.crawler.util.Yes24RegionTypeConverter;
 import com.kilometer.domain.item.enumType.ExposureType;
-import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
