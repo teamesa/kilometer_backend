@@ -2,6 +2,11 @@ package com.kilometer.backend.batch.crawler.infrastructure;
 
 import com.kilometer.backend.batch.crawler.domain.Crawler;
 import com.kilometer.backend.batch.crawler.domain.dto.CrawledItemDto;
+import com.kilometer.backend.batch.crawler.util.Yes24ExhibitionTypeConverter;
+import com.kilometer.backend.batch.crawler.util.Yes24FeeTypeConverter;
+import com.kilometer.backend.batch.crawler.util.Yes24RegionTypeConverter;
+import com.kilometer.domain.item.enumType.ExposureType;
+import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -45,7 +50,6 @@ public class Yes24Crawler implements Crawler {
                 .map(this::extractItemDetail)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .peek(System.out::println)
                 .collect(Collectors.toList());
     }
 
@@ -76,21 +80,25 @@ public class Yes24Crawler implements Crawler {
     private CrawledItemDto parsePage(final String pageSource, final String pageUrl) {
         Document document = Jsoup.parse(pageSource);
         String mainImageUrl = extractMainImageUrl(document);
-        String operatingTime = generateOperatingTime(extractPerformanceDuration(document), extractPerformanceSchedule(document));
+        String operatingTime = generateOperatingTime(extractPerformanceDuration(document),
+                extractPerformanceSchedule(document));
         String[] period = extractTextByClass(document, "ps-date")
                 .replace(".", "-")
                 .split(PERFORMANCE_PERIOD_DELIMETER);
+        LocalDate startDate = LocalDate.parse(period[0], DateTimeFormatter.ISO_DATE);
+        LocalDate endDate = LocalDate.parse(period[1], DateTimeFormatter.ISO_DATE);
+        String extractedPrice = extractTextByClass(document, "rn-product-price1")
+                .replace("원 ", "원\n");
 
         return CrawledItemDto.builder()
-                .exhibitionType(extractExhibitionType(document))
-                .exposureType("ON")
-                .startDate(LocalDate.parse(period[0], DateTimeFormatter.ISO_DATE))
-                .endDate(LocalDate.parse(period[1], DateTimeFormatter.ISO_DATE))
-                .feeType("COST")
-                .price(extractTextByClass(document, "rn-product-price1")
-                        .replace("원 ", "원\n"))
+                .exhibitionType(Yes24ExhibitionTypeConverter.of(extractExhibitionType(document)))
+                .exposureType(ExposureType.findExposureType(startDate, endDate).name())
+                .startDate(startDate)
+                .endDate(endDate)
+                .feeType(Yes24FeeTypeConverter.convertFeeType(extractedPrice))
+                .price(extractedPrice)
                 .ticketUrl(pageUrl)
-                .regionType(extractRegion(document))
+                .regionType(Yes24RegionTypeConverter.of(extractRegion(document)))
                 .listImageUrl(mainImageUrl)
                 .thumbnailImageUrl(mainImageUrl)
                 .operatingTime(operatingTime)

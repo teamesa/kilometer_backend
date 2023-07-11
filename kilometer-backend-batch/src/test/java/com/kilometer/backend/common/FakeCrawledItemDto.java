@@ -1,2 +1,6 @@
-package com.kilometer.backend.common;public class FakeCrawledItemDto {
+package com.kilometer.backend.common;
+
+public class FakeCrawledItemDto {
+
+
 }
