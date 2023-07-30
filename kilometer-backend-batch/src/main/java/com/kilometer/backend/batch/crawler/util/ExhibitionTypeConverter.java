@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Yes24ExhibitionTypeConverter {
+public class ExhibitionTypeConverter {
 
     public static final Map<String, String> cache;
 

@@ -2,7 +2,7 @@ package com.kilometer.backend.batch.crawler.infrastructure;
 
 import com.kilometer.backend.batch.crawler.domain.Crawler;
 import com.kilometer.backend.batch.crawler.domain.dto.CrawledItemDto;
-import com.kilometer.backend.batch.crawler.util.Yes24ExhibitionTypeConverter;
+import com.kilometer.backend.batch.crawler.util.ExhibitionTypeConverter;
 import com.kilometer.backend.batch.crawler.util.Yes24FeeTypeConverter;
 import com.kilometer.backend.batch.crawler.util.RegionTypeConverter;
 import com.kilometer.domain.item.enumType.ExposureType;
@@ -20,6 +20,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ById;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,9 +70,9 @@ public class Yes24Crawler implements Crawler {
     private Optional<CrawledItemDto> extractItemDetail(final String pageUrl) {
         ChromeDriver<CrawledItemDto> chromeDriver = new ChromeDriver<>(remoteDriverUrl);
         Function<String, CrawledItemDto> page = pageSource -> parsePage(pageSource, pageUrl);
-        List<ExpectedCondition<?>> expectedRenderingConditions = List.of(
-                ExpectedConditions.visibilityOfElementLocated(By.xpath(ITEM_DETAIL_IMAGE_XPATH)),
-                ExpectedConditions.textToBePresentInElementLocated(ById.id("TheaterAddress"), " ")
+        List<Function<WebDriver, ExpectedCondition<?>>> expectedRenderingConditions = List.of(
+                (webDriver) -> ExpectedConditions.visibilityOfElementLocated(By.xpath(ITEM_DETAIL_IMAGE_XPATH)),
+                (webDriver) -> ExpectedConditions.textToBePresentInElementLocated(ById.id("TheaterAddress"), " ")
         );
         return chromeDriver.crawlUrl(pageUrl, page, expectedRenderingConditions);
     }
@@ -90,7 +91,7 @@ public class Yes24Crawler implements Crawler {
                 .replace("원 ", "원\n");
 
         return CrawledItemDto.builder()
-                .exhibitionType(Yes24ExhibitionTypeConverter.of(extractExhibitionType(document)))
+                .exhibitionType(ExhibitionTypeConverter.of(extractExhibitionType(document)))
                 .exposureType(ExposureType.findExposureType(startDate, endDate).name())
                 .startDate(startDate)
                 .endDate(endDate)

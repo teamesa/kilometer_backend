@@ -23,7 +23,7 @@ public class ChromeDriver<T> {
     }
 
     public Optional<T> crawlUrl(final String targetUrl, final Function<String, T> parseResult,
-                                final List<ExpectedCondition<?>> waitingConditions) {
+                                final List<Function<WebDriver, ExpectedCondition<?>>> waitingConditions) {
         WebDriver chromeDriver = null;
         try {
             chromeDriver = new RemoteWebDriver(new URL(remoteDriverUrl), makeChromeOptions());

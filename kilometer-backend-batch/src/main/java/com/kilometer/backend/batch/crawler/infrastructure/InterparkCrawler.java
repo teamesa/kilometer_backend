@@ -2,6 +2,8 @@ package com.kilometer.backend.batch.crawler.infrastructure;
 
 import com.kilometer.backend.batch.crawler.domain.Crawler;
 import com.kilometer.backend.batch.crawler.domain.dto.CrawledItemDto;
+import com.kilometer.backend.batch.crawler.util.ExhibitionTypeConverter;
+import com.kilometer.backend.batch.crawler.util.RegionTypeConverter;
 import com.kilometer.domain.item.enumType.ExposureType;
 import com.kilometer.domain.item.enumType.FeeType;
 import java.time.LocalDate;
@@ -15,8 +17,9 @@ import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,8 +66,15 @@ public class InterparkCrawler implements Crawler {
 
     private Optional<CrawledItemDto> extractItemDetail(final String pageUrl) {
         ChromeDriver<CrawledItemDto> chromeDriver = new ChromeDriver<>(remoteDriverUrl);
-        List<ExpectedCondition<?>> expectedRenderingConditions = List.of(
-                ExpectedConditions.presenceOfElementLocated(By.id("popup-info-place")));
+        Function<WebDriver, ExpectedCondition<?>> renderingCondition = (driver) -> {
+            try {
+                driver.findElement(By.id("container"));
+                return ExpectedConditions.presenceOfElementLocated(By.id("popup-info-place"));
+            } catch (NoSuchElementException e) {
+                return ExpectedConditions.presenceOfElementLocated(By.id("gateway_warp"));
+            }
+        };
+        List<Function<WebDriver, ExpectedCondition<?>>> expectedRenderingConditions = List.of(renderingCondition);
         Function<String, CrawledItemDto> page = pageSource -> parsePage(pageSource, pageUrl);
         return chromeDriver.crawlUrl(pageUrl, page, expectedRenderingConditions);
     }
@@ -77,14 +87,14 @@ public class InterparkCrawler implements Crawler {
         String mainImageUrl = extractMainImageUrl(document);
 
         return CrawledItemDto.builder()
-                .exhibitionType(extractExhibitionType(document))
+                .exhibitionType(ExhibitionTypeConverter.of(extractExhibitionType(document)))
                 .exposureType(ExposureType.findExposureType(startDate, endDate).name())
                 .startDate(startDate)
                 .endDate(endDate)
                 .feeType(FeeType.COST.name())
                 .price(extractPrice(document))
                 .ticketUrl(pageUrl)
-                .regionType(extractRegion(document))
+                .regionType(RegionTypeConverter.of(extractRegion(document)))
                 .listImageUrl(mainImageUrl)
                 .thumbnailImageUrl(mainImageUrl)
                 .operatingTime(generateOperatingTime(document))
