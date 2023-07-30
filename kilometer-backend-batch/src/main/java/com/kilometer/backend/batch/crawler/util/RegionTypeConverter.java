@@ -9,13 +9,13 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Yes24RegionTypeConverter {
+public class RegionTypeConverter {
 
     private static final Map<List<String>, String> cache;
 
     static {
         cache = new HashMap<>();
-        cache.put(List.of("서울", "서울특별시"), RegionType.SEOUL.name());
+        cache.put(List.of("서울", "서울특별시", "서울시"), RegionType.SEOUL.name());
         cache.put(List.of("경기", "경기도", "인천", "인천광역시"), RegionType.GYEONGGI.name());
         cache.put(List.of("대전", "세종특별자치시", "세종", "충청북도", "충청남도"), RegionType.CHUNGCHEONG.name());
         cache.put(List.of("부산", "부산광역시", "울산", "울산광역시",

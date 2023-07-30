@@ -4,7 +4,7 @@ import com.kilometer.backend.batch.crawler.domain.Crawler;
 import com.kilometer.backend.batch.crawler.domain.dto.CrawledItemDto;
 import com.kilometer.backend.batch.crawler.util.Yes24ExhibitionTypeConverter;
 import com.kilometer.backend.batch.crawler.util.Yes24FeeTypeConverter;
-import com.kilometer.backend.batch.crawler.util.Yes24RegionTypeConverter;
+import com.kilometer.backend.batch.crawler.util.RegionTypeConverter;
 import com.kilometer.domain.item.enumType.ExposureType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -97,7 +97,7 @@ public class Yes24Crawler implements Crawler {
                 .feeType(Yes24FeeTypeConverter.convertFeeType(extractedPrice))
                 .price(extractedPrice)
                 .ticketUrl(pageUrl)
-                .regionType(Yes24RegionTypeConverter.of(extractRegion(document)))
+                .regionType(RegionTypeConverter.of(extractRegion(document)))
                 .listImageUrl(mainImageUrl)
                 .thumbnailImageUrl(mainImageUrl)
                 .operatingTime(operatingTime)
