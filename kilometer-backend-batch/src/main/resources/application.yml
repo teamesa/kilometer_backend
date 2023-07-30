@@ -26,3 +26,6 @@ crawler:
     yes24:
       origin: http://ticket.yes24.com
       category: http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15457&Gcode=009_202_002 , http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15460&Gcode=009_202_005, http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15456&Gcode=009_202_001
+    interpark:
+      origin: https://tickets.interpark.com
+      category: https://ticket.interpark.com/MusicalIndex.asp, https://ticket.interpark.com/LesIndex.asp, https://ticket.interpark.com/ConcertIndex.asp
