@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -84,9 +85,14 @@ public class CrawledItem {
     private boolean isDeleted = false;
 
 
-    @OneToMany(mappedBy = "crawledItem", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "crawledItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<CrawledItemDetailImage> crawledItemDetailImages = new ArrayList<>();
+
+    public void addCralwedItemDetailImage(CrawledItemDetailImage crawledItemDetailImage) {
+        crawledItemDetailImages.add(crawledItemDetailImage);
+        crawledItemDetailImage.setCrawledItem(this);
+    }
 
     @Override
     public String toString() {

@@ -21,7 +21,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Builder
 @Where(clause = "isDeleted=false")
-@SQLDelete(sql = "UPDATE `item` SET isDeleted = true where id=?")
+@SQLDelete(sql = "UPDATE `crawled_item_image` SET isDeleted = true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "crawled_item_image")
@@ -45,6 +45,10 @@ public class CrawledItemDetailImage {
 
     @Builder.Default
     private boolean isDeleted = false;
+
+    void setCrawledItem(CrawledItem crawledItem) {
+        this.crawledItem = crawledItem;
+    }
 
     @Override
     public String toString() {
