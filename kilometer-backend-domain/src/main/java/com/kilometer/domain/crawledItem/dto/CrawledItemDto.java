@@ -1,5 +1,9 @@
 package com.kilometer.domain.crawledItem.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.kilometer.domain.crawledItem.CrawledItem;
 import com.kilometer.domain.crawledItem.CrawledItemDetailImage;
 import com.kilometer.domain.crawledItem.CrawledItemDetailImage.CrawledItemDetailImageBuilder;
@@ -34,8 +38,13 @@ public class CrawledItemDto {
     private String thumbnailImageUrl;
     private String title;
 
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 

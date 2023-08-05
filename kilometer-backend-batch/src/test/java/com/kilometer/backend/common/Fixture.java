@@ -1,6 +1,6 @@
 package com.kilometer.backend.common;
 
-import com.kilometer.backend.batch.crawler.domain.dto.CrawledItemDto;
+import com.kilometer.domain.crawledItem.dto.CrawledItemDto;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -8,15 +8,15 @@ import java.util.List;
 public class Fixture {
 
     public static final CrawledItemDto crawledItemDto = CrawledItemDto.builder()
-            .exhibitionType("뮤지컬")
+            .exhibitionType("MUSICAL")
             .exposureType("ON")
-            .regionType("서울")
+            .regionType("SEOUL")
             .feeType("COST")
             .listImageUrl("http://tkfile.yes24.com/upload2/PerfBlog/202307/20230707/20230707-46037.jpg")
             .thumbnailImageUrl("http://tkfile.yes24.com/upload2/PerfBlog/202307/20230707/20230707-46037.jpg")
             .title("뮤지컬 <알로하, 나의 엄마들>")
-            .startDate(LocalDate.parse("2023-07-15", DateTimeFormatter.ISO_OFFSET_DATE))
-            .endDate(LocalDate.parse("2023-08-19", DateTimeFormatter.ISO_OFFSET_DATE))
+            .startDate(LocalDate.parse("2023-07-15", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+            .endDate(LocalDate.parse("2023-08-19", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
             .placeName("국립극장 해오름극장")
             .price("R석 100,000원\n"
                     + "    S석 80,000원\n"
