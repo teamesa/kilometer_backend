@@ -23,7 +23,14 @@ public class PerformanceOutputTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(final StepContribution contribution, final ChunkContext chunkContext) throws Exception {
-        crawledItemDtos.forEach(crawledItemService::saveCrawledItem);
+        crawledItemDtos.forEach(this::saveUniqueCrawledItem);
         return RepeatStatus.FINISHED;
+    }
+
+    public void saveUniqueCrawledItem(final CrawledItemDto crawledItemDto) {
+        if (crawledItemService.hasDuplicatedCrawledItem(crawledItemDto)) {
+            return;
+        }
+        crawledItemService.saveCrawledItem(crawledItemDto);
     }
 }

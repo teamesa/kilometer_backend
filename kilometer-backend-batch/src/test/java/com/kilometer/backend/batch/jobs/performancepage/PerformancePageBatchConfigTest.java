@@ -11,6 +11,7 @@ import com.kilometer.backend.common.Fixture;
 import com.kilometer.domain.crawledItem.CrawledItem;
 import com.kilometer.domain.crawledItem.CrawledItemRepository;
 import com.kilometer.domain.crawledItem.CrawledItemService;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.ExitStatus;
@@ -52,5 +53,16 @@ class PerformancePageBatchConfigTest {
             );
             return null;
         });
+    }
+
+    @DisplayName("중복된 공연 정보는 저장하지 말아야 한다.")
+    @Test
+    void ignoreDuplicatedCralwedItem() throws Exception {
+        jobLauncherTestUtils.launchJob();
+        jobLauncherTestUtils.launchJob();
+
+        List<CrawledItem> actual = crawledItemRepository.findAll();
+
+        assertThat(actual.size()).isEqualTo(1);
     }
 }
