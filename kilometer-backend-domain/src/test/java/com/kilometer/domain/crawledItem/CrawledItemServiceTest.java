@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.kilometer.common.Fixture;
 import com.kilometer.common.annotation.SpringTestWithData;
+import com.kilometer.domain.crawledItem.dto.CrawledItemPageResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,5 +48,22 @@ class CrawledItemServiceTest {
         boolean actual = crawledItemService.hasDuplicatedCrawledItem(Fixture.CRAWLED_ITEM_DTO);
 
         assertThat(actual).isTrue();
+    }
+
+    @DisplayName("현재 페이지에 해당하는 crawledItem들을 반환해야 한다.")
+    @Test
+    void getCrawledItem() {
+        int crawledItems = 35;
+        for (int i = 0; i < crawledItems; i++) {
+            crawledItemRepository.save(Fixture.CRAWLED_ITEM_DTO.toEntity());
+        }
+
+        CrawledItemPageResponse actual = crawledItemService.getCralwedItem(1);
+
+        assertAll(
+                () -> assertThat(actual.getTotalPage()).isEqualTo(2),
+                () -> assertThat(actual.getCurrentPage()).isEqualTo(1),
+                () -> assertThat(actual.getCrawledItemResponses().size()).isEqualTo(15)
+        );
     }
 }
