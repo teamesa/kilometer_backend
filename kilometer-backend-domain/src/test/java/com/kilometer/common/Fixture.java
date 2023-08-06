@@ -23,6 +23,9 @@ public class Fixture {
     public static final String LOWER_TITLE = "bottomTitle";
     public static final Long USER_ID = 1L;
 
+    public static final LocalDate PERFORMANCE_START_DATE = LocalDate.parse("2023-07-15", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    public static final LocalDate PERFORMANCE_END_DATE = LocalDate.parse("2023-08-19", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
     public static final CrawledItemDto CRAWLED_ITEM_DTO = CrawledItemDto.builder()
             .exhibitionType("MUSICAL")
             .exposureType("ON")
@@ -31,8 +34,8 @@ public class Fixture {
             .listImageUrl("http://tkfile.yes24.com/upload2/PerfBlog/202307/20230707/20230707-46037.jpg")
             .thumbnailImageUrl("http://tkfile.yes24.com/upload2/PerfBlog/202307/20230707/20230707-46037.jpg")
             .title("뮤지컬 <알로하, 나의 엄마들>")
-            .startDate(LocalDate.parse("2023-07-15", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-            .endDate(LocalDate.parse("2023-08-19", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+            .startDate(PERFORMANCE_START_DATE)
+            .endDate(PERFORMANCE_END_DATE)
             .placeName("국립극장 해오름극장")
             .price("R석 100,000원\n"
                     + "    S석 80,000원\n"
