@@ -29,6 +29,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class Yes24Crawler implements Crawler {
 
+    public static final int PERFORMANCE_SCHEDULE_INCLUSIVE_MIN_LENGTH = 0;
+    public static final int PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH = 101;
+
     private static final String ITEM_DETAIL_IMAGE_XPATH = "//div[@id='divPerfContent']//p";
     private static final String NO_PERFORMANCE_DURATION = "-";
     public static final String PERFORMANCE_PERIOD_DELIMETER = " ~ ";
@@ -155,7 +158,8 @@ public class Yes24Crawler implements Crawler {
         if (performanceSchedule.equals(NO_PERFORMANCE_DURATION)) {
             return performanceSchedule;
         }
-        return performanceDuration.substring(0, 101);
+        return performanceDuration.substring(PERFORMANCE_SCHEDULE_INCLUSIVE_MIN_LENGTH,
+                PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH);
     }
 
     private List<String> extractIntroductionImages(final Document document) {

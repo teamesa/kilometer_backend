@@ -30,6 +30,9 @@ public class InterparkCrawler implements Crawler {
 
     public static final String PERFORMANCE_PERIOD_DELIMITER = "~";
 
+    public static final int PERFORMANCE_SCHEDULE_INCLUSIVE_MIN_LENGTH = 0;
+    public static final int PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH = 101;
+
     @Value("${crawler.target.interpark.origin}")
     public String ORIGIN;
 
@@ -157,10 +160,9 @@ public class InterparkCrawler implements Crawler {
     }
 
     private String generateOperatingTime(final Document document) {
-        Optional<String> performanceDuration = extractPerformanceDuration(document);
         return extractPerformanceDuration(document)
                 .orElseGet(() -> extractTextByClassName(document, "contentDetailList", 0))
-                .substring(0, 101);
+                .substring(PERFORMANCE_SCHEDULE_INCLUSIVE_MIN_LENGTH, PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH);
     }
 
     private Optional<String> extractPerformanceDuration(final Document document) {
