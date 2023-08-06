@@ -21,7 +21,7 @@ public class PerformancePageBatchConfig {
 
     @Bean
     public Job crawlPerformances() {
-        return jobBuilderFactory.get("generate performance")
+        return jobBuilderFactory.get("generatePerformance")
                 .start(crawPerformancePages())
                 .next(outputPerformances())
                 .build();
@@ -30,7 +30,7 @@ public class PerformancePageBatchConfig {
 
     @Bean
     public Step crawPerformancePages() {
-        return stepBuilderFactory.get("performance page crawler")
+        return stepBuilderFactory.get("performancePageCrawler")
                 .tasklet(pageCrawlingTasklet)
                 .build();
     }
@@ -38,7 +38,7 @@ public class PerformancePageBatchConfig {
 
     @Bean
     public Step outputPerformances() {
-        return stepBuilderFactory.get("output performances")
+        return stepBuilderFactory.get("outputPerformances")
                 .tasklet(performanceOutputTasklet)
                 .build();
     }

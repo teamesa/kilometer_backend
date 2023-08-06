@@ -5,10 +5,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.kilometer.common.Fixture;
 import com.kilometer.domain.item.enumType.RegionType;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @DisplayName("CrawledItemRepository 는 ")
 @DataJpaTest
@@ -29,5 +32,24 @@ class CrawledItemRepositoryTest {
                 .get();
 
         assertThat(expected.getId()).isEqualTo(actual.getId());
+    }
+
+    @DisplayName("엔티티를 페이지 형태로 가져와야 한다.")
+    @Test
+    void findAll() {
+        for (int i = 0; i < 100; i++) {
+            crawledItemRepository.save(Fixture.CRAWLED_ITEM_DTO.toEntity());
+        }
+
+        Page<CrawledItem> actual = crawledItemRepository.findAll(PageRequest.of(1, 10));
+        CrawledItem crawledItem = actual.get()
+                .collect(Collectors.toList())
+                .get(0);
+
+        assertAll(
+                () -> assertThat(actual.getTotalElements()).isEqualTo(100),
+                () -> assertThat(actual.getTotalPages()).isEqualTo(10),
+                () -> assertThat(crawledItem.getId()).isEqualTo(11L)
+        );
     }
 }
