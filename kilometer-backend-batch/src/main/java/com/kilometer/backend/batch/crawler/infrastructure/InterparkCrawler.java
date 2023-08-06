@@ -1,7 +1,7 @@
 package com.kilometer.backend.batch.crawler.infrastructure;
 
 import com.kilometer.backend.batch.crawler.domain.Crawler;
-import com.kilometer.backend.batch.crawler.domain.dto.CrawledItemDto;
+import com.kilometer.domain.crawledItem.dto.CrawledItemDto;
 import com.kilometer.backend.batch.crawler.util.ExhibitionTypeConverter;
 import com.kilometer.backend.batch.crawler.util.RegionTypeConverter;
 import com.kilometer.domain.item.enumType.ExposureType;
@@ -157,9 +157,10 @@ public class InterparkCrawler implements Crawler {
     }
 
     private String generateOperatingTime(final Document document) {
-        return extractPerformanceDuration(document).orElse("")
-                + "\n"
-                + extractTextByClassName(document, "contentDetailList", 0);
+        Optional<String> performanceDuration = extractPerformanceDuration(document);
+        return extractPerformanceDuration(document)
+                .orElseGet(() -> extractTextByClassName(document, "contentDetailList", 0))
+                .substring(0, 101);
     }
 
     private Optional<String> extractPerformanceDuration(final Document document) {

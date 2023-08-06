@@ -1,7 +1,7 @@
 package com.kilometer.backend.batch.crawler.infrastructure;
 
 import com.kilometer.backend.batch.crawler.domain.Crawler;
-import com.kilometer.backend.batch.crawler.domain.dto.CrawledItemDto;
+import com.kilometer.domain.crawledItem.dto.CrawledItemDto;
 import com.kilometer.backend.batch.crawler.util.ExhibitionTypeConverter;
 import com.kilometer.backend.batch.crawler.util.Yes24FeeTypeConverter;
 import com.kilometer.backend.batch.crawler.util.RegionTypeConverter;
@@ -155,7 +155,7 @@ public class Yes24Crawler implements Crawler {
         if (performanceSchedule.equals(NO_PERFORMANCE_DURATION)) {
             return performanceSchedule;
         }
-        return performanceDuration + "\n" + performanceSchedule;
+        return performanceDuration.substring(0, 101);
     }
 
     private List<String> extractIntroductionImages(final Document document) {
