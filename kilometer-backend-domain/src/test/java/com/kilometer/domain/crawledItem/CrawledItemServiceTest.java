@@ -38,4 +38,14 @@ class CrawledItemServiceTest {
             return null;
         });
     }
+
+    @DisplayName("같은 CrawledItem이 존재하는지 확인해야 한다.")
+    @Test
+    void hasDuplicatedCrawledItem() {
+        crawledItemRepository.save(Fixture.CRAWLED_ITEM_DTO.toEntity());
+
+        boolean actual = crawledItemService.hasDuplicatedCrawledItem(Fixture.CRAWLED_ITEM_DTO);
+
+        assertThat(actual).isTrue();
+    }
 }
