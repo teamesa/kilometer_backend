@@ -180,7 +180,7 @@ public class InterparkCrawler implements Crawler {
         return document.getElementsByClass("contentDetail")
                 .stream()
                 .filter(element -> element.getElementsByTag("title").size() > 0)
-                .map(element -> element.getElementsByTag("img")
+                .map(element -> "https://" + element.getElementsByTag("img")
                         .attr("src")
                         .substring(2))
                 .collect(Collectors.toList());
