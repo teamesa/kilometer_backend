@@ -21,7 +21,11 @@ public class CrawledItemService {
 
     @Transactional
     public void saveCrawledItem(final CrawledItemDto crawledItemDto) {
-        crawledItemRepository.save(crawledItemDto.toEntity());
+        try {
+            crawledItemRepository.save(crawledItemDto.toEntity());
+        } catch (Exception e) {
+            System.out.println(crawledItemDto);
+        }
     }
 
     public boolean hasDuplicatedCrawledItem(final CrawledItemDto crawledItemDto) {

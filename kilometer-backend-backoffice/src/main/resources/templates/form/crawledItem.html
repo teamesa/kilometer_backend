@@ -8,7 +8,7 @@
 <body>
 <main>
   <h1>아이템 후보</h1>
-  <table id="crawled_item" th:each="crawledItem : ${crawledItemPage.getCrawledItemResponses()}">
+  <table id="crawled_item">
     <th>전시 유형</th>
     <th>전시중 여부</th>
     <th>지역</th>
@@ -29,7 +29,7 @@
     <th>출처</th>
     <th>소개 이미지</th>
     <th>삭제</th>
-    <tr>
+    <tr th:each="crawledItem : ${crawledItemPage.getCrawledItemResponses()}">
       <td th:text="${crawledItem.getExhibitionType()}">뮤지컬</td>
       <td th:text="${crawledItem.getExposureType()}">전시중</td>
       <td th:text="${crawledItem.getRegionType()}">서울</td>
@@ -135,8 +135,8 @@
 </main>
 </body>
 <script>
-  $("#delete_item_button").addEventListener('click', () => {
-
+  $("#delete_item_button").addEventListener('click', (button) => {
+      alert("a");
   })
 </script>
 </html>
