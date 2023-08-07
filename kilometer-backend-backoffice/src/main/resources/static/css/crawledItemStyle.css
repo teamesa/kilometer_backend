@@ -6,11 +6,18 @@ table, th, td {
     border: 1px solid;
 }
 
+td::-webkit-scrollbar {
+    display: none;
+}
+
 td {
     text-align: center;
     height: 50px;
     width: 5%;
     overflow: scroll;
+    padding: 0;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
 }
 
 th, td {
@@ -32,6 +39,10 @@ th, td {
     margin-right: 5px;
 }
 
+.performance_data::-webkit-scrollbar, td::-webkit-scrollbar {
+    display: none;
+}
+
 .performance_data {
     width: 100%;
     height: 95%;
@@ -40,9 +51,15 @@ th, td {
     justify-content: center;
     align-items: center;
     overflow: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
 }
 
 #detail_image_data {
     margin-top: 15px;
     padding-top: 40px;
+}
+
+#operating_time {
+    padding-top: 100px;
 }

@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../../static/css/" th:href="@{/css/crawledItemStyle.css}">
   <title>예비 아이템</title>
+<!--  <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
 <main>
@@ -74,7 +77,7 @@
       </td>
 
       <td>
-        <div class="performance_data" th:text="${crawledItem.getOperatingTime()}"></div>
+        <div class="performance_data" id="operating_time" th:text="${crawledItem.getOperatingTime()}"></div>
       </td>
 
       <td th:if="${#strings.isEmpty(crawledItem.getTicketUrl())}">X</td>
@@ -133,10 +136,11 @@
     >다음 페이지</a>
   </section>
 </main>
-</body>
-<script>
-  $("#delete_item_button").addEventListener('click', (button) => {
-      alert("a");
-  })
+
+<script th:inline="javascript">
+    $("#delete_item_button").addEventListener('click', (button) => {
+        console.log(button);
+    });
 </script>
+</body>
 </html>

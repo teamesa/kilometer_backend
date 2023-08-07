@@ -80,7 +80,7 @@ public class CrawledItemResponse {
                 .longitude(crawledItem.getLongitude())
                 .price(crawledItem.getPrice())
                 .homepageUrl(crawledItem.getHomepageUrl())
-                .operatingTime(crawledItem.getHomepageUrl())
+                .operatingTime(crawledItem.getOperatingTime())
                 .ticketUrl(crawledItem.getTicketUrl())
                 .introduce(crawledItem.getIntroduce())
                 .source(crawledItem.getSource())
