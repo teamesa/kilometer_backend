@@ -38,4 +38,9 @@ public class CrawledItemService {
                 .collect(Collectors.toList());
         return CrawledItemPageResponse.from(totalPages, page, crawledItems);
     }
+
+    @Transactional
+    public void deleteCrawledItem(final Long crawledItemId) {
+        crawledItemRepository.deleteById(crawledItemId);
+    }
 }

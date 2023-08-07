@@ -31,7 +31,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Builder
 @Where(clause = "isDeleted=false")
-@SQLDelete(sql = "UPDATE `item` SET isDeleted = true where id=?")
+@SQLDelete(sql = "UPDATE `crawled_item` SET isDeleted = true where id=?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "crawled_item")

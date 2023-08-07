@@ -66,4 +66,14 @@ class CrawledItemServiceTest {
                 () -> assertThat(actual.getCrawledItemResponses().size()).isEqualTo(15)
         );
     }
+
+    @DisplayName("특정 CrawledItem을 삭제해야 한다.")
+    @Test
+    void deleteCrawledItem() {
+        CrawledItem save = crawledItemRepository.save(Fixture.CRAWLED_ITEM_DTO.toEntity());
+
+        crawledItemService.deleteCrawledItem(save.getId());
+
+        assertThat(crawledItemRepository.findAll().size()).isEqualTo(0);
+    }
 }
