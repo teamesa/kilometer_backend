@@ -31,7 +31,7 @@ public class CrawledItemService {
                 .isPresent();
     }
 
-    public CrawledItemPageResponse getCralwedItem(final int page) {
+    public CrawledItemPageResponse getCrawledItem(final int page) {
         Page<CrawledItem> currentPageOfCrawledItem = crawledItemRepository.findAll(PageRequest.of(page, PAGE_SIZE));
         int totalPages = currentPageOfCrawledItem.getTotalPages();
         List<CrawledItem> crawledItems = currentPageOfCrawledItem.stream()

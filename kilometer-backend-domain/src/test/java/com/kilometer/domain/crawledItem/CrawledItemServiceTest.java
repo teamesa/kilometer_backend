@@ -58,7 +58,7 @@ class CrawledItemServiceTest {
             crawledItemRepository.save(Fixture.CRAWLED_ITEM_DTO.toEntity());
         }
 
-        CrawledItemPageResponse actual = crawledItemService.getCralwedItem(1);
+        CrawledItemPageResponse actual = crawledItemService.getCrawledItem(1);
 
         assertAll(
                 () -> assertThat(actual.getTotalPage()).isEqualTo(2),
