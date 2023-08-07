@@ -24,6 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @ToString
 public class CrawledItemResponse {
 
+    private Long id;
     private String exhibitionType;
     private String exposureType;
     private String regionType;
@@ -64,6 +65,7 @@ public class CrawledItemResponse {
                 .collect(Collectors.toList());
 
         return CrawledItemResponse.builder()
+                .id(crawledItem.getId())
                 .exhibitionType(crawledItem.getExhibitionType().getDescription())
                 .exposureType(crawledItem.getExposureType().getDescription())
                 .regionType(crawledItem.getRegionType().getDescription())
