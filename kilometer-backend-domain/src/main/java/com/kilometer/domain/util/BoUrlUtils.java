@@ -27,4 +27,5 @@ public class BoUrlUtils {
     public static final String HOME_MODULES_DELETE = HOME_MODULES + "/delete";
 
     public static final String CRAWLED_ITEM = ROOT + "/crawled-item";
+    public static final String CRAWLED_ITEM_DELETEION = ROOT + "/crawled-item";
 }

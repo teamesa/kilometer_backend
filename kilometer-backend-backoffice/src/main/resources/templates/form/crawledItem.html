@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../../static/css/" th:href="@{/css/crawledItemStyle.css}">
   <title>예비 아이템</title>
-<!--  <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
 <main>
@@ -116,7 +113,7 @@
       </td>
 
       <td>
-        <button id="delete_item_button" type="button" th:value="${crawledItem.getId()}">
+        <button class="delete_item_button" type="button" th:value="${crawledItem.getId()}">
           삭제
         </button>
       </td>
@@ -137,9 +134,20 @@
   </section>
 </main>
 
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:inline="javascript">
-    $("#delete_item_button").addEventListener('click', (button) => {
-        console.log(button);
+    $(".delete_item_button").on('click', (button) => {
+        const {target: {value: itemId}} = button
+        axios({
+            method: 'DELETE',
+            url: `/form/crawled-item/${itemId}`
+        })
+            .then(() => alert("아이템이 삭제되었습니다."))
+            .catch((err) => {
+                alert("아이템 삭제에 실패했습니다.");
+                console.log(err);
+            });
     });
 </script>
 </body>
