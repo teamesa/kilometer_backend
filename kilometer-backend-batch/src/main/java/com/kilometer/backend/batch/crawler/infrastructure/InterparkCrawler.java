@@ -127,7 +127,7 @@ public class InterparkCrawler implements Crawler {
     }
 
     private String extractExhibitionType(final Document document) {
-       return extractTextByClassName(document, "tagText", 0).split(" ")[0];
+        return extractTextByClassName(document, "tagText", 0).split(" ")[0];
     }
 
     private String extractPrice(final Document document) {
@@ -160,9 +160,11 @@ public class InterparkCrawler implements Crawler {
     }
 
     private String generateOperatingTime(final Document document) {
-        return extractPerformanceDuration(document)
-                .orElseGet(() -> extractTextByClassName(document, "contentDetailList", 0))
-                .substring(PERFORMANCE_SCHEDULE_INCLUSIVE_MIN_LENGTH, PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH);
+        String operatingTime = extractPerformanceDuration(document)
+                .orElseGet(() -> extractTextByClassName(document, "contentDetailList", 0));
+
+        return operatingTime.substring(PERFORMANCE_SCHEDULE_INCLUSIVE_MIN_LENGTH,
+                Math.min(operatingTime.length(), PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH));
     }
 
     private Optional<String> extractPerformanceDuration(final Document document) {

@@ -159,7 +159,7 @@ public class Yes24Crawler implements Crawler {
             return performanceSchedule;
         }
         return performanceDuration.substring(PERFORMANCE_SCHEDULE_INCLUSIVE_MIN_LENGTH,
-                PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH);
+                Math.min(performanceDuration.length(), PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH));
     }
 
     private List<String> extractIntroductionImages(final Document document) {
