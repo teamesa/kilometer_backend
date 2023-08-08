@@ -3,10 +3,13 @@ package com.kilometer.backend.batch.jobs.performancepage;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.kilometer.backend.batch.alert.infrastructure.SlackMessageSender;
+import com.kilometer.backend.batch.domain.performancepage.FinishMessageTasklet;
 import com.kilometer.backend.batch.domain.performancepage.PageCrawlingTasklet;
 import com.kilometer.backend.batch.domain.performancepage.PerformanceOutputTasklet;
 import com.kilometer.backend.common.BatchTestConfig;
 import com.kilometer.backend.common.FakeCrawler;
+import com.kilometer.backend.common.FakeMessageSender;
 import com.kilometer.backend.common.Fixture;
 import com.kilometer.domain.crawledItem.CrawledItem;
 import com.kilometer.domain.crawledItem.CrawledItemRepository;
@@ -27,7 +30,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 @SpringBatchTest
 @SpringBootTest(classes = {BatchTestConfig.class, PerformancePageBatchConfig.class,
         PageCrawlingTasklet.class, PerformanceOutputTasklet.class, FakeCrawler.class,
-        CrawledItemService.class, CrawledItemRepository.class, Fixture.class})
+        CrawledItemService.class, CrawledItemRepository.class, Fixture.class,
+        FakeMessageSender.class, FinishMessageTasklet.class})
 class PerformancePageBatchConfigTest {
 
     @Autowired

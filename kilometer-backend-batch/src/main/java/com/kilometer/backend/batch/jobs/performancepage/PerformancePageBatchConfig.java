@@ -1,5 +1,6 @@
 package com.kilometer.backend.batch.jobs.performancepage;
 
+import com.kilometer.backend.batch.domain.performancepage.FinishMessageTasklet;
 import com.kilometer.backend.batch.domain.performancepage.PageCrawlingTasklet;
 import com.kilometer.backend.batch.domain.performancepage.PerformanceOutputTasklet;
 import lombok.AllArgsConstructor;
@@ -18,12 +19,14 @@ public class PerformancePageBatchConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final PageCrawlingTasklet pageCrawlingTasklet;
     private final PerformanceOutputTasklet performanceOutputTasklet;
+    private final FinishMessageTasklet finishMessageTasklet;
 
     @Bean
     public Job crawlPerformances() {
         return jobBuilderFactory.get("generatePerformance")
                 .start(crawPerformancePages())
                 .next(outputPerformances())
+                .next(sendCompleteMessage())
                 .build();
     }
 
@@ -40,6 +43,13 @@ public class PerformancePageBatchConfig {
     public Step outputPerformances() {
         return stepBuilderFactory.get("outputPerformances")
                 .tasklet(performanceOutputTasklet)
+                .build();
+    }
+
+    @Bean
+    public Step sendCompleteMessage() {
+        return stepBuilderFactory.get("sendCompleteMessage")
+                .tasklet(finishMessageTasklet)
                 .build();
     }
 }

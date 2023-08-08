@@ -30,6 +30,11 @@ crawler:
       origin: https://tickets.interpark.com
       category: https://ticket.interpark.com/MusicalIndex.asp, https://ticket.interpark.com/LesIndex.asp, https://ticket.interpark.com/ConcertIndex.asp
 
+message:
+  slack:
+    webHookUrl: https://fake-webhook.com
+    adminPageUrl: https://fake-admin-page.com
+
 cloud:
   aws:
     s3:
