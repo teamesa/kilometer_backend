@@ -1,4 +1,4 @@
-package com.kilometer.common;
+package com.kilometer.backend.common;
 
 import com.kilometer.domain.crawledItem.dto.CrawledItemDto;
 import java.time.LocalDate;
@@ -7,26 +7,7 @@ import java.util.List;
 
 public class Fixture {
 
-    public static final int LIKE_COUNT = 3;
-    public static final int STAR_RATING = 5;
-    public static final String COMMENT = "comment";
-    public static final String PLACE_NAME = "placeName";
-    public static final String TITLE = "title";
-    public static final String ARCHIVE_IMAGE_URL = "archiveImageUrl";
-    public static final String USER_IMAGE_URL = "userImageUrl";
-    public static final String USER_NAME = "userName";
-    public static final String USER_EMAIL = "email@email.com";
-    public static final String USER_EMAIL2 = "email2@email.com";
-    public static final LocalDate MIN_DATE = LocalDate.of(1000, 1, 1);
-    public static final LocalDate MAX_DATE = LocalDate.of(9999, 12, 31);
-    public static final String TOP_TITLE = "topTitle";
-    public static final String LOWER_TITLE = "bottomTitle";
-    public static final Long USER_ID = 1L;
-
-    public static final LocalDate PERFORMANCE_START_DATE = LocalDate.parse("2023-07-15", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    public static final LocalDate PERFORMANCE_END_DATE = LocalDate.parse("2023-08-19", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-    public static final CrawledItemDto CRAWLED_ITEM_DTO = CrawledItemDto.builder()
+    public static final CrawledItemDto crawledItemDto = CrawledItemDto.builder()
             .exhibitionType("MUSICAL")
             .exposureType("ON")
             .regionType("SEOUL")
@@ -34,8 +15,8 @@ public class Fixture {
             .listImageUrl("http://tkfile.yes24.com/upload2/PerfBlog/202307/20230707/20230707-46037.jpg")
             .thumbnailImageUrl("http://tkfile.yes24.com/upload2/PerfBlog/202307/20230707/20230707-46037.jpg")
             .title("뮤지컬 <알로하, 나의 엄마들>")
-            .startDate(PERFORMANCE_START_DATE)
-            .endDate(PERFORMANCE_END_DATE)
+            .startDate(LocalDate.parse("2023-07-15", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+            .endDate(LocalDate.parse("2023-08-19", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
             .placeName("국립극장 해오름극장")
             .price("R석 100,000원\n"
                     + "    S석 80,000원\n"

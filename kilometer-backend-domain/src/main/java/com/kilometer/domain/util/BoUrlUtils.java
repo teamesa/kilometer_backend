@@ -25,4 +25,7 @@ public class BoUrlUtils {
     public static final String HOME_MODULES_TYPE = HOME_MODULES + "/type";
     public static final String HOME_MODULES_EDIT = HOME_MODULES + "/edit";
     public static final String HOME_MODULES_DELETE = HOME_MODULES + "/delete";
+
+    public static final String CRAWLED_ITEM = ROOT + "/crawled-item";
+    public static final String CRAWLED_ITEM_DELETEION = ROOT + "/crawled-item";
 }

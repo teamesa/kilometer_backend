@@ -1,30 +1,27 @@
 spring:
-  batch:
-    job:
-      names: ${job.name:EMPTY}
-  datasource:
-    url: jdbc:mariadb://azxca1731.synology.me:3306/summer
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: summer
-    password: rI5[w0vhFX
   jpa:
-    open-in-view: false
-    generate-ddl: false
-    show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
       naming:
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    open-in-view: false
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        show_sql: true
+        format_sql: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:kilometer-test;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
 
   flyway:
-    enabled: true
-    baseline-on-migrate: true
-    baseline-version: 0
+    enabled: false
 
 crawler:
   selenium:
-    remote-driver-url: ${selenium.server.url}
+    remote-driver-url: http://61.73.21.98:10004
   target: # 뮤지컬, 전시, 콘서트 순
     yes24:
       origin: http://ticket.yes24.com
@@ -35,18 +32,18 @@ crawler:
 
 message:
   slack:
-    webHookUrl: ${slack.webHook.url}
-    adminPageUrl: ${admin.url}
+    webHookUrl: https://fake-webhook.com
+    adminPageUrl: https://fake-admin-page.com
 
 cloud:
   aws:
     s3:
-      bucket: kilometer-image
+      bucket: fake-bycket
       folderName: api
     region:
       static: ap-northeast-2
     stack:
       auto: false
     credentials:
-      accessKey: ${s3.accessKey}
-      secretKey: ${s3.secretKey}
+      accessKey: sdafevawegjo
+      secretKey: dafevaojisvpae
