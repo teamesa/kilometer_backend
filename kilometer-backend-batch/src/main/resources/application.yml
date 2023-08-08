@@ -35,7 +35,7 @@ crawler:
 
 message:
   slack:
-    webHookUrl: https://hooks.slack.com/services/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
+    webHookUrl: ${slack.webHook.url}
     adminPageUrl: ${admin.url}
 
 cloud:
