@@ -1,0 +1,64 @@
+spring:
+  datasource:
+    url: jdbc:mysql://ls-80a31ed8e39fcc2579db65f4f2c9dc2ce150c573.c9ioyzhqhcag.ap-northeast-2.rds.amazonaws.com/summer?allowPublicKeyRetrieval=true&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    username: ${my.database.username}
+    password: ${my.database.password}
+  jpa:
+    open-in-view: false
+    generate-ddl: false
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+        user_sql_comments: true
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+    baseline-version: 0
+
+crawler:
+  selenium:
+    remote-driver-url: ${selenium.server.url}
+  target: # 뮤지컬, 전시, 콘서트 순
+    yes24:
+      origin: http://ticket.yes24.com
+      category: http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15457&Gcode=009_202_002 , http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15460&Gcode=009_202_005, http://ticket.yes24.com/New/Genre/GenreMain.aspx?genre=15456&Gcode=009_202_001
+    interpark:
+      origin: https://tickets.interpark.com
+      category: https://ticket.interpark.com/MusicalIndex.asp, https://ticket.interpark.com/LesIndex.asp, https://ticket.interpark.com/ConcertIndex.asp
+
+message:
+  slack:
+    webHookUrl: ${slack.webHook.url}
+    adminPageUrl: ${admin.url}
+
+cloud:
+  aws:
+    s3:
+      bucket: kilometer-image
+      folderName: bo
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${s3.accessKey}
+      secretKey: ${s3.secretKey}
+
+logging:
+  config: classpath:log4j2.xml
