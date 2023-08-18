@@ -1,12 +1,9 @@
 spring:
-  batch:
-    job:
-      names: ${job.name:EMPTY}
   datasource:
-    url: jdbc:mariadb://azxca1731.synology.me:3306/summer
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: summer
-    password: rI5[w0vhFX
+    url: jdbc:mysql://ls-80a31ed8e39fcc2579db65f4f2c9dc2ce150c573.c9ioyzhqhcag.ap-northeast-2.rds.amazonaws.com/summer?allowPublicKeyRetrieval=true&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    username: ${my.database.username}
+    password: ${my.database.password}
   jpa:
     open-in-view: false
     generate-ddl: false
@@ -16,9 +13,21 @@ spring:
       naming:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+        user_sql_comments: true
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
   flyway:
-    enabled: true
+    enabled: false
     baseline-on-migrate: true
     baseline-version: 0
 
@@ -42,7 +51,7 @@ cloud:
   aws:
     s3:
       bucket: kilometer-image
-      folderName: api
+      folderName: bo
     region:
       static: ap-northeast-2
     stack:
@@ -50,3 +59,6 @@ cloud:
     credentials:
       accessKey: ${s3.accessKey}
       secretKey: ${s3.secretKey}
+
+logging:
+  config: classpath:log4j2.xml

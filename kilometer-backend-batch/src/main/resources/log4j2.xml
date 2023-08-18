@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+  <!--    해당 설정파일에서 사용하는 프로퍼티-->
+  <Properties>
+    <Property name="logName">Kilometer-performance-crawling-batch</Property>
+    <Property name="layoutPattern">[%d{yyyy/MM/dd HH:mm:ss:SSSS}] %highlight{%-5level} %c{-2} %style{[%t]}{yellow}- %m%n -</Property>
+  </Properties>
+  <!--    LogEvent를 전달해주는 Appender-->
+  <Appenders>
+    <Console name="Console_Appender" target="SYSTEM_OUT">
+      <PatternLayout pattern="${layoutPattern}"/>
+    </Console>
+    <RollingFile name="File_Appender" fileName="data/logs/${logName}.log" filePattern="data/logs/${logName}_%d{yyyy-MM-dd}_%i.log">
+      <PatternLayout pattern="${layoutPattern}"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1"/>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="50" fileIndex="min"/>
+    </RollingFile>
+  </Appenders>
+  <!--    실제 Logger-->
+  <Loggers>
+    <Root level="INFO" additivity="false">
+      <AppenderRef ref="Console_Appender"/>
+      <AppenderRef ref="File_Appender"/>
+    </Root>
+    <Logger name="org.springframework" level="INFO"
+      additivity="false">
+      <AppenderRef ref="Console_Appender" />
+      <AppenderRef ref="File_Appender"/>
+    </Logger>
+  </Loggers>
+</Configuration>

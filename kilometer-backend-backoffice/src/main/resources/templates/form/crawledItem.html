@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../static/css/" th:href="@{/css/crawledItemStyle.css}">
+  <title>예비 아이템</title>
+</head>
+<body>
+<main>
+  <h1>아이템 후보</h1>
+  <table id="crawled_item">
+    <th>전시 유형</th>
+    <th>전시중 여부</th>
+    <th>지역</th>
+    <th>유료 여부</th>
+    <th>리스트 이미지</th>
+    <th>상세 이미지</th>
+    <th>제목</th>
+    <th>시작일</th>
+    <th>종료일</th>
+    <th>장소</th>
+    <th>장소 위도</th>
+    <th>장소 경도</th>
+    <th>금액</th>
+    <th>홈페이지 주소</th>
+    <th>시간</th>
+    <th>티켓 주소</th>
+    <th>소개</th>
+    <th>출처</th>
+    <th>소개 이미지</th>
+    <th>삭제</th>
+    <tr th:each="crawledItem : ${crawledItemPage.getCrawledItemResponses()}">
+      <td th:text="${crawledItem.getExhibitionType()}">뮤지컬</td>
+      <td th:text="${crawledItem.getExposureType()}">전시중</td>
+      <td th:text="${crawledItem.getRegionType()}">서울</td>
+      <td th:text="${crawledItem.getFeeType()}">유료</td>
+
+      <td>
+        <div class="performance_data" >
+          <a th:href="${crawledItem.getListImageUrl()}" target="_blank" rel="noopener noreferrer">
+            리스트 이미지 보기
+          </a>
+        </div>
+      </td>
+
+      <td>
+        <div class="performance_data" >
+          <a th:href="${crawledItem.getItemDetailImages()}" target="_blank" rel="noopener noreferrer">
+            상세 이미지 보기
+          </a>
+        </div>
+      </td>
+
+      <td>
+        <div class="performance_data" th:text="${crawledItem.getTitle()}"></div>
+      </td>
+      <td th:text="${crawledItem.getStartDate()}">2023-07-15</td>
+      <td th:text="${crawledItem.getEndDate()}">2023-08-19</td>
+      <td th:text="${crawledItem.getPlaceName()}">국립극장 해오름극장</td>
+
+      <td th:if="${#strings.isEmpty(crawledItem.getLatitude())}">X</td>
+      <td th:if="${not #strings.isEmpty(crawledItem.getLatitude())}" th:text="${crawledItem.getLatitude()}">X</td>
+
+      <td th:if="${#strings.isEmpty(crawledItem.getLongitude())}">X</td>
+      <td th:if="${not #strings.isEmpty(crawledItem.getLongitude())}" th:text="${crawledItem.getLongitude()}">X</td>
+
+      <td th:if="${crawledItem.getFeeType()=='무료'}">X</td>
+      <td th:if="not ${crawledItem.getFeeType()=='무료'}" th:text="${crawledItem.getPrice()}"></td>
+
+      <td th:if="${#strings.isEmpty(crawledItem.homepageUrl)}">X</td>
+      <td th:if="${not #strings.isEmpty(crawledItem.homepageUrl)}">
+        <div class="performance_data" th:text="${crawledItem.getHomepageUrl()}">
+        </div>
+      </td>
+
+      <td>
+        <div class="performance_data" id="operating_time" th:text="${crawledItem.getOperatingTime()}"></div>
+      </td>
+
+      <td th:if="${#strings.isEmpty(crawledItem.getTicketUrl())}">X</td>
+      <td th:if="${not #strings.isEmpty(crawledItem.getTicketUrl())}">
+        <div class="performance_data">
+          <a
+              th:href="${crawledItem.getTicketUrl()}"
+              th:text="${crawledItem.getTicketUrl()}"
+              target="_blank"
+              rel="noopener noreferrer"
+          ></a>
+        </div>
+      </td>
+
+      <td th:if="${#strings.isEmpty(crawledItem.getIntroduce())}">X</td>
+      <td th:if="${not #strings.isEmpty(crawledItem.getIntroduce())}">
+        <div class="performance_data" th:text="${crawledItem.getIntroduce()}"></div>
+      </td>
+
+      <td th:if="${#strings.isEmpty(crawledItem.getSource())}">X</td>
+        <td th:if="${not #strings.isEmpty(crawledItem.getSource())}">
+          <div class="performance_data" th:text="${crawledItem.getSource()}"></div>
+        </td>
+
+      <td>
+        <div class="performance_data" id="detail_image_data">
+          <a th:each="detailImageUrl : ${crawledItem.getItemDetailImages()}"
+             th:href="${detailImageUrl}"
+             target="_blank"
+             rel="noopener noreferrer"
+          >
+            - 소개 이미지 보기
+          </a>
+          <br>
+        </div>
+      </td>
+
+      <td>
+        <button class="delete_item_button" type="button" th:value="${crawledItem.getId()}">
+          삭제
+        </button>
+      </td>
+
+    </tr>
+  </table>
+
+  <section id="page_button">
+    <a th:if="${crawledItemPage.getCurrentPage() > 0}"
+       th:href="@{/form/crawled-item(page=${crawledItemPage.getCurrentPage() - 1})}"
+       id="page_button__previous-page"
+    >이전 페이지</a>
+
+    <a th:if="${(crawledItemPage.getTotalPage() - 1) != crawledItemPage.getCurrentPage()}"
+       th:href="@{/form/crawled-item(page=${crawledItemPage.getCurrentPage() + 1})}"
+       id="page_button__next-page"
+    >다음 페이지</a>
+  </section>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:inline="javascript">
+    $(".delete_item_button").on('click', (button) => {
+        const {target: {value: itemId}} = button
+        axios({
+            method: 'DELETE',
+            url: `/form/crawled-item/${itemId}`
+        })
+            .then(() => alert("아이템이 삭제되었습니다."))
+            .catch((err) => {
+                alert("아이템 삭제에 실패했습니다.");
+                console.log(err);
+            });
+    });
+</script>
+</body>
+</html>

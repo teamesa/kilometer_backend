@@ -28,6 +28,8 @@ public class MostPickItemDto implements ItemInfoExtraction {
     private LocalDate endDate;
     private boolean isHearted;
     private Long pickCount;
+
+    @Builder.Default
     private String apiType = API_TYPE;
 
     @Override
