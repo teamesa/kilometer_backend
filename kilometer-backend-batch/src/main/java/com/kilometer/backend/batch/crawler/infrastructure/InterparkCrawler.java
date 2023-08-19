@@ -28,10 +28,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class InterparkCrawler implements Crawler {
 
-    public static final String PERFORMANCE_PERIOD_DELIMITER = "~";
-
-    public static final int PERFORMANCE_SCHEDULE_INCLUSIVE_MIN_LENGTH = 0;
-    public static final int PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH = 101;
+    private static final String PERFORMANCE_PERIOD_DELIMITER = "~";
+    private static final String HTTPS_URL_PREFIX = "https://";
+    private static final int PERFORMANCE_SCHEDULE_INCLUSIVE_MIN_LENGTH = 0;
+    private static final int PERFORMANCE_SCHEDULE_EXCLUSIVE_MAX_LENGTH = 101;
 
     @Value("${crawler.target.interpark.origin}")
     public String ORIGIN;
@@ -153,7 +153,7 @@ public class InterparkCrawler implements Crawler {
     }
 
     private String extractMainImageUrl(final Document document) {
-        return document.getElementsByClass("posterBoxImage")
+        return HTTPS_URL_PREFIX + document.getElementsByClass("posterBoxImage")
                 .get(0)
                 .attr("src")
                 .substring(2);
@@ -180,7 +180,7 @@ public class InterparkCrawler implements Crawler {
         return document.getElementsByClass("contentDetail")
                 .stream()
                 .filter(element -> element.getElementsByTag("title").size() > 0)
-                .map(element -> "https://" + element.getElementsByTag("img")
+                .map(element -> HTTPS_URL_PREFIX + element.getElementsByTag("img")
                         .attr("src")
                         .substring(2))
                 .collect(Collectors.toList());
